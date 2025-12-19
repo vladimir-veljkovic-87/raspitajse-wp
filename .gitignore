@@ -1,0 +1,44 @@
+##################################
+# Ignore everything
+##################################
+*
+
+!.gitignore
+
+##################################
+# Allow ONLY child theme
+##################################
+!wp-content/
+!wp-content/themes/
+!wp-content/themes/superio-child/
+!wp-content/themes/superio-child/**
+
+##################################
+# Ignore ALL plugins by default
+##################################
+wp-content/plugins/
+
+##################################
+# Ignore runtime
+##################################
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/ai1wm-backups/
+wp-content/wflogs/
+
+##################################
+# Ignore WordPress core
+##################################
+wp-admin/
+wp-includes/
+wp-*.php
+index.php
+xmlrpc.php
+license.txt
+readme.html
+
+##################################
+# Ignore staging
+##################################
+public_html_stage/

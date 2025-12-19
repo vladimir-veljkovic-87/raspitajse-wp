@@ -1,0 +1,488 @@
+/*
+ Theme Name:   Superio Child
+ Theme URI:    https://themeforest.net/item/superio-job-board-wordpress-theme/32180231
+ Description:  Superio Child Theme
+ Author:       ApusTheme
+ Author URI:   http://apusthemes.com
+ Template:     superio
+ Version:      1.0.0
+ Text Domain:  superio-child
+*/
+
+
+/* Added CSS for header buttons */
+.role-employer #browse-job-btn-1 {
+	display:none!important;
+}
+.role-employer .elementor-element-62604f1:has(#browse-job-btn-1) {
+	display:none!important;
+}
+
+.role-candidate .job-post-btn-1 {
+	display:none!important;
+}
+.role-candidate .elementor-element-ad2c1d9:has(.job-post-btn-1) {
+	display:none!important;
+}
+
+p {
+	font-size:16px;
+}
+
+/* Input style gloabal */
+input::placeholder {
+  color: #c3c3c3;
+}
+input {
+	color:#202124;
+}
+form.cmb-form input[type="text"] {
+	background: #f2f4f9!important;
+	color:#202124!important;
+}
+form.cmb-form input[type="text"]:focus {
+	background: #ffffff!important;
+}
+/* Input fields candidate page */
+.cmb2-id-custom-multiselect-34916487 {
+	width:100%!important;
+}
+/* Authorized Representative Details input field */
+.before-group-row.columns-1 .before-group-row-inner > .cmb-row {
+	width: 50%;
+    float: left;
+}
+/* Bradcrump */
+.apus-breadscrumb {
+	background-color: #C5E2FC;
+	background-image: url(https://raspitajse.com/wp-content/uploads/2023/07/h18-slider.jpg);
+	background-size: 100%;
+}
+
+
+.elementor-element-4074490 .btn-login {
+	color: #1967d2!important;
+    background-color: #34A85312!important;
+	border-color:transparent!important;
+}
+.elementor-element-4074490 .btn-login:hover {
+	color: #ffffff!important;
+    background-color: #1967d2!important;
+	border-color:transparent!important;
+}
+
+
+/* Hide the menu item by default */
+/* Hide 'Candidates' li from menu */
+.menu-item-2186 {
+    /*display: none!important;*/
+}
+/* Hide Candidate page*/
+.post-type-archive-candidate.purchased-nothing {
+	display:none!important;
+}
+
+/* Phone field with flags*/
+.cmb2-id--candidate-phone .cmb-td {
+	height:60px;
+}
+.iti--allow-dropdown {
+	width:100%!important;
+}
+/* Phone field validation */
+.validation-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 7px;
+}
+
+/************************/
+/*      Home Page      */
+/**********************/
+html:has(> body.home) {
+    overflow-x: hidden !important;
+}
+
+.home .elementor-26 .elementor-element.elementor-element-9902db3 {
+	margin-top:100px;
+}
+.home .widget-job-search-form  h2 {
+	padding-top:30px;
+	font-size:44px;	
+}
+.home .widget-job-search-form .des {
+	color:#202124!important;
+}
+.home .candidate-grid .featured-text {
+    position: absolute;
+    left: -1px!important;
+    top: -1px!important;
+    background: #3167d1!important;
+    color: #fff;
+    padding: 4px 12px!important;
+    border-radius: 8px 0 14px 0;
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.home .candidate-grid .candidate-logo {
+	margin-top:5px;
+}
+.home .job-list-content .featured-text {
+	position: absolute;
+    right: -1px;
+    bottom: -1px;
+    background: #3167d1 !important;
+    color: #fff;
+    padding: 4px 12px !important;
+    border-radius: 8px 0 8px 0;
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.home .elementor-26 .elementor-element.elementor-element-a4ee68d > .elementor-container > .elementor-column > .elementor-widget-wrap {
+	align-content: start!important;
+}
+/* NOTE RADI 2112 */
+.home .urgent {
+	color: #202124!important;
+    background: rgb(218 70 65 / 46%);
+}
+
+
+/* Register candidate page */
+/* Register now btn */
+.page-id-1981 .button-primary {
+	margin-bottom:50px;
+}
+/* Fix width candidate Job Title input*/
+.page-id-1657 .cmb2-id--candidate-job-title {
+	max-width:50%;
+}
+
+/* Fix width candidate Job Title input*/
+.page-id-1981 .cmb2-id--candidate-job-title {
+	width:100%;
+}
+
+/* Register employer page */
+.page-id-4754 .button-primary {
+	margin-bottom:50px;
+}
+
+/* Employer pages */
+.find-me-location::before {
+	content: "\f3c5"!important;
+	color: #3167d1;
+	font-size: 33px;
+}
+.find-me-location::after {
+	content: "Find your location";
+    display: inline-block;
+    width: 141px;
+    position: absolute;
+    left: -137px;
+    top: 0;
+    color: #3f67d0;
+    text-decoration: underline;
+}
+
+.page-template-page-employers .filter-top-sidebar-wrapper .widget:last-child {
+	background: #edf3fa;
+}
+
+#_candidate_map_location-mapcyc8t-DewhG {
+  width: 100%!important;
+  height: 400px!important; /* Adjust as needed */
+}
+
+.ga-recaptcha {
+	margin-bottom:30px;
+}
+
+.page-id-26 .widget-title span{
+	letter-spacing: -0.02em;
+}
+.page-id-26 .des, .page-template-page-jobs .des, .page-template-page-candidates .des {
+	font-size:1.3em;
+}
+
+.btn-submit.btn.btn-theme.btn-inverse {
+	padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+}
+
+/* Half Job Detail - Template job search */
+.page-template-page-jobs .filter-listing-form.st-small-show .main-inner {
+	padding-top:20px!important;
+	padding-bottom:0!important;
+}
+
+.close-sidebar-btn span {
+	top: -1px;
+    position: relative;
+}
+
+.page-template-page-jobs .job-detail-wr .widget-title {
+	font-size:2.9em!important;
+	margin-bottom:10px!important;
+}
+
+/* Candidates Filter */
+.page-template-page-candidates .candidates-filter-1 .elementor-heading-title {
+	font-size:45px!important;
+}
+
+/* Candidates page  */ 
+.candidate-salary {
+	display:none!important;
+}
+.page-template-page-candidates .candidate-des, .archive .des {
+	display:none!important;
+}
+.is-featured .candidate-list.v3 {
+	border: 3px solid #c3e3ff;
+}
+.widget_candidate_alert_form_widget .widget-title {
+	color:#3167d1;
+	margin-bottom:10px!important;
+}
+.candidate-alert-subtitle {
+	color: #202124;
+}
+.page-template-page-jobs .urgent {
+	color: #202124!important;
+    background: rgb(218 70 65 / 46%);
+}
+.page-template-page-candidates .featured-text {
+    position: absolute;
+    right: -2px;
+    top: -2px;
+    background: #3167d1 !important;
+    color: #fff;
+    padding: 4px 12px !important;
+    border-radius: 0 14px 0 14px;
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.page-template-page-candidates .btn-add-candidate-shortlist {
+	top: 30px!important;
+    right: 7px!important;
+}
+.page-template-page-candidates .candidate-category {
+	display:none!important;
+}
+
+/* Apply - Prijavite se na posao */
+label[for="register-terms-and-conditions"] a {
+	color:#1967d2;
+	text-decoration:underline;
+}
+
+/* Job detail Page header image */
+.job-detail-header.v1 {
+	background-size:cover!important;
+	background-position: left!important;
+    padding: 100px 0!important;
+}
+
+/* Dahboard page */
+.text-info.btn-blue {
+	background: #1967d2;
+	color: #fff;
+    border-radius: 4px;
+    padding: 4px 8px;
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+/* Delete profile */
+ .widget-delete .undone-messages {
+    color: #e44343!important;
+    font-weight: bold;
+    text-decoration: underline;
+}
+.widget-delete .conf-deleted {
+    color: #202124;
+    font-weight: 500;
+}
+/*Styling job page*/
+.job-detail-header .employer-logo {
+	margin-right:15px;
+}
+.job-detail-header .employer-logo + .info-detail-job {
+	background-color: rgb(245 247 252 / 86%);
+    border-radius: 8px;
+    padding: 20px;
+}
+.job_listing-template-default .job-metas-detail a {
+	color:#1967d2!important;
+}
+.job_listing-template-default .with-icon, .job-location i  {
+	color:#202124!important;
+}
+.job_listing-template-default .urgent {
+	color: #202124!important;
+    background: rgb(218 70 65 / 46%);
+}
+span.featured {
+	background-color: #e44343!important;
+}
+.widget_job_alert_form_widget .widget-title {
+	color:#3167d1;
+	margin-bottom:10px!important;
+}
+.job-alert-subtitle {
+	color: #202124;
+}
+.page-template-page-jobs .is-featured {
+	border: 3px solid #c3e3ff;
+}
+.page-template-page-jobs .featured-text {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    background: #3167d1 !important;
+    color: #fff;
+    padding: 4px 12px !important;
+    border-radius: 8px 0 8px 0;
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Register page */
+.banner-register-page {
+	padding-top:50px!important;
+}
+.register-fields-wr .elementor-container.elementor-column-gap-default {
+	justify-content:center;
+}
+
+.register-fields-wr .napravite-h { 
+	margin-bottom:10px!important;
+}
+.register-fields-wr .zapocnite-h {
+	margin-bottom:30px!important;
+}
+.register-fields-wr .napravite-column {
+	width:52%!important;
+}
+
+/*=============================*/
+/*===    Tablet ready      ===*/
+/*===========================*/
+@media only screen
+and (min-width : 768px)
+and (max-width : 992px) {
+	
+}
+
+/*=============================*/
+/*===     Mobile ready     ===*/
+/*===========================*/
+
+
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+
+/* Small devices (tablets, 768px sett and up) */
+@media only screen
+and (min-width : 0px)
+and (max-width : 767px) {
+	/* Home page */
+	.home .candidate-grid .candidate-logo {
+		margin-top:20px;
+	}
+	.home .widget-job-search-form h2 {
+		padding-top:0!important;
+	}
+	.home .elementor-26 .elementor-element.elementor-element-9902db3 {
+		margin-top:50px!important;
+	}
+	/* Fix width candidate Job Title input*/
+	.cmb2-id--candidate-job-title {
+		max-width:100%;
+	}
+	/* Half Job Detail - Template job search */
+	.page-template-page-jobs .filter-listing-form.st-small-show .main-inner {
+		padding-bottom:20px!important;
+	}
+	.page-template-page-jobs .top-icon-wr {
+		padding:0 0 15px 0!important;
+	}
+	.page-template-page-jobs .filter-top-sidebar-wrapper {
+		margin-bottom:20px!important;
+	}
+	.page-template-page-jobs .search-jobs-link {
+		display:none;
+	}
+	.page-template-page-jobs .des span { 
+		display:block;
+	}
+	/* Candidates Page */
+	.candidate-list.v3 .btn {
+		width:100%;
+	}
+	.page-template-page-candidates .featured-text {
+		border-radius: 0 8px 0 6px;
+	}
+	/* Jobs ordering filter on candidate and jobs page */
+	.jobs-ordering-wrapper .select2 {
+		width:100%!important;
+	}
+	/* Otvori meni wrapper */
+	.top-icon-wr {
+		padding: 15px 15px 0 15px!important;
+	}	
+	/* Zatvori Buttton meni top  */
+	.close-sidebar-btn.txt-a-left {
+		text-align: left;
+		background: #ebf0fa;
+		border-radius: 8px;
+		margin: 10px 0 10px 0!important;
+		padding: 7px 15px!important;
+		color: #1967D2;
+	}
+	
+	/* Job detail Page header image */
+	.job-detail-header.v1 {
+		padding: 25px 0!important;
+	}
+	.login-header-1 {
+		margin-bottom:0!important;
+	}
+	.elementor-element-06d2923 {
+		margin-bottom:0!important;
+	}
+	.elementor-element-06d2923 .elementor-widget-container p {
+		margin-bottom:10px!important;
+	}
+	.label-ostavi {
+		top: -2px;
+    	position: relative;
+	}
+	.ostavi-me {
+		position:relative;
+		top:2px;
+	}
+	/*Styling job page*/
+	.job-detail-header .employer-logo {
+		margin-bottom:10px!important;
+	}
+	.job-detail-header .employer-logo + .info-detail-job {
+		padding: 20px!important;
+	}
+	.job-metas-detail a {
+		color:#202124;
+	}
+	.page-template-page-jobs .urgent { 
+		margin-top:10px;
+	}
+}
