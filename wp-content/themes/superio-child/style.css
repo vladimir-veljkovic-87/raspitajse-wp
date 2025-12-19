@@ -145,11 +145,11 @@ html:has(> body.home) {
 .home .elementor-26 .elementor-element.elementor-element-a4ee68d > .elementor-container > .elementor-column > .elementor-widget-wrap {
 	align-content: start!important;
 }
-/* DEPLOY TEST – VERSION 1 */
+/* Test posle izmena deploy.sh */
 .home .urgent {
 	color: #202124!important;
     background: rgb(218 70 65 / 46%);
-	border: 4px solid red!important;
+	border: 11px solid #09ff00!important;
 }
 
 
