@@ -1,0 +1,142 @@
+.wp-job-board-pro-filter-fields li {
+	background: #fafafa;
+	border: 1px solid #dfdfdf;
+	cursor: move;
+}
+
+.wp-job-board-pro-filter-fields li.invisible {
+	opacity: .4;
+}
+
+.wp-job-board-pro-filter-fields li p {
+	font-size: 12px;
+	margin: 7px 15px;
+}
+
+.wp-job-board-pro-filter-fields li i {
+	font-size: 10px;
+	margin: 0 5px 0 0;
+}
+
+.wp-job-board-pro-filter-fields li .visibility {
+	cursor: pointer;
+	float: right;
+	position: relative;
+	color: #0085ba;
+}
+
+.wp-job-board-pro-filter-fields li.invisible .visibility {
+	color: #000;
+}
+
+.wp-job-board-pro-filter-fields li .visibility i {
+	cursor: pointer;
+	font-size: 15px;
+	left: 0;
+	position: absolute;
+	pointer-events: none;
+	top: 2px;
+}
+
+.wp-job-board-pro-filter-fields li .visibility .field-visibility {
+	background-color: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
+
+.wp-job-board-pro-filter-fields li .visibility .field-visibility:before {
+	display: none;
+}
+
+.post-type-job_listing .widefat th.column-title {
+	width: 20%;
+}
+.widefat th.column-employer-logo {
+	width: 50px;
+}
+.widefat td.column-employer-logo img, .widefat td.thumbnail img.logo-thumnail {
+    width: 32px;
+    height: 32px;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    box-shadow: 0 1px 0 1px rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 1px 0 1px rgba(0,0,0,.1);
+    -moz-box-shadow: 0 1px 0 1px rgba(0,0,0,.1);
+    border: 1px solid #fff;
+}
+.widefat td.thumbnail img.logo-thumnail {
+    width: 52px;
+    height: 52px;
+}
+.status-active {
+	color: #0073aa;
+}
+.status-expired {
+	color: #a00;
+}
+.status-pending {
+	color: #ffba00;
+}
+.status-draft {
+	color: #999;
+}
+.job-type-bg {
+	border-radius: 3px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 13px;
+    height: 28px;
+    line-height: 26px;
+    margin: 0;
+    padding: 0 10px 1px;
+}
+form.cmb-form {
+	position: relative;
+}
+form.cmb-form::before {
+    background: rgba(255,255,255,0.8) url("../images/loading.gif") no-repeat center center/18px auto;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    visibility: hidden;
+    -webkit-transition: all .3s ease-in-out 0s;
+    -o-transition: all .3s ease-in-out 0s;
+    transition: all .3s ease-in-out 0s;
+}
+form.cmb-form.loading::before {
+    opacity: 1;
+    filter: alpha(opacity=100);
+    visibility: visible;
+}
+
+form.cmb-form .alert {
+    padding: 15px;
+    margin-bottom: 28px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+form.cmb-form .alert {
+    padding: 15px;
+    margin-bottom: 28px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+form.cmb-form .alert-warning {
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+}
+
+ul#_job_posted_by_results::after {
+    content: "";
+    clear: both;
+    display: block;
+}

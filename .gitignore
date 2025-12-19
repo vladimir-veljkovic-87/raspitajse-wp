@@ -6,17 +6,30 @@
 !.gitignore
 
 ##################################
-# Allow ONLY child theme
+# Allow wp-content structure
 ##################################
 !wp-content/
 !wp-content/themes/
+!wp-content/plugins/
+
+##################################
+# Allow ONLY child theme
+##################################
 !wp-content/themes/superio-child/
 !wp-content/themes/superio-child/**
 
 ##################################
 # Ignore ALL plugins by default
 ##################################
-wp-content/plugins/
+wp-content/plugins/*
+
+##################################
+# Allow ONLY these plugins
+##################################
+!wp-content/plugins/wp-job-board-pro/
+!wp-content/plugins/wp-job-board-pro/**
+!wp-content/plugins/wp-job-board-pro-wc-paid-listings/
+!wp-content/plugins/wp-job-board-pro-wc-paid-listings/**
 
 ##################################
 # Ignore runtime
@@ -26,6 +39,9 @@ wp-content/cache/
 wp-content/upgrade/
 wp-content/ai1wm-backups/
 wp-content/wflogs/
+wp-content/debug.log
+wp-content/object-cache.php
+wp-content/ses-smtp.log
 
 ##################################
 # Ignore WordPress core
@@ -39,6 +55,17 @@ license.txt
 readme.html
 
 ##################################
+# Ignore system / local
+##################################
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+node_modules/
+vendor/
+
+##################################
 # Ignore staging
 ##################################
 public_html_stage/
+stage/

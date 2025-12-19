@@ -1,0 +1,7010 @@
+# Copyright (C) 2023 Habq
+# This file is distributed under the same license as the WP Job Board Pro plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Job Board Pro 1.2.61\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-job-board-pro\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-10-10T02:08:13+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0\n"
+"X-Domain: wp-job-board-pro\n"
+
+#. Plugin Name of the plugin
+msgid "WP Job Board Pro"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "http://apusthemes.com/wp-job-board-pro/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Powerful plugin to create a Job Board on your website."
+msgstr ""
+
+#. Author of the plugin
+msgid "Habq"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://apusthemes.com/"
+msgstr ""
+
+#: includes/3rd-party/class-polylang.php:111
+#: includes/3rd-party/class-wpml.php:111
+msgid "Page Not Set"
+msgstr ""
+
+#. translators: Placeholder (%s) is the URL to edit the primary language in WPML.
+#: includes/3rd-party/class-polylang.php:123
+#: includes/3rd-party/class-wpml.php:123
+msgid "<a href=\"%s\">Switch to primary language</a> to edit this setting."
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:24
+msgid "Job base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:31
+msgid "Job category base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:38
+msgid "Job type base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:45
+msgid "Job location base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:52
+msgid "Job tag base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:59
+msgid "Job archive base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:68
+msgid "Employer base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:75
+msgid "Employer category base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:82
+msgid "Employer location base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:89
+msgid "Employer archive base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:98
+msgid "Candidate base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:105
+msgid "Candidate category base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:112
+msgid "Candidate location base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:119
+msgid "Candidate tag base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:126
+msgid "Candidate archive base"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:136
+msgid "job"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:143
+msgid "job-category"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:150
+msgid "job-type"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:157
+msgid "job-location"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:164
+msgid "job-tag"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:171
+msgid "jobs"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:179
+#: templates/misc/not-allowed.php:14
+msgid "employer"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:186
+msgid "employer-category"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:193
+msgid "employer-location"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:200
+msgid "employers"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:208
+#: templates/misc/not-allowed.php:17
+msgid "candidate"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:215
+msgid "candidate-category"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:222
+msgid "candidate-location"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:229
+msgid "candidate-tag"
+msgstr ""
+
+#: includes/admin/class-permalink-settings.php:236
+msgid "candidates"
+msgstr ""
+
+#: includes/admin/class-settings.php:65
+#: includes/admin/class-settings.php:112
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:85
+#: includes/class-abstract-form.php:122
+#: includes/custom-fields/class-custom-fields.php:58
+#: includes/custom-fields/class-custom-fields.php:187
+#: includes/custom-fields/class-custom-fields.php:266
+#: includes/post-types/class-post-type-candidate.php:304
+#: includes/post-types/class-post-type-candidate.php:403
+#: includes/post-types/class-post-type-employer.php:183
+msgid "General"
+msgstr ""
+
+#: includes/admin/class-settings.php:86
+#: includes/admin/class-settings.php:593
+#: includes/admin/class-settings.php:597
+msgid "Job Submission"
+msgstr ""
+
+#: includes/admin/class-settings.php:87
+#: includes/admin/class-settings.php:688
+msgid "Pages"
+msgstr ""
+
+#: includes/admin/class-settings.php:88
+#: includes/admin/class-settings.php:804
+msgid "Jobs Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:89
+#: includes/admin/class-settings.php:874
+msgid "Employer Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:90
+#: includes/admin/class-settings.php:1063
+msgid "Employee Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:91
+#: includes/admin/class-settings.php:1152
+msgid "Candidate Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:92
+msgid "Socials API"
+msgstr ""
+
+#: includes/admin/class-settings.php:93
+msgid "ReCaptcha API"
+msgstr ""
+
+#: includes/admin/class-settings.php:94
+#: includes/admin/class-settings.php:1606
+msgid "Email Notification"
+msgstr ""
+
+#: includes/admin/class-settings.php:95
+#: includes/admin/class-settings.php:2145
+msgid "Import Job Integrations"
+msgstr ""
+
+#: includes/admin/class-settings.php:169
+msgid "All Countries"
+msgstr ""
+
+#: includes/admin/class-settings.php:182
+#: includes/admin/class-settings.php:809
+msgid "General Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:188
+msgid "Currency Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:198
+msgid "Enable Multiple Currencies"
+msgstr ""
+
+#: includes/admin/class-settings.php:202
+#: includes/admin/class-settings.php:531
+#: includes/class-candidate-filter.php:613
+#: includes/class-candidate-filter.php:617
+#: includes/class-email.php:347
+#: includes/class-email.php:362
+#: includes/class-job-filter.php:711
+#: includes/class-job-filter.php:715
+#: includes/custom-fields/class-custom-fields-display.php:80
+#: includes/custom-fields/class-custom-fields-html.php:49
+msgid "Yes"
+msgstr ""
+
+#: includes/admin/class-settings.php:203
+#: includes/admin/class-settings.php:532
+#: includes/class-email.php:349
+#: includes/class-email.php:364
+#: includes/custom-fields/class-custom-fields-display.php:80
+#: includes/custom-fields/class-custom-fields-html.php:48
+msgid "No"
+msgstr ""
+
+#: includes/admin/class-settings.php:208
+msgid "Exchangerate API Key"
+msgstr ""
+
+#: includes/admin/class-settings.php:211
+msgid "Acquire an API key from the <a href=\"%s\" target=\"_blank\">Exchange Rate API</a>"
+msgstr ""
+
+#: includes/admin/class-settings.php:214
+#: includes/admin/class-settings.php:280
+#: includes/admin/class-settings.php:289
+msgid "Currency"
+msgstr ""
+
+#: includes/admin/class-settings.php:215
+#: includes/admin/class-settings.php:290
+msgid "Choose a currency."
+msgstr ""
+
+#: includes/admin/class-settings.php:226
+#: includes/admin/class-settings.php:335
+msgid "Custom symbol"
+msgstr ""
+
+#: includes/admin/class-settings.php:230
+#: includes/admin/class-settings.php:339
+msgid "eg: CAD $"
+msgstr ""
+
+#: includes/admin/class-settings.php:234
+#: includes/admin/class-settings.php:301
+msgid "Currency Position"
+msgstr ""
+
+#: includes/admin/class-settings.php:239
+#: includes/admin/class-settings.php:306
+msgid "Before - $10"
+msgstr ""
+
+#: includes/admin/class-settings.php:240
+#: includes/admin/class-settings.php:307
+msgid "After - 10$"
+msgstr ""
+
+#: includes/admin/class-settings.php:241
+#: includes/admin/class-settings.php:308
+msgid "Before with space - $ 10"
+msgstr ""
+
+#: includes/admin/class-settings.php:242
+#: includes/admin/class-settings.php:309
+msgid "After with space - 10 $"
+msgstr ""
+
+#: includes/admin/class-settings.php:251
+#: includes/admin/class-settings.php:318
+msgid "Number of decimals"
+msgstr ""
+
+#: includes/admin/class-settings.php:252
+#: includes/admin/class-settings.php:319
+msgid "This sets the number of decimal points shown in displayed prices."
+msgstr ""
+
+#: includes/admin/class-settings.php:262
+msgid "Decimal Separator"
+msgstr ""
+
+#: includes/admin/class-settings.php:263
+msgid "The symbol (usually , or .) to separate decimal points"
+msgstr ""
+
+#: includes/admin/class-settings.php:269
+msgid "Thousands Separator"
+msgstr ""
+
+#: includes/admin/class-settings.php:270
+msgid "If you need space, enter &nbsp;"
+msgstr ""
+
+#: includes/admin/class-settings.php:276
+msgid "More Currencies"
+msgstr ""
+
+#: includes/admin/class-settings.php:281
+msgid "Add Another Currency"
+msgstr ""
+
+#: includes/admin/class-settings.php:282
+msgid "Remove Currency"
+msgstr ""
+
+#: includes/admin/class-settings.php:285
+msgid "Do you want to remove this currency"
+msgstr ""
+
+#: includes/admin/class-settings.php:329
+msgid "Rate + Exchange Fee"
+msgstr ""
+
+#: includes/admin/class-settings.php:347
+msgid "File Types"
+msgstr ""
+
+#: includes/admin/class-settings.php:355
+msgid "Images File Types"
+msgstr ""
+
+#: includes/admin/class-settings.php:362
+msgid "CV File Types"
+msgstr ""
+
+#: includes/admin/class-settings.php:369
+msgid "Map API Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:377
+msgid "Map Service"
+msgstr ""
+
+#: includes/admin/class-settings.php:381
+msgid "Mapbox"
+msgstr ""
+
+#: includes/admin/class-settings.php:382
+msgid "Google Maps"
+msgstr ""
+
+#: includes/admin/class-settings.php:383
+msgid "Here Maps"
+msgstr ""
+
+#: includes/admin/class-settings.php:387
+msgid "Google Map API"
+msgstr ""
+
+#: includes/admin/class-settings.php:388
+msgid "Google requires an API key to retrieve location information for job listings. Acquire an API key from the <a href=\"https://developers.google.com/maps/documentation/geocoding/get-api-key\">Google Maps API developer site.</a>"
+msgstr ""
+
+#: includes/admin/class-settings.php:394
+msgid "Google Maps Style"
+msgstr ""
+
+#: includes/admin/class-settings.php:395
+msgid "<a href=\"//snazzymaps.com/\">Get custom style</a> and paste it below. If there is nothing added, we will fallback to the Google Maps service."
+msgstr ""
+
+#: includes/admin/class-settings.php:401
+msgid "Mapbox Token"
+msgstr ""
+
+#: includes/admin/class-settings.php:402
+msgid "<a href=\"//www.mapbox.com/help/create-api-access-token/\">Get a FREE token</a> and paste it below. If there is nothing added, we will fallback to the Google Maps service."
+msgstr ""
+
+#: includes/admin/class-settings.php:408
+msgid "Mapbox Style"
+msgstr ""
+
+#: includes/admin/class-settings.php:413
+msgid "streets"
+msgstr ""
+
+#: includes/admin/class-settings.php:417
+msgid "light"
+msgstr ""
+
+#: includes/admin/class-settings.php:421
+msgid "dark"
+msgstr ""
+
+#: includes/admin/class-settings.php:425
+msgid "outdoors"
+msgstr ""
+
+#: includes/admin/class-settings.php:429
+msgid "satellite"
+msgstr ""
+
+#: includes/admin/class-settings.php:436
+msgid "Here Maps API Key"
+msgstr ""
+
+#: includes/admin/class-settings.php:437
+msgid "<a href=\"https://developer.here.com/tutorials/getting-here-credentials/\">Get a API key</a> and paste it below. If there is nothing added, we will fallback to the Google Maps service."
+msgstr ""
+
+#: includes/admin/class-settings.php:443
+msgid "Here Maps Style"
+msgstr ""
+
+#: includes/admin/class-settings.php:447
+msgid "Normal Day"
+msgstr ""
+
+#: includes/admin/class-settings.php:448
+msgid "Normal Day Grey"
+msgstr ""
+
+#: includes/admin/class-settings.php:449
+msgid "Normal Day Transit"
+msgstr ""
+
+#: includes/admin/class-settings.php:450
+msgid "Normal Night"
+msgstr ""
+
+#: includes/admin/class-settings.php:451
+msgid "Reduced Day"
+msgstr ""
+
+#: includes/admin/class-settings.php:452
+msgid "Reduced Night"
+msgstr ""
+
+#: includes/admin/class-settings.php:453
+msgid "Pedestrian Day"
+msgstr ""
+
+#: includes/admin/class-settings.php:457
+msgid "Geocoder Country"
+msgstr ""
+
+#: includes/admin/class-settings.php:463
+msgid "Default maps location"
+msgstr ""
+
+#: includes/admin/class-settings.php:471
+#: libraries/cmb2/cmb2_field_map/cmb-field-map.php:50
+msgid "Latitude"
+msgstr ""
+
+#: includes/admin/class-settings.php:472
+msgid "Enter your latitude"
+msgstr ""
+
+#: includes/admin/class-settings.php:478
+#: libraries/cmb2/cmb2_field_map/cmb-field-map.php:60
+msgid "Longitude"
+msgstr ""
+
+#: includes/admin/class-settings.php:479
+msgid "Enter your longitude"
+msgstr ""
+
+#: includes/admin/class-settings.php:485
+msgid "Map Pin"
+msgstr ""
+
+#: includes/admin/class-settings.php:486
+msgid "Enter your map pin"
+msgstr ""
+
+#: includes/admin/class-settings.php:501
+msgid "Distance Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:509
+msgid "Distance unit"
+msgstr ""
+
+#: includes/admin/class-settings.php:513
+msgid "Kilometers"
+msgstr ""
+
+#: includes/admin/class-settings.php:514
+msgid "Miles"
+msgstr ""
+
+#: includes/admin/class-settings.php:519
+msgid "Location Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:527
+msgid "Location Multiple Fields"
+msgstr ""
+
+#: includes/admin/class-settings.php:535
+#: includes/admin/class-settings.php:548
+msgid "You can set 4 fields for regions like: Country, State, City, District"
+msgstr ""
+
+#: includes/admin/class-settings.php:538
+msgid "Number Fields"
+msgstr ""
+
+#: includes/admin/class-settings.php:542
+msgid "1 Field"
+msgstr ""
+
+#: includes/admin/class-settings.php:543
+msgid "2 Fields"
+msgstr ""
+
+#: includes/admin/class-settings.php:544
+msgid "3 Fields"
+msgstr ""
+
+#: includes/admin/class-settings.php:545
+msgid "4 Fields"
+msgstr ""
+
+#: includes/admin/class-settings.php:551
+msgid "First Field Label"
+msgstr ""
+
+#: includes/admin/class-settings.php:552
+#: includes/admin/class-settings.php:561
+#: includes/admin/class-settings.php:570
+#: includes/admin/class-settings.php:579
+msgid "Empty for translate multiple languages"
+msgstr ""
+
+#: includes/admin/class-settings.php:560
+msgid "Second Field Label"
+msgstr ""
+
+#: includes/admin/class-settings.php:569
+msgid "Third Field Label"
+msgstr ""
+
+#: includes/admin/class-settings.php:578
+msgid "Fourth Field Label"
+msgstr ""
+
+#: includes/admin/class-settings.php:604
+msgid "Submit Job Form Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:605
+msgid "This is page to display form for submit job. The <code>[wp_job_board_pro_submission]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:612
+msgid "Moderate New Listings"
+msgstr ""
+
+#: includes/admin/class-settings.php:613
+msgid "Require admin approval of all new listing submissions"
+msgstr ""
+
+#: includes/admin/class-settings.php:617
+#: includes/admin/class-settings.php:654
+#: includes/admin/class-settings.php:665
+#: includes/admin/class-settings.php:676
+#: includes/admin/class-settings.php:992
+#: includes/admin/class-settings.php:1002
+#: includes/admin/class-settings.php:1012
+#: includes/admin/class-settings.php:1022
+#: includes/admin/class-settings.php:1032
+#: includes/admin/class-settings.php:1072
+#: includes/admin/class-settings.php:1082
+#: includes/admin/class-settings.php:1092
+#: includes/admin/class-settings.php:1102
+#: includes/admin/class-settings.php:1112
+#: includes/admin/class-settings.php:1122
+#: includes/admin/class-settings.php:1132
+#: includes/admin/class-settings.php:1142
+#: includes/admin/class-settings.php:1237
+#: includes/admin/class-settings.php:1268
+#: includes/admin/class-settings.php:1279
+#: includes/admin/class-settings.php:1351
+#: includes/admin/class-settings.php:1361
+#: includes/admin/class-settings.php:1371
+#: includes/admin/class-settings.php:1381
+#: includes/admin/class-settings.php:1392
+msgid "Enable"
+msgstr ""
+
+#: includes/admin/class-settings.php:618
+#: includes/admin/class-settings.php:655
+#: includes/admin/class-settings.php:666
+#: includes/admin/class-settings.php:677
+#: includes/admin/class-settings.php:993
+#: includes/admin/class-settings.php:1003
+#: includes/admin/class-settings.php:1013
+#: includes/admin/class-settings.php:1023
+#: includes/admin/class-settings.php:1033
+#: includes/admin/class-settings.php:1073
+#: includes/admin/class-settings.php:1083
+#: includes/admin/class-settings.php:1093
+#: includes/admin/class-settings.php:1103
+#: includes/admin/class-settings.php:1113
+#: includes/admin/class-settings.php:1123
+#: includes/admin/class-settings.php:1133
+#: includes/admin/class-settings.php:1143
+#: includes/admin/class-settings.php:1238
+#: includes/admin/class-settings.php:1269
+#: includes/admin/class-settings.php:1280
+#: includes/admin/class-settings.php:1352
+#: includes/admin/class-settings.php:1362
+#: includes/admin/class-settings.php:1372
+#: includes/admin/class-settings.php:1382
+#: includes/admin/class-settings.php:1393
+msgid "Disable"
+msgstr ""
+
+#: includes/admin/class-settings.php:623
+msgid "Allow Published Edits"
+msgstr ""
+
+#: includes/admin/class-settings.php:624
+msgid "Choose whether published job listings can be edited and if edits require admin approval. When moderation is required, the original job listings will be unpublished while edits await admin approval."
+msgstr ""
+
+#: includes/admin/class-settings.php:628
+msgid "Users cannot edit"
+msgstr ""
+
+#: includes/admin/class-settings.php:629
+msgid "Users can edit without admin approval"
+msgstr ""
+
+#: includes/admin/class-settings.php:630
+msgid "Users can edit, but edits require admin approval"
+msgstr ""
+
+#: includes/admin/class-settings.php:635
+msgid "Listing Duration"
+msgstr ""
+
+#: includes/admin/class-settings.php:636
+msgid "Listings will display for the set number of days, then expire. Enter this field \"0\" if you don't want listings to have an expiration date."
+msgstr ""
+
+#: includes/admin/class-settings.php:642
+msgid "Job Slug"
+msgstr ""
+
+#: includes/admin/class-settings.php:649
+msgid "Employer Name"
+msgstr ""
+
+#: includes/admin/class-settings.php:650
+msgid "Use employer name in job slug"
+msgstr ""
+
+#: includes/admin/class-settings.php:660
+#: includes/class-candidate-filter.php:39
+#: includes/class-candidate-filter.php:551
+#: includes/class-candidate-filter.php:589
+#: includes/class-job-filter.php:37
+#: includes/class-job-filter.php:653
+#: includes/class-job-filter.php:700
+#: includes/custom-fields/class-fields-manager.php:541
+#: includes/custom-fields/class-fields-manager.php:955
+#: includes/custom-fields/class-fields-manager.php:1373
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:64
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:64
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:71
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:64
+#: includes/post-types/class-post-type-candidate.php:494
+#: includes/post-types/class-post-type-employer.php:272
+#: includes/post-types/class-post-type-job_listing.php:424
+#: includes/taxonomies/class-taxonomy-candidate-location.php:26
+#: includes/taxonomies/class-taxonomy-employer-location.php:26
+#: includes/taxonomies/class-taxonomy-job-location.php:26
+#: templates/candidates-styles/inner-grid.php:36
+#: templates/misc/candidates-shortlist.php:122
+#: templates/single-candidate/map-location.php:10
+#: templates/single-employer/detail.php:57
+msgid "Location"
+msgstr ""
+
+#: includes/admin/class-settings.php:661
+msgid "Use location in job slug"
+msgstr ""
+
+#: includes/admin/class-settings.php:671
+#: includes/class-job-filter.php:53
+msgid "Job Type"
+msgstr ""
+
+#: includes/admin/class-settings.php:672
+msgid "Use job type in job slug"
+msgstr ""
+
+#: includes/admin/class-settings.php:692
+msgid "Jobs Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:693
+msgid "This lets the plugin know the location of the jobs listing page. The <code>[wp_job_board_pro_jobs]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:702
+msgid "Login/Register Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:703
+msgid "This lets the plugin know the location of the job listings page. The <code>[wp_job_board_pro_login]</code> <code>[wp_job_board_pro_register]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:710
+msgid "After Login Page (Employer)"
+msgstr ""
+
+#: includes/admin/class-settings.php:711
+msgid "This lets the plugin know the page after employer login."
+msgstr ""
+
+#: includes/admin/class-settings.php:718
+msgid "After Login Page (Candidate)"
+msgstr ""
+
+#: includes/admin/class-settings.php:719
+msgid "This lets the plugin know the page after candidate login."
+msgstr ""
+
+#: includes/admin/class-settings.php:726
+msgid "After Register Page (Employer)"
+msgstr ""
+
+#: includes/admin/class-settings.php:727
+msgid "This lets the plugin know the page after employer register."
+msgstr ""
+
+#: includes/admin/class-settings.php:734
+msgid "After Register Page (Candidate)"
+msgstr ""
+
+#: includes/admin/class-settings.php:735
+msgid "This lets the plugin know the page after candidate register."
+msgstr ""
+
+#: includes/admin/class-settings.php:742
+msgid "Approve User Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:743
+msgid "This lets the plugin know the location of the job listings page. The <code>[wp_job_board_pro_approve_user]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:750
+msgid "User Dashboard Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:751
+msgid "This lets the plugin know the location of the user dashboard. The <code>[wp_job_board_pro_user_dashboard]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:758
+msgid "Edit Profile Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:759
+msgid "This lets the plugin know the location of the user edit profile. The <code>[wp_job_board_pro_change_profile]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:766
+msgid "Change Password Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:767
+msgid "This lets the plugin know the location of the user edit profile. The <code>[wp_job_board_pro_change_password]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:774
+msgid "My Jobs Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:775
+msgid "This lets the plugin know the location of the job listings page. The <code>[wp_job_board_pro_my_jobs]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:782
+msgid "My Resume"
+msgstr ""
+
+#: includes/admin/class-settings.php:783
+msgid "This lets the plugin know the location of the candidate resume page. The <code>[wp_job_board_pro_change_resume]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:790
+msgid "Terms and Conditions Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:791
+msgid "This lets the plugin know the Terms and Conditions page."
+msgstr ""
+
+#: includes/admin/class-settings.php:816
+msgid "Number jobs per page"
+msgstr ""
+
+#: includes/admin/class-settings.php:817
+msgid "Number of jobs to display per page."
+msgstr ""
+
+#: includes/admin/class-settings.php:825
+msgid "Restrict Job settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:832
+msgid "Restrict Job Type"
+msgstr ""
+
+#: includes/admin/class-settings.php:833
+msgid "Select a restrict type for restrict job"
+msgstr ""
+
+#: includes/admin/class-settings.php:837
+#: includes/admin/class-settings.php:936
+#: includes/admin/class-settings.php:1298
+msgid "None"
+msgstr ""
+
+#: includes/admin/class-settings.php:838
+msgid "View Job"
+msgstr ""
+
+#: includes/admin/class-settings.php:843
+msgid "Restrict Job Detail"
+msgstr ""
+
+#: includes/admin/class-settings.php:844
+msgid "Restrict Jobs detail page for all users except jobs."
+msgstr ""
+
+#: includes/admin/class-settings.php:848
+#: includes/admin/class-settings.php:948
+#: includes/admin/class-settings.php:978
+#: includes/admin/class-settings.php:1050
+#: includes/admin/class-settings.php:1310
+#: includes/admin/class-settings.php:1338
+#: includes/admin/class-settings.php:1410
+msgid "All (Users, Guests)"
+msgstr ""
+
+#: includes/admin/class-settings.php:849
+#: includes/admin/class-settings.php:862
+#: includes/admin/class-settings.php:949
+#: includes/admin/class-settings.php:963
+#: includes/admin/class-settings.php:979
+#: includes/admin/class-settings.php:1051
+#: includes/admin/class-settings.php:1311
+#: includes/admin/class-settings.php:1324
+#: includes/admin/class-settings.php:1339
+#: includes/admin/class-settings.php:1411
+msgid "All Register Users"
+msgstr ""
+
+#: includes/admin/class-settings.php:850
+#: includes/admin/class-settings.php:863
+msgid "Register Candidates (All registered candidates can view jobs.)"
+msgstr ""
+
+#: includes/admin/class-settings.php:851
+#: includes/admin/class-settings.php:864
+#: includes/admin/class-settings.php:952
+#: includes/admin/class-settings.php:966
+#: includes/admin/class-settings.php:982
+#: includes/admin/class-settings.php:1054
+#: includes/admin/class-settings.php:1414
+msgid "Always Hidden"
+msgstr ""
+
+#: includes/admin/class-settings.php:856
+msgid "Restrict Job Listing"
+msgstr ""
+
+#: includes/admin/class-settings.php:857
+msgid "Restrict Jobs Listing page for all users except jobs."
+msgstr ""
+
+#: includes/admin/class-settings.php:861
+#: includes/admin/class-settings.php:962
+#: includes/admin/class-settings.php:1323
+msgid "All Users (Users, Guests)"
+msgstr ""
+
+#: includes/admin/class-settings.php:878
+msgid "Moderate New Employer"
+msgstr ""
+
+#: includes/admin/class-settings.php:879
+msgid "Require admin approval of all new employers"
+msgstr ""
+
+#: includes/admin/class-settings.php:883
+#: includes/admin/class-settings.php:1183
+#: includes/admin/class-settings.php:1195
+msgid "Auto Approve"
+msgstr ""
+
+#: includes/admin/class-settings.php:884
+#: includes/admin/class-settings.php:1184
+msgid "Email Approve"
+msgstr ""
+
+#: includes/admin/class-settings.php:885
+#: includes/admin/class-settings.php:1185
+#: includes/admin/class-settings.php:1196
+msgid "Administrator Approve"
+msgstr ""
+
+#: includes/admin/class-settings.php:890
+msgid "Employers Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:891
+msgid "This lets the plugin know the location of the employers listing page. The <code>[wp_job_board_pro_employers]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:898
+msgid "Number employers per page"
+msgstr ""
+
+#: includes/admin/class-settings.php:899
+msgid "Number of employers to display per page."
+msgstr ""
+
+#: includes/admin/class-settings.php:906
+#: includes/admin/class-settings.php:913
+msgid "Employer Slug"
+msgstr ""
+
+#: includes/admin/class-settings.php:917
+msgid "Default (Employer name)"
+msgstr ""
+
+#: includes/admin/class-settings.php:918
+#: includes/admin/class-settings.php:1220
+msgid "Random Number"
+msgstr ""
+
+#: includes/admin/class-settings.php:924
+msgid "Restrict Employer settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:931
+#: includes/admin/class-settings.php:1293
+msgid "Restrict Type"
+msgstr ""
+
+#: includes/admin/class-settings.php:932
+msgid "Select a restrict type for restrict employer"
+msgstr ""
+
+#: includes/admin/class-settings.php:937
+msgid "View Employer"
+msgstr ""
+
+#: includes/admin/class-settings.php:938
+msgid "View Employer Contact Info"
+msgstr ""
+
+#: includes/admin/class-settings.php:943
+msgid "Restrict Employer Detail"
+msgstr ""
+
+#: includes/admin/class-settings.php:944
+msgid "Restrict Employers detail page for all users except employers."
+msgstr ""
+
+#: includes/admin/class-settings.php:950
+#: includes/admin/class-settings.php:964
+msgid "Only Applicants (Candidate can view only their own applicants employers.)"
+msgstr ""
+
+#: includes/admin/class-settings.php:951
+#: includes/admin/class-settings.php:965
+msgid "Register Candidates (All registered candidates can view employers.)"
+msgstr ""
+
+#: includes/admin/class-settings.php:957
+msgid "Restrict Employer Listing"
+msgstr ""
+
+#: includes/admin/class-settings.php:958
+msgid "Restrict Employers Listing page for all users except employers."
+msgstr ""
+
+#: includes/admin/class-settings.php:973
+msgid "Restrict View Contact Employer"
+msgstr ""
+
+#: includes/admin/class-settings.php:974
+msgid "Restrict View Contact Employers detail page for all users except employers."
+msgstr ""
+
+#: includes/admin/class-settings.php:980
+#: includes/admin/class-settings.php:1052
+msgid "Only Applicants (Candidate can see contact info only their own applicants employers.)"
+msgstr ""
+
+#: includes/admin/class-settings.php:981
+#: includes/admin/class-settings.php:1053
+msgid "Register Candidates (All registered employers can see contact info employers.)"
+msgstr ""
+
+#: includes/admin/class-settings.php:988
+msgid "Hide Employer Name"
+msgstr ""
+
+#: includes/admin/class-settings.php:998
+msgid "Hide Employer Email"
+msgstr ""
+
+#: includes/admin/class-settings.php:1008
+msgid "Hide Employer Phone"
+msgstr ""
+
+#: includes/admin/class-settings.php:1018
+msgid "Hide Employer Website"
+msgstr ""
+
+#: includes/admin/class-settings.php:1028
+msgid "Hide Employer Socials Media"
+msgstr ""
+
+#: includes/admin/class-settings.php:1039
+msgid "Employer Review settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1046
+#: includes/admin/class-settings.php:1406
+msgid "Restrict Review"
+msgstr ""
+
+#: includes/admin/class-settings.php:1068
+msgid "Employee View Dashboard"
+msgstr ""
+
+#: includes/admin/class-settings.php:1078
+msgid "Employee Submit Job"
+msgstr ""
+
+#: includes/admin/class-settings.php:1088
+msgid "Employee Edit Job"
+msgstr ""
+
+#: includes/admin/class-settings.php:1098
+msgid "Employee Edit Employer Profile"
+msgstr ""
+
+#: includes/admin/class-settings.php:1108
+msgid "Employee View My Jobs"
+msgstr ""
+
+#: includes/admin/class-settings.php:1118
+msgid "Employee View Applications"
+msgstr ""
+
+#: includes/admin/class-settings.php:1128
+msgid "Employee View Shortlist Candidate"
+msgstr ""
+
+#: includes/admin/class-settings.php:1138
+msgid "Employee View Candidate Alerts"
+msgstr ""
+
+#: includes/admin/class-settings.php:1156
+msgid "Candidates Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:1157
+msgid "This lets the plugin know the location of the candidates listing page. The <code>[wp_job_board_pro_candidates]</code> shortcode should be on this page."
+msgstr ""
+
+#: includes/admin/class-settings.php:1164
+msgid "Number candidates per page"
+msgstr ""
+
+#: includes/admin/class-settings.php:1165
+msgid "Number of candidates to display per page."
+msgstr ""
+
+#: includes/admin/class-settings.php:1171
+msgid "Register Candidate settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1178
+msgid "Moderate New Candidate"
+msgstr ""
+
+#: includes/admin/class-settings.php:1179
+msgid "Require admin approval of all new candidates"
+msgstr ""
+
+#: includes/admin/class-settings.php:1190
+msgid "Moderate New Resume"
+msgstr ""
+
+#: includes/admin/class-settings.php:1191
+msgid "Require admin approval of all new resume"
+msgstr ""
+
+#: includes/admin/class-settings.php:1201
+msgid "Resume Duration"
+msgstr ""
+
+#: includes/admin/class-settings.php:1202
+msgid "Resumes will display for the set number of days, then expire. Enter this field \"0\" if you don't want resumes to have an expiration date."
+msgstr ""
+
+#: includes/admin/class-settings.php:1208
+#: includes/admin/class-settings.php:1215
+msgid "Candidate Slug"
+msgstr ""
+
+#: includes/admin/class-settings.php:1219
+msgid "Default (Candidate name)"
+msgstr ""
+
+#: includes/admin/class-settings.php:1225
+msgid "Candidate Apply settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1232
+msgid "Free Job Apply"
+msgstr ""
+
+#: includes/admin/class-settings.php:1233
+msgid "Allow candidates to apply jobs absolutely package free."
+msgstr ""
+
+#: includes/admin/class-settings.php:1243
+msgid "Candidate packages Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:1244
+msgid "Select Candidate Packages Page. It will redirect candidates at selected page to buy package."
+msgstr ""
+
+#: includes/admin/class-settings.php:1250
+msgid "Apply Job With Complete Resume"
+msgstr ""
+
+#: includes/admin/class-settings.php:1251
+msgid "% Candidate can apply job with percent number resume complete."
+msgstr ""
+
+#: includes/admin/class-settings.php:1263
+msgid "Apply job without login"
+msgstr ""
+
+#: includes/admin/class-settings.php:1264
+msgid "Allow candidates to apply jobs without login."
+msgstr ""
+
+#: includes/admin/class-settings.php:1274
+msgid "CV required ?"
+msgstr ""
+
+#: includes/admin/class-settings.php:1275
+msgid "Required candidate choose a CV."
+msgstr ""
+
+#: includes/admin/class-settings.php:1286
+msgid "Restrict Candidate settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1294
+msgid "Select a restrict type for restrict candidate"
+msgstr ""
+
+#: includes/admin/class-settings.php:1299
+msgid "View Candidate"
+msgstr ""
+
+#: includes/admin/class-settings.php:1300
+msgid "View Candidate Contact Info"
+msgstr ""
+
+#: includes/admin/class-settings.php:1305
+msgid "Restrict Candidate Detail"
+msgstr ""
+
+#: includes/admin/class-settings.php:1306
+msgid "Restrict Candidates detail page for all users except employers."
+msgstr ""
+
+#: includes/admin/class-settings.php:1312
+#: includes/admin/class-settings.php:1325
+msgid "Only Applicants (Employer can view only their own applicants candidates.)"
+msgstr ""
+
+#: includes/admin/class-settings.php:1313
+#: includes/admin/class-settings.php:1326
+msgid "Register Employers (All registered employers can view candidates.)"
+msgstr ""
+
+#: includes/admin/class-settings.php:1318
+msgid "Restrict Candidate Listing"
+msgstr ""
+
+#: includes/admin/class-settings.php:1319
+msgid "Restrict Candidates Listing page for all users except employers."
+msgstr ""
+
+#: includes/admin/class-settings.php:1333
+msgid "Restrict View Contact Candidate"
+msgstr ""
+
+#: includes/admin/class-settings.php:1334
+msgid "Restrict View Contact Candidates detail page for all users except employers."
+msgstr ""
+
+#: includes/admin/class-settings.php:1340
+#: includes/admin/class-settings.php:1412
+msgid "Only Applicants (Employer can see contact info only their own applicants candidates.)"
+msgstr ""
+
+#: includes/admin/class-settings.php:1341
+#: includes/admin/class-settings.php:1413
+msgid "Register Employers (All registered employers can see contact info candidates.)"
+msgstr ""
+
+#: includes/admin/class-settings.php:1347
+msgid "Hide Candidate Name"
+msgstr ""
+
+#: includes/admin/class-settings.php:1357
+msgid "Hide Candidate Email"
+msgstr ""
+
+#: includes/admin/class-settings.php:1367
+msgid "Hide Candidate Phone"
+msgstr ""
+
+#: includes/admin/class-settings.php:1377
+msgid "Hide Candidate Socials Media"
+msgstr ""
+
+#: includes/admin/class-settings.php:1388
+msgid "Hide Candidate Download CV"
+msgstr ""
+
+#: includes/admin/class-settings.php:1399
+msgid "Candidate Review settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1425
+msgid "Social API"
+msgstr ""
+
+#: includes/admin/class-settings.php:1430
+msgid "Facebook API settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1435
+#: includes/admin/class-settings.php:1467
+#: includes/admin/class-settings.php:1499
+#: includes/admin/class-settings.php:1543
+msgid "Callback URL is: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1438
+msgid "App ID"
+msgstr ""
+
+#: includes/admin/class-settings.php:1439
+msgid "Please enter App ID of your Facebook account."
+msgstr ""
+
+#: includes/admin/class-settings.php:1444
+msgid "App Secret"
+msgstr ""
+
+#: includes/admin/class-settings.php:1445
+msgid "Please enter App Secret of your Facebook account."
+msgstr ""
+
+#: includes/admin/class-settings.php:1450
+msgid "Enable Facebook Login"
+msgstr ""
+
+#: includes/admin/class-settings.php:1455
+msgid "Enable Facebook Apply"
+msgstr ""
+
+#: includes/admin/class-settings.php:1462
+msgid "Linkedin API settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1470
+#: includes/admin/class-settings.php:1546
+msgid "Client ID"
+msgstr ""
+
+#: includes/admin/class-settings.php:1471
+msgid "Please enter Client ID of your linkedin app."
+msgstr ""
+
+#: includes/admin/class-settings.php:1476
+#: includes/admin/class-settings.php:1552
+#: templates/misc/employer-meetings.php:51
+msgid "Client Secret"
+msgstr ""
+
+#: includes/admin/class-settings.php:1477
+msgid "Please enter Client Secret of your linkedin app."
+msgstr ""
+
+#: includes/admin/class-settings.php:1482
+msgid "Enable Linkedin Login"
+msgstr ""
+
+#: includes/admin/class-settings.php:1487
+msgid "Enable Linkedin Apply"
+msgstr ""
+
+#: includes/admin/class-settings.php:1494
+msgid "Twitter API settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1502
+msgid "Consumer Key"
+msgstr ""
+
+#: includes/admin/class-settings.php:1503
+msgid "Set Consumer Key for twitter."
+msgstr ""
+
+#: includes/admin/class-settings.php:1508
+msgid "Consumer Secret"
+msgstr ""
+
+#: includes/admin/class-settings.php:1509
+msgid "Set Consumer Secret for twitter."
+msgstr ""
+
+#: includes/admin/class-settings.php:1514
+msgid "Access Token"
+msgstr ""
+
+#: includes/admin/class-settings.php:1515
+msgid "Set Access Token for twitter."
+msgstr ""
+
+#: includes/admin/class-settings.php:1520
+msgid "Token Secret"
+msgstr ""
+
+#: includes/admin/class-settings.php:1521
+msgid "Set Token Secret for twitter."
+msgstr ""
+
+#: includes/admin/class-settings.php:1526
+msgid "Enable Twitter Login"
+msgstr ""
+
+#: includes/admin/class-settings.php:1531
+msgid "Enable Twitter Apply"
+msgstr ""
+
+#: includes/admin/class-settings.php:1538
+msgid "Google API settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1547
+msgid "Please enter Client ID of your Google account."
+msgstr ""
+
+#: includes/admin/class-settings.php:1553
+msgid "Please enter Client secret of your Google account."
+msgstr ""
+
+#: includes/admin/class-settings.php:1558
+msgid "Enable Google Login"
+msgstr ""
+
+#: includes/admin/class-settings.php:1563
+msgid "Enable Google Apply"
+msgstr ""
+
+#: includes/admin/class-settings.php:1574
+msgid "reCAPTCHA API"
+msgstr ""
+
+#: includes/admin/class-settings.php:1580
+msgid "Google reCAPTCHA API (V2) Settings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1585
+msgid "The plugin use ReCaptcha v2"
+msgstr ""
+
+#: includes/admin/class-settings.php:1588
+msgid "Site Key"
+msgstr ""
+
+#: includes/admin/class-settings.php:1589
+msgid "You can retrieve your site key from <a href=\"https://www.google.com/recaptcha/admin#list\">Google's reCAPTCHA admin dashboard.</a>"
+msgstr ""
+
+#: includes/admin/class-settings.php:1594
+msgid "Secret Key"
+msgstr ""
+
+#: includes/admin/class-settings.php:1595
+msgid "You can retrieve your secret key from <a href=\"https://www.google.com/recaptcha/admin#list\">Google's reCAPTCHA admin dashboard.</a>"
+msgstr ""
+
+#: includes/admin/class-settings.php:1611
+msgid "Admin Notice of New Listing"
+msgstr ""
+
+#: includes/admin/class-settings.php:1614
+msgid "Send a notice to the site administrator when a new job is submitted on the frontend."
+msgstr ""
+
+#: includes/admin/class-settings.php:1617
+#: includes/admin/class-settings.php:1639
+#: includes/admin/class-settings.php:1668
+#: includes/admin/class-settings.php:1697
+#: templates/single-candidate/contact-form.php:35
+#: templates/single-employer/contact-form.php:31
+msgid "Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1618
+#: includes/admin/class-settings.php:1640
+#: includes/admin/class-settings.php:1669
+#: includes/admin/class-settings.php:1698
+#: includes/admin/class-settings.php:1723
+#: includes/admin/class-settings.php:1746
+#: includes/admin/class-settings.php:1770
+#: includes/admin/class-settings.php:1794
+#: includes/admin/class-settings.php:1818
+#: includes/admin/class-settings.php:1842
+#: includes/admin/class-settings.php:1866
+#: includes/admin/class-settings.php:1890
+#: includes/admin/class-settings.php:1914
+#: includes/admin/class-settings.php:1938
+#: includes/admin/class-settings.php:1962
+#: includes/admin/class-settings.php:1986
+#: includes/admin/class-settings.php:2010
+#: includes/admin/class-settings.php:2034
+#: includes/admin/class-settings.php:2057
+#: includes/admin/class-settings.php:2080
+#: includes/admin/class-settings.php:2103
+#: includes/admin/class-settings.php:2126
+msgid "Enter email subject. You can add variables: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1624
+#: includes/admin/class-settings.php:1646
+#: includes/admin/class-settings.php:1675
+#: includes/admin/class-settings.php:1704
+msgid "Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1625
+#: includes/admin/class-settings.php:1647
+#: includes/admin/class-settings.php:1676
+#: includes/admin/class-settings.php:1705
+#: includes/admin/class-settings.php:1730
+#: includes/admin/class-settings.php:1753
+#: includes/admin/class-settings.php:1777
+#: includes/admin/class-settings.php:1801
+#: includes/admin/class-settings.php:1825
+#: includes/admin/class-settings.php:1849
+#: includes/admin/class-settings.php:1873
+#: includes/admin/class-settings.php:1897
+#: includes/admin/class-settings.php:1921
+#: includes/admin/class-settings.php:1945
+#: includes/admin/class-settings.php:1969
+#: includes/admin/class-settings.php:1993
+#: includes/admin/class-settings.php:2017
+#: includes/admin/class-settings.php:2041
+#: includes/admin/class-settings.php:2064
+#: includes/admin/class-settings.php:2087
+#: includes/admin/class-settings.php:2110
+#: includes/admin/class-settings.php:2133
+msgid "Enter email content. You can add variables: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1633
+msgid "Admin Notice of Updated Listing"
+msgstr ""
+
+#: includes/admin/class-settings.php:1636
+msgid "Send a notice to the site administrator when a job is updated on the frontend."
+msgstr ""
+
+#: includes/admin/class-settings.php:1655
+msgid "Admin Notice of Expiring Job Listings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1658
+msgid "Send notices to the site administrator before a job listing expires."
+msgstr ""
+
+#: includes/admin/class-settings.php:1661
+#: includes/admin/class-settings.php:1690
+msgid "Notice Period"
+msgstr ""
+
+#: includes/admin/class-settings.php:1662
+#: includes/admin/class-settings.php:1691
+msgid "days"
+msgstr ""
+
+#: includes/admin/class-settings.php:1684
+msgid "Employer Notice of Expiring Job Listings"
+msgstr ""
+
+#: includes/admin/class-settings.php:1687
+msgid "Send notices to employers before a job listing expires."
+msgstr ""
+
+#: includes/admin/class-settings.php:1714
+#: includes/post-types/class-post-type-job-alert.php:24
+msgid "Job Alert"
+msgstr ""
+
+#: includes/admin/class-settings.php:1722
+msgid "Job Alert Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1726
+msgid "Job Alert: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1729
+msgid "Job Alert Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1737
+#: includes/post-types/class-post-type-candidate-alert.php:25
+msgid "Candidate Alert"
+msgstr ""
+
+#: includes/admin/class-settings.php:1745
+msgid "Candidate Alert Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1749
+msgid "Candidate Alert: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1752
+msgid "Candidate Alert Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1761
+msgid "Email Apply Template"
+msgstr ""
+
+#: includes/admin/class-settings.php:1769
+msgid "Email Apply Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1773
+#: includes/admin/class-settings.php:1797
+#: includes/admin/class-settings.php:1845
+#: includes/admin/class-settings.php:1869
+msgid "Apply Job: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1776
+msgid "Email Apply Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1785
+msgid "Internal Apply Template"
+msgstr ""
+
+#: includes/admin/class-settings.php:1793
+msgid "Internal Apply Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1800
+msgid "Internal Apply Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1809
+msgid "Thanks For Applying Job Template"
+msgstr ""
+
+#: includes/admin/class-settings.php:1817
+msgid "Thanks For Applying Job Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1821
+msgid "Thanks for applying the job: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1824
+msgid "Thanks For Applying Job Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1833
+msgid "Create Meeting Template"
+msgstr ""
+
+#: includes/admin/class-settings.php:1841
+msgid "Create Meeting Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1848
+msgid "Create Meeting Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1857
+msgid "Re-schedule Meeting Template"
+msgstr ""
+
+#: includes/admin/class-settings.php:1865
+msgid "Re-schedule Meeting Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1872
+msgid "Re-schedule Meeting Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1881
+msgid "Invite Candidate Template"
+msgstr ""
+
+#: includes/admin/class-settings.php:1889
+msgid "Invite Candidate Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1893
+msgid "Invite Candidate: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1896
+msgid "Invite Candidate Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1905
+msgid "Contact Form"
+msgstr ""
+
+#: includes/admin/class-settings.php:1913
+msgid "Contact Form Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1917
+msgid "Contact Form: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1920
+msgid "Contact Form Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1929
+msgid "Reject interview"
+msgstr ""
+
+#: includes/admin/class-settings.php:1937
+msgid "Reject interview Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1941
+#: includes/admin/class-settings.php:1965
+msgid "Reject interview: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1944
+msgid "Reject interview Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1953
+msgid "Undo Reject interview"
+msgstr ""
+
+#: includes/admin/class-settings.php:1961
+msgid "Undo Reject interview Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1968
+msgid "Undo Reject interview Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:1977
+msgid "Approve interview"
+msgstr ""
+
+#: includes/admin/class-settings.php:1985
+msgid "Approve interview Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:1989
+#: includes/admin/class-settings.php:2013
+msgid "Approve interview: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:1992
+msgid "Approve interview Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:2001
+msgid "Undo Approve interview"
+msgstr ""
+
+#: includes/admin/class-settings.php:2009
+msgid "Undo Approve interview Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:2016
+msgid "Undo Approve interview Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:2025
+msgid "New user register (auto approve)"
+msgstr ""
+
+#: includes/admin/class-settings.php:2033
+msgid "New user register Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:2037
+msgid "New user register: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:2040
+msgid "New user register Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:2048
+msgid "Approve new user register"
+msgstr ""
+
+#: includes/admin/class-settings.php:2056
+msgid "Approve new user register Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:2060
+#: includes/admin/class-settings.php:2083
+#: includes/admin/class-settings.php:2106
+msgid "Approve new user register: %s"
+msgstr ""
+
+#: includes/admin/class-settings.php:2063
+msgid "Approve new user register Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:2071
+msgid "Approved user"
+msgstr ""
+
+#: includes/admin/class-settings.php:2079
+msgid "Approved user Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:2086
+msgid "Approved user Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:2094
+msgid "Denied user"
+msgstr ""
+
+#: includes/admin/class-settings.php:2102
+msgid "Denied user Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:2109
+msgid "Denied user Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:2117
+#: templates/misc/login.php:53
+msgid "Reset Password"
+msgstr ""
+
+#: includes/admin/class-settings.php:2125
+msgid "Reset Password Subject"
+msgstr ""
+
+#: includes/admin/class-settings.php:2132
+msgid "Reset Password Content"
+msgstr ""
+
+#: includes/admin/class-settings.php:2149
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:53
+msgid "Indeed Jobs Import"
+msgstr ""
+
+#: includes/admin/class-settings.php:2157
+msgid "Enable Indeed Jobs Import"
+msgstr ""
+
+#: includes/admin/class-settings.php:2162
+msgid "Publisher Number"
+msgstr ""
+
+#: includes/admin/class-settings.php:2165
+msgid "Acquire an publisher ID from the <a href=\"https://www.indeed.com/publisher\" target=\"_blank\">https://www.indeed.com/publisher</a>"
+msgstr ""
+
+#: includes/admin/class-settings.php:2169
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:53
+msgid "Ziprecruiter Jobs Import"
+msgstr ""
+
+#: includes/admin/class-settings.php:2177
+msgid "Enable Ziprecruiter Jobs import"
+msgstr ""
+
+#: includes/admin/class-settings.php:2182
+msgid "Ziprecruiter API Key"
+msgstr ""
+
+#: includes/admin/class-settings.php:2185
+msgid "Acquire an API key from the <a href=\"https://www.ziprecruiter.com/zipsearch\" target=\"_blank\">https://www.ziprecruiter.com/zipsearch</a>"
+msgstr ""
+
+#: includes/admin/class-settings.php:2189
+msgid "CareerJet Jobs Import"
+msgstr ""
+
+#: includes/admin/class-settings.php:2197
+msgid "Enable CareerJet Jobs import"
+msgstr ""
+
+#: includes/admin/class-settings.php:2202
+msgid "CareerJet AFFID"
+msgstr ""
+
+#: includes/admin/class-settings.php:2205
+msgid "Acquire an AFFID from the <a href=\"https://www.careerjet.com/contact-us\" target=\"_blank\">https://www.careerjet.com/contact-us</a>"
+msgstr ""
+
+#: includes/admin/class-settings.php:2209
+msgid "CareerBuilder Jobs Import"
+msgstr ""
+
+#: includes/admin/class-settings.php:2217
+msgid "Enable CareerBuilder Jobs import"
+msgstr ""
+
+#: includes/admin/class-settings.php:2222
+msgid "CareerBuilder API Key"
+msgstr ""
+
+#: includes/admin/class-settings.php:2225
+msgid "Acquire an AFFID from the <a href=\"https://developer.careerbuilder.com/\" target=\"_blank\">https://developer.careerbuilder.com/</a>"
+msgstr ""
+
+#: includes/admin/class-settings.php:2259
+msgid "Settings updated."
+msgstr ""
+
+#: includes/admin/class-settings.php:2411
+msgid "Save Settings"
+msgstr ""
+
+#: includes/class-abstract-filter.php:65
+msgid "Last Hour"
+msgstr ""
+
+#: includes/class-abstract-filter.php:69
+msgid "Last 24 hours"
+msgstr ""
+
+#: includes/class-abstract-filter.php:73
+msgid "Last 7 days"
+msgstr ""
+
+#: includes/class-abstract-filter.php:77
+msgid "Last 14 days"
+msgstr ""
+
+#: includes/class-abstract-filter.php:81
+msgid "Last 30 days"
+msgstr ""
+
+#: includes/class-abstract-filter.php:85
+msgid "All"
+msgstr ""
+
+#: includes/class-abstract-form.php:183
+#: includes/class-abstract-register-form.php:84
+#: includes/class-candidate-register-apply-form.php:62
+#: includes/post-types/class-post-type-candidate-alert.php:104
+#: includes/post-types/class-post-type-candidate.php:365
+#: includes/post-types/class-post-type-candidate.php:465
+#: includes/post-types/class-post-type-employer.php:244
+#: includes/post-types/class-post-type-job-alert.php:104
+#: includes/post-types/class-post-type-job-applicant.php:76
+msgid "General Options"
+msgstr ""
+
+#: includes/class-abstract-form.php:197
+#: includes/class-abstract-register-form.php:98
+#: includes/class-candidate-register-apply-form.php:189
+#: includes/class-shortcodes.php:312
+#: includes/class-shortcodes.php:318
+#: includes/class-shortcodes.php:329
+#: includes/class-shortcodes.php:360
+msgid "A metabox with the specified 'metabox_id' doesn't exist."
+msgstr ""
+
+#: includes/class-abstract-form.php:209
+msgid "Save & Preview"
+msgstr ""
+
+#: includes/class-abstract-form.php:211
+#: includes/custom-fields/class-fields-manager.php:96
+#: includes/custom-fields/class-fields-manager.php:192
+#: includes/taxonomies/class-taxonomy-candidate-category.php:37
+#: includes/taxonomies/class-taxonomy-candidate-location.php:37
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:38
+#: includes/taxonomies/class-taxonomy-employer-category.php:38
+#: includes/taxonomies/class-taxonomy-employer-location.php:37
+#: includes/taxonomies/class-taxonomy-job-category.php:37
+#: includes/taxonomies/class-taxonomy-job-location.php:37
+#: includes/taxonomies/class-taxonomy-job-tag.php:38
+#: includes/taxonomies/class-taxonomy-job-type.php:45
+msgid "Update"
+msgstr ""
+
+#: includes/class-abstract-register-form.php:47
+#: includes/class-abstract-register-form.php:53
+#: includes/class-candidate-register-apply-form.php:48
+#: includes/class-candidate-register-apply-form.php:54
+#: includes/custom-fields/class-fields-manager.php:331
+#: includes/custom-fields/class-fields-manager.php:739
+#: includes/custom-fields/class-fields-manager.php:1101
+#: templates/misc/employer-employees.php:71
+#: templates/misc/register.php:27
+#: templates/misc/register.php:87
+#: templates/single-candidate/reviews.php:50
+#: templates/single-employer/reviews.php:49
+msgid "Email"
+msgstr ""
+
+#: includes/class-abstract-register-form.php:58
+#: includes/class-abstract-register-form.php:64
+#: templates/misc/employer-employees.php:76
+#: templates/misc/login.php:23
+#: templates/misc/register.php:32
+#: templates/misc/register.php:92
+msgid "Password"
+msgstr ""
+
+#: includes/class-abstract-register-form.php:69
+#: includes/class-abstract-register-form.php:75
+#: templates/misc/employer-employees.php:81
+#: templates/misc/register.php:37
+#: templates/misc/register.php:97
+msgid "Confirm Password"
+msgstr ""
+
+#: includes/class-abstract-register-form.php:109
+#: templates/misc/register.php:69
+#: templates/misc/register.php:129
+msgid "Register now"
+msgstr ""
+
+#: includes/class-applicant.php:60
+msgid "Job doesn't exits"
+msgstr ""
+
+#: includes/class-applicant.php:183
+#: includes/class-applicant.php:278
+#: includes/class-applicant.php:371
+#: includes/class-applicant.php:458
+#: includes/class-applicant.php:553
+#: includes/class-applicant.php:646
+#: includes/class-applicant.php:730
+#: includes/class-candidate-alert.php:136
+#: includes/class-candidate-alert.php:214
+#: includes/class-candidate.php:476
+#: includes/class-candidate.php:664
+#: includes/class-candidate.php:996
+#: includes/class-candidate.php:1057
+#: includes/class-candidate.php:1122
+#: includes/class-candidate.php:1168
+#: includes/class-candidate.php:1211
+#: includes/class-employer.php:128
+#: includes/class-employer.php:205
+#: includes/class-employer.php:239
+#: includes/class-employer.php:290
+#: includes/class-job-alert.php:167
+#: includes/class-job-alert.php:245
+#: includes/class-submit-form.php:305
+#: includes/class-user-notification.php:58
+#: includes/class-user.php:930
+#: includes/meetings/class-meeting-zoom.php:26
+#: includes/meetings/class-meeting.php:35
+#: includes/meetings/class-meeting.php:204
+#: includes/meetings/class-meeting.php:323
+#: includes/meetings/class-meeting.php:381
+#: includes/post-types/class-post-type-job_listing.php:267
+#: includes/post-types/class-post-type-job_listing.php:307
+#: includes/post-types/class-post-type-job_listing.php:351
+#: libraries/cmb2/cmb2_field_profile_url/cmb2-field-type-profile_url.php:68
+msgid "Your nonce did not verify."
+msgstr ""
+
+#: includes/class-applicant.php:189
+#: includes/class-applicant.php:284
+#: includes/class-applicant.php:377
+msgid "Please login as \"Employer\" to reject."
+msgstr ""
+
+#: includes/class-applicant.php:197
+#: includes/class-applicant.php:292
+#: includes/class-applicant.php:472
+#: includes/class-applicant.php:567
+#: includes/class-candidate.php:1008
+#: includes/class-job-alert.php:257
+msgid "Applicant doesn't exist"
+msgstr ""
+
+#: includes/class-applicant.php:205
+msgid "You can not to reject this applicant."
+msgstr ""
+
+#: includes/class-applicant.php:270
+msgid "Reject this applicant successful."
+msgstr ""
+
+#: includes/class-applicant.php:300
+msgid "You can not to undo this applicant."
+msgstr ""
+
+#: includes/class-applicant.php:363
+msgid "Undo Reject this applicant successful."
+msgstr ""
+
+#: includes/class-applicant.php:387
+msgid "Can not to show rejected applicants."
+msgstr ""
+
+#: includes/class-applicant.php:435
+#: includes/class-applicant.php:707
+#: includes/class-applicant.php:795
+#: templates/misc/job-applicants.php:191
+msgid "Load more"
+msgstr ""
+
+#: includes/class-applicant.php:446
+msgid "No rejected applicants found."
+msgstr ""
+
+#: includes/class-applicant.php:464
+#: includes/class-applicant.php:559
+#: includes/class-applicant.php:652
+msgid "Please login as \"Employer\" to approve."
+msgstr ""
+
+#: includes/class-applicant.php:480
+msgid "You can not to approve this applicant."
+msgstr ""
+
+#: includes/class-applicant.php:545
+msgid "Application approved successfully"
+msgstr ""
+
+#: includes/class-applicant.php:575
+msgid "You can not to undo approve this applicant."
+msgstr ""
+
+#: includes/class-applicant.php:638
+msgid "Undo Application approved successfully"
+msgstr ""
+
+#: includes/class-applicant.php:661
+msgid "Can not to show approved applicants."
+msgstr ""
+
+#: includes/class-applicant.php:718
+msgid "No approved applicants found."
+msgstr ""
+
+#: includes/class-applicant.php:736
+msgid "Please login as \"Employer\" to show applications."
+msgstr ""
+
+#: includes/class-applicant.php:745
+msgid "Can not to show applications."
+msgstr ""
+
+#: includes/class-applicant.php:805
+#: templates/misc/employer-dashboard.php:93
+#: templates/misc/employer-dashboard.php:98
+#: templates/misc/job-applicants.php:201
+#: templates/misc/job-applicants.php:212
+msgid "No applicants found."
+msgstr ""
+
+#: includes/class-candidate-alert.php:141
+msgid "Please login as \"Employer\" to add candidate alert."
+msgstr ""
+
+#: includes/class-candidate-alert.php:189
+msgid "Add candidate alert successfully."
+msgstr ""
+
+#: includes/class-candidate-alert.php:193
+msgid "Add candidate alert error."
+msgstr ""
+
+#: includes/class-candidate-alert.php:202
+#: includes/class-job-alert.php:233
+msgid "Name is required."
+msgstr ""
+
+#: includes/class-candidate-alert.php:206
+#: includes/class-job-alert.php:237
+msgid "Email frequency is required."
+msgstr ""
+
+#: includes/class-candidate-alert.php:219
+msgid "Please login to remove candidate alert."
+msgstr ""
+
+#: includes/class-candidate-alert.php:226
+msgid "Candidate did not exists."
+msgstr ""
+
+#: includes/class-candidate-alert.php:234
+msgid "You can not remove this candidate alert."
+msgstr ""
+
+#: includes/class-candidate-alert.php:240
+msgid "Remove candidate alert successfully."
+msgstr ""
+
+#: includes/class-candidate-alert.php:244
+msgid "Remove candidate alert error."
+msgstr ""
+
+#: includes/class-candidate-filter.php:24
+#: includes/class-job-filter.php:24
+msgid "Search Keywords"
+msgstr ""
+
+#: includes/class-candidate-filter.php:26
+#: includes/class-employer-filter.php:26
+#: includes/class-job-filter.php:26
+msgid "e.g. web design"
+msgstr ""
+
+#: includes/class-candidate-filter.php:31
+msgid "Candidate Category"
+msgstr ""
+
+#: includes/class-candidate-filter.php:34
+#: includes/class-employer-filter.php:34
+msgid "All Categories"
+msgstr ""
+
+#: includes/class-candidate-filter.php:41
+#: includes/class-employer-filter.php:41
+#: includes/class-job-filter.php:39
+msgid "All Location"
+msgstr ""
+
+#: includes/class-candidate-filter.php:47
+msgid "Location List"
+msgstr ""
+
+#: includes/class-candidate-filter.php:50
+#: includes/class-employer-filter.php:50
+#: includes/class-job-filter.php:48
+msgid "All Locations"
+msgstr ""
+
+#: includes/class-candidate-filter.php:55
+#: includes/class-job-filter.php:67
+#: includes/custom-fields/class-custom-fields.php:171
+#: includes/custom-fields/class-custom-fields.php:340
+msgid "Date Posted"
+msgstr ""
+
+#: includes/class-candidate-filter.php:61
+#: includes/class-candidate-filter.php:557
+#: includes/class-job-filter.php:61
+#: includes/class-job-filter.php:666
+#: templates/candidates-styles/inner-grid.php:43
+#: templates/misc/candidates-shortlist.php:129
+msgid "Salary"
+msgstr ""
+
+#: includes/class-candidate-filter.php:67
+#: includes/class-candidate-filter.php:489
+#: includes/class-candidate-filter.php:614
+#: includes/class-employer-filter.php:61
+#: includes/class-job-filter.php:80
+#: includes/class-job-filter.php:539
+#: includes/class-job-filter.php:712
+#: includes/post-types/class-post-type-candidate.php:496
+#: includes/post-types/class-post-type-employer.php:273
+#: includes/post-types/class-post-type-job_listing.php:429
+#: templates/submission/my-jobs.php:120
+msgid "Featured"
+msgstr ""
+
+#: includes/class-candidate-filter.php:72
+#: includes/class-candidate-filter.php:494
+#: includes/class-candidate-filter.php:618
+#: includes/class-job-filter.php:85
+#: includes/class-job-filter.php:544
+#: includes/class-job-filter.php:716
+#: includes/post-types/class-post-type-candidate.php:495
+#: templates/submission/my-jobs.php:115
+msgid "Urgent"
+msgstr ""
+
+#: includes/class-candidate-filter.php:476
+#: includes/class-candidate-filter.php:601
+#: includes/class-job-filter.php:586
+#: includes/class-job-filter.php:753
+#: templates/loop/candidate/orderby.php:7
+#: templates/loop/employer/orderby.php:7
+#: templates/loop/job/orderby.php:7
+#: templates/misc/candidates-shortlist.php:26
+#: templates/misc/job-applicants.php:39
+#: templates/misc/jobs-applied.php:25
+#: templates/misc/jobs-shortlist.php:25
+#: templates/misc/my-candidates-alerts.php:28
+#: templates/misc/my-following-employers.php:25
+#: templates/misc/my-jobs-alerts.php:28
+#: templates/submission/my-jobs.php:29
+msgid "Default"
+msgstr ""
+
+#: includes/class-candidate-filter.php:477
+#: includes/class-candidate-filter.php:602
+#: includes/class-job-filter.php:587
+#: includes/class-job-filter.php:754
+#: templates/loop/candidate/orderby.php:8
+#: templates/loop/employer/orderby.php:8
+#: templates/loop/job/orderby.php:8
+#: templates/misc/candidates-shortlist.php:27
+#: templates/misc/job-applicants.php:40
+#: templates/misc/jobs-applied.php:26
+#: templates/misc/jobs-shortlist.php:26
+#: templates/misc/my-candidates-alerts.php:29
+#: templates/misc/my-following-employers.php:26
+#: templates/misc/my-jobs-alerts.php:29
+#: templates/submission/my-jobs.php:30
+msgid "Newest"
+msgstr ""
+
+#: includes/class-candidate-filter.php:478
+#: includes/class-candidate-filter.php:603
+#: includes/class-job-filter.php:588
+#: includes/class-job-filter.php:755
+#: templates/loop/candidate/orderby.php:9
+#: templates/loop/employer/orderby.php:9
+#: templates/loop/job/orderby.php:9
+#: templates/misc/candidates-shortlist.php:28
+#: templates/misc/job-applicants.php:41
+#: templates/misc/jobs-applied.php:27
+#: templates/misc/jobs-shortlist.php:27
+#: templates/misc/my-candidates-alerts.php:30
+#: templates/misc/my-following-employers.php:27
+#: templates/misc/my-jobs-alerts.php:30
+#: templates/submission/my-jobs.php:31
+msgid "Oldest"
+msgstr ""
+
+#: includes/class-candidate-filter.php:479
+#: includes/class-candidate-filter.php:604
+#: includes/class-job-filter.php:589
+#: includes/class-job-filter.php:756
+#: templates/loop/candidate/orderby.php:10
+#: templates/loop/employer/orderby.php:10
+#: templates/loop/job/orderby.php:10
+msgid "Random"
+msgstr ""
+
+#: includes/class-candidate-filter.php:548
+#: includes/class-job-filter.php:30
+#: includes/class-job-filter.php:650
+#: includes/custom-fields/class-fields-manager.php:572
+#: includes/post-types/class-post-type-candidate.php:493
+#: includes/post-types/class-post-type-employer.php:271
+#: includes/post-types/class-post-type-job_listing.php:427
+#: includes/taxonomies/class-taxonomy-candidate-category.php:26
+#: includes/taxonomies/class-taxonomy-employer-category.php:27
+#: includes/taxonomies/class-taxonomy-job-category.php:26
+msgid "Category"
+msgstr ""
+
+#: includes/class-candidate-filter.php:562
+#: includes/class-job-filter.php:672
+msgid "Salary Min"
+msgstr ""
+
+#: includes/class-candidate-filter.php:566
+#: includes/class-job-filter.php:677
+msgid "Salary Max"
+msgstr ""
+
+#: includes/class-candidate-filter.php:575
+#: includes/class-job-filter.php:686
+#: includes/custom-fields/class-fields-manager.php:534
+#: includes/custom-fields/class-fields-manager.php:1147
+msgid "Salary Type"
+msgstr ""
+
+#: includes/class-candidate-filter.php:582
+#: includes/class-job-filter.php:693
+msgid "Posted Date"
+msgstr ""
+
+#: includes/class-candidate-filter.php:596
+#: includes/class-job-filter.php:707
+#: includes/custom-fields/class-custom-fields.php:164
+#: includes/custom-fields/class-custom-fields.php:248
+#: includes/custom-fields/class-custom-fields.php:333
+msgid "Distance"
+msgstr ""
+
+#: includes/class-candidate-filter.php:610
+#: includes/class-job-filter.php:762
+msgid "Orderby"
+msgstr ""
+
+#: includes/class-candidate-register-apply-form.php:82
+#: includes/class-candidate.php:502
+#: includes/class-candidate.php:686
+#: includes/class-candidate.php:1070
+#: includes/class-candidate.php:1134
+msgid "Job doesn't exist"
+msgstr ""
+
+#: includes/class-candidate-register-apply-form.php:89
+#: includes/class-candidate.php:509
+#: includes/class-candidate.php:692
+#: includes/class-scripts.php:190
+msgid "This job is filled and no longer accepting applications."
+msgstr ""
+
+#: includes/class-candidate-register-apply-form.php:143
+msgid "You have successfully applied to the job, redirecting ..."
+msgstr ""
+
+#: includes/class-candidate-register-apply-form.php:143
+#: includes/class-candidate.php:828
+#: includes/class-job_listing.php:616
+msgid "Applied"
+msgstr ""
+
+#: includes/class-candidate-register-apply-form.php:147
+#: includes/class-candidate.php:655
+#: includes/class-candidate.php:832
+msgid "Error accord when applying for the job"
+msgstr ""
+
+#: includes/class-candidate-register-apply-form.php:153
+#: includes/class-employer.php:161
+#: includes/class-user.php:608
+#: includes/class-user.php:682
+msgid "Register user error!"
+msgstr ""
+
+#: includes/class-candidate-register-apply-form.php:201
+msgid "Apply now"
+msgstr ""
+
+#: includes/class-candidate.php:255
+#: includes/class-job_listing.php:365
+msgid " per year"
+msgstr ""
+
+#: includes/class-candidate.php:258
+#: includes/class-job_listing.php:368
+msgid " per month"
+msgstr ""
+
+#: includes/class-candidate.php:261
+#: includes/class-job_listing.php:371
+msgid " per week"
+msgstr ""
+
+#: includes/class-candidate.php:264
+#: includes/class-job_listing.php:374
+msgid " per day"
+msgstr ""
+
+#: includes/class-candidate.php:267
+#: includes/class-job_listing.php:377
+msgid " per hour"
+msgstr ""
+
+#: includes/class-candidate.php:336
+#: includes/class-candidate.php:364
+#: includes/class-job_listing.php:643
+#: templates/misc/candidate-dashboard.php:39
+#: templates/misc/employer-dashboard.php:28
+msgid "Shortlisted"
+msgstr ""
+
+#: includes/class-candidate.php:340
+#: includes/class-candidate.php:368
+#: includes/class-job_listing.php:647
+msgid "Shortlist"
+msgstr ""
+
+#: includes/class-candidate.php:412
+#: includes/class-candidate.php:448
+msgid "Please login as \"Employer\" to download CV."
+msgstr ""
+
+#: includes/class-candidate.php:417
+#: templates/content-applicant.php:69
+#: templates/single-candidate/cv_attachments.php:14
+msgid "Download CV"
+msgstr ""
+
+#: includes/class-candidate.php:451
+#: templates/single-candidate/invite-candidate-form.php:71
+msgid "Invite"
+msgstr ""
+
+#: includes/class-candidate.php:483
+#: includes/class-candidate.php:671
+msgid "Your recaptcha did not verify."
+msgstr ""
+
+#: includes/class-candidate.php:496
+#: includes/class-email.php:117
+msgid "Form has been not filled correctly."
+msgstr ""
+
+#: includes/class-candidate.php:554
+#: includes/class-candidate.php:573
+#: includes/class-candidate.php:782
+#: includes/class-candidate.php:805
+msgid "Can not upload file."
+msgstr ""
+
+#: includes/class-candidate.php:651
+#: includes/class-candidate.php:828
+msgid "You have successfully applied to the job"
+msgstr ""
+
+#: includes/class-candidate.php:678
+msgid "Please login as \"Candidate\" to apply."
+msgstr ""
+
+#: includes/class-candidate.php:703
+msgid "You have applied this job."
+msgstr ""
+
+#: includes/class-candidate.php:714
+msgid "You have no package. <a href=\"%s\" class=\"text-theme\">Click here</a> to subscribe a package."
+msgstr ""
+
+#: includes/class-candidate.php:734
+msgid "You need to complete your resume before you can apply for a job."
+msgstr ""
+
+#: includes/class-candidate.php:1001
+#: includes/class-candidate.php:1127
+#: includes/class-employer.php:295
+msgid "Please login to remove shortlist."
+msgstr ""
+
+#: includes/class-candidate.php:1018
+msgid "You can not remove this applied."
+msgstr ""
+
+#: includes/class-candidate.php:1042
+msgid "Application removed successful"
+msgstr ""
+
+#: includes/class-candidate.php:1048
+msgid "Remove applied error."
+msgstr ""
+
+#: includes/class-candidate.php:1062
+msgid "Please login as \"Candidate\" to add shortlist."
+msgstr ""
+
+#: includes/class-candidate.php:1092
+msgid "Job has been added to the shortlist successfully"
+msgstr ""
+
+#: includes/class-candidate.php:1096
+msgid "Error accord when add job to the shortlist"
+msgstr ""
+
+#: includes/class-candidate.php:1155
+msgid "Job has been removed from the shortlist successfully"
+msgstr ""
+
+#: includes/class-candidate.php:1159
+msgid "Error accord when remove job from the shortlist"
+msgstr ""
+
+#: includes/class-candidate.php:1173
+msgid "Please login as \"Candidate\" to follow employer."
+msgstr ""
+
+#: includes/class-candidate.php:1180
+#: includes/class-candidate.php:1223
+msgid "Employer did not exists."
+msgstr ""
+
+#: includes/class-candidate.php:1198
+#: includes/class-employer.php:703
+msgid "Following"
+msgstr ""
+
+#: includes/class-candidate.php:1198
+msgid "You are now successfully following \"%s\""
+msgstr ""
+
+#: includes/class-candidate.php:1202
+msgid "Follow employer error."
+msgstr ""
+
+#: includes/class-candidate.php:1216
+msgid "Please login to unfollow employer."
+msgstr ""
+
+#: includes/class-candidate.php:1243
+#: includes/class-employer.php:707
+#: templates/single-employer/header.php:52
+msgid "Follow us"
+msgstr ""
+
+#: includes/class-candidate.php:1243
+msgid "You have successfully unfollowed \"%s\""
+msgstr ""
+
+#: includes/class-candidate.php:1247
+msgid "Unfollow employer error."
+msgstr ""
+
+#: includes/class-candidate.php:1856
+#: includes/class-employer.php:772
+#: templates/single-candidate.php:23
+#: templates/single-employer.php:21
+#: templates/single-job_listing.php:21
+msgid "The page is restricted only for register user."
+msgstr ""
+
+#: includes/class-candidate.php:1857
+#: includes/class-employer.php:773
+#: templates/single-candidate.php:24
+#: templates/single-employer.php:22
+#: templates/single-job_listing.php:22
+msgid "You need login to view this page"
+msgstr ""
+
+#: includes/class-candidate.php:1870
+msgid "The page is restricted only for employers."
+msgstr ""
+
+#: includes/class-candidate.php:1889
+#: templates/single-candidate.php:29
+msgid "The page is restricted only for employers view his applicants."
+msgstr ""
+
+#: includes/class-edit-form.php:140
+msgid "Your changes have been saved."
+msgstr ""
+
+#: includes/class-edit-form.php:142
+#: includes/class-submit-form.php:255
+msgid "Can not update job"
+msgstr ""
+
+#: includes/class-edit-form.php:152
+#: includes/class-submit-form.php:266
+#: includes/post-types/class-post-type-job_listing.php:254
+msgid "Please login to submit job"
+msgstr ""
+
+#: includes/class-edit-form.php:155
+#: includes/class-submit-form.php:269
+#: includes/post-types/class-post-type-job_listing.php:257
+msgid "Title is required."
+msgstr ""
+
+#: includes/class-edit-form.php:158
+#: includes/class-submit-form.php:272
+#: includes/post-types/class-post-type-job_listing.php:260
+msgid "Description is required."
+msgstr ""
+
+#: includes/class-email.php:72
+msgid "You have no package."
+msgstr ""
+
+#: includes/class-email.php:110
+msgid "Your message has been successfully sent."
+msgstr ""
+
+#: includes/class-email.php:114
+msgid "An error occurred when sending an email."
+msgstr ""
+
+#: includes/class-employer-filter.php:24
+msgid "Search Employer"
+msgstr ""
+
+#: includes/class-employer-filter.php:31
+msgid "Employer Category"
+msgstr ""
+
+#: includes/class-employer-filter.php:39
+msgid "Employer Location"
+msgstr ""
+
+#: includes/class-employer-filter.php:47
+msgid "Employer Location List"
+msgstr ""
+
+#: includes/class-employer-filter.php:55
+#: includes/custom-fields/class-fields-manager.php:745
+msgid "Founded Date"
+msgstr ""
+
+#: includes/class-employer.php:138
+msgid "Username too short. At least 4 characters is required"
+msgstr ""
+
+#: includes/class-employer.php:142
+msgid "The username already exists"
+msgstr ""
+
+#: includes/class-employer.php:146
+msgid "The username you entered is not valid"
+msgstr ""
+
+#: includes/class-employer.php:186
+#: includes/class-employer.php:196
+msgid "Add employee to team successful"
+msgstr ""
+
+#: includes/class-employer.php:211
+#: includes/class-employer.php:230
+msgid "Employee not found"
+msgstr ""
+
+#: includes/class-employer.php:225
+msgid "Remove employee from team successful"
+msgstr ""
+
+#: includes/class-employer.php:244
+msgid "Please login as \"Employer\" to add shortlist."
+msgstr ""
+
+#: includes/class-employer.php:252
+#: includes/class-employer.php:302
+#: includes/class-employer.php:343
+msgid "Candidate doesn't exist"
+msgstr ""
+
+#: includes/class-employer.php:277
+msgid "Candidate has been added to the shortlist successfully"
+msgstr ""
+
+#: includes/class-employer.php:281
+msgid "Error accord when add candidate to the shortlist"
+msgstr ""
+
+#: includes/class-employer.php:323
+msgid "Candidate has been removed from the shortlist successfully"
+msgstr ""
+
+#: includes/class-employer.php:327
+msgid "Error accord when remove candidate from the shortlist"
+msgstr ""
+
+#: includes/class-employer.php:335
+msgid "Please login as \"Employer\" to invite Candidate."
+msgstr ""
+
+#: includes/class-employer.php:349
+msgid "Please select jobs first"
+msgstr ""
+
+#: includes/class-employer.php:363
+msgid "You already invited this user for these jobs."
+msgstr ""
+
+#: includes/class-employer.php:415
+msgid "Invited successfully."
+msgstr ""
+
+#: includes/class-employer.php:418
+msgid "Send a email error"
+msgstr ""
+
+#: includes/class-employer.php:765
+msgid "The page is restricted. You can not view this page"
+msgstr ""
+
+#: includes/class-employer.php:785
+#: templates/single-job_listing.php:32
+msgid "The page is restricted only for candidates."
+msgstr ""
+
+#: includes/class-employer.php:805
+#: templates/single-employer.php:27
+#: templates/single-job_listing.php:27
+msgid "The page is restricted only for candidates view his applicants."
+msgstr ""
+
+#: includes/class-geocode.php:145
+msgid "No results found"
+msgstr ""
+
+#: includes/class-geocode.php:148
+msgid "Query limit reached"
+msgstr ""
+
+#: includes/class-geocode.php:152
+#: includes/class-geocode.php:155
+msgid "Geocoding error"
+msgstr ""
+
+#: includes/class-image.php:29
+msgid "You must be logged in to upload files using this method."
+msgstr ""
+
+#. translators: %1$s is the file field label; %2$s is the file type; %3$s is the list of allowed file types.
+#: includes/class-image.php:149
+msgid "\"%1$s\" (filetype %2$s) needs to be one of the following file types: %3$s"
+msgstr ""
+
+#. translators: %s is the list of allowed file types.
+#: includes/class-image.php:152
+#: includes/class-image.php:201
+msgid "Uploaded files need to be one of the following file types: %s"
+msgstr ""
+
+#: includes/class-image.php:256
+msgid "Attachment Image"
+msgstr ""
+
+#: includes/class-job-alert.php:34
+#: includes/class-mixes.php:128
+msgid "Daily"
+msgstr ""
+
+#: includes/class-job-alert.php:38
+#: includes/class-mixes.php:127
+msgid "Weekly"
+msgstr ""
+
+#: includes/class-job-alert.php:42
+msgid "Fortnightly"
+msgstr ""
+
+#: includes/class-job-alert.php:46
+#: includes/class-mixes.php:126
+msgid "Monthly"
+msgstr ""
+
+#: includes/class-job-alert.php:50
+msgid "Biannually"
+msgstr ""
+
+#: includes/class-job-alert.php:54
+msgid "Annually"
+msgstr ""
+
+#: includes/class-job-alert.php:172
+msgid "Please login as \"Candidate\" to add job alert."
+msgstr ""
+
+#: includes/class-job-alert.php:220
+msgid "Job alert added successfully"
+msgstr ""
+
+#: includes/class-job-alert.php:224
+msgid "Error adding job alert"
+msgstr ""
+
+#: includes/class-job-alert.php:250
+msgid "Please login to remove job alert."
+msgstr ""
+
+#: includes/class-job-alert.php:265
+msgid "You can not remove this job alert."
+msgstr ""
+
+#: includes/class-job-alert.php:273
+msgid "Remove job alert successfully."
+msgstr ""
+
+#: includes/class-job-alert.php:277
+msgid "Remove job alert error."
+msgstr ""
+
+#: includes/class-job-filter.php:45
+msgid "Location list"
+msgstr ""
+
+#: includes/class-job-filter.php:56
+msgid "All Types"
+msgstr ""
+
+#: includes/class-job-filter.php:73
+msgid "Job Tag"
+msgstr ""
+
+#: includes/class-job-filter.php:90
+#: includes/class-user.php:75
+#: includes/post-types/class-post-type-employer.php:39
+#: templates/misc/register.php:13
+msgid "Employer"
+msgstr ""
+
+#: includes/class-job-filter.php:656
+#: includes/custom-fields/class-fields-manager.php:565
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:77
+#: includes/post-types/class-post-type-job_listing.php:423
+#: includes/taxonomies/class-taxonomy-job-type.php:34
+msgid "Type"
+msgstr ""
+
+#: includes/class-job-filter.php:659
+#: includes/custom-fields/class-fields-manager.php:579
+#: includes/custom-fields/class-fields-manager.php:1438
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:27
+#: includes/taxonomies/class-taxonomy-job-tag.php:27
+msgid "Tag"
+msgstr ""
+
+#: includes/class-job-filter.php:733
+#: includes/class-job-filter.php:747
+#: includes/post-types/class-post-type-job-alert.php:131
+#: includes/post-types/class-post-type-job-applicant.php:138
+msgid "Author"
+msgstr ""
+
+#: includes/class-job-filter.php:792
+msgid "to"
+msgstr ""
+
+#: includes/class-job-filter.php:796
+msgid "from"
+msgstr ""
+
+#: includes/class-job_listing.php:303
+msgctxt "post status"
+msgid "Draft"
+msgstr ""
+
+#: includes/class-job_listing.php:304
+#: wp-job-board-pro.php:209
+msgctxt "post status"
+msgid "Expired"
+msgstr ""
+
+#: includes/class-job_listing.php:305
+#: wp-job-board-pro.php:233
+msgctxt "post status"
+msgid "Preview"
+msgstr ""
+
+#: includes/class-job_listing.php:306
+#: includes/class-job_listing.php:307
+msgctxt "post status"
+msgid "Pending approval"
+msgstr ""
+
+#: includes/class-job_listing.php:308
+msgctxt "post status"
+msgid "Pending payment"
+msgstr ""
+
+#: includes/class-job_listing.php:309
+msgctxt "post status"
+msgid "Active"
+msgstr ""
+
+#: includes/class-job_listing.php:344
+msgid "<a href=\"%s\" class=\"employer text-theme\">%s</a>"
+msgstr ""
+
+#: includes/class-job_listing.php:542
+msgid "Application ends: <strong>%s</strong>"
+msgstr ""
+
+#: includes/class-job_listing.php:555
+#: includes/class-job_listing.php:559
+#: includes/class-job_listing.php:568
+#: includes/class-job_listing.php:574
+#: includes/class-job_listing.php:582
+#: includes/class-job_listing.php:588
+#: includes/class-job_listing.php:597
+#: includes/class-job_listing.php:602
+#: includes/class-job_listing.php:609
+msgid "Apply Now"
+msgstr ""
+
+#: includes/class-job_listing.php:630
+msgid "Application deadline closed."
+msgstr ""
+
+#: includes/class-mixes.php:129
+msgid "Hourly"
+msgstr ""
+
+#: includes/class-mixes.php:130
+msgid "Yearly"
+msgstr ""
+
+#: includes/class-mixes.php:136
+msgid "Internal"
+msgstr ""
+
+#: includes/class-mixes.php:137
+msgid "External URL"
+msgstr ""
+
+#: includes/class-mixes.php:138
+msgid "By Email"
+msgstr ""
+
+#: includes/class-mixes.php:139
+msgid "Call To Apply"
+msgstr ""
+
+#: includes/class-mixes.php:170
+#: includes/socials/class-social-facebook.php:325
+#: includes/socials/class-social-facebook.php:340
+msgid "Facebook"
+msgstr ""
+
+#: includes/class-mixes.php:174
+#: includes/socials/class-social-twitter.php:292
+#: includes/socials/class-social-twitter.php:307
+msgid "Twitter"
+msgstr ""
+
+#: includes/class-mixes.php:178
+msgid "Linkedin"
+msgstr ""
+
+#: includes/class-mixes.php:182
+msgid "Dribbble"
+msgstr ""
+
+#: includes/class-mixes.php:186
+msgid "Tumblr"
+msgstr ""
+
+#: includes/class-mixes.php:190
+msgid "Pinterest"
+msgstr ""
+
+#: includes/class-mixes.php:194
+msgid "Instagram"
+msgstr ""
+
+#: includes/class-mixes.php:198
+msgid "Youtube"
+msgstr ""
+
+#: includes/class-mixes.php:202
+msgid "Tiktok"
+msgstr ""
+
+#: includes/class-mixes.php:206
+msgid "Telegram"
+msgstr ""
+
+#: includes/class-mixes.php:210
+msgid "Discord"
+msgstr ""
+
+#: includes/class-mixes.php:320
+#: includes/class-mixes.php:419
+msgid "Prev"
+msgstr ""
+
+#: includes/class-mixes.php:321
+#: includes/class-mixes.php:420
+msgid "Next"
+msgstr ""
+
+#: includes/class-mixes.php:574
+msgid "or"
+msgstr ""
+
+#: includes/class-price.php:307
+msgid "United Arab Emirates dirham"
+msgstr ""
+
+#: includes/class-price.php:308
+msgid "Afghan afghani"
+msgstr ""
+
+#: includes/class-price.php:309
+msgid "Albanian lek"
+msgstr ""
+
+#: includes/class-price.php:310
+msgid "Armenian dram"
+msgstr ""
+
+#: includes/class-price.php:311
+msgid "Netherlands Antillean guilder"
+msgstr ""
+
+#: includes/class-price.php:312
+msgid "Angolan kwanza"
+msgstr ""
+
+#: includes/class-price.php:313
+msgid "Argentine peso"
+msgstr ""
+
+#: includes/class-price.php:314
+msgid "Australian dollar"
+msgstr ""
+
+#: includes/class-price.php:315
+msgid "Aruban florin"
+msgstr ""
+
+#: includes/class-price.php:316
+msgid "Azerbaijani manat"
+msgstr ""
+
+#: includes/class-price.php:317
+msgid "Bosnia and Herzegovina convertible mark"
+msgstr ""
+
+#: includes/class-price.php:318
+msgid "Barbadian dollar"
+msgstr ""
+
+#: includes/class-price.php:319
+msgid "Bangladeshi taka"
+msgstr ""
+
+#: includes/class-price.php:320
+msgid "Bulgarian lev"
+msgstr ""
+
+#: includes/class-price.php:321
+msgid "Bahraini dinar"
+msgstr ""
+
+#: includes/class-price.php:322
+msgid "Burundian franc"
+msgstr ""
+
+#: includes/class-price.php:323
+msgid "Bermudian dollar"
+msgstr ""
+
+#: includes/class-price.php:324
+msgid "Brunei dollar"
+msgstr ""
+
+#: includes/class-price.php:325
+msgid "Bolivian boliviano"
+msgstr ""
+
+#: includes/class-price.php:326
+msgid "Brazilian real"
+msgstr ""
+
+#: includes/class-price.php:327
+msgid "Bahamian dollar"
+msgstr ""
+
+#: includes/class-price.php:328
+msgid "Bitcoin"
+msgstr ""
+
+#: includes/class-price.php:329
+msgid "Bhutanese ngultrum"
+msgstr ""
+
+#: includes/class-price.php:330
+msgid "Botswana pula"
+msgstr ""
+
+#: includes/class-price.php:331
+msgid "Belarusian ruble (old)"
+msgstr ""
+
+#: includes/class-price.php:332
+msgid "Belarusian ruble"
+msgstr ""
+
+#: includes/class-price.php:333
+msgid "Belize dollar"
+msgstr ""
+
+#: includes/class-price.php:334
+msgid "Canadian dollar"
+msgstr ""
+
+#: includes/class-price.php:335
+msgid "Congolese franc"
+msgstr ""
+
+#: includes/class-price.php:336
+msgid "Swiss franc"
+msgstr ""
+
+#: includes/class-price.php:337
+msgid "Chilean peso"
+msgstr ""
+
+#: includes/class-price.php:338
+msgid "Chinese yuan"
+msgstr ""
+
+#: includes/class-price.php:339
+msgid "Colombian peso"
+msgstr ""
+
+#: includes/class-price.php:340
+msgid "Costa Rican col&oacute;n"
+msgstr ""
+
+#: includes/class-price.php:341
+msgid "Cuban convertible peso"
+msgstr ""
+
+#: includes/class-price.php:342
+msgid "Cuban peso"
+msgstr ""
+
+#: includes/class-price.php:343
+msgid "Cape Verdean escudo"
+msgstr ""
+
+#: includes/class-price.php:344
+msgid "Czech koruna"
+msgstr ""
+
+#: includes/class-price.php:345
+msgid "Djiboutian franc"
+msgstr ""
+
+#: includes/class-price.php:346
+msgid "Danish krone"
+msgstr ""
+
+#: includes/class-price.php:347
+msgid "Dominican peso"
+msgstr ""
+
+#: includes/class-price.php:348
+msgid "Algerian dinar"
+msgstr ""
+
+#: includes/class-price.php:349
+msgid "Egyptian pound"
+msgstr ""
+
+#: includes/class-price.php:350
+msgid "Eritrean nakfa"
+msgstr ""
+
+#: includes/class-price.php:351
+msgid "Ethiopian birr"
+msgstr ""
+
+#: includes/class-price.php:352
+msgid "Euro"
+msgstr ""
+
+#: includes/class-price.php:353
+msgid "Fijian dollar"
+msgstr ""
+
+#: includes/class-price.php:354
+msgid "Falkland Islands pound"
+msgstr ""
+
+#: includes/class-price.php:355
+msgid "Pound sterling"
+msgstr ""
+
+#: includes/class-price.php:356
+msgid "Georgian lari"
+msgstr ""
+
+#: includes/class-price.php:357
+msgid "Guernsey pound"
+msgstr ""
+
+#: includes/class-price.php:358
+msgid "Ghana cedi"
+msgstr ""
+
+#: includes/class-price.php:359
+msgid "Gibraltar pound"
+msgstr ""
+
+#: includes/class-price.php:360
+msgid "Gambian dalasi"
+msgstr ""
+
+#: includes/class-price.php:361
+msgid "Guinean franc"
+msgstr ""
+
+#: includes/class-price.php:362
+msgid "Guatemalan quetzal"
+msgstr ""
+
+#: includes/class-price.php:363
+msgid "Guyanese dollar"
+msgstr ""
+
+#: includes/class-price.php:364
+msgid "Hong Kong dollar"
+msgstr ""
+
+#: includes/class-price.php:365
+msgid "Honduran lempira"
+msgstr ""
+
+#: includes/class-price.php:366
+msgid "Croatian kuna"
+msgstr ""
+
+#: includes/class-price.php:367
+msgid "Haitian gourde"
+msgstr ""
+
+#: includes/class-price.php:368
+msgid "Hungarian forint"
+msgstr ""
+
+#: includes/class-price.php:369
+msgid "Indonesian rupiah"
+msgstr ""
+
+#: includes/class-price.php:370
+msgid "Israeli new shekel"
+msgstr ""
+
+#: includes/class-price.php:371
+msgid "Manx pound"
+msgstr ""
+
+#: includes/class-price.php:372
+msgid "Indian rupee"
+msgstr ""
+
+#: includes/class-price.php:373
+msgid "Iraqi dinar"
+msgstr ""
+
+#: includes/class-price.php:374
+msgid "Iranian rial"
+msgstr ""
+
+#: includes/class-price.php:375
+msgid "Iranian toman"
+msgstr ""
+
+#: includes/class-price.php:376
+msgid "Icelandic kr&oacute;na"
+msgstr ""
+
+#: includes/class-price.php:377
+msgid "Jersey pound"
+msgstr ""
+
+#: includes/class-price.php:378
+msgid "Jamaican dollar"
+msgstr ""
+
+#: includes/class-price.php:379
+msgid "Jordanian dinar"
+msgstr ""
+
+#: includes/class-price.php:380
+msgid "Japanese yen"
+msgstr ""
+
+#: includes/class-price.php:381
+msgid "Kenyan shilling"
+msgstr ""
+
+#: includes/class-price.php:382
+msgid "Kyrgyzstani som"
+msgstr ""
+
+#: includes/class-price.php:383
+msgid "Cambodian riel"
+msgstr ""
+
+#: includes/class-price.php:384
+msgid "Comorian franc"
+msgstr ""
+
+#: includes/class-price.php:385
+msgid "North Korean won"
+msgstr ""
+
+#: includes/class-price.php:386
+msgid "South Korean won"
+msgstr ""
+
+#: includes/class-price.php:387
+msgid "Kuwaiti dinar"
+msgstr ""
+
+#: includes/class-price.php:388
+msgid "Cayman Islands dollar"
+msgstr ""
+
+#: includes/class-price.php:389
+msgid "Kazakhstani tenge"
+msgstr ""
+
+#: includes/class-price.php:390
+msgid "Lao kip"
+msgstr ""
+
+#: includes/class-price.php:391
+msgid "Lebanese pound"
+msgstr ""
+
+#: includes/class-price.php:392
+msgid "Sri Lankan rupee"
+msgstr ""
+
+#: includes/class-price.php:393
+msgid "Liberian dollar"
+msgstr ""
+
+#: includes/class-price.php:394
+msgid "Lesotho loti"
+msgstr ""
+
+#: includes/class-price.php:395
+msgid "Libyan dinar"
+msgstr ""
+
+#: includes/class-price.php:396
+msgid "Moroccan dirham"
+msgstr ""
+
+#: includes/class-price.php:397
+msgid "Moldovan leu"
+msgstr ""
+
+#: includes/class-price.php:398
+msgid "Malagasy ariary"
+msgstr ""
+
+#: includes/class-price.php:399
+msgid "Macedonian denar"
+msgstr ""
+
+#: includes/class-price.php:400
+msgid "Burmese kyat"
+msgstr ""
+
+#: includes/class-price.php:401
+msgid "Mongolian t&ouml;gr&ouml;g"
+msgstr ""
+
+#: includes/class-price.php:402
+msgid "Macanese pataca"
+msgstr ""
+
+#: includes/class-price.php:403
+msgid "Mauritanian ouguiya"
+msgstr ""
+
+#: includes/class-price.php:404
+msgid "Mauritian rupee"
+msgstr ""
+
+#: includes/class-price.php:405
+msgid "Maldivian rufiyaa"
+msgstr ""
+
+#: includes/class-price.php:406
+msgid "Malawian kwacha"
+msgstr ""
+
+#: includes/class-price.php:407
+msgid "Mexican peso"
+msgstr ""
+
+#: includes/class-price.php:408
+msgid "Malaysian ringgit"
+msgstr ""
+
+#: includes/class-price.php:409
+msgid "Mozambican metical"
+msgstr ""
+
+#: includes/class-price.php:410
+msgid "Namibian dollar"
+msgstr ""
+
+#: includes/class-price.php:411
+msgid "Nigerian naira"
+msgstr ""
+
+#: includes/class-price.php:412
+msgid "Nicaraguan c&oacute;rdoba"
+msgstr ""
+
+#: includes/class-price.php:413
+msgid "Norwegian krone"
+msgstr ""
+
+#: includes/class-price.php:414
+msgid "Nepalese rupee"
+msgstr ""
+
+#: includes/class-price.php:415
+msgid "New Zealand dollar"
+msgstr ""
+
+#: includes/class-price.php:416
+msgid "Omani rial"
+msgstr ""
+
+#: includes/class-price.php:417
+msgid "Panamanian balboa"
+msgstr ""
+
+#: includes/class-price.php:418
+msgid "Sol"
+msgstr ""
+
+#: includes/class-price.php:419
+msgid "Papua New Guinean kina"
+msgstr ""
+
+#: includes/class-price.php:420
+msgid "Philippine peso"
+msgstr ""
+
+#: includes/class-price.php:421
+msgid "Pakistani rupee"
+msgstr ""
+
+#: includes/class-price.php:422
+msgid "Polish z&#x142;oty"
+msgstr ""
+
+#: includes/class-price.php:423
+msgid "Transnistrian ruble"
+msgstr ""
+
+#: includes/class-price.php:424
+msgid "Paraguayan guaran&iacute;"
+msgstr ""
+
+#: includes/class-price.php:425
+msgid "Qatari riyal"
+msgstr ""
+
+#: includes/class-price.php:426
+msgid "Romanian leu"
+msgstr ""
+
+#: includes/class-price.php:427
+msgid "Serbian dinar"
+msgstr ""
+
+#: includes/class-price.php:428
+msgid "Russian ruble"
+msgstr ""
+
+#: includes/class-price.php:429
+msgid "Rwandan franc"
+msgstr ""
+
+#: includes/class-price.php:430
+msgid "Saudi riyal"
+msgstr ""
+
+#: includes/class-price.php:431
+msgid "Solomon Islands dollar"
+msgstr ""
+
+#: includes/class-price.php:432
+msgid "Seychellois rupee"
+msgstr ""
+
+#: includes/class-price.php:433
+msgid "Sudanese pound"
+msgstr ""
+
+#: includes/class-price.php:434
+msgid "Swedish krona"
+msgstr ""
+
+#: includes/class-price.php:435
+msgid "Singapore dollar"
+msgstr ""
+
+#: includes/class-price.php:436
+msgid "Saint Helena pound"
+msgstr ""
+
+#: includes/class-price.php:437
+msgid "Sierra Leonean leone"
+msgstr ""
+
+#: includes/class-price.php:438
+msgid "Somali shilling"
+msgstr ""
+
+#: includes/class-price.php:439
+msgid "Surinamese dollar"
+msgstr ""
+
+#: includes/class-price.php:440
+msgid "South Sudanese pound"
+msgstr ""
+
+#: includes/class-price.php:441
+msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra"
+msgstr ""
+
+#: includes/class-price.php:442
+msgid "Syrian pound"
+msgstr ""
+
+#: includes/class-price.php:443
+msgid "Swazi lilangeni"
+msgstr ""
+
+#: includes/class-price.php:444
+msgid "Thai baht"
+msgstr ""
+
+#: includes/class-price.php:445
+msgid "Tajikistani somoni"
+msgstr ""
+
+#: includes/class-price.php:446
+msgid "Turkmenistan manat"
+msgstr ""
+
+#: includes/class-price.php:447
+msgid "Tunisian dinar"
+msgstr ""
+
+#: includes/class-price.php:448
+msgid "Tongan pa&#x2bb;anga"
+msgstr ""
+
+#: includes/class-price.php:449
+msgid "Turkish lira"
+msgstr ""
+
+#: includes/class-price.php:450
+msgid "Trinidad and Tobago dollar"
+msgstr ""
+
+#: includes/class-price.php:451
+msgid "New Taiwan dollar"
+msgstr ""
+
+#: includes/class-price.php:452
+msgid "Tanzanian shilling"
+msgstr ""
+
+#: includes/class-price.php:453
+msgid "Ukrainian hryvnia"
+msgstr ""
+
+#: includes/class-price.php:454
+msgid "Ugandan shilling"
+msgstr ""
+
+#: includes/class-price.php:455
+msgid "United States (US) dollar"
+msgstr ""
+
+#: includes/class-price.php:456
+msgid "Uruguayan peso"
+msgstr ""
+
+#: includes/class-price.php:457
+msgid "Uzbekistani som"
+msgstr ""
+
+#: includes/class-price.php:458
+msgid "Venezuelan bol&iacute;var"
+msgstr ""
+
+#: includes/class-price.php:459
+msgid "Bol&iacute;var soberano"
+msgstr ""
+
+#: includes/class-price.php:460
+msgid "Vietnamese &#x111;&#x1ed3;ng"
+msgstr ""
+
+#: includes/class-price.php:461
+msgid "Vanuatu vatu"
+msgstr ""
+
+#: includes/class-price.php:462
+msgid "Samoan t&#x101;l&#x101;"
+msgstr ""
+
+#: includes/class-price.php:463
+msgid "Central African CFA franc"
+msgstr ""
+
+#: includes/class-price.php:464
+msgid "East Caribbean dollar"
+msgstr ""
+
+#: includes/class-price.php:465
+msgid "West African CFA franc"
+msgstr ""
+
+#: includes/class-price.php:466
+msgid "CFP franc"
+msgstr ""
+
+#: includes/class-price.php:467
+msgid "Yemeni rial"
+msgstr ""
+
+#: includes/class-price.php:468
+msgid "South African rand"
+msgstr ""
+
+#: includes/class-price.php:469
+msgid "Zambian kwacha"
+msgstr ""
+
+#: includes/class-recaptcha.php:31
+msgid "reCAPTCHA is a required field"
+msgstr ""
+
+#: includes/class-review.php:174
+msgid "%d Review"
+msgid_plural "%d Reviews"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-review.php:176
+msgid "(%d Review)"
+msgid_plural "(%d Reviews)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-review.php:204
+msgid "Your Rating for this listing"
+msgstr ""
+
+#: includes/class-review.php:219
+msgid "Your Rating"
+msgstr ""
+
+#: includes/class-scripts.php:51
+msgid "Invalid file type. Accepted types:"
+msgstr ""
+
+#: includes/class-scripts.php:52
+msgid "Invalid file size. Accepted size %sMB:"
+msgstr ""
+
+#: includes/class-scripts.php:62
+#: includes/class-scripts.php:232
+msgid "No Results Found"
+msgstr ""
+
+#: includes/class-scripts.php:63
+#: includes/class-scripts.php:228
+msgid "Please enter 2 or more characters"
+msgstr ""
+
+#: includes/class-scripts.php:171
+msgid "File size should not greater than %s."
+msgstr ""
+
+#: includes/class-scripts.php:172
+msgid "Suitable files are %s."
+msgstr ""
+
+#: includes/class-scripts.php:179
+msgid "Show more"
+msgstr ""
+
+#: includes/class-scripts.php:181
+msgid "Show less"
+msgstr ""
+
+#: includes/class-scripts.php:185
+msgid "Are you sure?"
+msgstr ""
+
+#: includes/class-scripts.php:188
+msgid "Not Allow"
+msgstr ""
+
+#: includes/class-scripts.php:189
+msgid "Choose a cv"
+msgstr ""
+
+#: includes/class-shortcodes.php:97
+#: includes/class-user.php:412
+#: includes/socials/class-social-facebook.php:227
+#: includes/socials/class-social-google.php:160
+#: includes/socials/class-social-linkedin.php:251
+#: includes/socials/class-social-twitter.php:182
+msgid "Your account is denied"
+msgstr ""
+
+#: includes/class-submit-form.php:253
+msgid "Can not create job"
+msgstr ""
+
+#: includes/class-user-notification.php:75
+msgid "You can not remove the notification"
+msgstr ""
+
+#: includes/class-user-notification.php:86
+msgid "The notification was successfully removed"
+msgstr ""
+
+#: includes/class-user-notification.php:90
+msgid "The notification dosen't exist"
+msgstr ""
+
+#: includes/class-user-notification.php:174
+msgid "A new application is submitted on your job <a href=\"%s\">%s</a>"
+msgstr ""
+
+#: includes/class-user-notification.php:179
+msgid "A new application is submitted on your job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:185
+msgid "The application is removed on your job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:191
+msgid "A new meeting is created on the job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:199
+msgid "A meeting is re-schedule on the job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:206
+msgid "A meeting is removed on the job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:213
+msgid "A meeting is canceled on your job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:219
+msgid "The application is rejected on your job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:225
+msgid "The application is undo rejected on your job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:231
+msgid "The application is approved on your job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:237
+msgid "The application is undo approved on your job <a href=\"%s\">%s</a> by <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:248
+msgid "A new private message from <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:252
+msgid "A new private message from %s."
+msgstr ""
+
+#: includes/class-user-notification.php:262
+msgid "You are invited to apply job <a href=\"%s\">%s</a>."
+msgstr ""
+
+#: includes/class-user-notification.php:270
+msgid "You are invited to apply jobs %s."
+msgstr ""
+
+#: includes/class-user.php:67
+#: includes/post-types/class-post-type-candidate.php:56
+#: templates/misc/register.php:12
+msgid "Candidate"
+msgstr ""
+
+#: includes/class-user.php:83
+msgid "Employee"
+msgstr ""
+
+#: includes/class-user.php:376
+#: includes/class-user.php:441
+#: includes/class-user.php:698
+msgid "Captcha is not valid"
+msgstr ""
+
+#: includes/class-user.php:391
+msgid "Please fill all form fields"
+msgstr ""
+
+#: includes/class-user.php:419
+msgid "Wrong username or password. Please try again!!!"
+msgstr ""
+
+#: includes/class-user.php:426
+msgid "Signin successful, redirecting..."
+msgstr ""
+
+#: includes/class-user.php:452
+msgid "Enter an username or e-mail address."
+msgstr ""
+
+#: includes/class-user.php:458
+msgid "There is no user registered with that email address."
+msgstr ""
+
+#: includes/class-user.php:464
+msgid "There is no user registered with that username."
+msgstr ""
+
+#: includes/class-user.php:467
+msgid "Invalid username or e-mail address."
+msgstr ""
+
+#: includes/class-user.php:490
+#: includes/class-user.php:1590
+msgid "Your account is denied."
+msgstr ""
+
+#: includes/class-user.php:524
+msgid "Check your email address for you new password."
+msgstr ""
+
+#: includes/class-user.php:526
+msgid "System is unable to send you mail containg your new password."
+msgstr ""
+
+#: includes/class-user.php:529
+msgid "Oops! Something went wrong while updating your account."
+msgstr ""
+
+#: includes/class-user.php:598
+#: includes/class-user.php:673
+msgid "You have registered, redirecting ..."
+msgstr ""
+
+#: includes/class-user.php:705
+msgid "Terms and Conditions are required"
+msgstr ""
+
+#: includes/class-user.php:713
+msgid "Password length must be greater than 8 characters"
+msgstr ""
+
+#: includes/class-user.php:717
+msgid "Password must have at least 1 numeric character"
+msgstr ""
+
+#: includes/class-user.php:720
+msgid "Password must have at least 1 lower case character"
+msgstr ""
+
+#: includes/class-user.php:723
+msgid "Password must have at least 1 upper case character"
+msgstr ""
+
+#: includes/class-user.php:727
+msgid "Password must be equal Confirm Password"
+msgstr ""
+
+#: includes/class-user.php:732
+msgid "Email is not valid"
+msgstr ""
+
+#: includes/class-user.php:736
+msgid "Email is already in use. Please use a different email to register"
+msgstr ""
+
+#: includes/class-user.php:940
+msgid "Please Enter the password."
+msgstr ""
+
+#: includes/class-user.php:945
+msgid "Please Enter the correct password."
+msgstr ""
+
+#: includes/class-user.php:954
+msgid "Your profile deleted successfully."
+msgstr ""
+
+#: includes/class-user.php:1225
+msgid "All fields are required."
+msgstr ""
+
+#: includes/class-user.php:1230
+msgid "New and retyped password are not same."
+msgstr ""
+
+#: includes/class-user.php:1236
+msgid "Your old password is not correct."
+msgstr ""
+
+#: includes/class-user.php:1243
+msgid "Your password has been successfully changed."
+msgstr ""
+
+#: includes/class-user.php:1336
+msgid "Profile has been successfully updated."
+msgstr ""
+
+#: includes/class-user.php:1339
+msgid "Can not update profile"
+msgstr ""
+
+#: includes/class-user.php:1412
+msgid "Resume has been successfully updated."
+msgstr ""
+
+#: includes/class-user.php:1415
+msgid "Can not update resume"
+msgstr ""
+
+#: includes/class-user.php:1527
+msgid "Username or Email not exactly."
+msgstr ""
+
+#: includes/class-user.php:1560
+msgid "Sent a email successfully."
+msgstr ""
+
+#: includes/class-user.php:1566
+msgid "Send a email error."
+msgstr ""
+
+#: includes/class-user.php:1574
+msgid "Your account is not available."
+msgstr ""
+
+#: includes/class-user.php:1612
+#: includes/class-user.php:1620
+msgid "The user is not exists."
+msgstr ""
+
+#: includes/class-user.php:1627
+msgid "Approve key is not exactly."
+msgstr ""
+
+#: includes/class-user.php:1636
+msgid "Your account is approved."
+msgstr ""
+
+#: includes/class-user.php:1846
+msgid "Approve"
+msgstr ""
+
+#: includes/class-user.php:1847
+msgid "Deny"
+msgstr ""
+
+#: includes/class-user.php:1869
+#: includes/post-types/class-post-type-candidate.php:497
+#: includes/post-types/class-post-type-job-applicant.php:84
+#: includes/post-types/class-post-type-job-applicant.php:139
+#: includes/post-types/class-post-type-job_listing.php:431
+#: templates/submission/my-jobs.php:95
+msgid "Status"
+msgstr ""
+
+#: includes/class-user.php:1892
+msgid "approved"
+msgstr ""
+
+#: includes/class-user.php:1894
+msgid "denied"
+msgstr ""
+
+#: includes/class-user.php:1896
+msgid "pending"
+msgstr ""
+
+#: includes/class-user.php:1915
+msgid "Filter"
+msgstr ""
+
+#: includes/class-user.php:1922
+#: includes/class-user.php:1924
+msgid "View all users"
+msgstr ""
+
+#: includes/class-user.php:2004
+msgid "Registration complete. Before you can login, you must activate your account sent to your email address."
+msgstr ""
+
+#: includes/class-user.php:2006
+msgid "Registration complete. Your account has to be confirmed by an administrator before you can login"
+msgstr ""
+
+#: includes/class-user.php:2008
+#: includes/class-user.php:2027
+msgid "Your account has to be confirmed yet."
+msgstr ""
+
+#: includes/class-user.php:2023
+msgid "Account account has not confirmed yet, you must activate your account with the link sent to your email address. If you did not receive this email, please check your junk/spam folder. <a href=\"javascript:void(0);\" class=\"wp-job-board-pro-resend-approve-account-btn\" data-login=\"%s\">Click here</a> to resend the activation email."
+msgstr ""
+
+#: includes/class-user.php:2025
+msgid "Your account has to be confirmed by an administrator before you can login."
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-display.php:94
+#: includes/custom-fields/class-custom-fields-display.php:101
+msgid "Download file"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:55
+msgid "Profile Form"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:56
+msgid "Resume Form"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:111
+#: includes/custom-fields/class-custom-fields-html.php:209
+#: includes/custom-fields/class-custom-fields-html.php:298
+#: includes/custom-fields/class-custom-fields-html.php:382
+#: includes/custom-fields/class-custom-fields-html.php:480
+#: includes/custom-fields/class-custom-fields-html.php:545
+#: includes/custom-fields/class-custom-fields-html.php:612
+#: includes/custom-fields/class-custom-fields-html.php:692
+#: includes/custom-fields/class-custom-fields-html.php:770
+#: includes/custom-fields/class-custom-fields-html.php:844
+#: includes/custom-fields/class-custom-fields-html.php:918
+#: includes/custom-fields/class-custom-fields-html.php:995
+#: includes/custom-fields/class-custom-fields-html.php:1083
+#: includes/custom-fields/class-custom-fields-html.php:1161
+msgid "Label"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:112
+#: includes/custom-fields/class-custom-fields-html.php:210
+#: includes/custom-fields/class-custom-fields-html.php:299
+#: includes/custom-fields/class-custom-fields-html.php:383
+msgid "Key"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:113
+#: includes/custom-fields/class-custom-fields-html.php:211
+#: includes/custom-fields/class-custom-fields-html.php:384
+#: includes/custom-fields/class-custom-fields-html.php:481
+#: includes/custom-fields/class-custom-fields-html.php:613
+#: includes/custom-fields/class-custom-fields-html.php:693
+#: includes/custom-fields/class-custom-fields-html.php:771
+#: includes/custom-fields/class-custom-fields-html.php:845
+#: includes/custom-fields/class-custom-fields-html.php:919
+#: includes/custom-fields/class-custom-fields-html.php:996
+#: includes/custom-fields/class-custom-fields-html.php:1084
+#: includes/custom-fields/class-custom-fields-html.php:1162
+msgid "Placeholder"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:114
+#: includes/custom-fields/class-custom-fields-html.php:212
+#: includes/custom-fields/class-custom-fields-html.php:385
+#: includes/custom-fields/class-custom-fields-html.php:482
+#: includes/custom-fields/class-custom-fields-html.php:547
+#: includes/custom-fields/class-custom-fields-html.php:614
+#: includes/custom-fields/class-custom-fields-html.php:694
+#: includes/custom-fields/class-custom-fields-html.php:772
+#: includes/custom-fields/class-custom-fields-html.php:846
+#: includes/custom-fields/class-custom-fields-html.php:920
+#: includes/custom-fields/class-custom-fields-html.php:997
+#: includes/custom-fields/class-custom-fields-html.php:1085
+#: includes/custom-fields/class-custom-fields-html.php:1163
+#: includes/custom-fields/class-fields-manager.php:679
+#: includes/custom-fields/class-fields-manager.php:917
+#: includes/custom-fields/class-fields-manager.php:997
+#: includes/custom-fields/class-fields-manager.php:1248
+#: includes/custom-fields/class-fields-manager.php:1299
+#: includes/custom-fields/class-fields-manager.php:1328
+msgid "Description"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:121
+#: includes/custom-fields/class-custom-fields-html.php:219
+#: includes/custom-fields/class-custom-fields-html.php:304
+#: includes/custom-fields/class-custom-fields-html.php:397
+msgid "Icon"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:135
+#: includes/custom-fields/class-custom-fields-html.php:231
+#: includes/custom-fields/class-custom-fields-html.php:412
+#: includes/custom-fields/class-custom-fields-html.php:483
+#: includes/custom-fields/class-custom-fields-html.php:548
+#: includes/custom-fields/class-custom-fields-html.php:625
+#: includes/custom-fields/class-custom-fields-html.php:703
+#: includes/custom-fields/class-custom-fields-html.php:780
+#: includes/custom-fields/class-custom-fields-html.php:853
+#: includes/custom-fields/class-custom-fields-html.php:931
+#: includes/custom-fields/class-custom-fields-html.php:1020
+#: includes/custom-fields/class-custom-fields-html.php:1098
+#: includes/custom-fields/class-custom-fields-html.php:1176
+msgid "Show in frontend form"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:136
+#: includes/custom-fields/class-custom-fields-html.php:232
+#: includes/custom-fields/class-custom-fields-html.php:413
+#: includes/custom-fields/class-custom-fields-html.php:484
+#: includes/custom-fields/class-custom-fields-html.php:549
+#: includes/custom-fields/class-custom-fields-html.php:626
+#: includes/custom-fields/class-custom-fields-html.php:704
+#: includes/custom-fields/class-custom-fields-html.php:781
+#: includes/custom-fields/class-custom-fields-html.php:854
+#: includes/custom-fields/class-custom-fields-html.php:932
+#: includes/custom-fields/class-custom-fields-html.php:1021
+#: includes/custom-fields/class-custom-fields-html.php:1099
+#: includes/custom-fields/class-custom-fields-html.php:1177
+msgid "Show in admin form"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:140
+#: includes/custom-fields/class-custom-fields-html.php:236
+#: includes/custom-fields/class-custom-fields-html.php:319
+#: includes/custom-fields/class-custom-fields-html.php:417
+#: includes/custom-fields/class-custom-fields-html.php:488
+#: includes/custom-fields/class-custom-fields-html.php:553
+#: includes/custom-fields/class-custom-fields-html.php:630
+#: includes/custom-fields/class-custom-fields-html.php:708
+#: includes/custom-fields/class-custom-fields-html.php:785
+#: includes/custom-fields/class-custom-fields-html.php:858
+#: includes/custom-fields/class-custom-fields-html.php:936
+#: includes/custom-fields/class-custom-fields-html.php:1025
+#: includes/custom-fields/class-custom-fields-html.php:1103
+#: includes/custom-fields/class-custom-fields-html.php:1181
+msgid "Show in Candidate Form"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:148
+#: includes/custom-fields/class-custom-fields-html.php:242
+#: includes/custom-fields/class-custom-fields-html.php:423
+#: includes/custom-fields/class-custom-fields-html.php:494
+#: includes/custom-fields/class-custom-fields-html.php:559
+#: includes/custom-fields/class-custom-fields-html.php:636
+#: includes/custom-fields/class-custom-fields-html.php:714
+#: includes/custom-fields/class-custom-fields-html.php:791
+#: includes/custom-fields/class-custom-fields-html.php:864
+#: includes/custom-fields/class-custom-fields-html.php:942
+#: includes/custom-fields/class-custom-fields-html.php:1031
+#: includes/custom-fields/class-custom-fields-html.php:1109
+#: includes/custom-fields/class-custom-fields-html.php:1187
+msgid "Show in register form"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:152
+#: includes/custom-fields/class-custom-fields-html.php:245
+#: includes/custom-fields/class-custom-fields-html.php:426
+#: includes/custom-fields/class-custom-fields-html.php:497
+#: includes/custom-fields/class-custom-fields-html.php:562
+#: includes/custom-fields/class-custom-fields-html.php:639
+#: includes/custom-fields/class-custom-fields-html.php:717
+#: includes/custom-fields/class-custom-fields-html.php:794
+#: includes/custom-fields/class-custom-fields-html.php:867
+#: includes/custom-fields/class-custom-fields-html.php:945
+#: includes/custom-fields/class-custom-fields-html.php:1034
+#: includes/custom-fields/class-custom-fields-html.php:1112
+#: includes/custom-fields/class-custom-fields-html.php:1190
+msgid "Required"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:162
+#: includes/custom-fields/class-custom-fields-html.php:257
+#: includes/custom-fields/class-custom-fields-html.php:336
+#: includes/custom-fields/class-custom-fields-html.php:434
+#: includes/custom-fields/class-custom-fields-html.php:505
+#: includes/custom-fields/class-custom-fields-html.php:570
+#: includes/custom-fields/class-custom-fields-html.php:647
+#: includes/custom-fields/class-custom-fields-html.php:725
+#: includes/custom-fields/class-custom-fields-html.php:802
+#: includes/custom-fields/class-custom-fields-html.php:875
+#: includes/custom-fields/class-custom-fields-html.php:953
+#: includes/custom-fields/class-custom-fields-html.php:1042
+#: includes/custom-fields/class-custom-fields-html.php:1120
+#: includes/custom-fields/class-custom-fields-html.php:1198
+msgid "Enable package visibility"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:162
+#: includes/custom-fields/class-custom-fields-html.php:164
+#: includes/custom-fields/class-custom-fields-html.php:257
+#: includes/custom-fields/class-custom-fields-html.php:259
+#: includes/custom-fields/class-custom-fields-html.php:336
+#: includes/custom-fields/class-custom-fields-html.php:337
+#: includes/custom-fields/class-custom-fields-html.php:434
+#: includes/custom-fields/class-custom-fields-html.php:435
+#: includes/custom-fields/class-custom-fields-html.php:505
+#: includes/custom-fields/class-custom-fields-html.php:506
+#: includes/custom-fields/class-custom-fields-html.php:570
+#: includes/custom-fields/class-custom-fields-html.php:571
+#: includes/custom-fields/class-custom-fields-html.php:647
+#: includes/custom-fields/class-custom-fields-html.php:648
+#: includes/custom-fields/class-custom-fields-html.php:725
+#: includes/custom-fields/class-custom-fields-html.php:726
+#: includes/custom-fields/class-custom-fields-html.php:802
+#: includes/custom-fields/class-custom-fields-html.php:803
+#: includes/custom-fields/class-custom-fields-html.php:875
+#: includes/custom-fields/class-custom-fields-html.php:876
+#: includes/custom-fields/class-custom-fields-html.php:953
+#: includes/custom-fields/class-custom-fields-html.php:954
+#: includes/custom-fields/class-custom-fields-html.php:1042
+#: includes/custom-fields/class-custom-fields-html.php:1043
+#: includes/custom-fields/class-custom-fields-html.php:1120
+#: includes/custom-fields/class-custom-fields-html.php:1121
+#: includes/custom-fields/class-custom-fields-html.php:1198
+#: includes/custom-fields/class-custom-fields-html.php:1199
+msgid "Choose Packages to show this field insubmit form."
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:164
+#: includes/custom-fields/class-custom-fields-html.php:259
+#: includes/custom-fields/class-custom-fields-html.php:337
+#: includes/custom-fields/class-custom-fields-html.php:435
+#: includes/custom-fields/class-custom-fields-html.php:506
+#: includes/custom-fields/class-custom-fields-html.php:571
+#: includes/custom-fields/class-custom-fields-html.php:648
+#: includes/custom-fields/class-custom-fields-html.php:726
+#: includes/custom-fields/class-custom-fields-html.php:803
+#: includes/custom-fields/class-custom-fields-html.php:876
+#: includes/custom-fields/class-custom-fields-html.php:954
+#: includes/custom-fields/class-custom-fields-html.php:1043
+#: includes/custom-fields/class-custom-fields-html.php:1121
+#: includes/custom-fields/class-custom-fields-html.php:1199
+msgid "Packages"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:170
+#: includes/custom-fields/class-custom-fields-html.php:266
+#: includes/custom-fields/class-custom-fields-html.php:442
+msgid "Position Display"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:213
+#: includes/custom-fields/class-custom-fields-html.php:930
+msgid "Options"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:213
+#: includes/custom-fields/class-custom-fields-html.php:930
+msgid "Add each option in a new line."
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:323
+msgid "1 Column"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:324
+msgid "2 Column"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:325
+msgid "3 Column"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:326
+msgid "4 Column"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:328
+msgid "Columns Inner"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:387
+#: includes/custom-fields/class-custom-fields-html.php:774
+msgid "File limit"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:388
+#: includes/custom-fields/class-custom-fields-html.php:697
+#: includes/custom-fields/class-custom-fields-html.php:775
+msgid "Limit Size"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:388
+#: includes/custom-fields/class-custom-fields-html.php:697
+#: includes/custom-fields/class-custom-fields-html.php:775
+msgid "Enter limit size by megabyte"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:391
+#: includes/custom-fields/class-custom-fields-html.php:701
+#: includes/custom-fields/class-custom-fields-html.php:778
+msgid "Allowed file types"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:410
+msgid "Multiple files"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:617
+#: includes/custom-fields/class-custom-fields-html.php:1003
+#: includes/custom-fields/class-custom-fields-html.php:1014
+msgid "Term Select"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:618
+#: includes/custom-fields/class-custom-fields-html.php:1004
+#: includes/custom-fields/class-custom-fields-html.php:1015
+msgid "Term Select Search"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:619
+#: includes/custom-fields/class-custom-fields-html.php:1005
+msgid "Term Multiselect"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:620
+#: includes/custom-fields/class-custom-fields-html.php:1006
+msgid "Term Multiselect Search"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:621
+#: includes/custom-fields/class-custom-fields-html.php:1007
+msgid "Term Checklist"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:622
+#: includes/custom-fields/class-custom-fields-html.php:1008
+msgid "Term Radio Button"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:624
+#: includes/custom-fields/class-custom-fields-html.php:852
+#: includes/custom-fields/class-custom-fields-html.php:928
+#: includes/custom-fields/class-custom-fields-html.php:1010
+#: includes/custom-fields/class-custom-fields-html.php:1017
+msgid "Template"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:696
+msgid "Limit Files"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:849
+#: includes/custom-fields/class-fields-manager.php:326
+msgid "Textarea"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:850
+#: includes/custom-fields/class-fields-manager.php:327
+msgid "WP Editor"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:923
+#: includes/custom-fields/class-fields-manager.php:337
+msgid "Select"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:924
+msgid "Multi Select"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:925
+msgid "Multi Check"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:926
+msgid "Radio Button"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:1096
+#: includes/custom-fields/class-custom-fields-html.php:1174
+msgid "Allowed salary types"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields-html.php:1234
+msgid "%s Field %s"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields.php:92
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:94
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:94
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:125
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:101
+msgid "Posted By"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields.php:110
+msgid "Employer Author"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields.php:119
+msgid "Search employers user..."
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields.php:127
+msgid "Job Data"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields.php:162
+#: includes/custom-fields/class-custom-fields.php:246
+#: includes/custom-fields/class-custom-fields.php:331
+msgid "Search Distance"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields.php:211
+msgid "Employer Data"
+msgstr ""
+
+#: includes/custom-fields/class-custom-fields.php:289
+msgid "Candidate Data"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:22
+#: includes/custom-fields/class-fields-manager.php:24
+#: includes/custom-fields/class-fields-manager.php:26
+msgid "Fields Manager"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:92
+msgid "Fields manager"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:195
+msgid "Create a custom field"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:206
+msgid "Create"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:213
+msgid "Available Fields"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:323
+msgid "Direct Input"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:325
+msgid "Text"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:328
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:89
+#: includes/post-types/class-post-type-candidate-alert.php:130
+#: includes/post-types/class-post-type-employer.php:274
+#: includes/post-types/class-post-type-job-alert.php:130
+#: templates/misc/meeting-form.php:40
+#: templates/misc/meeting-reschedule-form.php:33
+msgid "Date"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:329
+msgid "Number"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:330
+#: includes/custom-fields/class-fields-manager.php:824
+#: includes/custom-fields/class-fields-manager.php:1201
+msgid "Url"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:335
+msgid "Choices"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:338
+msgid "Multiselect"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:339
+msgid "Checkbox"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:340
+msgid "Radio Buttons"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:344
+msgid "Form UI"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:346
+msgid "Heading"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:350
+msgid "Others"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:352
+msgid "File"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:382
+#: includes/custom-fields/class-fields-manager.php:1136
+#: includes/post-types/class-post-type-job-applicant.php:136
+#: templates/submission/my-jobs.php:93
+msgid "Job Title"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:391
+#: templates/content-single-employer.php:21
+#: templates/content-single-job_listing.php:21
+msgid "Job Description"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:413
+#: includes/custom-fields/class-fields-manager.php:1045
+msgid "Expiry Date"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:429
+msgid "Featured Job"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:432
+msgid "Featured properties will be sticky during searches, and can be styled differently."
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:439
+#: includes/post-types/class-post-type-job_listing.php:428
+msgid "Urgent Job"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:442
+msgid "Urgent jobs will be sticky during searches, and can be styled differently."
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:449
+#: includes/post-types/class-post-type-job_listing.php:342
+#: includes/post-types/class-post-type-job_listing.php:430
+msgid "Filled"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:452
+msgid "Filled listings will no longer accept applications."
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:474
+msgid "Banner Image"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:482
+#: includes/custom-fields/class-fields-manager.php:766
+msgid "Logo Image"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:490
+msgid "Application Deadline Date"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:502
+msgid "Job Apply Type"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:508
+msgid "External URL for Apply Job"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:513
+msgid "Job Apply Email"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:518
+#: includes/custom-fields/class-fields-manager.php:761
+#: includes/custom-fields/class-fields-manager.php:1131
+msgid "Phone Number"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:523
+msgid "Min. Salary"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:529
+msgid "Max. Salary"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:549
+#: includes/custom-fields/class-fields-manager.php:831
+#: includes/custom-fields/class-fields-manager.php:1208
+msgid "Friendly Address"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:555
+#: includes/custom-fields/class-fields-manager.php:837
+#: includes/custom-fields/class-fields-manager.php:1214
+msgid "Maps Location"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:588
+#: includes/custom-fields/class-fields-manager.php:866
+#: includes/custom-fields/class-fields-manager.php:1255
+msgid "Experience"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:600
+#: includes/custom-fields/class-fields-manager.php:1397
+msgid "Gender"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:609
+msgid "Industry"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:622
+#: includes/custom-fields/class-fields-manager.php:1417
+msgid "Qualification"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:633
+msgid "Career Level"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:644
+msgid "Photos"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:653
+#: includes/custom-fields/class-fields-manager.php:792
+#: includes/custom-fields/class-fields-manager.php:1163
+msgid "Add or Upload Images"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:657
+#: includes/custom-fields/class-fields-manager.php:796
+#: includes/custom-fields/class-fields-manager.php:1177
+msgid "Introduction Video URL"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:669
+msgid "Employer name"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:698
+msgid "Featured Employer"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:701
+#: includes/custom-fields/class-fields-manager.php:1019
+msgid "Featured employer will be sticky during searches, and can be styled differently."
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:708
+#: includes/custom-fields/class-fields-manager.php:1036
+#: includes/post-types/class-post-type-candidate.php:491
+#: includes/post-types/class-post-type-employer.php:270
+msgid "Attached User"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:729
+#: includes/custom-fields/class-fields-manager.php:1083
+msgid "Profile url"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:756
+msgid "Website"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:774
+msgid "Cover Photo"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:783
+msgid "Profile Photos"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:801
+msgid "Company Size"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:806
+#: includes/custom-fields/class-fields-manager.php:1182
+msgid "Socials"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:810
+#: includes/custom-fields/class-fields-manager.php:1186
+msgid "Network {#}"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:811
+#: includes/custom-fields/class-fields-manager.php:1187
+msgid "Add Another Network"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:812
+#: includes/custom-fields/class-fields-manager.php:1188
+msgid "Remove Network"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:818
+#: includes/custom-fields/class-fields-manager.php:1195
+msgid "Network"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:844
+msgid "Members"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:848
+msgid "Member {#}"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:849
+msgid "Add Another Member"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:850
+msgid "Remove Member"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:856
+#: templates/single-candidate/reviews.php:48
+#: templates/single-employer/reviews.php:47
+msgid "Name"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:861
+msgid "Designation"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:871
+msgid "Profile Image"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:878
+msgid "Add Image"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:892
+msgid "Facebook URL"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:897
+msgid "Twitter URL"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:902
+msgid "Google Plus URL"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:907
+msgid "Linkedin URL"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:912
+msgid "Dribbble URL"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:924
+#: templates/misc/employer-employees.php:26
+msgid "Employees"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:948
+#: includes/custom-fields/class-fields-manager.php:1366
+#: includes/taxonomies/class-taxonomy-candidate-category.php:27
+#: includes/taxonomies/class-taxonomy-employer-category.php:28
+#: includes/taxonomies/class-taxonomy-job-category.php:27
+#: templates/single-candidate/detail.php:20
+#: templates/single-employer/detail.php:69
+msgid "Categories"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:960
+#: includes/custom-fields/class-fields-manager.php:1378
+msgid "Select %s"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:965
+#: includes/custom-fields/class-fields-manager.php:1107
+msgid "Show my profile"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:969
+#: includes/custom-fields/class-fields-manager.php:1111
+#: libraries/cmb2/cmb2-hide-show-password-field/cmb2-hide-show-password.php:26
+#: libraries/cmb2/cmb2-hide-show-password-field/cmb2-hide-show-password.php:43
+#: libraries/cmb2/cmb2-hide-show-password-field/cmb2-hide-show-password.php:54
+msgid "Show"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:970
+#: includes/custom-fields/class-fields-manager.php:1112
+#: libraries/cmb2/cmb2-hide-show-password-field/cmb2-hide-show-password.php:55
+msgid "Hide"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:987
+#: templates/single-job_listing/apply-email-form.php:95
+msgid "Full Name"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1016
+msgid "Featured Candidate"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1026
+msgid "Urgent Candidate"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1029
+msgid "Urgent candidate will be sticky during searches, and can be styled differently."
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1092
+msgid "Featured Image"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1117
+msgid "Date of Birth"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1141
+msgid "Salary (%s)"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1154
+msgid "Portfolio Photos"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1167
+msgid "CV Attachment"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1174
+msgid "Upload file .pdf, .doc, .docx"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1221
+#: templates/single-candidate/education.php:13
+msgid "Education"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1225
+msgid "Education {#}"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1226
+msgid "Add Another Education"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1227
+msgid "Remove Education"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1233
+#: includes/custom-fields/class-fields-manager.php:1267
+#: includes/custom-fields/class-fields-manager.php:1318
+#: includes/custom-fields/class-fields-manager.php:1347
+#: includes/post-types/class-post-type-candidate-alert.php:128
+#: includes/post-types/class-post-type-employer.php:268
+#: includes/post-types/class-post-type-job-alert.php:128
+#: includes/post-types/class-post-type-job-applicant.php:135
+#: includes/widgets/class-widget-candidate-alert-form.php:71
+#: includes/widgets/class-widget-candidate-filter.php:71
+#: includes/widgets/class-widget-employer-filter.php:72
+#: includes/widgets/class-widget-job-alert-form.php:71
+#: includes/widgets/class-widget-job-filter.php:72
+#: libraries/cmb2/cmb2-tabs/example.php:28
+#: libraries/cmb2/cmb2-tabs/example.php:52
+#: libraries/cmb2/cmb2-tabs/example.php:134
+#: libraries/cmb2/cmb2-tabs/example.php:158
+#: templates/loop/candidate/candidates-alert-form.php:14
+#: templates/loop/job/jobs-alert-form.php:14
+#: templates/loop/job/jobs-alert-form.php:16
+#: templates/misc/my-candidates-alerts.php:60
+#: templates/misc/my-jobs-alerts.php:58
+#: templates/widgets/candidate-alert-form.php:22
+#: templates/widgets/job-alert-form.php:22
+msgid "Title"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1238
+msgid "Academy"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1243
+#: includes/custom-fields/class-fields-manager.php:1323
+msgid "Year"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1259
+msgid "Experience {#}"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1260
+msgid "Add Another Experience"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1261
+msgid "Remove Experience"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1272
+msgid "Start Date"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1283
+msgid "End Date"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1294
+msgid "Company"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1306
+msgid "Award"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1310
+msgid "Award {#}"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1311
+msgid "Add Another Award"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1312
+msgid "Remove Award"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1335
+msgid "Skill"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1339
+msgid "Skill {#}"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1340
+msgid "Add Another Skill"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1341
+msgid "Remove Skill"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1352
+msgid "Percentage"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1385
+msgid "Experience Time"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1406
+msgid "Age"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1428
+msgid "Languages"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1453
+#: includes/custom-fields/class-fields-manager.php:1460
+#: includes/custom-fields/class-fields-manager.php:1467
+msgid "Choose a position"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1454
+msgid "Single Job - Description"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1455
+msgid "Single Job - Details"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1461
+msgid "Single Employer - Description"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1462
+msgid "Single Employer - Details"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1468
+msgid "Single Candidate - Description"
+msgstr ""
+
+#: includes/custom-fields/class-fields-manager.php:1469
+msgid "Single Candidate - Details"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:34
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:41
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:307
+msgid "Import Careerbuilder Jobs"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:53
+msgid "Careerbuilder Jobs Import"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:58
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:58
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:58
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:58
+msgid "Keywords"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:59
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:59
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:59
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:59
+msgid "Enter job title, keywords or company name. Default keyword is all."
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:65
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:65
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:72
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:65
+msgid "Enter a location for search."
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:70
+msgid "Number of jobs"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:71
+msgid "Enter number of jobs."
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:77
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:77
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:108
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:84
+msgid "Expired on"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:78
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:78
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:109
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:85
+msgid "Enter number of days (numeric format) for expiray date after job posted date."
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:84
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:84
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:115
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:91
+msgid "Posted By Type"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:88
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:88
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:119
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:95
+msgid "Auto Generate"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:89
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:89
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:120
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:96
+msgid "Choose A Employer"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:101
+msgid "Choose an employer for job author."
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:115
+msgid "Careerbuilder Job Fields"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:123
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:123
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:154
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:130
+msgid "Job Detail Url"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:128
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:128
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:159
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:135
+msgid "Company Name"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:170
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:168
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:229
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:181
+msgid "Sorry! There are no jobs found for your search query."
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:265
+msgid "%s careerbuilder jobs are imported successfully."
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:286
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:274
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:351
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:299
+msgid "<span class=\"employer text-theme\">%s</span>"
+msgstr ""
+
+#: includes/import-jobs-integration/careerbuilder/class-careerbuilder-jobs.php:296
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:284
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:361
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:309
+msgid "view more"
+msgstr ""
+
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:34
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:41
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:295
+msgid "Import Careerjet Jobs"
+msgstr ""
+
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:53
+msgid "Careerjet Jobs Import"
+msgstr ""
+
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:70
+#: templates/single-candidate.php:55
+#: templates/single-employer.php:54
+#: templates/single-job_listing.php:55
+msgid "Page"
+msgstr ""
+
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:71
+msgid "Enter page number to import jobs. Default page number is 1."
+msgstr ""
+
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:101
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:132
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:108
+msgid "Choose an employer for job author"
+msgstr ""
+
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:115
+msgid "Careerjet Job Fields"
+msgstr ""
+
+#: includes/import-jobs-integration/careerjet/class-careerjet-jobs.php:253
+msgid "%s careerjet jobs are imported successfully."
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs-api.php:295
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:172
+#: includes/taxonomies/class-taxonomy-job-type.php:72
+msgid "Full Time"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs-api.php:296
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:175
+#: includes/taxonomies/class-taxonomy-job-type.php:73
+msgid "Part Time"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs-api.php:297
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:178
+msgid "Contract"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs-api.php:298
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:181
+msgid "Internship"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs-api.php:299
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:184
+#: includes/taxonomies/class-taxonomy-job-type.php:75
+msgid "Temporary"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:34
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:41
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:372
+msgid "Import Indeed Jobs"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:64
+#: libraries/cmb2/cmb_field_taxonomy_location/cmb-field-taxonomy-location.php:50
+#: libraries/cmb2/cmb_field_taxonomy_location_search/cmb-field-taxonomy-location-search.php:63
+#: templates/widgets/filter-fields/regions_select.php:92
+#: templates/widgets/filter-fields/regions_select_search.php:93
+msgid "Country"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:65
+msgid "Select a country for search."
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:78
+msgid "Choose which type of job to query."
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:84
+msgid "Sort By"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:85
+msgid "Choose sort query results by Date/Relevance."
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:90
+msgid "Relevance"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:94
+msgid "Start Import Jobs"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:95
+msgid "Enter start number to import jobs. Default start number is 1."
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:101
+msgid "Number of Jobs to Import (Maximum Limit 25)"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:102
+msgid "Enter number of jobs to import. Default number of import jobs is 10. Maximum import jobs limit is 25."
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:146
+msgid "Indeed Job Fields"
+msgstr ""
+
+#: includes/import-jobs-integration/indeed/class-indeed-jobs.php:330
+msgid "%s indeed jobs are imported successfully."
+msgstr ""
+
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:34
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:41
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:320
+msgid "Import Ziprecruiter Jobs"
+msgstr ""
+
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:70
+msgid "Per page jobs"
+msgstr ""
+
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:71
+msgid "Enter per page jobs."
+msgstr ""
+
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:77
+#: templates/widgets/filter-fields/distance.php:16
+msgid "Radius"
+msgstr ""
+
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:78
+msgid "Enter radius for search."
+msgstr ""
+
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:122
+msgid "Ziprecruiter Job Fields"
+msgstr ""
+
+#: includes/import-jobs-integration/ziprecruiter/class-ziprecruiter-jobs.php:278
+msgid "%s ziprecruiter jobs are imported successfully."
+msgstr ""
+
+#: includes/meetings/class-meeting-zoom.php:32
+msgid "Please login to set zoom meeting API."
+msgstr ""
+
+#: includes/meetings/class-meeting-zoom.php:42
+#: includes/meetings/class-meeting.php:60
+#: includes/meetings/class-meeting.php:229
+msgid "Fill all fields"
+msgstr ""
+
+#: includes/meetings/class-meeting.php:41
+msgid "Please login as \"Employer\" to create meeting."
+msgstr ""
+
+#: includes/meetings/class-meeting.php:50
+msgid "Application doesn't exist"
+msgstr ""
+
+#: includes/meetings/class-meeting.php:95
+msgid "Interview meeting for job - %s"
+msgstr ""
+
+#: includes/meetings/class-meeting.php:192
+msgid "You have successfully created a meeting"
+msgstr ""
+
+#: includes/meetings/class-meeting.php:197
+msgid "Error accord when creating a meeting"
+msgstr ""
+
+#: includes/meetings/class-meeting.php:210
+msgid "Please login to reschedule meeting."
+msgstr ""
+
+#: includes/meetings/class-meeting.php:219
+#: includes/meetings/class-meeting.php:335
+#: includes/meetings/class-meeting.php:393
+msgid "Meeting doesn't exist"
+msgstr ""
+
+#: includes/meetings/class-meeting.php:314
+msgid "You have successfully re-scheduled a meeting"
+msgstr ""
+
+#: includes/meetings/class-meeting.php:328
+msgid "Please login to remove meeting."
+msgstr ""
+
+#: includes/meetings/class-meeting.php:343
+msgid "You can not remove this meeting."
+msgstr ""
+
+#: includes/meetings/class-meeting.php:366
+msgid "Meeting removed successful"
+msgstr ""
+
+#: includes/meetings/class-meeting.php:372
+msgid "Remove meeting error."
+msgstr ""
+
+#: includes/meetings/class-meeting.php:386
+msgid "Please login to cancel meeting."
+msgstr ""
+
+#: includes/meetings/class-meeting.php:402
+msgid "You can not cancel this meeting."
+msgstr ""
+
+#: includes/meetings/class-meeting.php:427
+msgid "Meeting canceled successful"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:26
+#: templates/misc/my-candidates-alerts.php:9
+msgid "Candidate Alerts"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:31
+#: includes/post-types/class-post-type-candidate-alert.php:32
+#: includes/post-types/class-post-type-candidate.php:62
+#: includes/post-types/class-post-type-candidate.php:63
+#: includes/post-types/class-post-type-employer.php:45
+#: includes/post-types/class-post-type-employer.php:46
+#: includes/post-types/class-post-type-job-alert.php:30
+#: includes/post-types/class-post-type-job-alert.php:31
+#: includes/post-types/class-post-type-job-applicant.php:34
+#: includes/post-types/class-post-type-job-applicant.php:35
+#: includes/post-types/class-post-type-job_listing.php:66
+#: includes/post-types/class-post-type-job_listing.php:67
+#: includes/post-types/class-post-type-meeting.php:29
+#: includes/post-types/class-post-type-meeting.php:30
+msgid "Add New %s"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:33
+#: includes/post-types/class-post-type-candidate.php:64
+#: includes/post-types/class-post-type-employer.php:47
+#: includes/post-types/class-post-type-job-alert.php:32
+#: includes/post-types/class-post-type-job-applicant.php:36
+#: includes/post-types/class-post-type-job_listing.php:68
+#: includes/post-types/class-post-type-meeting.php:31
+msgid "Edit %s"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:34
+#: includes/post-types/class-post-type-candidate.php:65
+#: includes/post-types/class-post-type-employer.php:48
+#: includes/post-types/class-post-type-job-alert.php:33
+#: includes/post-types/class-post-type-job-applicant.php:37
+#: includes/post-types/class-post-type-job_listing.php:69
+#: includes/post-types/class-post-type-meeting.php:32
+#: includes/taxonomies/class-taxonomy-candidate-category.php:39
+#: includes/taxonomies/class-taxonomy-candidate-location.php:39
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:40
+#: includes/taxonomies/class-taxonomy-employer-category.php:40
+#: includes/taxonomies/class-taxonomy-employer-location.php:39
+#: includes/taxonomies/class-taxonomy-job-category.php:39
+#: includes/taxonomies/class-taxonomy-job-location.php:39
+#: includes/taxonomies/class-taxonomy-job-tag.php:40
+#: includes/taxonomies/class-taxonomy-job-type.php:47
+msgid "New %s"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:36
+#: includes/post-types/class-post-type-candidate.php:67
+#: includes/post-types/class-post-type-employer.php:50
+#: includes/post-types/class-post-type-job-alert.php:35
+#: includes/post-types/class-post-type-job-applicant.php:39
+#: includes/post-types/class-post-type-job_listing.php:71
+#: includes/post-types/class-post-type-meeting.php:34
+msgid "View %s"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:37
+#: includes/post-types/class-post-type-candidate.php:68
+#: includes/post-types/class-post-type-employer.php:51
+#: includes/post-types/class-post-type-job-alert.php:36
+#: includes/post-types/class-post-type-job-applicant.php:40
+#: includes/post-types/class-post-type-job_listing.php:72
+#: includes/post-types/class-post-type-meeting.php:35
+#: includes/taxonomies/class-taxonomy-candidate-category.php:32
+#: includes/taxonomies/class-taxonomy-candidate-location.php:32
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:33
+#: includes/taxonomies/class-taxonomy-employer-category.php:33
+#: includes/taxonomies/class-taxonomy-employer-location.php:32
+#: includes/taxonomies/class-taxonomy-job-category.php:32
+#: includes/taxonomies/class-taxonomy-job-location.php:32
+#: includes/taxonomies/class-taxonomy-job-tag.php:33
+#: includes/taxonomies/class-taxonomy-job-type.php:40
+msgid "Search %s"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:38
+#: includes/post-types/class-post-type-candidate.php:69
+#: includes/post-types/class-post-type-employer.php:52
+#: includes/post-types/class-post-type-job-alert.php:37
+#: includes/post-types/class-post-type-job-applicant.php:41
+#: includes/post-types/class-post-type-job_listing.php:73
+#: includes/post-types/class-post-type-meeting.php:36
+msgid "No %s found"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:39
+#: includes/post-types/class-post-type-candidate.php:70
+#: includes/post-types/class-post-type-employer.php:53
+#: includes/post-types/class-post-type-job-alert.php:38
+#: includes/post-types/class-post-type-job-applicant.php:42
+#: includes/post-types/class-post-type-job_listing.php:74
+#: includes/post-types/class-post-type-meeting.php:37
+msgid "No %s found in Trash"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:85
+#: includes/post-types/class-post-type-job-alert.php:85
+msgid "Author: %s (%s)"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:92
+#: includes/post-types/class-post-type-job-alert.php:92
+#: templates/misc/my-candidates-alerts.php:61
+#: templates/misc/my-jobs-alerts.php:59
+msgid "Alert Query"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:97
+#: includes/post-types/class-post-type-candidate-alert.php:129
+#: includes/post-types/class-post-type-job-alert.php:97
+#: includes/post-types/class-post-type-job-alert.php:129
+#: templates/loop/candidate/candidates-alert-form.php:20
+#: templates/loop/job/jobs-alert-form.php:20
+#: templates/widgets/candidate-alert-form.php:28
+#: templates/widgets/job-alert-form.php:28
+msgid "Email Frequency"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate-alert.php:131
+msgid "Auhtor"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate.php:57
+msgid "Candidates"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate.php:66
+#: includes/post-types/class-post-type-employer.php:49
+#: includes/post-types/class-post-type-job_listing.php:70
+#: includes/taxonomies/class-taxonomy-candidate-category.php:33
+#: includes/taxonomies/class-taxonomy-candidate-location.php:33
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:34
+#: includes/taxonomies/class-taxonomy-employer-category.php:34
+#: includes/taxonomies/class-taxonomy-employer-location.php:33
+#: includes/taxonomies/class-taxonomy-job-category.php:33
+#: includes/taxonomies/class-taxonomy-job-location.php:33
+#: includes/taxonomies/class-taxonomy-job-tag.php:34
+#: includes/taxonomies/class-taxonomy-job-type.php:41
+msgid "All %s"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate.php:81
+msgctxt "Candidate slug - resave permalinks after changing this"
+msgid "candidate"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate.php:489
+#: includes/post-types/class-post-type-employer.php:269
+#: includes/post-types/class-post-type-job-applicant.php:134
+msgid "Thumbnail"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate.php:490
+#: includes/post-types/class-post-type-job_listing.php:425
+msgid "Posted"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate.php:492
+#: includes/post-types/class-post-type-job_listing.php:426
+msgid "Expires"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate.php:523
+#: includes/post-types/class-post-type-job_listing.php:508
+msgid "by a guest"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate.php:523
+#: includes/post-types/class-post-type-job_listing.php:508
+#: templates/jobs-styles/inner-list.php:38
+#: templates/misc/jobs-applied.php:88
+#: templates/misc/jobs-shortlist.php:122
+#: templates/single-employer/header.php:34
+#: templates/single-job_listing/header.php:30
+msgid "by %s"
+msgstr ""
+
+#: includes/post-types/class-post-type-candidate.php:606
+#: includes/post-types/class-post-type-employer.php:351
+#: includes/post-types/class-post-type-job_listing.php:600
+msgid "All categories"
+msgstr ""
+
+#: includes/post-types/class-post-type-employer.php:40
+msgid "Employers"
+msgstr ""
+
+#: includes/post-types/class-post-type-employer.php:64
+msgctxt "Employer slug - resave permalinks after changing this"
+msgid "employer"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-alert.php:25
+#: templates/misc/my-jobs-alerts.php:9
+msgid "Job Alerts"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:28
+msgid "Job Applicant"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:29
+msgid "Job Applicants"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:88
+#: includes/post-types/class-post-type-job-applicant.php:183
+msgid "Pending"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:89
+#: includes/post-types/class-post-type-job-applicant.php:179
+msgid "Approved"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:90
+#: includes/post-types/class-post-type-job-applicant.php:181
+#: templates/content-applicant.php:77
+msgid "Rejected"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:94
+msgid "Job ID"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:99
+msgid "Job Name"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:104
+#: templates/misc/meeting-form.php:65
+#: templates/misc/meeting-form.php:66
+#: templates/misc/meeting-reschedule-form.php:59
+#: templates/misc/meeting-reschedule-form.php:60
+#: templates/single-candidate/contact-form.php:50
+#: templates/single-employer/contact-form.php:46
+#: templates/single-job_listing/apply-email-form.php:110
+#: templates/single-job_listing/apply-internal-form.php:95
+msgid "Message"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:109
+msgid "CV ID"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:137
+#: templates/candidates-styles/inner-grid.php:49
+#: templates/content-applicant.php:61
+#: templates/content-approved-applicant.php:39
+#: templates/content-rejected-applicant.php:39
+#: templates/misc/candidates-shortlist.php:135
+msgid "View Profile"
+msgstr ""
+
+#: includes/post-types/class-post-type-job-applicant.php:172
+msgid "View profile"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:60
+msgid "Job"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:61
+msgid "Jobs"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:85
+msgctxt "Job slug - resave permalinks after changing this"
+msgid "job"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:273
+msgid "Please login to remove this job"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:279
+#: includes/post-types/class-post-type-job_listing.php:319
+#: includes/post-types/class-post-type-job_listing.php:363
+msgid "Job not found"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:287
+msgid "You can not remove this job."
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:295
+msgid "Job has been successfully removed."
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:299
+msgid "An error occured when removing an item."
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:313
+msgid "Please login to mark filled this job"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:327
+msgid "You can not mark this job as 'filled'"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:341
+msgid "Job has been successfully marked as 'filled'"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:341
+#: templates/submission/my-jobs.php:183
+msgid "Mark not filled"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:357
+msgid "Please login to mark job as 'not filled'"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:371
+msgid "You can't mark this job as 'not filled'"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:385
+msgid "Job has been successfully marked as 'not filled'"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:385
+#: templates/submission/my-jobs.php:187
+msgid "Mark filled"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:418
+msgid "Logo"
+msgstr ""
+
+#: includes/post-types/class-post-type-job_listing.php:583
+msgid "All types"
+msgstr ""
+
+#: includes/post-types/class-post-type-meeting.php:23
+msgid "Meeting"
+msgstr ""
+
+#: includes/post-types/class-post-type-meeting.php:24
+#: templates/misc/candidate-meetings.php:36
+#: templates/misc/employer-meetings.php:33
+msgid "Meetings"
+msgstr ""
+
+#: includes/socials/class-social-facebook.php:148
+#: includes/socials/class-social-facebook.php:177
+msgid "Graph returned an error: %s"
+msgstr ""
+
+#: includes/socials/class-social-facebook.php:150
+#: includes/socials/class-social-facebook.php:179
+msgid "Facebook SDK returned an error: %s"
+msgstr ""
+
+#: includes/socials/class-social-google.php:291
+#: includes/socials/class-social-google.php:307
+msgid "Google"
+msgstr ""
+
+#: includes/socials/class-social-linkedin.php:129
+msgid "LinkedIn login error: %s %s"
+msgstr ""
+
+#: includes/socials/class-social-linkedin.php:390
+#: includes/socials/class-social-linkedin.php:405
+msgid "LinkedIn"
+msgstr ""
+
+#: includes/socials/class-social-twitter.php:104
+msgid "%s There is problem while connecting to twitter"
+msgstr ""
+
+#: includes/socials/class-social-twitter.php:129
+msgid "There is problem while connecting to twitter"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-category.php:30
+#: includes/taxonomies/class-taxonomy-candidate-location.php:30
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:31
+msgid "Candidate %s"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-category.php:34
+#: includes/taxonomies/class-taxonomy-candidate-location.php:34
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:35
+#: includes/taxonomies/class-taxonomy-employer-category.php:35
+#: includes/taxonomies/class-taxonomy-employer-location.php:34
+#: includes/taxonomies/class-taxonomy-job-category.php:34
+#: includes/taxonomies/class-taxonomy-job-location.php:34
+#: includes/taxonomies/class-taxonomy-job-tag.php:35
+#: includes/taxonomies/class-taxonomy-job-type.php:42
+msgid "Parent %s"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-category.php:35
+#: includes/taxonomies/class-taxonomy-candidate-location.php:35
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:36
+#: includes/taxonomies/class-taxonomy-employer-category.php:36
+#: includes/taxonomies/class-taxonomy-employer-location.php:35
+#: includes/taxonomies/class-taxonomy-job-category.php:35
+#: includes/taxonomies/class-taxonomy-job-location.php:35
+#: includes/taxonomies/class-taxonomy-job-tag.php:36
+#: includes/taxonomies/class-taxonomy-job-type.php:43
+msgid "Parent %s:"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-category.php:36
+#: includes/taxonomies/class-taxonomy-candidate-location.php:36
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:37
+#: includes/taxonomies/class-taxonomy-employer-category.php:37
+#: includes/taxonomies/class-taxonomy-employer-location.php:36
+#: includes/taxonomies/class-taxonomy-job-category.php:36
+#: includes/taxonomies/class-taxonomy-job-location.php:36
+#: includes/taxonomies/class-taxonomy-job-tag.php:37
+#: includes/taxonomies/class-taxonomy-job-type.php:44
+#: libraries/cmb2/cmb2_field_profile_url/cmb2-field-type-profile_url.php:46
+#: templates/submission/my-jobs.php:197
+#: templates/submission/my-jobs.php:198
+#: templates/submission/my-jobs.php:218
+#: templates/submission/my-jobs.php:219
+msgid "Edit"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-category.php:38
+#: includes/taxonomies/class-taxonomy-candidate-location.php:38
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:39
+#: includes/taxonomies/class-taxonomy-employer-category.php:39
+#: includes/taxonomies/class-taxonomy-employer-location.php:38
+#: includes/taxonomies/class-taxonomy-job-category.php:38
+#: includes/taxonomies/class-taxonomy-job-location.php:38
+#: includes/taxonomies/class-taxonomy-job-tag.php:39
+#: includes/taxonomies/class-taxonomy-job-type.php:46
+msgid "Add New"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-category.php:44
+msgctxt "Candidate category slug - resave permalinks after changing this"
+msgid "candidate-category"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-location.php:27
+#: includes/taxonomies/class-taxonomy-employer-location.php:27
+#: includes/taxonomies/class-taxonomy-job-location.php:27
+msgid "Locations"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-location.php:45
+msgctxt "Candidate location slug - resave permalinks after changing this"
+msgid "candidate-location"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:28
+#: includes/taxonomies/class-taxonomy-job-tag.php:28
+msgid "Tags"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-candidate-tag.php:46
+msgctxt "Candidate tag slug - resave permalinks after changing this"
+msgid "candidate-tag"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-employer-category.php:31
+#: includes/taxonomies/class-taxonomy-employer-location.php:30
+msgid "Employer %s"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-employer-category.php:46
+msgctxt "Employer category slug - resave permalinks after changing this"
+msgid "employer-category"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-employer-location.php:45
+msgctxt "Employer location slug - resave permalinks after changing this"
+msgid "employer-location"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-category.php:30
+#: includes/taxonomies/class-taxonomy-job-location.php:30
+#: includes/taxonomies/class-taxonomy-job-tag.php:31
+#: includes/taxonomies/class-taxonomy-job-type.php:38
+msgid "Job %s"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-category.php:45
+msgctxt "Job category slug - resave permalinks after changing this"
+msgid "job-category"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-location.php:45
+msgctxt "Job location slug - resave permalinks after changing this"
+msgid "job-location"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-tag.php:46
+msgctxt "Job tag slug - resave permalinks after changing this"
+msgid "job-tag"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:35
+msgid "Types"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:53
+msgctxt "Job type slug - resave permalinks after changing this"
+msgid "job-type"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:74
+msgid "Contractor"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:76
+msgid "Intern"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:77
+msgid "Volunteer"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:78
+msgid "Per Diem"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:79
+msgid "Other"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:87
+#: includes/taxonomies/class-taxonomy-job-type.php:109
+msgid "Background Color"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:91
+#: includes/taxonomies/class-taxonomy-job-type.php:115
+msgid "Text Color"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:96
+#: includes/taxonomies/class-taxonomy-job-type.php:121
+#: includes/taxonomies/class-taxonomy-job-type.php:167
+msgid "Employment Type"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:139
+msgid "Choose a employment type"
+msgstr ""
+
+#: includes/taxonomies/class-taxonomy-job-type.php:163
+msgid "Color"
+msgstr ""
+
+#: includes/widgets/class-widget-candidate-alert-form.php:24
+msgid "Candidate Alert Form"
+msgstr ""
+
+#: includes/widgets/class-widget-candidate-alert-form.php:26
+msgid "Candidate alert form for add email alert."
+msgstr ""
+
+#: includes/widgets/class-widget-candidate-alert-form.php:80
+#: includes/widgets/class-widget-candidate-filter.php:80
+#: includes/widgets/class-widget-employer-filter.php:81
+#: includes/widgets/class-widget-job-alert-form.php:80
+#: includes/widgets/class-widget-job-filter.php:81
+msgid "Button text"
+msgstr ""
+
+#: includes/widgets/class-widget-candidate-filter.php:24
+msgid "Candidate Filter"
+msgstr ""
+
+#: includes/widgets/class-widget-candidate-filter.php:26
+msgid "Filter for filtering candidates."
+msgstr ""
+
+#: includes/widgets/class-widget-candidate-filter.php:86
+#: includes/widgets/class-widget-employer-filter.php:87
+#: includes/widgets/class-widget-job-filter.php:87
+msgid "Filter Fields"
+msgstr ""
+
+#: includes/widgets/class-widget-employer-filter.php:24
+msgid "Employer Filter"
+msgstr ""
+
+#: includes/widgets/class-widget-employer-filter.php:26
+msgid "Filter for filtering employers."
+msgstr ""
+
+#: includes/widgets/class-widget-job-alert-form.php:24
+msgid "Job Alert Form"
+msgstr ""
+
+#: includes/widgets/class-widget-job-alert-form.php:26
+msgid "Job alert form for add email alert."
+msgstr ""
+
+#: includes/widgets/class-widget-job-filter.php:24
+msgid "Job Filter"
+msgstr ""
+
+#: includes/widgets/class-widget-job-filter.php:26
+msgid "Filter for filtering jobs."
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:9
+#: libraries/cmb2/cmb2-tabs/example.php:109
+msgid "Example tabs"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:25
+#: libraries/cmb2/cmb2-tabs/example.php:131
+msgid "Tab 1"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:33
+#: libraries/cmb2/cmb2-tabs/example.php:57
+#: libraries/cmb2/cmb2-tabs/example.php:139
+#: libraries/cmb2/cmb2-tabs/example.php:163
+msgid "Subtitle"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:38
+#: libraries/cmb2/cmb2-tabs/example.php:144
+msgid "Background image"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:49
+#: libraries/cmb2/cmb2-tabs/example.php:155
+msgid "Tab 2"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:65
+#: libraries/cmb2/cmb2-tabs/example.php:171
+msgid "Review {#}"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:66
+#: libraries/cmb2/cmb2-tabs/example.php:172
+msgid "Add review"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:67
+#: libraries/cmb2/cmb2-tabs/example.php:173
+msgid "Remove review"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:72
+#: libraries/cmb2/cmb2-tabs/example.php:178
+msgid "Author name"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:77
+#: libraries/cmb2/cmb2-tabs/example.php:183
+msgid "Author avatar"
+msgstr ""
+
+#: libraries/cmb2/cmb2-tabs/example.php:85
+#: libraries/cmb2/cmb2-tabs/example.php:191
+msgid "Comment"
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_ajax_search/cmb2-field-ajax-search.php:237
+msgid "Error : Unauthorized action"
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_ajax_search/cmb2-field-ajax-search.php:243
+msgid "Error : Wrong request parameters"
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_attached_user/cmb2-field-type-attached_user.php:37
+msgid "User email: "
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_file/cmb2-field-type-file.php:64
+msgid "Browse"
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_profile_url/cmb2-field-type-profile_url.php:52
+msgid "Save"
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_profile_url/cmb2-field-type-profile_url.php:73
+msgid "Please login to edit slug."
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_profile_url/cmb2-field-type-profile_url.php:78
+msgid "Slug is empty."
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_profile_url/cmb2-field-type-profile_url.php:130
+msgid "Can not change slug."
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_rate_exchange/cmb2-field-type-rate_exchange.php:45
+msgid "Update Rate"
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_rate_exchange/cmb2-field-type-rate_exchange.php:61
+msgid "Please choose a currency."
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_rate_exchange/cmb2-field-type-rate_exchange.php:70
+msgid "Unable to communicate with Instagram."
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_rate_exchange/cmb2-field-type-rate_exchange.php:74
+msgid "Instagram did not return a 200."
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_rate_exchange/cmb2-field-type-rate_exchange.php:80
+msgid "The currency is not available."
+msgstr ""
+
+#: libraries/cmb2/cmb2_field_rate_exchange/cmb2-field-type-rate_exchange.php:86
+msgid "error."
+msgstr ""
+
+#: libraries/cmb2/cmb_field_taxonomy_location/cmb-field-taxonomy-location.php:52
+#: libraries/cmb2/cmb_field_taxonomy_location_search/cmb-field-taxonomy-location-search.php:65
+#: templates/widgets/filter-fields/regions_select.php:133
+#: templates/widgets/filter-fields/regions_select_search.php:140
+msgid "State"
+msgstr ""
+
+#: libraries/cmb2/cmb_field_taxonomy_location/cmb-field-taxonomy-location.php:54
+#: libraries/cmb2/cmb_field_taxonomy_location_search/cmb-field-taxonomy-location-search.php:67
+#: templates/widgets/filter-fields/regions_select.php:170
+#: templates/widgets/filter-fields/regions_select_search.php:174
+msgid "City"
+msgstr ""
+
+#: libraries/cmb2/cmb_field_taxonomy_location/cmb-field-taxonomy-location.php:56
+#: libraries/cmb2/cmb_field_taxonomy_location_search/cmb-field-taxonomy-location-search.php:69
+#: templates/widgets/filter-fields/regions_select.php:207
+#: templates/widgets/filter-fields/regions_select_search.php:208
+msgid "District"
+msgstr ""
+
+#: libraries/plugin-update-checker/Puc/v4p9/Plugin/Ui.php:54
+msgid "View details"
+msgstr ""
+
+#: libraries/plugin-update-checker/Puc/v4p9/Plugin/Ui.php:77
+msgid "More information about %s"
+msgstr ""
+
+#: templates/content-applicant.php:64
+#: templates/content-approved-applicant.php:42
+#: templates/content-rejected-applicant.php:42
+#: templates/misc/my-candidates-alerts.php:64
+#: templates/misc/my-jobs-alerts.php:62
+msgid "Actions"
+msgstr ""
+
+#: templates/content-applicant.php:79
+msgid "Reject"
+msgstr ""
+
+#: templates/content-applicant.php:84
+#: templates/content-approved-applicant.php:49
+#: templates/content-rejected-applicant.php:49
+#: templates/employees-styles/inner-list-team.php:24
+#: templates/misc/candidates-shortlist.php:137
+#: templates/misc/jobs-applied.php:103
+#: templates/misc/jobs-shortlist.php:137
+#: templates/misc/my-candidates-alerts.php:142
+#: templates/submission/my-jobs.php:236
+#: templates/submission/my-jobs.php:237
+msgid "Remove"
+msgstr ""
+
+#: templates/content-approved-applicant.php:47
+#: templates/content-rejected-applicant.php:47
+msgid "Undo Rejected"
+msgstr ""
+
+#: templates/content-single-candidate-pdf.php:23
+#: templates/content-single-candidate.php:21
+msgid "About Me"
+msgstr ""
+
+#: templates/jobs-styles/inner-list.php:35
+#: templates/misc/jobs-applied.php:85
+#: templates/misc/jobs-shortlist.php:119
+#: templates/single-employer/header.php:31
+#: templates/single-job_listing/header.php:27
+msgid " posted %s ago"
+msgstr ""
+
+#: templates/loop/candidate/archive-inner.php:37
+#: templates/loop/candidate/pagination.php:11
+#: templates/loop/employer/archive-inner.php:38
+#: templates/loop/employer/pagination.php:11
+#: templates/loop/job/archive-inner.php:38
+#: templates/loop/job/pagination.php:11
+#: templates/misc/candidate-meetings.php:137
+#: templates/misc/candidates-shortlist.php:145
+#: templates/misc/employer-employees.php:51
+#: templates/misc/employer-meetings.php:162
+#: templates/misc/jobs-applied.php:113
+#: templates/misc/jobs-shortlist.php:146
+#: templates/misc/my-candidates-alerts.php:155
+#: templates/misc/my-following-employers.php:61
+#: templates/misc/my-jobs-alerts.php:151
+#: templates/single-candidate.php:53
+#: templates/single-employer.php:52
+#: templates/single-job_listing.php:53
+msgid "Previous page"
+msgstr ""
+
+#: templates/loop/candidate/archive-inner.php:38
+#: templates/loop/candidate/pagination.php:12
+#: templates/loop/employer/archive-inner.php:39
+#: templates/loop/employer/pagination.php:12
+#: templates/loop/job/archive-inner.php:39
+#: templates/loop/job/pagination.php:12
+#: templates/misc/candidate-meetings.php:138
+#: templates/misc/candidates-shortlist.php:146
+#: templates/misc/employer-employees.php:52
+#: templates/misc/employer-meetings.php:163
+#: templates/misc/jobs-applied.php:114
+#: templates/misc/jobs-shortlist.php:147
+#: templates/misc/my-candidates-alerts.php:156
+#: templates/misc/my-following-employers.php:62
+#: templates/misc/my-jobs-alerts.php:152
+#: templates/single-candidate.php:54
+#: templates/single-employer.php:53
+#: templates/single-job_listing.php:54
+msgid "Next page"
+msgstr ""
+
+#: templates/loop/candidate/archive-inner.php:46
+msgid "No candidate found."
+msgstr ""
+
+#: templates/loop/candidate/candidates-alert-form.php:9
+msgid "Get Candidate Alerts"
+msgstr ""
+
+#: templates/loop/candidate/candidates-alert-form.php:43
+msgid "Save Candidate Alert"
+msgstr ""
+
+#: templates/loop/candidate/candidates-rss-btn.php:10
+#: templates/loop/job/jobs-rss-btn.php:10
+msgid "RSS Feed"
+msgstr ""
+
+#: templates/loop/candidate/orderby.php:20
+#: templates/loop/employer/orderby.php:20
+#: templates/loop/job/orderby.php:20
+msgid "Sort by:"
+msgstr ""
+
+#. translators: %d: total results
+#: templates/loop/candidate/results-count.php:11
+#: templates/loop/employer/results-count.php:11
+#: templates/loop/job/results-count.php:11
+msgid "Showing the single result"
+msgid_plural "Showing all %d results"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: first result 2: last result 3: total results
+#: templates/loop/candidate/results-count.php:16
+#: templates/loop/employer/results-count.php:16
+#: templates/loop/job/results-count.php:16
+msgctxt "with first and last result"
+msgid "Showing the single result"
+msgid_plural "Showing <span class=\"first\">%1$d</span> &ndash; <span class=\"last\">%2$d</span> of %3$d results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/loop/candidate/results-filters.php:9
+#: templates/loop/job/results-filters.php:9
+msgid "Your Selected"
+msgstr ""
+
+#: templates/loop/candidate/results-filters.php:16
+#: templates/loop/job/results-filters.php:16
+msgid "Clear all"
+msgstr ""
+
+#: templates/loop/employer/archive-inner.php:47
+msgid "No employer found."
+msgstr ""
+
+#: templates/loop/job/archive-inner.php:45
+msgid "No job found."
+msgstr ""
+
+#: templates/loop/job/jobs-alert-form.php:9
+msgid "Get Jobs Alerts"
+msgstr ""
+
+#: templates/loop/job/jobs-alert-form.php:43
+msgid "Save Job Alert"
+msgstr ""
+
+#: templates/loop/job/orderby.php:21
+msgid "Sort by"
+msgstr ""
+
+#: templates/misc/candidate-dashboard.php:32
+#: templates/misc/employer-dashboard.php:21
+msgid "Applications statistics"
+msgstr ""
+
+#: templates/misc/candidate-dashboard.php:35
+msgid "Applied Jobs"
+msgstr ""
+
+#: templates/misc/candidate-dashboard.php:43
+#: templates/misc/employer-dashboard.php:32
+#: templates/single-candidate/reviews.php:60
+#: templates/single-employer/reviews.php:59
+msgid "Review"
+msgstr ""
+
+#: templates/misc/candidate-dashboard.php:47
+#: templates/misc/employer-dashboard.php:36
+#: templates/single-employer/detail.php:33
+msgid "Views"
+msgstr ""
+
+#: templates/misc/candidate-dashboard.php:52
+msgid "Jobs Applied Recently"
+msgstr ""
+
+#: templates/misc/candidate-dashboard.php:77
+#: templates/misc/candidate-dashboard.php:82
+msgid "No Applicants found."
+msgstr ""
+
+#: templates/misc/candidate-meetings.php:56
+#: templates/misc/employer-meetings.php:81
+msgid "Today"
+msgstr ""
+
+#: templates/misc/candidate-meetings.php:72
+#: templates/misc/employer-meetings.php:97
+msgid "Minutes"
+msgstr ""
+
+#: templates/misc/candidate-meetings.php:75
+#: templates/misc/employer-meetings.php:100
+msgid "Meeting with: "
+msgstr ""
+
+#: templates/misc/candidate-meetings.php:87
+#: templates/misc/employer-meetings.php:112
+#: templates/misc/meeting-form.php:71
+msgid "Zoom Meeting"
+msgstr ""
+
+#: templates/misc/candidate-meetings.php:95
+#: templates/misc/employer-meetings.php:120
+msgid "Meeting History"
+msgstr ""
+
+#: templates/misc/candidate-meetings.php:104
+#: templates/misc/employer-meetings.php:129
+msgid "Created by: %s"
+msgstr ""
+
+#: templates/misc/candidate-meetings.php:108
+#: templates/misc/employer-meetings.php:133
+msgid "Re-schedule by: %s"
+msgstr ""
+
+#: templates/misc/candidate-meetings.php:144
+#: templates/misc/employer-meetings.php:169
+msgid "No meetings found."
+msgstr ""
+
+#: templates/misc/candidates-shortlist.php:17
+#: templates/misc/job-applicants.php:15
+#: templates/misc/jobs-applied.php:12
+#: templates/misc/jobs-shortlist.php:12
+#: templates/misc/my-candidates-alerts.php:15
+#: templates/misc/my-following-employers.php:12
+#: templates/misc/my-jobs-alerts.php:15
+#: templates/submission/my-jobs.php:21
+msgid "Search ..."
+msgstr ""
+
+#: templates/misc/candidates-shortlist.php:36
+#: templates/misc/job-applicants.php:49
+#: templates/misc/jobs-applied.php:35
+#: templates/misc/jobs-shortlist.php:35
+#: templates/misc/my-candidates-alerts.php:38
+#: templates/misc/my-following-employers.php:35
+#: templates/misc/my-jobs-alerts.php:38
+#: templates/submission/my-jobs.php:39
+msgid "Sort by: "
+msgstr ""
+
+#: templates/misc/candidates-shortlist.php:155
+msgid "Don't have any candidates in shortlist"
+msgstr ""
+
+#: templates/misc/delete-profile-form.php:11
+msgid "Are you sure! You want to delete your profile."
+msgstr ""
+
+#: templates/misc/delete-profile-form.php:12
+msgid "This can't be undone!"
+msgstr ""
+
+#: templates/misc/delete-profile-form.php:17
+msgid "Please enter your login Password to confirm:"
+msgstr ""
+
+#: templates/misc/delete-profile-form.php:26
+msgid "Delete Profile"
+msgstr ""
+
+#: templates/misc/employer-dashboard.php:24
+msgid "Posted Jobs"
+msgstr ""
+
+#: templates/misc/employer-dashboard.php:41
+msgid "Recent Applicants"
+msgstr ""
+
+#: templates/misc/employer-employees.php:36
+msgid "No employees found."
+msgstr ""
+
+#: templates/misc/employer-employees.php:61
+#: templates/misc/employer-employees.php:87
+msgid "Add Employee"
+msgstr ""
+
+#: templates/misc/employer-employees.php:66
+#: templates/misc/register.php:22
+#: templates/misc/register.php:82
+msgid "Username"
+msgstr ""
+
+#: templates/misc/employer-employees.php:68
+#: templates/misc/register.php:24
+#: templates/misc/register.php:84
+msgid "Enter Username"
+msgstr ""
+
+#: templates/misc/employer-employees.php:73
+#: templates/misc/register.php:29
+#: templates/misc/register.php:89
+msgid "Enter Email"
+msgstr ""
+
+#: templates/misc/employer-employees.php:78
+#: templates/misc/login.php:25
+#: templates/misc/login.php:58
+#: templates/misc/register.php:34
+#: templates/misc/register.php:39
+#: templates/misc/register.php:94
+#: templates/misc/register.php:99
+msgid "Enter Password"
+msgstr ""
+
+#: templates/misc/employer-employees.php:83
+msgid "Re-enter Password"
+msgstr ""
+
+#: templates/misc/employer-meetings.php:35
+msgid "Zoom Settings"
+msgstr ""
+
+#: templates/misc/employer-meetings.php:39
+msgid "Zoom API Setting"
+msgstr ""
+
+#: templates/misc/employer-meetings.php:43
+msgid "Zoom Email"
+msgstr ""
+
+#: templates/misc/employer-meetings.php:47
+msgid "Zoom Client ID"
+msgstr ""
+
+#: templates/misc/employer-meetings.php:59
+msgid "Get Authorize with zoom"
+msgstr ""
+
+#: templates/misc/job-applicants.php:9
+msgid "Applicant"
+msgstr ""
+
+#: templates/misc/job-applicants.php:18
+msgid "Filter by job"
+msgstr ""
+
+#: templates/misc/job-applicants.php:161
+msgid "Total(s): %s"
+msgstr ""
+
+#: templates/misc/job-applicants.php:164
+msgid "Approved: %s"
+msgstr ""
+
+#: templates/misc/job-applicants.php:167
+msgid "Rejected(s): %s"
+msgstr ""
+
+#: templates/misc/jobs-applied.php:120
+msgid "No apply found."
+msgstr ""
+
+#: templates/misc/jobs-shortlist.php:156
+msgid "No jobs found."
+msgstr ""
+
+#: templates/misc/loged-in.php:12
+msgid "You are currently signed in as <strong>%s</strong>."
+msgstr ""
+
+#: templates/misc/loged-in.php:15
+msgid "Sign out"
+msgstr ""
+
+#: templates/misc/login.php:18
+msgid "Username Or Email"
+msgstr ""
+
+#: templates/misc/login.php:20
+msgid "Enter username or email"
+msgstr ""
+
+#: templates/misc/login.php:31
+msgid "Keep me signed in"
+msgstr ""
+
+#: templates/misc/login.php:37
+msgid "Forgot Password"
+msgstr ""
+
+#: templates/misc/login.php:37
+msgid "Lost Your Password?"
+msgstr ""
+
+#: templates/misc/login.php:42
+msgid "Login"
+msgstr ""
+
+#: templates/misc/login.php:56
+msgid "Username or E-mail"
+msgstr ""
+
+#: templates/misc/login.php:70
+msgid "Get New Password"
+msgstr ""
+
+#: templates/misc/login.php:71
+msgid "Cancel"
+msgstr ""
+
+#: templates/misc/login.php:74
+msgid "Back To Login"
+msgstr ""
+
+#: templates/misc/meeting-form.php:36
+#: templates/misc/meeting-form.php:81
+msgid "Create Meeting"
+msgstr ""
+
+#: templates/misc/meeting-form.php:46
+#: templates/misc/meeting-reschedule-form.php:40
+msgid "Time"
+msgstr ""
+
+#: templates/misc/meeting-form.php:60
+#: templates/misc/meeting-reschedule-form.php:54
+msgid "Time Duration"
+msgstr ""
+
+#: templates/misc/meeting-form.php:61
+#: templates/misc/meeting-reschedule-form.php:55
+msgid "30"
+msgstr ""
+
+#: templates/misc/meeting-reschedule-form.php:29
+#: templates/misc/meeting-reschedule-form.php:67
+msgid "Re-schedule Meeting"
+msgstr ""
+
+#: templates/misc/my-candidates-alerts.php:62
+#: templates/misc/my-jobs-alerts.php:60
+msgid "Number Jobs"
+msgstr ""
+
+#: templates/misc/my-candidates-alerts.php:63
+#: templates/misc/my-jobs-alerts.php:61
+msgid "Times"
+msgstr ""
+
+#: templates/misc/my-candidates-alerts.php:133
+#: templates/misc/my-jobs-alerts.php:128
+msgid "Jobs found %d"
+msgstr ""
+
+#: templates/misc/my-candidates-alerts.php:162
+msgid "No candidate alert found."
+msgstr ""
+
+#: templates/misc/my-following-employers.php:68
+msgid "No following employer found."
+msgstr ""
+
+#: templates/misc/my-jobs-alerts.php:157
+msgid "No job alert found."
+msgstr ""
+
+#: templates/misc/need-login.php:11
+msgid "You need to be signed in to access this page."
+msgstr ""
+
+#: templates/misc/need-login.php:11
+msgid "Sign in"
+msgstr ""
+
+#: templates/misc/not-allowed.php:10
+msgid "You are not allowed to access this page."
+msgstr ""
+
+#: templates/misc/not-allowed.php:20
+msgid "You need login with %s account to access this page."
+msgstr ""
+
+#: templates/misc/password-form.php:9
+msgid "Old password"
+msgstr ""
+
+#: templates/misc/password-form.php:14
+msgid "New password"
+msgstr ""
+
+#: templates/misc/password-form.php:19
+msgid "Retype password"
+msgstr ""
+
+#: templates/misc/password-form.php:23
+msgid "Change Password"
+msgstr ""
+
+#: templates/misc/profile-form.php:7
+msgid "Edit Profile"
+msgstr ""
+
+#: templates/misc/profile-form.php:32
+msgid "Save Profile"
+msgstr ""
+
+#: templates/misc/register-apply-candidate.php:49
+#: templates/misc/register-candidate.php:49
+#: templates/misc/register-employer.php:49
+#: templates/misc/register.php:61
+#: templates/misc/register.php:121
+msgid "You accept our <a href=\"%s\">Terms and Conditions and Privacy Policy</a>"
+msgstr ""
+
+#: templates/misc/resume-form.php:7
+msgid "Edit Resume"
+msgstr ""
+
+#: templates/misc/resume-form.php:13
+msgid "Your resume has to be confirmed by an administrator before publish."
+msgstr ""
+
+#: templates/misc/resume-form.php:18
+msgid "Your resume has expired."
+msgstr ""
+
+#: templates/misc/resume-form.php:48
+msgid "Save Resume"
+msgstr ""
+
+#: templates/misc/uploaded-file-html.php:40
+#: templates/misc/uploaded-file-html.php:61
+#: templates/misc/uploaded-file-html.php:68
+#: templates/misc/uploaded-file-html.php:72
+msgid "remove"
+msgstr ""
+
+#: templates/single-candidate.php:34
+msgid "Please login as employer to view candidate."
+msgstr ""
+
+#: templates/single-candidate/award.php:13
+msgid "Awards"
+msgstr ""
+
+#: templates/single-candidate/contact-form.php:27
+#: templates/single-employer/contact-form.php:23
+msgid "Contact %s"
+msgstr ""
+
+#: templates/single-candidate/contact-form.php:40
+#: templates/single-employer/contact-form.php:36
+#: templates/single-job_listing/apply-email-form.php:100
+msgid "E-mail"
+msgstr ""
+
+#: templates/single-candidate/contact-form.php:45
+#: templates/single-employer/contact-form.php:41
+#: templates/single-job_listing/apply-email-form.php:105
+msgid "Phone"
+msgstr ""
+
+#: templates/single-candidate/contact-form.php:58
+#: templates/single-employer/contact-form.php:54
+msgid "Send Message"
+msgstr ""
+
+#: templates/single-candidate/experience.php:13
+msgid "Work &amp; Experience"
+msgstr ""
+
+#: templates/single-candidate/invite-candidate-form.php:14
+msgid "Invite to apply job"
+msgstr ""
+
+#: templates/single-candidate/invite-candidate-form.php:20
+msgid "Select job to invite this user"
+msgstr ""
+
+#: templates/single-candidate/invite-candidate-form.php:76
+msgid "You need to have jobs to invite the candidates."
+msgstr ""
+
+#: templates/single-candidate/portfolios.php:13
+msgid "Portfolio"
+msgstr ""
+
+#: templates/single-candidate/review.php:19
+#: templates/single-employer/review.php:19
+msgid "Rated %d out of 5"
+msgstr ""
+
+#: templates/single-candidate/review.php:30
+#: templates/single-employer/review.php:30
+msgid "Your comment is awaiting approval"
+msgstr ""
+
+#: templates/single-candidate/reviews.php:34
+#: templates/single-employer/reviews.php:33
+msgid "There are no reviews yet."
+msgstr ""
+
+#: templates/single-candidate/reviews.php:43
+#: templates/single-employer/header.php:53
+#: templates/single-employer/reviews.php:42
+msgid "Add a review"
+msgstr ""
+
+#: templates/single-candidate/reviews.php:43
+#: templates/single-employer/reviews.php:42
+msgid "Be the first to review &ldquo;%s&rdquo;"
+msgstr ""
+
+#: templates/single-candidate/reviews.php:44
+#: templates/single-employer/reviews.php:43
+msgid "Leave a Reply to %s"
+msgstr ""
+
+#: templates/single-candidate/reviews.php:49
+#: templates/single-employer/reviews.php:48
+msgid "Your Name"
+msgstr ""
+
+#: templates/single-candidate/reviews.php:51
+#: templates/single-employer/reviews.php:50
+msgid "your@mail.com"
+msgstr ""
+
+#: templates/single-candidate/reviews.php:53
+#: templates/single-employer/reviews.php:52
+msgid "Submit Review"
+msgstr ""
+
+#: templates/single-candidate/reviews.php:58
+#: templates/single-employer/reviews.php:57
+msgid "You must be <a href=\"\">logged in</a> to post a review."
+msgstr ""
+
+#: templates/single-candidate/reviews.php:60
+#: templates/single-employer/reviews.php:59
+msgid "Write Comment"
+msgstr ""
+
+#: templates/single-candidate/skill.php:13
+msgid "Skills"
+msgstr ""
+
+#: templates/single-candidate/socials.php:15
+#: templates/single-employer/socials.php:32
+msgid "Social Profiles:"
+msgstr ""
+
+#: templates/single-employer.php:32
+msgid "Please login as candidate to view employer."
+msgstr ""
+
+#: templates/single-employer/detail.php:23
+msgid "Company Information"
+msgstr ""
+
+#: templates/single-employer/detail.php:45
+msgid "Post jobs"
+msgstr ""
+
+#: templates/single-employer/detail.php:85
+msgid "Since"
+msgstr ""
+
+#: templates/single-employer/members.php:13
+msgid "Team Member"
+msgstr ""
+
+#: templates/single-employer/members.php:50
+msgid "Experience: "
+msgstr ""
+
+#: templates/single-employer/open-jobs.php:21
+msgid "Open Position"
+msgstr ""
+
+#: templates/single-employer/profile-photos.php:13
+msgid "Office Photos"
+msgstr ""
+
+#: templates/single-job_listing/apply-call-form.php:31
+msgid "Call employer"
+msgstr ""
+
+#: templates/single-job_listing/apply-call-form.php:35
+msgid "Call %s to apply"
+msgstr ""
+
+#: templates/single-job_listing/apply-email-form.php:34
+#: templates/single-job_listing/apply-internal-form.php:20
+#: templates/single-job_listing/apply-internal-without-login.php:14
+msgid "Apply for this job"
+msgstr ""
+
+#: templates/single-job_listing/apply-email-form.php:42
+msgid "Select a your CV"
+msgstr ""
+
+#: templates/single-job_listing/apply-email-form.php:69
+#: templates/single-job_listing/apply-internal-form.php:70
+msgid "or upload your CV"
+msgstr ""
+
+#: templates/single-job_listing/apply-email-form.php:84
+#: templates/single-job_listing/apply-email-form.php:85
+#: templates/single-job_listing/apply-internal-form.php:86
+#: templates/single-job_listing/apply-internal-form.php:87
+msgid "Upload CV (%s)"
+msgstr ""
+
+#: templates/single-job_listing/apply-email-form.php:125
+#: templates/single-job_listing/apply-internal-form.php:111
+msgid "You accept our <a href=\"%s\" target=\"_blank\">Terms and Conditions and Privacy Policy</a>"
+msgstr ""
+
+#: templates/single-job_listing/apply-email-form.php:142
+#: templates/single-job_listing/apply-internal-form.php:129
+msgid "Apply Job"
+msgstr ""
+
+#: templates/single-job_listing/apply-internal-required.php:10
+msgid "Please login as \"Candidate\" to apply"
+msgstr ""
+
+#: templates/single-job_listing/detail.php:18
+msgid "Offered Salary"
+msgstr ""
+
+#: templates/single-job_listing/releated.php:51
+msgid "Related Jobs"
+msgstr ""
+
+#: templates/submission/job-submit-done.php:13
+msgid "Job listed successfully. To view your listing <a href=\"%s\">click here</a>."
+msgstr ""
+
+#: templates/submission/job-submit-done.php:16
+msgid "Job submitted successfully. Your listing will be visible once approved."
+msgstr ""
+
+#: templates/submission/job-submit-preview.php:27
+msgid "Submit Job"
+msgstr ""
+
+#: templates/submission/job-submit-preview.php:28
+msgid "Edit Job"
+msgstr ""
+
+#: templates/submission/my-jobs.php:94
+msgid "Applicants"
+msgstr ""
+
+#: templates/submission/my-jobs.php:134
+msgid "Created: "
+msgstr ""
+
+#: templates/submission/my-jobs.php:155
+msgid "%d Applicant(s)"
+msgstr ""
+
+#: templates/submission/my-jobs.php:167
+#: templates/submission/my-jobs.php:175
+#: templates/submission/my-jobs.php:176
+msgid "View"
+msgstr ""
+
+#: templates/submission/my-jobs.php:206
+#: templates/submission/my-jobs.php:207
+msgid "Relist"
+msgstr ""
+
+#: templates/submission/my-jobs.php:228
+#: templates/submission/my-jobs.php:229
+msgid "Continue"
+msgstr ""
+
+#: templates/submission/my-jobs.php:258
+msgid "You don't have any jobs, yet. Start by creating new one."
+msgstr ""
+
+#: templates/widgets/filter-fields/check_list.php:44
+#: templates/widgets/filter-fields/tax_check_list.php:82
+#: templates/widgets/filter-fields/tax_radios.php:83
+msgid "Show More"
+msgstr ""
+
+#: templates/widgets/filter-fields/distance.php:17
+msgid "%s: <span class=\"text-distance\">%s</span> %s"
+msgstr ""
+
+#: templates/widgets/filter-fields/radios.php:36
+msgid "Show More +"
+msgstr ""
+
+#: templates/widgets/filter-fields/regions_select.php:95
+#: templates/widgets/filter-fields/regions_select_search.php:96
+msgid "Filter by %s"
+msgstr ""
+
+#: wp-job-board-pro.php:215
+msgid "Expired <span class=\"count\">(%s)</span>"
+msgid_plural "Expired <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wp-job-board-pro.php:221
+msgctxt "post status"
+msgid "Pending Approve"
+msgstr ""
+
+#: wp-job-board-pro.php:227
+msgid "Pending Approve <span class=\"count\">(%s)</span>"
+msgid_plural "Pending Approve <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wp-job-board-pro.php:238
+msgid "Preview <span class=\"count\">(%s)</span>"
+msgid_plural "Preview <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wp-job-board-pro.php:244
+msgctxt "post status"
+msgid "Pending Payment"
+msgstr ""
+
+#: wp-job-board-pro.php:249
+msgid "Pending Payment <span class=\"count\">(%s)</span>"
+msgid_plural "Pending Payment <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wp-job-board-pro.php:255
+msgctxt "post status"
+msgid "Denied"
+msgstr ""
+
+#: wp-job-board-pro.php:260
+msgid "Denied <span class=\"count\">(%s)</span>"
+msgid_plural "Denied <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
