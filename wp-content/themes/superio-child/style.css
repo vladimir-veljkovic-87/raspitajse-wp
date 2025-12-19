@@ -149,7 +149,7 @@ html:has(> body.home) {
 .home .urgent {
 	color: #202124!important;
     background: rgb(218 70 65 / 46%);
-	border: 1px solid red!important;
+	border: 4px solid red!important;
 }
 
 
