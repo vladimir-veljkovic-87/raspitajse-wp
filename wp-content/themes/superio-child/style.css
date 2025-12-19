@@ -145,10 +145,11 @@ html:has(> body.home) {
 .home .elementor-26 .elementor-element.elementor-element-a4ee68d > .elementor-container > .elementor-column > .elementor-widget-wrap {
 	align-content: start!important;
 }
-/* NOTE RADI 2112 */
+/* DEPLOY TEST – VERSION 1 */
 .home .urgent {
 	color: #202124!important;
     background: rgb(218 70 65 / 46%);
+	border: 1px solid red!important;
 }
 
 
