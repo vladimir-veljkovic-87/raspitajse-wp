@@ -145,7 +145,7 @@ html:has(> body.home) {
 .home .elementor-26 .elementor-element.elementor-element-a4ee68d > .elementor-container > .elementor-column > .elementor-widget-wrap {
 	align-content: start!important;
 }
-/* Test posle izmena deploy.sh ver-2 */
+/* Test posle izmena ver-2 */
 .home .urgent {
 	color: #202124!important;
     background: rgb(218 70 65 / 46%);
