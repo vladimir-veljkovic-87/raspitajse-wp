@@ -507,12 +507,21 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
 
     $map = [
         'All Applicants' => 'Svi kandidati',
+        'Candidate Shortlist' => 'Uži izbor kandidata',
+        'Candidate Alerts' => 'Obaveštenja o kandidatima',
+        'Title' => 'Naziv',
+        'Alert Query' => 'Upit za obaveštenje',
+        'Number Candidates' => 'Broj kandidata',
+        'Times' => 'Učestalost ',
+        'Actions' => 'Akcije',
         'Search' => 'Pretraga',
         'Search...' => 'Pretraga...',
         'Search ...' => 'Pretraga...',
         'Filter by job' => 'Filtriraj po poslu',
         'Sort by:' => 'Sortiraj po:',
         'Newest' => 'Najnovije',
+        'Oldest' => 'Najstarije',
+        'Default' => 'Podrazumevanor',
         'Total(s):' => 'Ukupno:',
         'Approved' => 'Odobreno',
         'Approved:' => 'Odobreno:',
@@ -521,6 +530,12 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
         'Applied date' => 'Datum prijave',
         'Applied date:' => 'Datum prijave:',
         'Pending' => 'Na čekanju',
+        '#'            => '#',
+        'ID'           => 'ID',
+        'Package'      => 'Paket',
+        'Package Type' => 'Tip paketa',
+        'Package Info' => 'Informacije o paketu',
+        'Status'       => 'Status',
     ];
 
     return isset( $map[ $text ] ) ? $map[ $text ] : $translated;
