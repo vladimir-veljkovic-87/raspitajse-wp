@@ -502,6 +502,33 @@ function raspitajse_filter_header_buttons($content) {
     return $content;
 }
 
+add_filter( 'gettext', function ( $translated, $text, $domain ) {
+
+    if ( $domain === 'wp-job-board-pro' ) {
+
+        $map = [
+            'All Applicants' => 'Svi kandidati',
+            'Search ...' => 'Pretraga...',
+            'Filter by job' => 'Filtriraj po poslu',
+            'Sort by:' => 'Sortiraj po:',
+            'Newest' => 'Najnovije',
+            'Total(s):' => 'Ukupno:',
+            'Approved:' => 'Odobreno:',
+            'Rejected(s):' => 'Odbijeno:',
+            'Applied date:' => 'Datum prijave:',
+            'Pending' => 'Na čekanju',
+        ];
+
+        if ( isset( $map[ $text ] ) ) {
+            return $map[ $text ];
+        }
+    }
+
+    return $translated;
+
+}, 20, 3 );
+
+
 
 
 
