@@ -502,7 +502,8 @@ function raspitajse_filter_header_buttons($content) {
     return $content;
 }
 
-add_filter( 'gettext', function ( $translated, $text ) {
+add_filter( 'gettext', 'raspitajse_quick_translate', 999, 3 );
+function raspitajse_quick_translate( $translated, $text, $domain ) {
 
     $map = [
         'All Applicants' => 'Svi kandidati',
@@ -522,9 +523,10 @@ add_filter( 'gettext', function ( $translated, $text ) {
         'Pending' => 'Na čekanju',
     ];
 
-    return $map[ $text ] ?? $translated;
+    return isset( $map[ $text ] ) ? $map[ $text ] : $translated;
+}
 
-}, 999 );
+
 
 
 
