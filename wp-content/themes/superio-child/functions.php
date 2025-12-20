@@ -502,31 +502,30 @@ function raspitajse_filter_header_buttons($content) {
     return $content;
 }
 
-add_filter( 'gettext', function ( $translated, $text, $domain ) {
+add_filter( 'gettext', function ( $translated, $text ) {
 
-    if ( $domain === 'wp-job-board-pro' ) {
+    $map = [
+        'All Applicants' => 'Svi kandidati',
+        'Search' => 'Pretraga',
+        'Search...' => 'Pretraga...',
+        'Search ...' => 'Pretraga...',
+        'Filter by job' => 'Filtriraj po poslu',
+        'Sort by:' => 'Sortiraj po:',
+        'Newest' => 'Najnovije',
+        'Total(s):' => 'Ukupno:',
+        'Approved' => 'Odobreno',
+        'Approved:' => 'Odobreno:',
+        'Rejected' => 'Odbijeno',
+        'Rejected(s):' => 'Odbijeno:',
+        'Applied date' => 'Datum prijave',
+        'Applied date:' => 'Datum prijave:',
+        'Pending' => 'Na čekanju',
+    ];
 
-        $map = [
-            'All Applicants' => 'Svi kandidati',
-            'Search ...' => 'Pretraga...',
-            'Filter by job' => 'Filtriraj po poslu',
-            'Sort by:' => 'Sortiraj po:',
-            'Newest' => 'Najnovije',
-            'Total(s):' => 'Ukupno:',
-            'Approved:' => 'Odobreno:',
-            'Rejected(s):' => 'Odbijeno:',
-            'Applied date:' => 'Datum prijave:',
-            'Pending' => 'Na čekanju',
-        ];
+    return $map[ $text ] ?? $translated;
 
-        if ( isset( $map[ $text ] ) ) {
-            return $map[ $text ];
-        }
-    }
+}, 999 );
 
-    return $translated;
-
-}, 20, 3 );
 
 
 
