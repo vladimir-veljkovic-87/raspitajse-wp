@@ -6,16 +6,16 @@ wp_enqueue_script('wpjbp-select2');
 wp_enqueue_style('wpjbp-select2');
 ?>
 <div class="box-applicants widget">
-	<h3 class="widget-title"><?php echo esc_html__('Applicant','wp-job-board-pro') ?></h3>
+	<h3 class="widget-title"><?php echo esc_html__('Kandidat','wp-job-board-pro') ?></h3>
 
 	<div class="search-orderby-wrapper flex-middle-sm">
 		<div class="search-applicants-form widget-search">
 			<form action="" method="get">
 				<div class="input-group">
-					<input type="text" placeholder="<?php echo esc_html__( 'Search ...', 'wp-job-board-pro' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
+					<input type="text" placeholder="<?php echo esc_html__( 'Pretraga ...', 'wp-job-board-pro' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
 
 					<select name="job_id">
-						<option value=""><?php esc_html_e('Filter by job', 'wp-job-board-pro'); ?></option>
+						<option value=""><?php esc_html_e('Filtriraj po oglasu', 'wp-job-board-pro'); ?></option>
 						<?php if ( !empty($job_ids) ) {
 							$selected = !empty($_GET['job_id']) ? $_GET['job_id'] : '';
 						?>
@@ -36,9 +36,9 @@ wp_enqueue_style('wpjbp-select2');
 		<div class="sort-applicants-form sortby-form">
 			<?php
 				$orderby_options = apply_filters( 'wp_job_board_pro_my_jobs_orderby', array(
-					'menu_order'	=> esc_html__( 'Default', 'wp-job-board-pro' ),
-					'newest' 		=> esc_html__( 'Newest', 'wp-job-board-pro' ),
-					'oldest'     	=> esc_html__( 'Oldest', 'wp-job-board-pro' ),
+					'menu_order'	=> esc_html__( 'Podrazumevano', 'wp-job-board-pro' ),
+					'newest' 		=> esc_html__( 'Najnovije', 'wp-job-board-pro' ),
+					'oldest'     	=> esc_html__( 'Najstarije', 'wp-job-board-pro' ),
 				) );
 
 				$orderby = isset( $_GET['orderby'] ) ? wp_unslash( $_GET['orderby'] ) : 'newest'; 
@@ -158,13 +158,13 @@ wp_enqueue_style('wpjbp-select2');
 				<div class="heading">
 					<h3 class="job-title"><?php echo get_the_title($job_id); ?></h3>
 					<div class="total-applicants show-total-applicants active" data-job_id="<?php echo esc_attr($job_id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-show-applicants-nonce' )); ?>">
-						<?php echo sprintf(__('Total(s): %s', 'wp-job-board-pro'), '<span class="number">'.$applicants->found_posts.'</span>'); ?>
+						<?php echo sprintf(__('Ukupno: %s', 'wp-job-board-pro'), '<span class="number">'.$applicants->found_posts.'</span>'); ?>
 					</div>
 					<div class="approved-applicants show-approved-applicants" data-job_id="<?php echo esc_attr($job_id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-show-approved-applicants-nonce' )); ?>">
-						<?php echo sprintf(__('Approved: %s', 'wp-job-board-pro'), '<span class="number">'.$approved->found_posts.'</span>'); ?>
+						<?php echo sprintf(__('Odobreno: %s', 'wp-job-board-pro'), '<span class="number">'.$approved->found_posts.'</span>'); ?>
 					</div>
 					<div class="rejected-applicants show-rejected-applicants" data-job_id="<?php echo esc_attr($job_id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-show-rejected-applicants-nonce' )); ?>">
-						<?php echo sprintf(__('Rejected(s): %s', 'wp-job-board-pro'), '<span class="number">'.$rejected->found_posts.'</span>'); ?>
+						<?php echo sprintf(__('Odbijeno: %s', 'wp-job-board-pro'), '<span class="number">'.$rejected->found_posts.'</span>'); ?>
 					</div>
 				</div>
 				<div class="applicants-wrapper">
@@ -188,7 +188,7 @@ wp_enqueue_style('wpjbp-select2');
 							</div>
 							<?php if ( $applicants->max_num_pages > $current_page ) { ?>
 								<form class="applicants-pagination-form">
-									<button class="apus-loadmore-btn"><?php esc_html_e( 'Load more', 'wp-job-board-pro' ); ?></button>
+									<button class="apus-loadmore-btn"><?php esc_html_e( 'Učitaj još', 'wp-job-board-pro' ); ?></button>
 									<input type="hidden" name="paged" value="<?php echo esc_attr($current_page + 1); ?>">
 									<input type="hidden" name="job_id" value="<?php echo esc_attr($job_id); ?>">
 									<?php WP_Job_Board_Pro_Mixes::query_string_form_fields( null, array( 'job_id', 'submit', 'paged' ) ); ?>
@@ -198,7 +198,7 @@ wp_enqueue_style('wpjbp-select2');
 							<?php wp_reset_postdata();
 						} else {
 							?>
-							<div class="no-found"><?php esc_html_e('No applicants found.', 'wp-job-board-pro'); ?></div>
+							<div class="no-found"><?php esc_html_e('Nema pronađenih kandidata.', 'wp-job-board-pro'); ?></div>
 							<?php
 						}
 					?>
@@ -209,6 +209,6 @@ wp_enqueue_style('wpjbp-select2');
 		}
 		
 	} else { ?>
-		<div class="no-found"><?php esc_html_e('No applicants found.', 'wp-job-board-pro'); ?></div>
+		<div class="no-found"><?php esc_html_e('Nema pronađenih kandidata.', 'wp-job-board-pro'); ?></div>
 	<?php } ?>
 </div>

@@ -29,27 +29,27 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 ?>
 
 <div class="employer-dashboard-wrapper">
-	<h3 class="title"><?php esc_html_e('Statistika prijava', 'wp-job-board-pro'); ?></h3>
+	<h3 class="title"><?php esc_html_e('Applications statistics', 'wp-job-board-pro'); ?></h3>
 	<div class="statistics">
 		<div class="posted-jobs">
-			<h4><?php esc_html_e('Prijavljeni poslovi', 'wp-job-board-pro'); ?></h4>
+			<h4><?php esc_html_e('Applied Jobs', 'wp-job-board-pro'); ?></h4>
 			<div class="jobs-count"><?php echo WP_Job_Board_Pro_Mixes::format_number($count_applicants); ?></div>
 		</div>
 		<div class="shortlist">
-			<h4><?php esc_html_e('U užem izboru', 'wp-job-board-pro'); ?></h4>
+			<h4><?php esc_html_e('Shortlisted', 'wp-job-board-pro'); ?></h4>
 			<div class="jobs-count"><?php echo WP_Job_Board_Pro_Mixes::format_number($shortlist); ?></div>
 		</div>
 		<div class="review-count-wrapper">
-			<h4><?php esc_html_e('Recenzije', 'wp-job-board-pro'); ?></h4>
+			<h4><?php esc_html_e('Review', 'wp-job-board-pro'); ?></h4>
 			<div class="review-count"><?php echo WP_Job_Board_Pro_Mixes::format_number($total_reviews); ?></div>
 		</div>
 		<div class="views-count-wrapper">
-			<h4><?php esc_html_e('Pregledi', 'wp-job-board-pro'); ?></h4>
+			<h4><?php esc_html_e('Views', 'wp-job-board-pro'); ?></h4>
 			<div class="views-count"><?php echo WP_Job_Board_Pro_Mixes::format_number($views); ?></div>
 		</div>
 	</div>
 
-	<h3 class="title"><?php esc_html_e('Nedavno prijavljeni poslovi', 'wp-job-board-pro'); ?></h3>
+	<h3 class="title"><?php esc_html_e('Jobs Applied Recently', 'wp-job-board-pro'); ?></h3>
 	<div class="applicants">
 		<?php
 			$job_ids = array();
@@ -74,12 +74,12 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 					wp_reset_postdata();
 				} else {
 					?>
-					<div class="not-found"><?php esc_html_e('Nema pronađenih prijava.', 'wp-job-board-pro'); ?></div>
+					<div class="not-found"><?php esc_html_e('No Applicants found.', 'wp-job-board-pro'); ?></div>
 					<?php
 				}
 			} else {
 				?>
-				<div class="not-found"><?php esc_html_e('Nema pronađenih prijava.', 'wp-job-board-pro'); ?></div>
+				<div class="not-found"><?php esc_html_e('No Applicants found.', 'wp-job-board-pro'); ?></div>
 				<?php
 			}
 		?>

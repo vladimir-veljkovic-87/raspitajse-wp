@@ -6,13 +6,13 @@ wp_enqueue_script('wpjbp-select2');
 wp_enqueue_style('wpjbp-select2');
 ?>
 <div class="box-employer widget">
-	<h3 class="widget-title"><?php echo esc_html__('Candidate Alerts','wp-job-board-pro') ?></h3>
+	<h3 class="widget-title"><?php echo esc_html__('Obaveštenja o Kandidatima','wp-job-board-pro') ?></h3>
 	
 	<div class="search-orderby-wrapper flex-middle-sm">
 		<div class="search-candidates-alert-form widget-search">
 			<form action="" method="get">
 				<div class="input-group">
-					<input type="text" placeholder="<?php echo esc_html__( 'Search ...', 'wp-job-board-pro' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
+					<input type="text" placeholder="<?php echo esc_html__( 'Pretraga ...', 'wp-job-board-pro' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
 					<span class="input-group-btn">
 						<button class="search-submit btn btn-sm btn-search" name="submit">
 							<i class="flaticon-magnifying-glass"></i>
@@ -25,9 +25,9 @@ wp_enqueue_style('wpjbp-select2');
 		<div class="sort-candidates-alert-form sortby-form">
 			<?php
 				$orderby_options = apply_filters( 'wp_job_board_pro_my_jobs_orderby', array(
-					'menu_order'	=> esc_html__( 'Default', 'wp-job-board-pro' ),
-					'newest' 		=> esc_html__( 'Newest', 'wp-job-board-pro' ),
-					'oldest'     	=> esc_html__( 'Oldest', 'wp-job-board-pro' ),
+					'menu_order'	=> esc_html__( 'Podrazumevano', 'wp-job-board-pro' ),
+					'newest' 		=> esc_html__( 'Najnovije', 'wp-job-board-pro' ),
+					'oldest'     	=> esc_html__( 'Najstarije', 'wp-job-board-pro' ),
 				) );
 
 				$orderby = isset( $_GET['orderby'] ) ? wp_unslash( $_GET['orderby'] ) : 'newest'; 
@@ -35,7 +35,7 @@ wp_enqueue_style('wpjbp-select2');
 
 			<div class="orderby-wrapper flex-middle">
 				<span class="text-sort">
-					<?php echo esc_html__('Sort by: ','wp-job-board-pro'); ?>
+					<?php echo esc_html__('Sortiraj po: ','wp-job-board-pro'); ?>
 				</span>
 				<form class="my-jobs-ordering" method="get">
 					<select name="orderby" class="orderby">
@@ -57,11 +57,11 @@ wp_enqueue_style('wpjbp-select2');
 			<table class="job-table">
 				<thead>
 					<tr>
-						<th class="job-title"><?php esc_html_e('Title', 'wp-job-board-pro'); ?></th>
-						<th class="alert-query"><?php esc_html_e('Alert Query', 'wp-job-board-pro'); ?></th>
-						<th class="job-number"><?php esc_html_e('Number Jobs', 'wp-job-board-pro'); ?></th>
-						<th class="job-times"><?php esc_html_e('Times', 'wp-job-board-pro'); ?></th>
-						<th class="job-actions"><?php esc_html_e('Actions', 'wp-job-board-pro'); ?></th>
+						<th class="job-title"><?php esc_html_e('Naziv', 'wp-job-board-pro'); ?></th>
+						<th class="alert-query"><?php esc_html_e('Kriterijumi obaveštenja', 'wp-job-board-pro'); ?></th>
+						<th class="job-number"><?php esc_html_e('Broj poslova', 'wp-job-board-pro'); ?></th>
+						<th class="job-times"><?php esc_html_e('Učestalost', 'wp-job-board-pro'); ?></th>
+						<th class="job-actions"><?php esc_html_e('Akcije', 'wp-job-board-pro'); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -130,7 +130,7 @@ wp_enqueue_style('wpjbp-select2');
 						    </td>
 						    <td>
 						        <div class="job-found">
-						            <?php echo sprintf( __('Jobs found %d', 'wp-job-board-pro'), intval($count_jobs) ); ?>
+						            <?php echo sprintf( __('Pronađeno poslova: %d', 'wp-job-board-pro'), intval($count_jobs) ); ?>
 						        </div>
 					        </td>
 					        <td>
@@ -139,7 +139,7 @@ wp_enqueue_style('wpjbp-select2');
 						        </div>
 						    </td>
 						    <td>
-								<a href="javascript:void(0)" class="btn-remove-job-alert" data-alert_id="<?php echo esc_attr($alert_id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-candidate-alert-nonce' )); ?>"><?php esc_html_e('Remove', 'wp-job-board-pro'); ?></a>
+								<a href="javascript:void(0)" class="btn-remove-job-alert" data-alert_id="<?php echo esc_attr($alert_id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-candidate-alert-nonce' )); ?>"><?php esc_html_e('Ukloni', 'wp-job-board-pro'); ?></a>
 							</td>
 						</tr><!-- #post-## -->
 
@@ -152,13 +152,13 @@ wp_enqueue_style('wpjbp-select2');
 		<?php
 		WP_Job_Board_Pro_Mixes::custom_pagination( array(
 			'max_num_pages' => $alerts->max_num_pages,
-			'prev_text'     => esc_html__( 'Previous page', 'wp-job-board-pro' ),
-			'next_text'     => esc_html__( 'Next page', 'wp-job-board-pro' ),
+			'prev_text'     => esc_html__( 'Prethodna strana', 'wp-job-board-pro' ),
+			'next_text'     => esc_html__( 'Sledeća strana', 'wp-job-board-pro' ),
 			'wp_query' => $alerts
 		));
 	?>
 
 	<?php } else { ?>
-		<div class="not-found"><?php esc_html_e('No candidate alert found.', 'wp-job-board-pro'); ?></div>
+		<div class="not-found"><?php esc_html_e('Nema pronađenih obaveštenja za kandidate.', 'wp-job-board-pro'); ?></div>
 	<?php } ?>
 </div>

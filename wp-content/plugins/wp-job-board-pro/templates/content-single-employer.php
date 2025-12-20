@@ -18,7 +18,7 @@ global $post;
 			<?php do_action( 'wp_job_board_pro_before_job_content', get_the_ID() ); ?>
 			<!-- job description -->
 			<div class="job-detail-description">
-				<h3><?php esc_html_e('Job Description', 'wp-job-board-pro'); ?></h3>
+				<h3><?php esc_html_e('Opis Posla', 'wp-job-board-pro'); ?></h3>
 				<div class="inner">
 					<?php the_content(); ?>
 				</div>

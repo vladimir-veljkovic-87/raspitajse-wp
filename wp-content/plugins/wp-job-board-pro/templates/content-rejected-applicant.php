@@ -36,17 +36,17 @@ $classes = $viewed ? 'viewed' : '';
             <?php the_time( get_option('date_format', 'd M, Y') ); ?>
         </div>
 
-        <a href="<?php echo esc_url( $candidate_url ); ?>" rel="bookmark"><?php esc_html_e('View Profile', 'wp-job-board-pro'); ?></a>
+        <a href="<?php echo esc_url( $candidate_url ); ?>" rel="bookmark"><?php esc_html_e('Pogledaj profil', 'wp-job-board-pro'); ?></a>
 
         <div class="applicant-action-button">
-            <a href="javascript:void(0);" class="btn-actions"><?php esc_html_e('Actions', 'wp-job-board-pro'); ?></a>
+            <a href="javascript:void(0);" class="btn-actions"><?php esc_html_e('Akcije', 'wp-job-board-pro'); ?></a>
             <div class="all-actions-wrapper">
                 
                 <?php WP_Job_Board_Pro_Candidate::display_shortlist_link($candidate_id); ?>
                 
-                <a href="javascript:void(0);" class="btn-undo-reject-job-applied" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-undo-reject-applied-nonce' )); ?>"><?php esc_html_e('Undo Rejected', 'wp-job-board-pro'); ?></a>
+                <a href="javascript:void(0);" class="btn-undo-reject-job-applied" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-undo-reject-applied-nonce' )); ?>"><?php esc_html_e('Poništi odbijanje', 'wp-job-board-pro'); ?></a>
 
-                <a href="javascript:void(0);" class="btn-remove-job-applied" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-applied-nonce' )); ?>"><?php esc_html_e('Remove', 'wp-job-board-pro'); ?></a>
+                <a href="javascript:void(0);" class="btn-remove-job-applied" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-applied-nonce' )); ?>"><?php esc_html_e('Ukloni', 'wp-job-board-pro'); ?></a>
             </div>
         </div>
     </div>

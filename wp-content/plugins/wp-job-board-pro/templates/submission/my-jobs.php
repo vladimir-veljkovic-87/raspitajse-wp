@@ -18,7 +18,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 			</div>
 			<div class="submit-wrapper">
 				<button class="search-submit" name="submit">
-					<?php esc_html_e( 'Search ...', 'wp-job-board-pro' ); ?>
+					<?php esc_html_e( 'Pretraga ...', 'wp-job-board-pro' ); ?>
 				</button>
 			</div>
 		</form>
@@ -26,9 +26,9 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 	<div class="sort-my-jobs-form sortby-form">
 		<?php
 			$orderby_options = apply_filters( 'wp_job_board_pro_my_jobs_orderby', array(
-				'menu_order'	=> esc_html__( 'Default', 'wp-job-board-pro' ),
-				'newest' 		=> esc_html__( 'Newest', 'wp-job-board-pro' ),
-				'oldest'     	=> esc_html__( 'Oldest', 'wp-job-board-pro' ),
+				'menu_order'	=> esc_html__( 'Podrazumevano', 'wp-job-board-pro' ),
+				'newest' 		=> esc_html__( 'Najnovije', 'wp-job-board-pro' ),
+				'oldest'     	=> esc_html__( 'Najstarije', 'wp-job-board-pro' ),
 			) );
 
 			$orderby = isset( $_GET['orderby'] ) ? wp_unslash( $_GET['orderby'] ) : 'newest'; 
@@ -36,7 +36,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 
 		<div class="orderby-wrapper">
 			<span>
-				<?php echo esc_html__('Sort by: ','wp-job-board-pro'); ?>
+				<?php echo esc_html__('Sortiraj po: ','wp-job-board-pro'); ?>
 			</span>
 			<form class="my-jobs-ordering" method="get">
 				<select name="orderby" class="orderby">
@@ -90,8 +90,8 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 	<table class="job-table">
 		<thead>
 			<tr>
-				<th class="job-title"><?php esc_html_e('Job Title', 'wp-job-board-pro'); ?></th>
-				<th class="job-applicants"><?php esc_html_e('Applicants', 'wp-job-board-pro'); ?></th>
+				<th class="job-title"><?php esc_html_e('Naziv posla', 'wp-job-board-pro'); ?></th>
+				<th class="job-applicants"><?php esc_html_e('Kandidati', 'wp-job-board-pro'); ?></th>
 				<th class="job-status"><?php esc_html_e('Status', 'wp-job-board-pro'); ?></th>
 				<th class="job-actions"></th>
 			</tr>
@@ -112,12 +112,12 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 
 							<?php $is_urgent = get_post_meta( $post->ID, WP_JOB_BOARD_PRO_JOB_LISTING_PREFIX . 'urgent', true ); ?>
 							<?php if ( $is_urgent ) : ?>
-								<span class="urgent-lable"><?php esc_html_e( 'Urgent', 'wp-job-board-pro' ); ?></span>
+								<span class="urgent-lable"><?php esc_html_e( 'Hitno', 'wp-job-board-pro' ); ?></span>
 							<?php endif; ?>
 
 							<?php $is_featured = get_post_meta( $post->ID, WP_JOB_BOARD_PRO_JOB_LISTING_PREFIX . 'featured', true ); ?>
 							<?php if ( $is_featured ) : ?>
-								<span class="featured-lable"><?php esc_html_e( 'Featured', 'wp-job-board-pro' ); ?></span>
+								<span class="featured-lable"><?php esc_html_e( 'Izdvojeno', 'wp-job-board-pro' ); ?></span>
 							<?php endif; ?>
 
 						</div>
@@ -131,7 +131,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 						
 						<div class="job-table-info-content-date-expiry">
 							<div class="job-table-info-content-date">
-								<?php esc_html_e('Created: ', 'wp-job-board-pro'); ?>
+								<?php esc_html_e('Kreirano: ', 'wp-job-board-pro'); ?>
 								<span><?php the_time( get_option('date_format') ); ?></span>
 							</div>
 							<div class="job-table-info-content-expiry">
@@ -164,7 +164,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 				</td>
 
 				<td class="job-table-actions min-width nowrap">
-					<a class="view-btn" href="<?php the_permalink(); ?>" title="<?php esc_attr_e('View', 'wp-job-board-pro'); ?>"><?php esc_html_e('View', 'wp-job-board-pro'); ?></a>
+					<a class="view-btn" href="<?php the_permalink(); ?>" title="<?php esc_attr_e('Pregled', 'wp-job-board-pro'); ?>"><?php esc_html_e('View', 'wp-job-board-pro'); ?></a>
 
 					<?php
 					$my_jobs_url = add_query_arg( 'job_id', $post->ID, remove_query_arg( 'job_id', $my_jobs_url ) );
@@ -172,8 +172,8 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 						case 'publish' :
 							$edit_url = add_query_arg( 'action', 'edit', remove_query_arg( 'action', $my_jobs_url ) );
 							?>
-							<a class="view-btn btn-action-icon view btn-action-sm" href="<?php the_permalink(); ?>" title="<?php esc_attr_e('View', 'wp-job-board-pro'); ?>">
-								<?php esc_html_e('View', 'wp-job-board-pro'); ?>
+							<a class="view-btn btn-action-icon view btn-action-sm" href="<?php the_permalink(); ?>" title="<?php esc_attr_e('Pregled', 'wp-job-board-pro'); ?>">
+								<?php esc_html_e('Pregled', 'wp-job-board-pro'); ?>
 							</a>
 
 							<?php
@@ -204,7 +204,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 							$relist_url = add_query_arg( 'action', 'relist', remove_query_arg( 'action', $my_jobs_url ) );
 							?>
 							<a href="<?php echo esc_url($relist_url); ?>" class="btn-action-icon view btn-action-sm job-table-action" title="<?php esc_attr_e('Relist', 'wp-job-board-pro'); ?>">
-								<?php esc_html_e('Relist', 'wp-job-board-pro'); ?>
+								<?php esc_html_e('Ponovo aktiviraj', 'wp-job-board-pro'); ?>
 							</a>
 							<?php
 							break;
@@ -215,8 +215,8 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 							if ( $edit_able !== 'no' ) {
 								$edit_url = add_query_arg( 'action', 'edit', remove_query_arg( 'action', $my_jobs_url ) );
 								?>
-								<a href="<?php echo esc_url($edit_url); ?>" class="edit-btn btn-action-icon edit btn-action-sm job-table-action" title="<?php esc_attr_e('Edit', 'wp-job-board-pro'); ?>">
-									<?php esc_html_e('Edit', 'wp-job-board-pro'); ?>
+								<a href="<?php echo esc_url($edit_url); ?>" class="edit-btn btn-action-icon edit btn-action-sm job-table-action" title="<?php esc_attr_e('Izmeni', 'wp-job-board-pro'); ?>">
+									<?php esc_html_e('Izmeni', 'wp-job-board-pro'); ?>
 								</a>
 								<?php
 							}
@@ -225,16 +225,16 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 						case 'preview' :
 							$continue_url = add_query_arg( 'action', 'continue', remove_query_arg( 'action', $my_jobs_url ) );
 							?>
-							<a href="<?php echo esc_url($continue_url); ?>" class="edit-btn btn-action-icon relist btn-action-sm job-table-action" title="<?php esc_attr_e('Continue', 'wp-job-board-pro'); ?>">
-								<?php esc_html_e('Continue', 'wp-job-board-pro'); ?>
+							<a href="<?php echo esc_url($continue_url); ?>" class="edit-btn btn-action-icon relist btn-action-sm job-table-action" title="<?php esc_attr_e('Nastavi', 'wp-job-board-pro'); ?>">
+								<?php esc_html_e('Nastavi', 'wp-job-board-pro'); ?>
 							</a>
 							<?php
 							break;
 					}
 					?>
 
-					<a class="remove-btn" href="javascript:void(0)" class="job-table-action job-button-delete" data-job_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-delete-job-nonce' )); ?>" title="<?php esc_attr_e('Remove', 'wp-job-board-pro'); ?>">
-						<?php esc_html_e( 'Remove', 'wp-job-board-pro' ); ?>
+					<a class="remove-btn" href="javascript:void(0)" class="job-table-action job-button-delete" data-job_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-delete-job-nonce' )); ?>" title="<?php esc_attr_e('Ukloni', 'wp-job-board-pro'); ?>">
+						<?php esc_html_e( 'Ukloni', 'wp-job-board-pro' ); ?>
 					</a>
 
 				</td>
@@ -255,6 +255,6 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 	?>
 <?php else : ?>
 	<div class="alert alert-warning">
-		<p><?php esc_html_e( 'You don\'t have any jobs, yet. Start by creating new one.', 'wp-job-board-pro' ); ?></p>
+		<p><?php esc_html_e( 'Još uvek nemate nijedan oglas. Započnite kreiranjem i obljavljivanjem novog.', 'wp-job-board-pro' ); ?></p>
 	</div>
 <?php endif; ?>

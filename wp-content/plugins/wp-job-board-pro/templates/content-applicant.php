@@ -58,15 +58,15 @@ $classes = $viewed ? 'viewed' : '';
             <?php the_time( get_option('date_format', 'd M, Y') ); ?>
         </div>
 
-        <a href="<?php echo esc_url( $candidate_url ); ?>" rel="bookmark"><?php esc_html_e('View Profile', 'wp-job-board-pro'); ?></a>
+        <a href="<?php echo esc_url( $candidate_url ); ?>" rel="bookmark"><?php esc_html_e('Pregledaj Profil', 'wp-job-board-pro'); ?></a>
 
         <div class="applicant-action-button">
-            <a href="javascript:void(0);" class="btn-actions"><?php esc_html_e('Actions', 'wp-job-board-pro'); ?></a>
+            <a href="javascript:void(0);" class="btn-actions"><?php esc_html_e('Akcije', 'wp-job-board-pro'); ?></a>
             <div class="all-actions-wrapper">
                 <?php
                 if ( $download_url ) {
                 ?>
-                    <a href="<?php echo esc_url($download_url); ?>"><?php esc_html_e('Download CV', 'wp-job-board-pro'); ?></a>
+                    <a href="<?php echo esc_url($download_url); ?>"><?php esc_html_e('Preuzimanje CV-a', 'wp-job-board-pro'); ?></a>
                 <?php } ?>
 
                 <?php WP_Job_Board_Pro_Candidate::display_shortlist_link($candidate_id); ?>
@@ -74,14 +74,14 @@ $classes = $viewed ? 'viewed' : '';
                 <?php
                     $app_status = WP_Job_Board_Pro_Applicant::get_post_meta($post->ID, 'app_status', true);
                     if ( $app_status == 'rejected' ) {
-                        $text = esc_html__('Rejected', 'wp-job-board-pro');
+                        $text = esc_html__('Odbijen', 'wp-job-board-pro');
                     } else {
-                        $text = esc_html__('Reject', 'wp-job-board-pro');
+                        $text = esc_html__('Odbij', 'wp-job-board-pro');
                     }
                 ?>
                 <a href="javascript:void(0);" class="btn-reject-job-applied" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-reject-applied-nonce' )); ?>"><?php echo wp_kses_post($text); ?></a>
 
-                <a href="javascript:void(0);" class="btn-remove-job-applied" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-applied-nonce' )); ?>"><?php esc_html_e('Remove', 'wp-job-board-pro'); ?></a>
+                <a href="javascript:void(0);" class="btn-remove-job-applied" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-applied-nonce' )); ?>"><?php esc_html_e('Ukloni', 'wp-job-board-pro'); ?></a>
             </div>
         </div>
     </div>

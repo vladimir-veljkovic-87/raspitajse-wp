@@ -9,7 +9,7 @@ wp_enqueue_style('wpjbp-select2');
 	<div class="search-following-employer-form widget-search">
 		<form action="" method="get">
 			<div class="input-group">
-				<input type="text" placeholder="<?php echo esc_html__( 'Search ...', 'wp-job-board-pro' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
+				<input type="text" placeholder="<?php echo esc_html__( 'Pretraga ...', 'wp-job-board-pro' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
 				<span class="input-group-btn">
 					<button class="search-submit btn btn-sm btn-search" name="submit">
 						<i class="flaticon-magnifying-glass"></i>
@@ -22,9 +22,9 @@ wp_enqueue_style('wpjbp-select2');
 	<div class="sort-following-employer-form sortby-form">
 		<?php
 			$orderby_options = apply_filters( 'wp_job_board_pro_my_jobs_orderby', array(
-				'menu_order'	=> esc_html__( 'Default', 'wp-job-board-pro' ),
-				'newest' 		=> esc_html__( 'Newest', 'wp-job-board-pro' ),
-				'oldest'     	=> esc_html__( 'Oldest', 'wp-job-board-pro' ),
+				'menu_order'	=> esc_html__( 'Podrazumevano', 'wp-job-board-pro' ),
+				'newest' 		=> esc_html__( 'Najnovije', 'wp-job-board-pro' ),
+				'oldest'     	=> esc_html__( 'Najstarije', 'wp-job-board-pro' ),
 			) );
 
 			$orderby = isset( $_GET['orderby'] ) ? wp_unslash( $_GET['orderby'] ) : 'newest'; 
@@ -65,5 +65,5 @@ if ( !empty($employers) && !empty($employers->have_posts()) ) {
 ?>
 
 <?php } else { ?>
-	<div class="not-found"><?php esc_html_e('No following employer found.', 'wp-job-board-pro'); ?></div>
+	<div class="not-found"><?php esc_html_e('Nije pronađen poslodavac koga pratite.', 'wp-job-board-pro'); ?></div>
 <?php } ?>
