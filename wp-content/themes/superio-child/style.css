@@ -226,13 +226,32 @@ html:has(> body.home) {
     background: rgb(218 70 65 / 46%);
     font-weight: 500;
 }
-.page-template-page-dashboard .bottom-sub {
+/* Package Features */
+.page-template-page-dashboard .package-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 	color: #77838f;
 }
-.page-template-page-dashboard .bottom-sub .fas {
+
+.page-template-page-dashboard.package-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.page-template-page-dashboard.package-features i {
 	color: #1967D2;
 	margin-right:5px;
+    min-width: 18px;
+    text-align: center;
 }
+.page-template-page-dashboard .ai-feature {
+    font-weight: 600;
+	color: #1967D2;
+} 
 
 /* Half Job Detail - Template job search */
 .page-template-page-jobs .filter-listing-form.st-small-show .main-inner {
