@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 if ( $user_packages ) : ?>
 	<div class="widget widget-your-packages">
-		<h2 class="widget-title"><?php esc_html_e( 'Your Packages', 'wp-job-board-pro-wc-paid-listings' ); ?></h2>
+		<h2 class="widget-title"><?php esc_html_e( 'Vaši paketi', 'wp-job-board-pro-wc-paid-listings' ); ?></h2>
 		<div class="row">
 			<?php
 				$prefix = WP_JOB_BOARD_PRO_WC_PAID_LISTINGS_PREFIX;

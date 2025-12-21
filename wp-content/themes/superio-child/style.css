@@ -145,11 +145,10 @@ html:has(> body.home) {
 .home .elementor-26 .elementor-element.elementor-element-a4ee68d > .elementor-container > .elementor-column > .elementor-widget-wrap {
 	align-content: start!important;
 }
-/* Test posle izmena ver-2c */
 .home .urgent {
 	color: #202124!important;
     background: rgb(218 70 65 / 46%);
-	border: 11px solid hsl(268, 100%, 50%)!important;
+	margin-top: 5px;
 }
 
 
@@ -214,6 +213,18 @@ html:has(> body.home) {
 	padding-left: 5px;
     padding-right: 5px;
     text-align: center;
+}
+/* Upravljanje poslovima - Urgent */
+.box-dashboard-wrapper .urgent {
+	color: #202124!important;
+	background: rgb(218 70 65 / 46%);
+	line-height: 33px;
+}
+/* Dashboard Paketi */
+.recommended {
+    margin-left: 10px;
+    background: rgb(218 70 65 / 46%);
+    font-weight: 500;
 }
 
 /* Half Job Detail - Template job search */
@@ -387,7 +398,7 @@ and (max-width : 992px) {
     .mfp-container {
         padding-left: 0;
         padding-right: 0;
-	
+	}
 }
 
 /*=============================*/
