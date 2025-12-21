@@ -383,6 +383,10 @@ span.featured {
 @media only screen
 and (min-width : 768px)
 and (max-width : 992px) {
+	/* Modall container */
+    .mfp-container {
+        padding-left: 0;
+        padding-right: 0;
 	
 }
 

@@ -67,7 +67,8 @@ jQuery(document).ready(function($) {
             'Rejected(s):' : 'Odbijeno:',
             'My Packages' : 'Moji paketi',
             'Active'    : 'Aktivan',
-            'Expired'   : 'Istekao',    
+            'Expired'   : 'Istekao',
+            'Published'  : 'Objavljen',    
         };
 
         document.querySelectorAll('[data-original-title]').forEach(el => {
@@ -119,11 +120,26 @@ jQuery(document).ready(function($) {
                 el.textContent = 'Aktivno';
             }
 
-            if (text === 'Inactive') {
-                el.textContent = 'Neaktivno';
+            if (text === 'Expired') {
+                el.textContent = 'Istekao';
             }
         });
+        // 🔹 Translate publish status labels
+        document.querySelectorAll('.job-table-actions-inner').forEach(el => {
+        const text = el.textContent.trim();
 
+        if (text === 'Published') {
+            el.textContent = 'Objavljeno';
+        }
+
+        if (text === 'Draft') {
+            el.textContent = 'Nacrt';
+        }
+
+        if (text === 'Pending') {
+            el.textContent = 'Na čekanju';
+        }
+        });
 
     }
 
