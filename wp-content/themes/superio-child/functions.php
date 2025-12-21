@@ -524,7 +524,7 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
         'Oldest' => 'Najstarije',
         'Default' => 'Podrazumevanor',
         'Oldest' => 'Najstarije',
-        'Default' => 'Podrazumevanor',
+        'Default' => 'Podrazumevano',
         'Total(s):' => 'Ukupno:',
         'Approved' => 'Odobreno',
         'Approved:' => 'Odobreno:',
