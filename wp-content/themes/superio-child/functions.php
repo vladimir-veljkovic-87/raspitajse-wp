@@ -505,50 +505,51 @@ function raspitajse_filter_header_buttons($content) {
 add_filter( 'gettext', 'raspitajse_quick_translate', 999, 3 );
 function raspitajse_quick_translate( $translated, $text, $domain ) {
 
+    // normalize whitespace (CRITICAL)
+    $normalized = trim( preg_replace( '/\s+/', ' ', $text ) );
+
     $map = [
-        'All Applicants' => 'Svi kandidati',
-        'Candidate Shortlist' => 'Uži izbor kandidata',
-        'Candidate Alerts' => 'Obaveštenja o kandidatima',
-        'My Packages' => 'Moji paketi',
-        'Title' => 'Naziv',
-        'Alert Query' => 'Upit za obaveštenje',
-        'Number Candidates' => 'Broj kandidata',
-        'Times' => 'Učestalost ',
-        'Actions' => 'Akcije',
-        'Search' => 'Pretraga',
-        'Search...' => 'Pretraga...',
-        'Search ...' => 'Pretraga...',
-        'Filter by job' => 'Filtriraj po poslu',
-        'Sort by:' => 'Sortiraj po:',
-        'Newest' => 'Najnovije',
-        'Oldest' => 'Najstarije',
-        'Default' => 'Podrazumevanor',
-        'Oldest' => 'Najstarije',
-        'Default' => 'Podrazumevano',
-        'Total(s):' => 'Ukupno:',
-        'Approved' => 'Odobreno',
-        'Approved:' => 'Odobreno:',
-        'Rejected' => 'Odbijeno',
-        'Rejected(s):' => 'Odbijeno:',
-        'Applied date' => 'Datum prijave',
-        'Applied date:' => 'Datum prijave:',
-        'Pending' => 'Na čekanju',
-        '#'            => '#',
-        'ID'           => 'ID',
-        'Package'      => 'Paket',
-        'Package Type' => 'Tip paketa',
-        'Package Info' => 'Informacije o paketu',
-        'Status'       => 'Status',
-        '#'            => '#',
-        'ID'           => 'ID',
-        'Package'      => 'Paket',
-        'Package Type' => 'Tip paketa',
-        'Package Info' => 'Informacije o paketu',
-        'Status'       => 'Status',
+        'All Applicants'       => 'Svi kandidati',
+        'Candidate Shortlist'  => 'Uži izbor kandidata',
+        'Candidate Alerts'     => 'Obaveštenja o kandidatima',
+        'My Packages'          => 'Moji paketi',
+
+        'Title'                => 'Naziv',
+        'Alert Query'          => 'Upit za obaveštenje',
+        'Number Candidates'    => 'Broj kandidata',
+        'Times'                => 'Učestalost',
+        'Actions'              => 'Akcije',
+
+        'Search'               => 'Pretraga',
+        'Search...'            => 'Pretraga...',
+        'Search ...'           => 'Pretraga...',
+        'Filter by job'        => 'Filtriraj po poslu',
+
+        'Sort by:'             => 'Sortiraj po:',
+        'Newest'               => 'Najnovije',
+        'Oldest'               => 'Najstarije',
+        'Default'              => 'Podrazumevano',
+
+        'Total(s):'            => 'Ukupno:',
+        'Approved'             => 'Odobreno',
+        'Approved:'            => 'Odobreno:',
+        'Rejected'             => 'Odbijeno',
+        'Rejected(s):'         => 'Odbijeno:',
+        'Applied date'         => 'Datum prijave',
+        'Applied date:'        => 'Datum prijave:',
+        'Pending'              => 'Na čekanju',
+
+        '#'                    => '#',
+        'ID'                   => 'ID',
+        'Package'              => 'Paket',
+        'Package Type'         => 'Tip paketa',
+        'Package Info'         => 'Informacije o paketu',
+        'Status'               => 'Status',
     ];
 
-    return isset( $map[ $text ] ) ? $map[ $text ] : $translated;
+    return isset( $map[ $normalized ] ) ? $map[ $normalized ] : $translated;
 }
+
 
 
 

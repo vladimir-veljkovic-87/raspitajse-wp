@@ -48,46 +48,61 @@ jQuery(document).ready(function($) {
 
     function applyTranslations() {
 
-    const translations = {
-        'Create Meeting': 'Zakaži sastanak',
-        'Approve Application': 'Odobri prijavu',
-        'Reject Application': 'Odbij prijavu',
-        'Download CV': 'Preuzmi CV',
-        'Remove': 'Ukloni',
-        'Date': 'Datum',
-        'Time': 'Vreme',
-        'Time Duration': 'Trajanje',
-        'Message': 'Poruka',
-        'Delete candidate': 'Obriši kandidata',
-        'Send message': 'Pošalji poruku',
-        'View Profile': 'Pogledaj profil',
-        'Testimonial': 'Iskustvo',
-        'Total(s):' : 'Ukupno:',
-        'Approved' : 'Odobreno',
-        'Rejected(s):' : 'Odbijeno:',
+        const translations = {
+            'Create Meeting': 'Zakaži sastanak',
+            'Approve Application': 'Odobri prijavu',
+            'Reject Application': 'Odbij prijavu',
+            'Download CV': 'Preuzmi CV',
+            'Remove': 'Ukloni',
+            'Date': 'Datum',
+            'Time': 'Vreme',
+            'Time Duration': 'Trajanje',
+            'Message': 'Poruka',
+            'Delete candidate': 'Obriši kandidata',
+            'Send message': 'Pošalji poruku',
+            'View Profile': 'Pogledaj profil',
+            'Testimonial': 'Iskustvo',
+            'Total(s):' : 'Ukupno:',
+            'Approved' : 'Odobreno',
+            'Rejected(s):' : 'Odbijeno:',
 
-    };
+        };
 
-    document.querySelectorAll('[data-original-title]').forEach(el => {
-        const key = el.getAttribute('data-original-title');
-        if (translations[key]) {
-        el.setAttribute('data-original-title', translations[key]);
-        }
-    });
+        document.querySelectorAll('[data-original-title]').forEach(el => {
+            const key = el.getAttribute('data-original-title');
+            if (translations[key]) {
+            el.setAttribute('data-original-title', translations[key]);
+            }
+        });
 
-    document.querySelectorAll('label, button, h1, h2 span').forEach(el => {
-        const key = el.textContent.trim();
-        if (translations[key]) {
-        el.textContent = translations[key];
-        }
-    });
+        document.querySelectorAll('label, button, h1, h2 span').forEach(el => {
+            const key = el.textContent.trim();
+            if (translations[key]) {
+            el.textContent = translations[key];
+            }
+        });
 
-    document.querySelectorAll('[placeholder]').forEach(el => {
-        const key = el.getAttribute('placeholder');
-        if (translations[key]) {
-        el.setAttribute('placeholder', translations[key]);
-        }
-    });
+        document.querySelectorAll('[placeholder]').forEach(el => {
+            const key = el.getAttribute('placeholder');
+            if (translations[key]) {
+            el.setAttribute('placeholder', translations[key]);
+            }
+        });
+        document.querySelectorAll('.total-applicants, .approved-applicants, .rejected-applicants').forEach(el => {
+                const textNode = Array.from(el.childNodes)
+                    .find(n => n.nodeType === 3 && n.textContent.trim().length);
+
+                if (!textNode) return;
+
+                const raw = textNode.textContent.trim();
+
+                Object.keys(translations).forEach(key => {
+                    if (raw.startsWith(key)) {
+                        textNode.textContent = raw.replace(key, translations[key]);
+                    }
+                });
+        });
+
     }
 
     // initial load
