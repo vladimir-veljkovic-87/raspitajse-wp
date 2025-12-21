@@ -142,12 +142,22 @@ jQuery(document).ready(function($) {
         });
 
     }
-
     // initial load
     document.addEventListener('DOMContentLoaded', applyTranslations);
-
     // after AJAX (safe polling)
     setInterval(applyTranslations, 800);
+    
+    document.querySelectorAll('.package-more-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const target = document.getElementById(this.dataset.target);
+            if (!target) return;
+
+            const isOpen = target.style.display === 'block';
+            target.style.display = isOpen ? 'none' : 'block';
+
+            this.innerText = isOpen ? 'Saznaj više' : 'Sakrij detalje';
+        });
+    });
 
 
 });

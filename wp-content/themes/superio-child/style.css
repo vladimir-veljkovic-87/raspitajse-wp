@@ -220,6 +220,10 @@ html:has(> body.home) {
 	background: rgb(218 70 65 / 46%);
 	line-height: 33px;
 }
+.job-table .title-wrapper .urgent P {
+	line-height: 35px;
+}
+
 /* Dashboard Paketi */
 .page-template-page-dashboard .recommended {
     margin-left: 10px;
@@ -228,13 +232,12 @@ html:has(> body.home) {
 }
 /* Package Features */
 .page-template-page-dashboard .package-features {
-	margin-top: 20px;
+	margin-top: 20px!important;
     list-style: none;
     padding: 0;
     margin: 0;
 	color: #77838f;
 }
-
 .page-template-page-dashboard .package-features li {
     display: flex;
     align-items: center;
@@ -242,7 +245,6 @@ html:has(> body.home) {
     margin-bottom: 10px;
     font-size: 15px;
 }
-
 .page-template-page-dashboard .package-features i {
 	margin-right:5px;
     min-width: 18px;
@@ -252,6 +254,8 @@ html:has(> body.home) {
     font-weight: 600;
 	color: #1967D2;
 } 
+
+/* Package */
 
 /* Half Job Detail - Template job search */
 .page-template-page-jobs .filter-listing-form.st-small-show .main-inner {
