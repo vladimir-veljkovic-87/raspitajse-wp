@@ -223,6 +223,27 @@ html:has(> body.home) {
 .job-table .title-wrapper .urgent P {
 	line-height: 35px;
 }
+/* Saznaj više link dugme */
+.package-more-toggle {
+    padding: 0;
+    font-weight: 600;
+    color: #2a90cc;
+    text-decoration: none;
+}
+
+.package-more-toggle i {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+/* kada je otvoreno */
+.package-more-toggle[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+.package-more-content {
+    margin-top: 10px;
+}
+
 
 /* Dashboard Paketi */
 .page-template-page-dashboard .recommended {
