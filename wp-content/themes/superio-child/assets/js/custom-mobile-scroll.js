@@ -65,7 +65,9 @@ jQuery(document).ready(function($) {
             'Total(s):' : 'Ukupno:',
             'Approved' : 'Odobreno',
             'Rejected(s):' : 'Odbijeno:',
-
+            'My Packages' : 'Moji paketi',
+            'Active'    : 'Aktivan',
+            'Expired'   : 'Istekao',    
         };
 
         document.querySelectorAll('[data-original-title]').forEach(el => {
