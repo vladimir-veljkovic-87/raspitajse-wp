@@ -104,6 +104,26 @@ jQuery(document).ready(function($) {
                     }
                 });
         });
+        // 🔹 Translate "Candidates found X"
+        document.querySelectorAll('.job-found').forEach(el => {
+            const text = el.textContent.trim();
+            const match = text.match(/^Candidates found\s+(\d+)/);
+            if (match) {
+                el.textContent = `Pronađeno kandidata ${match[1]}`;
+            }
+        });
+        // 🔹 Translate status labels like "Active"
+        document.querySelectorAll('.action').forEach(el => {
+            const text = el.textContent.trim();
+            if (text === 'Active') {
+                el.textContent = 'Aktivno';
+            }
+
+            if (text === 'Inactive') {
+                el.textContent = 'Neaktivno';
+            }
+        });
+
 
     }
 
