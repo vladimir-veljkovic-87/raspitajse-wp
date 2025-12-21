@@ -228,6 +228,7 @@ html:has(> body.home) {
 }
 /* Package Features */
 .page-template-page-dashboard .package-features {
+	margin-top: 20px;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -243,7 +244,6 @@ html:has(> body.home) {
 }
 
 .page-template-page-dashboard .package-features i {
-	color: #1967D2;
 	margin-right:5px;
     min-width: 18px;
     text-align: center;
