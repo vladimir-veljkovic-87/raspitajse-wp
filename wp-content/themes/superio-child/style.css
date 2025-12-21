@@ -275,6 +275,7 @@ html:has(> body.home) {
 	top: 30px!important;
     right: 7px!important;
 }
+/* Hide candidate category description */
 .page-template-page-candidates .candidate-category, .page-template-page-dashboard .candidate-category {
 	display:none!important;
 }

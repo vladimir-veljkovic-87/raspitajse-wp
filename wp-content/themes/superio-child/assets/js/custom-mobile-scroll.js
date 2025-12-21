@@ -61,6 +61,7 @@ jQuery(document).ready(function($) {
         'Delete candidate': 'Obriši kandidata',
         'Send message': 'Pošalji poruku',
         'Veiew Profile': 'Pogledaj profil',
+        'Testimonial': 'Iskustvo',
     };
 
     document.querySelectorAll('[data-original-title]').forEach(el => {
