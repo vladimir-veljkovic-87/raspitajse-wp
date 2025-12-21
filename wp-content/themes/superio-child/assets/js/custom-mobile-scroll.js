@@ -60,8 +60,12 @@ jQuery(document).ready(function($) {
         'Message': 'Poruka',
         'Delete candidate': 'Obriši kandidata',
         'Send message': 'Pošalji poruku',
-        'Veiew Profile': 'Pogledaj profil',
+        'View Profile': 'Pogledaj profil',
         'Testimonial': 'Iskustvo',
+        'Total(s):' : 'Ukupno:',
+        'Approved' : 'Odobreno',
+        'Rejected(s):' : 'Odbijeno:',
+
     };
 
     document.querySelectorAll('[data-original-title]').forEach(el => {
