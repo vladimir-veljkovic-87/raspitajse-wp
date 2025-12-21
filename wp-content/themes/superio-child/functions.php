@@ -509,6 +509,7 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
         'All Applicants' => 'Svi kandidati',
         'Candidate Shortlist' => 'Uži izbor kandidata',
         'Candidate Alerts' => 'Obaveštenja o kandidatima',
+        'My Packages' => 'Moji paketi',
         'Title' => 'Naziv',
         'Alert Query' => 'Upit za obaveštenje',
         'Number Candidates' => 'Broj kandidata',

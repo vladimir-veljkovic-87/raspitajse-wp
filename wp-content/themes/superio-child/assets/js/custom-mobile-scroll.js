@@ -18,7 +18,7 @@ jQuery(document).ready(function($) {
 
     }
 
-	// Dodavanje poruke izna Captcha provere
+	// Dodavanje poruke iznad Captcha provere
 	// Proveravamo periodično jer se neke forme / modali mogu učitati malo kasnije
     var tries = 0;
     var checkUniversalRecaptcha = setInterval(function () {
@@ -45,6 +45,51 @@ jQuery(document).ready(function($) {
         }
 
     }, 300);
+
+    function applyTranslations() {
+
+    const translations = {
+        'Create Meeting': 'Zakaži sastanak',
+        'Approve Application': 'Odobri prijavu',
+        'Reject Application': 'Odbij prijavu',
+        'Download CV': 'Preuzmi CV',
+        'Remove': 'Ukloni',
+        'Date': 'Datum',
+        'Time': 'Vreme',
+        'Time Duration': 'Trajanje',
+        'Message': 'Poruka',
+        'Delete candidate': 'Obriši kandidata',
+        'Send message': 'Pošalji poruku',
+        'Veiew Profile': 'Pogledaj profil',
+    };
+
+    document.querySelectorAll('[data-original-title]').forEach(el => {
+        const key = el.getAttribute('data-original-title');
+        if (translations[key]) {
+        el.setAttribute('data-original-title', translations[key]);
+        }
+    });
+
+    document.querySelectorAll('label, button, h1, h2 span').forEach(el => {
+        const key = el.textContent.trim();
+        if (translations[key]) {
+        el.textContent = translations[key];
+        }
+    });
+
+    document.querySelectorAll('[placeholder]').forEach(el => {
+        const key = el.getAttribute('placeholder');
+        if (translations[key]) {
+        el.setAttribute('placeholder', translations[key]);
+        }
+    });
+    }
+
+    // initial load
+    document.addEventListener('DOMContentLoaded', applyTranslations);
+
+    // after AJAX (safe polling)
+    setInterval(applyTranslations, 800);
 
 
 });
