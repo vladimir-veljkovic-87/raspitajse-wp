@@ -234,7 +234,7 @@ html:has(> body.home) {
 	color: #77838f;
 }
 
-.page-template-page-dashboard.package-features li {
+.page-template-page-dashboard .package-features li {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -242,7 +242,7 @@ html:has(> body.home) {
     font-size: 15px;
 }
 
-.page-template-page-dashboard.package-features i {
+.page-template-page-dashboard .package-features i {
 	color: #1967D2;
 	margin-right:5px;
     min-width: 18px;
