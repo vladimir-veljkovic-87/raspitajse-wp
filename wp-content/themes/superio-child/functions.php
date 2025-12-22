@@ -550,9 +550,12 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
     return isset( $map[ $normalized ] ) ? $map[ $normalized ] : $translated;
 }
 
-add_action('woocommerce_payment_complete', function ($order_id) {
+add_action('woocommerce_order_status_changed', function ($order_id, $old_status, $new_status) {
 
-    if (!$order_id) return;
+    // reagujemo samo kad order POSTANE processing ili completed
+    if (!in_array($new_status, ['processing', 'completed'], true)) {
+        return;
+    }
 
     $order = wc_get_order($order_id);
     if (!$order) return;
@@ -567,7 +570,18 @@ add_action('woocommerce_payment_complete', function ($order_id) {
 
         $product_id = $product->get_id();
 
-        // Paket važi 30 dana od trenutka dodele
+        // ako već ima expiration – ne diramo (bitno kod više status change-ova)
+        $existing = get_user_meta(
+            $user_id,
+            '_wjbp_package_expiration_' . $product_id,
+            true
+        );
+
+        if ($existing) {
+            continue;
+        }
+
+        // Paket važi 30 dana
         $expires_at = date(
             'Y-m-d H:i:s',
             strtotime('+30 days')
@@ -579,7 +593,9 @@ add_action('woocommerce_payment_complete', function ($order_id) {
             $expires_at
         );
     }
-});
+
+}, 10, 3);
+
 
 
 
