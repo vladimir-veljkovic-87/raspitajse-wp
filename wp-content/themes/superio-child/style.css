@@ -214,6 +214,7 @@ html:has(> body.home) {
     padding-right: 5px;
     text-align: center;
 }
+
 /* Upravljanje poslovima - Urgent */
 .box-dashboard-wrapper .urgent {
 	color: #202124!important;
@@ -223,28 +224,8 @@ html:has(> body.home) {
 .job-table .title-wrapper .urgent P {
 	line-height: 35px;
 }
-/* Saznaj više link dugme */
-.package-more-toggle {
-    padding-top: 0!important;
-    font-weight: 600;
-    color: #2a90cc;
-    text-decoration: none!important;
-}
 
-.package-more-toggle i {
-    transition: transform 0.3s ease;
-    font-size: 12px;
-	margin-left: 5px;
-}
-/* kada je otvoreno */
-.package-more-toggle[aria-expanded="true"] i {
-    transform: rotate(180deg);
-}
-
-.package-more-content ul {
-    line-height: 160%;
-    list-style: circle;
-}
+/* Objavi oglas TAB */
 
 
 /* Dashboard Paketi */
@@ -277,8 +258,43 @@ html:has(> body.home) {
     font-weight: 600;
 	color: #1967D2;
 } 
+/* Saznaj više link dugme */
+.package-more-toggle {
+    padding-top: 0!important;
+    font-weight: 600;
+    color: #2a90cc;
+    text-decoration: none!important;
+}
 
-/* Package */
+.package-more-toggle i {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+	margin-left: 5px;
+}
+/* kada je otvoreno */
+.package-more-toggle[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+.package-more-content ul {
+    line-height: 160%;
+    list-style: circle;
+}
+/* Donje dugme */
+.package-partner .button-action {
+	margin-top:25px!important;
+}
+.package-partner .button-action button {
+	background-color: #1967D2;
+    color: #FFFFFF;
+	border:1px solid #FFFFFF00;
+}
+.package-partner .button-action button:hover {
+	background-color: #FFFFFF;
+    color: #1967D2;
+    border-color: #1967D2;
+}
+
 
 /* Half Job Detail - Template job search */
 .page-template-page-jobs .filter-listing-form.st-small-show .main-inner {
