@@ -563,25 +563,22 @@ add_action('woocommerce_order_status_completed', function ($order_id) {
         $product = $item->get_product();
         if (!$product) continue;
 
-        // samo Job Package proizvodi
-        if (!$product->is_type(['job_package'])) continue;
+        $product_id = $product->get_id();
 
-        // koliko dana paket važi (npr. 30)
-        $package_duration_days = 30;
-
+        // Paket važi 30 dana
         $expires_at = date(
             'Y-m-d H:i:s',
-            strtotime("+{$package_duration_days} days")
+            strtotime('+30 days')
         );
 
-        // upiši expiration u USER meta (paket po korisniku)
-        add_user_meta(
+        update_user_meta(
             $user_id,
-            '_wjbp_package_expiration_' . $product->get_id(),
+            '_wjbp_package_expiration_' . $product_id,
             $expires_at
         );
     }
 });
+
 
 
 
