@@ -550,7 +550,9 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
     return isset( $map[ $normalized ] ) ? $map[ $normalized ] : $translated;
 }
 
-add_action('woocommerce_order_status_completed', function ($order_id) {
+add_action('woocommerce_payment_complete', function ($order_id) {
+
+    if (!$order_id) return;
 
     $order = wc_get_order($order_id);
     if (!$order) return;
@@ -565,7 +567,7 @@ add_action('woocommerce_order_status_completed', function ($order_id) {
 
         $product_id = $product->get_id();
 
-        // Paket važi 30 dana
+        // Paket važi 30 dana od trenutka dodele
         $expires_at = date(
             'Y-m-d H:i:s',
             strtotime('+30 days')
