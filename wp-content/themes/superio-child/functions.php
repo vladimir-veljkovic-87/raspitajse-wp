@@ -550,51 +550,38 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
     return isset( $map[ $normalized ] ) ? $map[ $normalized ] : $translated;
 }
 
-add_action('woocommerce_order_status_changed', function ($order_id, $old_status, $new_status) {
+add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_value) {
 
-    error_log("ORDER STATUS CHANGED: order_id={$order_id}, old={$old_status}, new={$new_status}");
-
-    if (!in_array($new_status, ['processing', 'completed'], true)) {
-        error_log("STATUS IGNORED: {$new_status}");
+    // WP Job Board Pro dodeljuje paket preko user meta
+    if (strpos($meta_key, 'wjbpwpl_user_package') === false) {
         return;
     }
 
-    $order = wc_get_order($order_id);
-    if (!$order) {
-        error_log("ORDER NOT FOUND");
-        return;
-    }
+    // $meta_value je package_id
+    $package_id = absint($meta_value);
+    if (!$package_id) return;
 
-    $user_id = $order->get_user_id();
-    if (!$user_id) {
-        error_log("NO USER ID FOR ORDER {$order_id}");
-        return;
-    }
+    // Ako već postoji expiration – ne diramo
+    $existing = get_user_meta(
+        $user_id,
+        '_wjbp_package_expiration_' . $package_id,
+        true
+    );
 
-    error_log("ORDER USER ID: {$user_id}");
+    if ($existing) return;
 
-    foreach ($order->get_items() as $item) {
-        $product = $item->get_product();
-        if (!$product) {
-            error_log("NO PRODUCT");
-            continue;
-        }
+    // Paket važi 30 dana
+    $expires_at = date('Y-m-d H:i:s', strtotime('+30 days'));
 
-        $product_id = $product->get_id();
-        error_log("PRODUCT IN ORDER: {$product_id}");
+    update_user_meta(
+        $user_id,
+        '_wjbp_package_expiration_' . $package_id,
+        $expires_at
+    );
 
-        $expires_at = date('Y-m-d H:i:s', strtotime('+30 days'));
+}, 10, 4);
 
-        update_user_meta(
-            $user_id,
-            '_wjbp_package_expiration_' . $product_id,
-            $expires_at
-        );
 
-        error_log("EXPIRATION SAVED for user {$user_id}, product {$product_id}");
-    }
-
-}, 10, 3);
 
 
 
