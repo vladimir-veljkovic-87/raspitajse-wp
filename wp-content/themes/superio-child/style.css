@@ -279,9 +279,17 @@ html:has(> body.home) {
 .package-more-content ul {
     line-height: 160%;
     list-style: circle;
+	color: #77838f;
 }
+.package-partner .subwoo-inner {
+	border: 1px solid #1967d2;
+}
+.package-pro .subwoo-inner {
+    border: 1px solid #c3e3ff;
+}
+
 /* Donje dugme */
-.package-partner .button-action {
+.package-partner .button-action, .package-pro.button-action, .package-start .button-action {
 	margin-top:25px!important;
 }
 .package-partner .button-action button {
@@ -289,7 +297,7 @@ html:has(> body.home) {
     color: #FFFFFF;
 	border:1px solid #FFFFFF00;
 }
-.package-partner .button-action button:hover {
+.package-partner .button-action button:hover, .package-pro .button-action button:hover{
 	background-color: #FFFFFF;
     color: #1967D2;
     border-color: #1967D2;
