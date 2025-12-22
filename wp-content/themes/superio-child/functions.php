@@ -550,6 +550,39 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
     return isset( $map[ $normalized ] ) ? $map[ $normalized ] : $translated;
 }
 
+add_action('woocommerce_order_status_completed', function ($order_id) {
+
+    $order = wc_get_order($order_id);
+    if (!$order) return;
+
+    $user_id = $order->get_user_id();
+    if (!$user_id) return;
+
+    foreach ($order->get_items() as $item) {
+
+        $product = $item->get_product();
+        if (!$product) continue;
+
+        // samo Job Package proizvodi
+        if (!$product->is_type(['job_package'])) continue;
+
+        // koliko dana paket važi (npr. 30)
+        $package_duration_days = 30;
+
+        $expires_at = date(
+            'Y-m-d H:i:s',
+            strtotime("+{$package_duration_days} days")
+        );
+
+        // upiši expiration u USER meta (paket po korisniku)
+        add_user_meta(
+            $user_id,
+            '_wjbp_package_expiration_' . $product->get_id(),
+            $expires_at
+        );
+    }
+});
+
 
 
 
