@@ -225,23 +225,25 @@ html:has(> body.home) {
 }
 /* Saznaj više link dugme */
 .package-more-toggle {
-    padding: 0;
+    padding-top: 0!important;
     font-weight: 600;
     color: #2a90cc;
-    text-decoration: none;
+    text-decoration: none!important;
 }
 
 .package-more-toggle i {
     transition: transform 0.3s ease;
     font-size: 12px;
+	margin-left: 5px;
 }
 /* kada je otvoreno */
 .package-more-toggle[aria-expanded="true"] i {
     transform: rotate(180deg);
 }
 
-.package-more-content {
-    margin-top: 10px;
+.package-more-content ul {
+    line-height: 160%;
+    list-style: circle;
 }
 
 
