@@ -552,46 +552,46 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
 
 add_action('woocommerce_order_status_changed', function ($order_id, $old_status, $new_status) {
 
-    // reagujemo samo kad order POSTANE processing ili completed
+    error_log("ORDER STATUS CHANGED: order_id={$order_id}, old={$old_status}, new={$new_status}");
+
     if (!in_array($new_status, ['processing', 'completed'], true)) {
+        error_log("STATUS IGNORED: {$new_status}");
         return;
     }
 
     $order = wc_get_order($order_id);
-    if (!$order) return;
+    if (!$order) {
+        error_log("ORDER NOT FOUND");
+        return;
+    }
 
     $user_id = $order->get_user_id();
-    if (!$user_id) return;
+    if (!$user_id) {
+        error_log("NO USER ID FOR ORDER {$order_id}");
+        return;
+    }
+
+    error_log("ORDER USER ID: {$user_id}");
 
     foreach ($order->get_items() as $item) {
-
         $product = $item->get_product();
-        if (!$product) continue;
-
-        $product_id = $product->get_id();
-
-        // ako već ima expiration – ne diramo (bitno kod više status change-ova)
-        $existing = get_user_meta(
-            $user_id,
-            '_wjbp_package_expiration_' . $product_id,
-            true
-        );
-
-        if ($existing) {
+        if (!$product) {
+            error_log("NO PRODUCT");
             continue;
         }
 
-        // Paket važi 30 dana
-        $expires_at = date(
-            'Y-m-d H:i:s',
-            strtotime('+30 days')
-        );
+        $product_id = $product->get_id();
+        error_log("PRODUCT IN ORDER: {$product_id}");
+
+        $expires_at = date('Y-m-d H:i:s', strtotime('+30 days'));
 
         update_user_meta(
             $user_id,
             '_wjbp_package_expiration_' . $product_id,
             $expires_at
         );
+
+        error_log("EXPIRATION SAVED for user {$user_id}, product {$product_id}");
     }
 
 }, 10, 3);
