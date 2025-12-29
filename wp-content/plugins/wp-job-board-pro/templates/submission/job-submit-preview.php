@@ -24,8 +24,8 @@ $job_preview = $post;
 		<input type="hidden" name="object_id" value="<?php echo esc_attr($job_id); ?>">
 		<?php wp_nonce_field('wp-job-board-pro-job-submit-preview-nonce', 'security-job-submit-preview'); ?>
 
-		<button class="button btn" name="continue-submit-job"><?php esc_html_e('Submit Job', 'wp-job-board-pro'); ?></button>
-		<button class="button btn" name="continue-edit-job"><?php esc_html_e('Edit Job', 'wp-job-board-pro'); ?></button>
+		<button class="button btn" name="continue-submit-job"><?php esc_html_e('Objavi oglas', 'wp-job-board-pro'); ?></button>
+		<button class="button btn" name="continue-edit-job"><?php esc_html_e('Izmeni oglas', 'wp-job-board-pro'); ?></button>
 
 		<?php echo WP_Job_Board_Pro_Template_Loader::get_template_part( 'content-single-job_listing' ); ?>
 	</form>

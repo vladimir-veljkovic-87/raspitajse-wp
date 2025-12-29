@@ -502,11 +502,16 @@ function raspitajse_filter_header_buttons($content) {
     return $content;
 }
 
-add_filter( 'gettext', 'raspitajse_quick_translate', 999, 3 );
-function raspitajse_quick_translate( $translated, $text, $domain ) {
+add_filter('gettext', 'raspitajse_quick_translate', 999, 3);
+function raspitajse_quick_translate($translated, $text, $domain) {
 
-    // normalize whitespace (CRITICAL)
-    $normalized = trim( preg_replace( '/\s+/', ' ', $text ) );
+    // Ako nije string – ne diramo
+    if (!is_string($text) || !is_string($translated)) {
+        return $translated;
+    }
+
+    // Normalizacija (kritično)
+    $normalized = trim(preg_replace('/\s+/', ' ', $text));
 
     $map = [
         'All Applicants'       => 'Svi kandidati',
@@ -547,8 +552,13 @@ function raspitajse_quick_translate( $translated, $text, $domain ) {
         'Status'               => 'Status',
     ];
 
-    return isset( $map[ $normalized ] ) ? $map[ $normalized ] : $translated;
+    if (isset($map[$normalized])) {
+        return (string) $map[$normalized];
+    }
+
+    return (string) $translated;
 }
+
 
 add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_value) {
 
