@@ -498,6 +498,14 @@ span.featured {
 	width:52%!important;
 }
 
+/* Woocommerce pages */
+.woocommerce ul.order_details {
+	display: flex;
+}
+.woocommerce ul.order_details li {
+	flex: 1;
+}
+
 /*=============================*/
 /*===    Tablet ready      ===*/
 /*===========================*/
@@ -566,7 +574,7 @@ and (max-width : 767px) {
 	}
 	/* Otvori meni wrapper */
 	.top-icon-wr {
-		padding: 15px 15px 0 15px!important;
+		padding: 15px 15px 10px 15px!important;
 	}	
 	/* Zatvori Buttton meni top  */
 	.close-sidebar-btn.txt-a-left {
