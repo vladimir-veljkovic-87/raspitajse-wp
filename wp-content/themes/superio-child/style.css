@@ -248,6 +248,16 @@ html:has(> body.home) {
 .page-template-page-dashboard .action-preview {
 	background: #fff!important;
 }
+.page-template-page-dashboard .action-preview .btn-success {
+	background-color: #1967d2!important;
+	color: #1967d2!important;
+	border:1px solid #1967D2!important;
+}
+.page-template-page-dashboard .action-preview .btn-theme {
+	background-color: #d4e1f5!important;
+	color: #3e67be!important;
+	border:1px solid #d4e1f5!important;
+}
 /* Dashboard Paketi */
 .page-template-page-dashboard .recommended {
     margin-left: 10px;
