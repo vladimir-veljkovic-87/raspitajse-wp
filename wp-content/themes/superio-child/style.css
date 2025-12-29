@@ -229,7 +229,7 @@ html:has(> body.home) {
 .page-template-page-dashboard .job_listing_types .widget-title {
 	font-size: 30px!important;
 }
-
+/* Packages */
 .package-partner .subwoo-inner {
 	border: 1px solid #1967d2;
 }
@@ -241,6 +241,12 @@ html:has(> body.home) {
 }
 .subwoo-inner .price {
 	font-size: 20px!important;
+}
+.page-template-page-dashboard[data-elementor-device-mode="desktop"] .top-icon-wr.scrollto {
+	display: none!important;
+}
+.page-template-page-dashboard .action-preview {
+	background: #fff!important;
 }
 /* Dashboard Paketi */
 .page-template-page-dashboard .recommended {

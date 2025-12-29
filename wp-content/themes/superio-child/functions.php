@@ -526,8 +526,8 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Actions'              => 'Akcije',
 
         'Search'               => 'Pretraga',
-        'Search...'            => 'Pretraga...',
-        'Search ...'           => 'Pretraga...',
+        'Submit Job'           => 'Pošalji oglas',
+        'Edit Job'             => 'Izmeni oglas',
         'Filter by job'        => 'Filtriraj po poslu',
 
         'Sort by:'             => 'Sortiraj po:',
