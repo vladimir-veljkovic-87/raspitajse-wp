@@ -591,6 +591,61 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 }, 10, 4);
 
+/**
+ * Get NBS EUR → RSD exchange rate (cached daily)
+ */
+function get_nbs_eur_to_rsd_rate() {
+    $rate = get_transient( 'nbs_eur_rsd_rate' );
+    if ( $rate !== false ) {
+        return (float) $rate;
+    }
+
+    $response = wp_remote_get( 'https://www.nbs.rs/kursnaListaModul/zaDevize.faces?lang=lat' );
+    if ( is_wp_error( $response ) ) {
+        return 117.5; // fallback
+    }
+
+    $body = wp_remote_retrieve_body( $response );
+
+    if ( preg_match( '/<td>EUR<\/td>.*?<td>([\d,]+)<\/td>/s', $body, $matches ) ) {
+        $rate = floatval( str_replace( ',', '.', $matches[1] ) );
+        set_transient( 'nbs_eur_rsd_rate', $rate, DAY_IN_SECONDS );
+        return $rate;
+    }
+
+    return 117.5; // fallback
+}
+
+/**
+ * Convert prices to RSD when RSD bank transfer is selected
+ */
+add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
+
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+        return;
+    }
+
+    if ( ! WC()->session ) {
+        return;
+    }
+
+    $chosen_payment = WC()->session->get( 'chosen_payment_method' );
+
+    // ID payment metode za RSD (proveri tačan ID u Payments)
+    if ( $chosen_payment !== 'bacs_rsd' ) {
+        return;
+    }
+
+    $rate = get_nbs_eur_to_rsd_rate();
+
+    foreach ( $cart->get_cart() as $cart_item ) {
+        $price_eur = $cart_item['data']->get_regular_price();
+        $price_rsd = round( $price_eur * $rate, 2 );
+        $cart_item['data']->set_price( $price_rsd );
+    }
+});
+
+
 
 
 
