@@ -592,7 +592,9 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 }, 10, 4);
 
 /**
- * Get NBS EUR → RSD exchange rate (cached daily)
+ * =========================================================
+ * NBS EUR → RSD exchange rate (cached daily)
+ * =========================================================
  */
 function raspitajse_get_nbs_eur_to_rsd_rate() {
 
@@ -618,7 +620,51 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
 }
 
 /**
- * Convert order totals to RSD when BANK TRANSFER 1 (RSD) is selected
+ * =========================================================
+ * REAL-TIME cart price switch (EUR ↔ RSD) based on payment
+ * =========================================================
+ */
+add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
+
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+        return;
+    }
+
+    if ( ! WC()->session ) {
+        return;
+    }
+
+    $chosen_payment = WC()->session->get( 'chosen_payment_method' );
+    $rsd_gateway_id = 'bank_transfer_1'; // ✅ RSD gateway ID
+
+    foreach ( $cart->get_cart() as $cart_item ) {
+
+        $product = $cart_item['data'];
+
+        // Sačuvaj originalnu EUR cenu samo jednom
+        if ( ! isset( $cart_item['_price_eur'] ) ) {
+            $cart_item['_price_eur'] = $product->get_regular_price();
+        }
+
+        if ( $chosen_payment === $rsd_gateway_id ) {
+
+            $rate = raspitajse_get_nbs_eur_to_rsd_rate();
+            $price_rsd = round( $cart_item['_price_eur'] * $rate );
+
+            $product->set_price( $price_rsd );
+
+        } else {
+            // Vrati EUR cenu
+            $product->set_price( $cart_item['_price_eur'] );
+        }
+    }
+
+}, 20 );
+
+/**
+ * =========================================================
+ * Convert ORDER totals to RSD (final save)
+ * =========================================================
  */
 add_action( 'woocommerce_checkout_create_order', function( $order ) {
 
@@ -628,17 +674,15 @@ add_action( 'woocommerce_checkout_create_order', function( $order ) {
 
     $chosen_payment = WC()->session->get( 'chosen_payment_method' );
 
-    // Use your real payment method ID here
     if ( $chosen_payment !== 'bank_transfer_1' ) {
         return;
     }
 
     $rate = raspitajse_get_nbs_eur_to_rsd_rate();
 
-    // Save original currency
+    // Sačuvaj originalnu valutu
     $order->update_meta_data( '_original_currency', 'EUR' );
 
-    // Convert items
     foreach ( $order->get_items() as $item ) {
 
         $total_eur = $item->get_total();
@@ -647,7 +691,6 @@ add_action( 'woocommerce_checkout_create_order', function( $order ) {
         $item->set_total( $total_rsd );
         $item->set_subtotal( $total_rsd );
 
-        // Store original EUR price (for admin / accounting)
         $item->add_meta_data(
             'Original price (EUR)',
             wc_price( $total_eur, [ 'currency' => 'EUR' ] ),
@@ -657,24 +700,20 @@ add_action( 'woocommerce_checkout_create_order', function( $order ) {
         $item->save();
     }
 
-    // Convert order total
     $order->set_total( round( $order->get_total() * $rate ) );
 
 }, 20 );
 
 /**
- * Force RSD currency display for RSD bank transfer orders
+ * =========================================================
+ * Force RSD currency display when RSD payment is selected
+ * =========================================================
  */
 add_filter( 'woocommerce_currency', function( $currency ) {
 
     if ( is_checkout() || is_wc_endpoint_url( 'order-received' ) ) {
-
-        if ( WC()->session ) {
-            $chosen = WC()->session->get( 'chosen_payment_method' );
-
-            if ( $chosen === 'bank_transfer_1' ) {
-                return 'RSD';
-            }
+        if ( WC()->session && WC()->session->get( 'chosen_payment_method' ) === 'bank_transfer_1' ) {
+            return 'RSD';
         }
     }
 
@@ -682,7 +721,9 @@ add_filter( 'woocommerce_currency', function( $currency ) {
 });
 
 /**
+ * =========================================================
  * RSD formatting (no decimals)
+ * =========================================================
  */
 add_filter( 'woocommerce_get_price_decimals', function( $decimals ) {
 
@@ -693,6 +734,25 @@ add_filter( 'woocommerce_get_price_decimals', function( $decimals ) {
     return $decimals;
 });
 
+/**
+ * =========================================================
+ * FORCE checkout refresh on payment method change (JS)
+ * =========================================================
+ */
+add_action( 'wp_footer', function () {
+    if ( ! is_checkout() ) {
+        return;
+    }
+    ?>
+    <script>
+        jQuery(function ($) {
+            $('form.checkout').on('change', 'input[name="payment_method"]', function () {
+                $('body').trigger('update_checkout');
+            });
+        });
+    </script>
+    <?php
+});
 
 
 
