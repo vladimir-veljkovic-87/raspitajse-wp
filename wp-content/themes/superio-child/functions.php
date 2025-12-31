@@ -759,28 +759,46 @@ add_action( 'wp_footer', function () {
                 }) + ' RSD';
             }
 
-            $('.woocommerce-order-overview__total .woocommerce-Price-amount bdi').each(function () {
+            function tryFixTotal() {
 
-                const el = $(this);
-                const text = el.text();
+                const el = $('.woocommerce-order-overview__total bdi');
 
-                // Skip if already converted
-                if (text.includes('RSD')) {
-                    return;
+                if (!el.length) {
+                    return false;
                 }
 
-                // Extract number: "113858,00 €" → 113858.00
-                const number = parseFloat(
+                const text = el.text();
+
+                // already fixed
+                if (text.includes('RSD')) {
+                    return true;
+                }
+
+                // extract number: "5758,00 €" → 5758.00
+                const value = parseFloat(
                     text
                         .replace(/\./g, '')
                         .replace(',', '.')
                         .replace(/[^\d.]/g, '')
                 );
 
-                if (!isNaN(number)) {
-                    el.text(formatRSD(number));
+                if (!isNaN(value)) {
+                    el.text(formatRSD(value));
+                    return true;
                 }
-            });
+
+                return false;
+            }
+
+            // 🔁 Retry up to 20 times (2 seconds total)
+            let attempts = 0;
+            const interval = setInterval(function () {
+                attempts++;
+
+                if (tryFixTotal() || attempts > 20) {
+                    clearInterval(interval);
+                }
+            }, 100);
 
         });
     </script>
