@@ -591,6 +591,17 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 }, 10, 4);
 
+
+/**
+ * =========================================================
+ * FORCE default payment method to EUR (bacs)
+ * =========================================================
+ */
+add_filter( 'woocommerce_default_payment_method', function () {
+    return 'bacs';
+});
+
+
 /**
  * =========================================================
  * NBS EUR → RSD exchange rate (cached daily)
@@ -618,16 +629,6 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
 
     return 117.5; // fallback
 }
-
-/**
- * =========================================================
- * FORCE default payment method to EUR (bacs)
- * =========================================================
- */
-add_filter( 'woocommerce_default_payment_method', function () {
-    return 'bacs';
-});
-
 
 /**
  * =========================================================
