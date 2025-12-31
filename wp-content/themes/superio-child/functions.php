@@ -611,7 +611,7 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
     $body = wp_remote_retrieve_body( $response );
 
     if ( preg_match( '/<td>EUR<\/td>.*?<td>([\d,]+)<\/td>/s', $body, $matches ) ) {
-        $rate = floatval( str_replace( ',', '.', $matches[1] ) );
+        $rate = (float) str_replace( ',', '.', $matches[1] );
         set_transient( 'raspitajse_nbs_eur_rsd_rate', $rate, DAY_IN_SECONDS );
         return $rate;
     }
@@ -621,7 +621,30 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
 
 /**
  * =========================================================
- * REAL-TIME cart price switch (EUR ↔ RSD) based on payment
+ * HARD RESET cart prices to EUR (prevents pollution)
+ * =========================================================
+ */
+add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
+
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+        return;
+    }
+
+    // 🔒 Cart page MUST ALWAYS be EUR
+    if ( is_cart() ) {
+        foreach ( $cart->get_cart() as $cart_item ) {
+            if ( isset( $cart_item['_price_eur'] ) ) {
+                $cart_item['data']->set_price( $cart_item['_price_eur'] );
+            }
+        }
+        return;
+    }
+
+}, 5 );
+
+/**
+ * =========================================================
+ * REAL-TIME price switch on CHECKOUT only (EUR ↔ RSD)
  * =========================================================
  */
 add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
@@ -634,27 +657,30 @@ add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
         return;
     }
 
+    // ❗ Convert ONLY on checkout (never cart)
+    if ( ! is_checkout() || is_cart() ) {
+        return;
+    }
+
     $chosen_payment = WC()->session->get( 'chosen_payment_method' );
-    $rsd_gateway_id = 'bank_transfer_1'; // ✅ RSD gateway ID
+    $rsd_gateway_id = 'bank_transfer_1';
 
     foreach ( $cart->get_cart() as $cart_item ) {
 
         $product = $cart_item['data'];
 
-        // Sačuvaj originalnu EUR cenu samo jednom
+        // Store original EUR price once
         if ( ! isset( $cart_item['_price_eur'] ) ) {
-            $cart_item['_price_eur'] = $product->get_regular_price();
+            $cart_item['_price_eur'] = (float) $product->get_regular_price();
         }
 
         if ( $chosen_payment === $rsd_gateway_id ) {
 
             $rate = raspitajse_get_nbs_eur_to_rsd_rate();
-            $price_rsd = round( $cart_item['_price_eur'] * $rate );
-
-            $product->set_price( $price_rsd );
+            $product->set_price( round( $cart_item['_price_eur'] * $rate ) );
 
         } else {
-            // Vrati EUR cenu
+            // Restore EUR
             $product->set_price( $cart_item['_price_eur'] );
         }
     }
@@ -663,7 +689,7 @@ add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
 
 /**
  * =========================================================
- * Convert ORDER totals to RSD (final save)
+ * FINAL ORDER CONVERSION (single authoritative save)
  * =========================================================
  */
 add_action( 'woocommerce_checkout_create_order', function( $order ) {
@@ -672,28 +698,25 @@ add_action( 'woocommerce_checkout_create_order', function( $order ) {
         return;
     }
 
-    $chosen_payment = WC()->session->get( 'chosen_payment_method' );
-
-    if ( $chosen_payment !== 'bank_transfer_1' ) {
+    if ( WC()->session->get( 'chosen_payment_method' ) !== 'bank_transfer_1' ) {
         return;
     }
 
     $rate = raspitajse_get_nbs_eur_to_rsd_rate();
 
-    // Sačuvaj originalnu valutu
     $order->update_meta_data( '_original_currency', 'EUR' );
 
     foreach ( $order->get_items() as $item ) {
 
-        $total_eur = $item->get_total();
-        $total_rsd = round( $total_eur * $rate );
+        $eur_total = $item->get_total();
+        $rsd_total = round( $eur_total * $rate );
 
-        $item->set_total( $total_rsd );
-        $item->set_subtotal( $total_rsd );
+        $item->set_total( $rsd_total );
+        $item->set_subtotal( $rsd_total );
 
         $item->add_meta_data(
             'Original price (EUR)',
-            wc_price( $total_eur, [ 'currency' => 'EUR' ] ),
+            wc_price( $eur_total, [ 'currency' => 'EUR' ] ),
             true
         );
 
@@ -706,15 +729,21 @@ add_action( 'woocommerce_checkout_create_order', function( $order ) {
 
 /**
  * =========================================================
- * Force RSD currency display when RSD payment is selected
+ * Currency switch (Checkout + Thank You only)
  * =========================================================
  */
-add_filter( 'woocommerce_currency', function( $currency ) {
+add_filter( 'woocommerce_currency', function ( $currency ) {
 
-    if ( is_checkout() || is_wc_endpoint_url( 'order-received' ) ) {
-        if ( WC()->session && WC()->session->get( 'chosen_payment_method' ) === 'bank_transfer_1' ) {
-            return 'RSD';
-        }
+    if ( is_cart() ) {
+        return 'EUR';
+    }
+
+    if (
+        ( is_checkout() || is_wc_endpoint_url( 'order-received' ) ) &&
+        WC()->session &&
+        WC()->session->get( 'chosen_payment_method' ) === 'bank_transfer_1'
+    ) {
+        return 'RSD';
     }
 
     return $currency;
@@ -725,13 +754,9 @@ add_filter( 'woocommerce_currency', function( $currency ) {
  * RSD formatting (no decimals)
  * =========================================================
  */
-add_filter( 'woocommerce_get_price_decimals', function( $decimals ) {
+add_filter( 'woocommerce_get_price_decimals', function ( $decimals ) {
 
-    if ( get_woocommerce_currency() === 'RSD' ) {
-        return 0;
-    }
-
-    return $decimals;
+    return get_woocommerce_currency() === 'RSD' ? 0 : $decimals;
 });
 
 /**
