@@ -759,7 +759,20 @@ add_action( 'wp_footer', function () {
                 }) + ' RSD';
             }
 
-            function tryFixTotal() {
+            function shouldConvertToRSD() {
+                const methodText = $('.woocommerce-order-overview__payment-method strong')
+                    .text()
+                    .toLowerCase();
+
+                // ✅ Convert ONLY if RSD payment was used
+                return methodText.includes('rsd');
+            }
+
+            function fixTotalIfNeeded() {
+
+                if (!shouldConvertToRSD()) {
+                    return true; // 🚫 EUR order → do nothing
+                }
 
                 const el = $('.woocommerce-order-overview__total bdi');
 
@@ -769,12 +782,11 @@ add_action( 'wp_footer', function () {
 
                 const text = el.text();
 
-                // already fixed
+                // already converted
                 if (text.includes('RSD')) {
                     return true;
                 }
 
-                // extract number: "5758,00 €" → 5758.00
                 const value = parseFloat(
                     text
                         .replace(/\./g, '')
@@ -790,12 +802,12 @@ add_action( 'wp_footer', function () {
                 return false;
             }
 
-            // 🔁 Retry up to 20 times (2 seconds total)
+            // ⏳ Wait until theme finishes rendering
             let attempts = 0;
             const interval = setInterval(function () {
                 attempts++;
 
-                if (tryFixTotal() || attempts > 20) {
+                if (fixTotalIfNeeded() || attempts > 20) {
                     clearInterval(interval);
                 }
             }, 100);
@@ -804,6 +816,7 @@ add_action( 'wp_footer', function () {
     </script>
     <?php
 });
+
 
 
 
