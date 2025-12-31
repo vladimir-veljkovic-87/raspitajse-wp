@@ -629,36 +629,36 @@ add_action( 'wp_footer', function () {
 
             const RATE = <?php echo esc_js( $rate ); ?>;
 
-            function extractEUR(el) {
+            function getEUR(el) {
                 if (el.data('eur')) {
                     return el.data('eur');
                 }
 
-                const text = el.text()
+                const raw = el.text()
                     .replace(/\s/g, '')
                     .replace('€', '')
                     .replace('.', '')
                     .replace(',', '.');
 
-                const value = parseFloat(text);
-                el.data('eur', value);
-                return value;
+                const eur = parseFloat(raw);
+                el.data('eur', eur);
+                return eur;
             }
 
-            function formatEUR(value) {
-                return value.toFixed(2).replace('.', ',') + ' €';
+            function formatEUR(val) {
+                return val.toFixed(2).replace('.', ',') + ' €';
             }
 
-            function formatRSD(value) {
-                return value.toLocaleString('sr-RS') + ' рсд';
+            function formatRSD(val) {
+                return val.toLocaleString('sr-RS') + ' рсд';
             }
 
             function applyCurrency() {
                 const method = $('input[name="payment_method"]:checked').val();
 
-                $('.woocommerce-Price-amount').each(function () {
+                $('.woocommerce-Price-amount bdi').each(function () {
                     const el = $(this);
-                    const eur = extractEUR(el);
+                    const eur = getEUR(el);
 
                     if (method === 'bank_transfer_1') {
                         el.text(formatRSD(Math.round(eur * RATE)));
@@ -668,20 +668,21 @@ add_action( 'wp_footer', function () {
                 });
             }
 
-            // 🔁 On payment method change
+            // Payment method click
             $(document).on('change', 'input[name="payment_method"]', function () {
-                applyCurrency();
+                setTimeout(applyCurrency, 50);
             });
 
-            // 🔁 After Woo updates checkout (AJAX refresh)
+            // Woo checkout AJAX refresh
             $(document.body).on('updated_checkout', function () {
-                applyCurrency();
+                setTimeout(applyCurrency, 50);
             });
 
-            // 🔁 Initial run (page load)
-            applyCurrency();
+            // Initial page load
+            setTimeout(applyCurrency, 100);
 
         });
     </script>
     <?php
 });
+
