@@ -591,17 +591,6 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 }, 10, 4);
 
-
-/**
- * =========================================================
- * FORCE default payment method to EUR (bacs)
- * =========================================================
- */
-add_filter( 'woocommerce_default_payment_method', function () {
-    return 'bacs';
-});
-
-
 /**
  * =========================================================
  * NBS EUR → RSD exchange rate (cached daily)
@@ -635,42 +624,7 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
  * REAL-TIME cart price switch (EUR ↔ RSD) based on payment
  * =========================================================
  */
-add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
 
-    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-        return;
-    }
-
-    if ( ! WC()->session ) {
-        return;
-    }
-
-    $chosen_payment = WC()->session->get( 'chosen_payment_method' );
-    $rsd_gateway_id = 'bank_transfer_1'; // ✅ RSD gateway ID
-
-    foreach ( $cart->get_cart() as $cart_item ) {
-
-        $product = $cart_item['data'];
-
-        // Sačuvaj originalnu EUR cenu samo jednom
-        if ( ! isset( $cart_item['_price_eur'] ) ) {
-            $cart_item['_price_eur'] = $product->get_regular_price();
-        }
-
-        if ( $chosen_payment === $rsd_gateway_id ) {
-
-            $rate = raspitajse_get_nbs_eur_to_rsd_rate();
-            $price_rsd = round( $cart_item['_price_eur'] * $rate );
-
-            $product->set_price( $price_rsd );
-
-        } else {
-            // Vrati EUR cenu
-            $product->set_price( $cart_item['_price_eur'] );
-        }
-    }
-
-}, 20 );
 
 /**
  * =========================================================
