@@ -593,7 +593,16 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 /**
  * =========================================================
- * 1. NBS EUR → RSD exchange rate (cached daily)
+ * 1. Force EUR (bacs) as default payment method
+ * =========================================================
+ */
+add_filter( 'woocommerce_default_gateway', function () {
+    return 'bacs';
+});
+
+/**
+ * =========================================================
+ * 2. NBS EUR → RSD exchange rate (cached daily)
  * =========================================================
  */
 function raspitajse_get_nbs_eur_to_rsd_rate() {
@@ -605,7 +614,7 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
 
     $response = wp_remote_get( 'https://www.nbs.rs/kursnaListaModul/zaDevize.faces?lang=lat' );
     if ( is_wp_error( $response ) ) {
-        return 117.5;
+        return 117.5; // fallback
     }
 
     $body = wp_remote_retrieve_body( $response );
@@ -616,23 +625,12 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
         return $rate;
     }
 
-    return 117.5;
+    return 117.5; // fallback
 }
 
 /**
  * =========================================================
- * 2. Reset intent on cart load (SAFETY)
- * =========================================================
- */
-add_action( 'woocommerce_before_cart', function () {
-    if ( WC()->session ) {
-        WC()->session->set( 'rsd_user_intent', false );
-    }
-});
-
-/**
- * =========================================================
- * 3. AJAX — store EXPLICIT user intent for RSD
+ * 3. Store explicit user intent for RSD (AJAX)
  * =========================================================
  */
 add_action( 'wp_ajax_raspitajse_set_rsd_intent', 'raspitajse_set_rsd_intent' );
@@ -656,45 +654,7 @@ function raspitajse_set_rsd_intent() {
 
 /**
  * =========================================================
- * 4. REAL-TIME cart / checkout price switch (EUR ↔ RSD)
- * =========================================================
- */
-add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
-
-    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-        return;
-    }
-
-    if ( ! WC()->session ) {
-        return;
-    }
-
-    $chosen_payment = WC()->session->get( 'chosen_payment_method' );
-    $has_user_intent = WC()->session->get( 'rsd_user_intent' );
-    $rsd_gateway_id = 'bank_transfer_1';
-
-    foreach ( $cart->get_cart() as $cart_item ) {
-
-        $product = $cart_item['data'];
-
-        // ALWAYS store true EUR price
-        if ( ! isset( $cart_item['_price_eur'] ) ) {
-            $cart_item['_price_eur'] = (float) $product->get_regular_price();
-        }
-
-        if ( $chosen_payment === $rsd_gateway_id && $has_user_intent === true ) {
-            $rate = raspitajse_get_nbs_eur_to_rsd_rate();
-            $product->set_price( round( $cart_item['_price_eur'] * $rate ) );
-        } else {
-            $product->set_price( $cart_item['_price_eur'] );
-        }
-    }
-
-}, 20 );
-
-/**
- * =========================================================
- * 5. Convert ORDER totals to RSD (FINAL SAVE)
+ * 4. Convert ORDER totals to RSD (ONLY on explicit RSD click)
  * =========================================================
  */
 add_action( 'woocommerce_checkout_create_order', function ( $order ) {
@@ -703,28 +663,31 @@ add_action( 'woocommerce_checkout_create_order', function ( $order ) {
         return;
     }
 
-    if (
-        WC()->session->get( 'chosen_payment_method' ) !== 'bank_transfer_1' ||
-        WC()->session->get( 'rsd_user_intent' ) !== true
-    ) {
+    $chosen_payment = WC()->session->get( 'chosen_payment_method' );
+    $has_intent     = WC()->session->get( 'rsd_user_intent' );
+
+    // 🔒 Convert ONLY if user explicitly clicked RSD
+    if ( $chosen_payment !== 'bank_transfer_1' || $has_intent !== true ) {
         return;
     }
 
     $rate = raspitajse_get_nbs_eur_to_rsd_rate();
 
+    // Save original currency
     $order->update_meta_data( '_original_currency', 'EUR' );
 
     foreach ( $order->get_items() as $item ) {
 
-        $eur = $item->get_total();
-        $rsd = round( $eur * $rate );
+        $eur_total = $item->get_total();
+        $rsd_total = round( $eur_total * $rate );
 
-        $item->set_subtotal( $rsd );
-        $item->set_total( $rsd );
+        $item->set_subtotal( $rsd_total );
+        $item->set_total( $rsd_total );
 
+        // Save original EUR value
         $item->add_meta_data(
             'Original price (EUR)',
-            wc_price( $eur, [ 'currency' => 'EUR' ] ),
+            wc_price( $eur_total, [ 'currency' => 'EUR' ] ),
             true
         );
 
@@ -737,15 +700,17 @@ add_action( 'woocommerce_checkout_create_order', function ( $order ) {
 
 /**
  * =========================================================
- * 6. Currency display logic
+ * 5. Currency display logic (symbols always correct)
  * =========================================================
  */
 add_filter( 'woocommerce_currency', function () {
 
+    // Cart is ALWAYS EUR
     if ( is_cart() ) {
         return 'EUR';
     }
 
+    // Checkout & Thank you page → RSD only if user chose RSD
     if (
         ( is_checkout() || is_wc_endpoint_url( 'order-received' ) ) &&
         WC()->session &&
@@ -759,7 +724,7 @@ add_filter( 'woocommerce_currency', function () {
 
 /**
  * =========================================================
- * 7. RSD formatting
+ * 6. RSD formatting (no decimals)
  * =========================================================
  */
 add_filter( 'woocommerce_get_price_decimals', function () {
@@ -767,27 +732,31 @@ add_filter( 'woocommerce_get_price_decimals', function () {
 });
 
 /**
- * =========================================================
- * 8. JS — set intent + refresh checkout
+ * ==========================================================
+ * 7. JS — mark intent ONLY when user clicks payment method
  * =========================================================
  */
 add_action( 'wp_footer', function () {
-    if ( ! is_checkout() ) return;
+    if ( ! is_checkout() ) {
+        return;
+    }
     ?>
     <script>
         jQuery(function ($) {
+
             $('form.checkout').on('change', 'input[name="payment_method"]', function () {
+
                 $.post(wc_checkout_params.ajax_url, {
                     action: 'raspitajse_set_rsd_intent',
                     method: $(this).val()
                 });
-                $('body').trigger('update_checkout');
+
             });
+
         });
     </script>
     <?php
 });
-
 
 
 
