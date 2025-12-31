@@ -593,7 +593,7 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 /**
  * =========================================================
- * NBS EUR → RSD exchange rate (cached daily)
+ * 1. NBS EUR → RSD exchange rate (cached daily)
  * =========================================================
  */
 function raspitajse_get_nbs_eur_to_rsd_rate() {
@@ -605,7 +605,7 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
 
     $response = wp_remote_get( 'https://www.nbs.rs/kursnaListaModul/zaDevize.faces?lang=lat' );
     if ( is_wp_error( $response ) ) {
-        return 117.5; // fallback
+        return 117.5;
     }
 
     $body = wp_remote_retrieve_body( $response );
@@ -616,35 +616,47 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
         return $rate;
     }
 
-    return 117.5; // fallback
+    return 117.5;
 }
 
 /**
  * =========================================================
- * HARD RESET cart prices to EUR (prevents pollution)
+ * 2. Reset intent on cart load (SAFETY)
  * =========================================================
  */
-add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
-
-    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-        return;
+add_action( 'woocommerce_before_cart', function () {
+    if ( WC()->session ) {
+        WC()->session->set( 'rsd_user_intent', false );
     }
-
-    // 🔒 Cart page MUST ALWAYS be EUR
-    if ( is_cart() ) {
-        foreach ( $cart->get_cart() as $cart_item ) {
-            if ( isset( $cart_item['_price_eur'] ) ) {
-                $cart_item['data']->set_price( $cart_item['_price_eur'] );
-            }
-        }
-        return;
-    }
-
-}, 5 );
+});
 
 /**
  * =========================================================
- * REAL-TIME price switch on CHECKOUT only (EUR ↔ RSD)
+ * 3. AJAX — store EXPLICIT user intent for RSD
+ * =========================================================
+ */
+add_action( 'wp_ajax_raspitajse_set_rsd_intent', 'raspitajse_set_rsd_intent' );
+add_action( 'wp_ajax_nopriv_raspitajse_set_rsd_intent', 'raspitajse_set_rsd_intent' );
+
+function raspitajse_set_rsd_intent() {
+
+    if ( ! WC()->session ) {
+        wp_die();
+    }
+
+    $method = sanitize_text_field( $_POST['method'] ?? '' );
+
+    WC()->session->set(
+        'rsd_user_intent',
+        $method === 'bank_transfer_1'
+    );
+
+    wp_die();
+}
+
+/**
+ * =========================================================
+ * 4. REAL-TIME cart / checkout price switch (EUR ↔ RSD)
  * =========================================================
  */
 add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
@@ -657,30 +669,23 @@ add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
         return;
     }
 
-    // ❗ Convert ONLY on checkout (never cart)
-    if ( ! is_checkout() || is_cart() ) {
-        return;
-    }
-
     $chosen_payment = WC()->session->get( 'chosen_payment_method' );
+    $has_user_intent = WC()->session->get( 'rsd_user_intent' );
     $rsd_gateway_id = 'bank_transfer_1';
 
     foreach ( $cart->get_cart() as $cart_item ) {
 
         $product = $cart_item['data'];
 
-        // Store original EUR price once
+        // ALWAYS store true EUR price
         if ( ! isset( $cart_item['_price_eur'] ) ) {
             $cart_item['_price_eur'] = (float) $product->get_regular_price();
         }
 
-        if ( $chosen_payment === $rsd_gateway_id ) {
-
+        if ( $chosen_payment === $rsd_gateway_id && $has_user_intent === true ) {
             $rate = raspitajse_get_nbs_eur_to_rsd_rate();
             $product->set_price( round( $cart_item['_price_eur'] * $rate ) );
-
         } else {
-            // Restore EUR
             $product->set_price( $cart_item['_price_eur'] );
         }
     }
@@ -689,16 +694,19 @@ add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
 
 /**
  * =========================================================
- * FINAL ORDER CONVERSION (single authoritative save)
+ * 5. Convert ORDER totals to RSD (FINAL SAVE)
  * =========================================================
  */
-add_action( 'woocommerce_checkout_create_order', function( $order ) {
+add_action( 'woocommerce_checkout_create_order', function ( $order ) {
 
     if ( ! WC()->session ) {
         return;
     }
 
-    if ( WC()->session->get( 'chosen_payment_method' ) !== 'bank_transfer_1' ) {
+    if (
+        WC()->session->get( 'chosen_payment_method' ) !== 'bank_transfer_1' ||
+        WC()->session->get( 'rsd_user_intent' ) !== true
+    ) {
         return;
     }
 
@@ -708,15 +716,15 @@ add_action( 'woocommerce_checkout_create_order', function( $order ) {
 
     foreach ( $order->get_items() as $item ) {
 
-        $eur_total = $item->get_total();
-        $rsd_total = round( $eur_total * $rate );
+        $eur = $item->get_total();
+        $rsd = round( $eur * $rate );
 
-        $item->set_total( $rsd_total );
-        $item->set_subtotal( $rsd_total );
+        $item->set_subtotal( $rsd );
+        $item->set_total( $rsd );
 
         $item->add_meta_data(
             'Original price (EUR)',
-            wc_price( $eur_total, [ 'currency' => 'EUR' ] ),
+            wc_price( $eur, [ 'currency' => 'EUR' ] ),
             true
         );
 
@@ -729,10 +737,10 @@ add_action( 'woocommerce_checkout_create_order', function( $order ) {
 
 /**
  * =========================================================
- * Currency switch (Checkout + Thank You only)
+ * 6. Currency display logic
  * =========================================================
  */
-add_filter( 'woocommerce_currency', function ( $currency ) {
+add_filter( 'woocommerce_currency', function () {
 
     if ( is_cart() ) {
         return 'EUR';
@@ -741,37 +749,38 @@ add_filter( 'woocommerce_currency', function ( $currency ) {
     if (
         ( is_checkout() || is_wc_endpoint_url( 'order-received' ) ) &&
         WC()->session &&
-        WC()->session->get( 'chosen_payment_method' ) === 'bank_transfer_1'
+        WC()->session->get( 'rsd_user_intent' ) === true
     ) {
         return 'RSD';
     }
 
-    return $currency;
+    return 'EUR';
 });
 
 /**
  * =========================================================
- * RSD formatting (no decimals)
+ * 7. RSD formatting
  * =========================================================
  */
-add_filter( 'woocommerce_get_price_decimals', function ( $decimals ) {
-
-    return get_woocommerce_currency() === 'RSD' ? 0 : $decimals;
+add_filter( 'woocommerce_get_price_decimals', function () {
+    return get_woocommerce_currency() === 'RSD' ? 0 : 2;
 });
 
 /**
  * =========================================================
- * FORCE checkout refresh on payment method change (JS)
+ * 8. JS — set intent + refresh checkout
  * =========================================================
  */
 add_action( 'wp_footer', function () {
-    if ( ! is_checkout() ) {
-        return;
-    }
+    if ( ! is_checkout() ) return;
     ?>
     <script>
         jQuery(function ($) {
             $('form.checkout').on('change', 'input[name="payment_method"]', function () {
+                $.post(wc_checkout_params.ajax_url, {
+                    action: 'raspitajse_set_rsd_intent',
+                    method: $(this).val()
+                });
                 $('body').trigger('update_checkout');
             });
         });
