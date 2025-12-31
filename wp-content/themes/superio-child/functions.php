@@ -605,95 +605,45 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
 
     $response = wp_remote_get( 'https://www.nbs.rs/kursnaListaModul/zaDevize.faces?lang=lat' );
     if ( is_wp_error( $response ) ) {
-        return 117.5; // fallback
+        return 117.5;
     }
 
     $body = wp_remote_retrieve_body( $response );
 
-    if ( preg_match( '/<td>EUR<\/td>.*?<td>([\d,]+)<\/td>/s', $body, $matches ) ) {
-        $rate = floatval( str_replace( ',', '.', $matches[1] ) );
+    if ( preg_match( '/<td>EUR<\/td>.*?<td>([\d,]+)<\/td>/s', $body, $m ) ) {
+        $rate = (float) str_replace( ',', '.', $m[1] );
         set_transient( 'raspitajse_nbs_eur_rsd_rate', $rate, DAY_IN_SECONDS );
         return $rate;
     }
 
-    return 117.5; // fallback
+    return 117.5;
 }
 
 /**
  * =========================================================
- * REAL-TIME cart price switch (EUR ↔ RSD) based on payment
+ * FINAL order conversion (ONLY place PHP touches prices)
  * =========================================================
  */
-add_action( 'woocommerce_before_calculate_totals', function ( $cart ) {
+add_action( 'woocommerce_checkout_create_order', function ( $order ) {
 
-    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-        return;
-    }
+    if ( ! WC()->session ) return;
 
-    if ( ! WC()->session ) {
-        return;
-    }
-
-    $chosen_payment = WC()->session->get( 'chosen_payment_method' );
-    $rsd_gateway_id = 'bank_transfer_1'; // ✅ RSD gateway ID
-
-    foreach ( $cart->get_cart() as $cart_item ) {
-
-        $product = $cart_item['data'];
-
-        // Sačuvaj originalnu EUR cenu samo jednom
-        if ( ! isset( $cart_item['_price_eur'] ) ) {
-            $cart_item['_price_eur'] = $product->get_regular_price();
-        }
-
-        if ( $chosen_payment === $rsd_gateway_id ) {
-
-            $rate = raspitajse_get_nbs_eur_to_rsd_rate();
-            $price_rsd = round( $cart_item['_price_eur'] * $rate );
-
-            $product->set_price( $price_rsd );
-
-        } else {
-            // Vrati EUR cenu
-            $product->set_price( $cart_item['_price_eur'] );
-        }
-    }
-
-}, 20 );
-
-/**
- * =========================================================
- * Convert ORDER totals to RSD (final save)
- * =========================================================
- */
-add_action( 'woocommerce_checkout_create_order', function( $order ) {
-
-    if ( ! WC()->session ) {
-        return;
-    }
-
-    $chosen_payment = WC()->session->get( 'chosen_payment_method' );
-
-    if ( $chosen_payment !== 'bank_transfer_1' ) {
+    if ( WC()->session->get( 'chosen_payment_method' ) !== 'bank_transfer_1' ) {
         return;
     }
 
     $rate = raspitajse_get_nbs_eur_to_rsd_rate();
 
-    // Sačuvaj originalnu valutu
-    $order->update_meta_data( '_original_currency', 'EUR' );
-
     foreach ( $order->get_items() as $item ) {
+        $eur = $item->get_total();
+        $rsd = round( $eur * $rate );
 
-        $total_eur = $item->get_total();
-        $total_rsd = round( $total_eur * $rate );
-
-        $item->set_total( $total_rsd );
-        $item->set_subtotal( $total_rsd );
+        $item->set_total( $rsd );
+        $item->set_subtotal( $rsd );
 
         $item->add_meta_data(
             'Original price (EUR)',
-            wc_price( $total_eur, [ 'currency' => 'EUR' ] ),
+            wc_price( $eur, [ 'currency' => 'EUR' ] ),
             true
         );
 
@@ -701,49 +651,64 @@ add_action( 'woocommerce_checkout_create_order', function( $order ) {
     }
 
     $order->set_total( round( $order->get_total() * $rate ) );
-
-}, 20 );
-
-/**
- * =========================================================
- * RSD formatting (no decimals)
- * =========================================================
- */
-add_filter( 'woocommerce_get_price_decimals', function( $decimals ) {
-
-    if ( get_woocommerce_currency() === 'RSD' ) {
-        return 0;
-    }
-
-    return $decimals;
 });
 
-/**
- * =========================================================
- * FORCE checkout refresh on payment method change (JS)
- * =========================================================
- */
 add_action( 'wp_footer', function () {
-    if ( ! is_checkout() ) {
-        return;
-    }
+    if ( ! is_checkout() ) return;
+
+    $rate = raspitajse_get_nbs_eur_to_rsd_rate();
     ?>
     <script>
         jQuery(function ($) {
-            $('form.checkout').on('change', 'input[name="payment_method"]', function () {
-                $('body').trigger('update_checkout');
+
+            const rate = <?php echo esc_js( $rate ); ?>;
+
+            function parseEUR(text) {
+                return parseFloat(
+                    text.replace(/[^\d,]/g, '').replace(',', '.')
+                );
+            }
+
+            function formatRSD(value) {
+                return value.toLocaleString('sr-RS') + ' рсд';
+            }
+
+            function formatEUR(value) {
+                return value.toFixed(2).replace('.', ',') + ' €';
+            }
+
+            function convertToRSD() {
+                $('.woocommerce-Price-amount').each(function () {
+                    const el = $(this);
+
+                    if (!el.data('eur')) {
+                        el.data('eur', parseEUR(el.text()));
+                    }
+
+                    const eur = el.data('eur');
+                    el.text(formatRSD(Math.round(eur * rate)));
+                });
+            }
+
+            function restoreEUR() {
+                $('.woocommerce-Price-amount').each(function () {
+                    const el = $(this);
+                    const eur = el.data('eur');
+                    if (eur) {
+                        el.text(formatEUR(eur));
+                    }
+                });
+            }
+
+            $('input[name="payment_method"]').on('change', function () {
+                if ($(this).val() === 'bank_transfer_1') {
+                    convertToRSD();
+                } else {
+                    restoreEUR();
+                }
             });
+
         });
     </script>
     <?php
 });
-
-
-
-
-
-
-
-
-
-
