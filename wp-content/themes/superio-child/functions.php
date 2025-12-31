@@ -743,26 +743,49 @@ add_action( 'woocommerce_checkout_create_order', function ( $order ) {
 
 }, 20 );
 
-add_filter( 'woocommerce_currency_symbol', function ( $symbol, $currency ) {
+add_action( 'wp_footer', function () {
 
-    if ( is_wc_endpoint_url( 'order-received' ) ) {
-        global $wp;
-
-        if ( empty( $wp->query_vars['order-received'] ) ) {
-            return $symbol;
-        }
-
-        $order_id = absint( $wp->query_vars['order-received'] );
-        $order    = wc_get_order( $order_id );
-
-        if ( $order && $order->get_currency() === 'RSD' ) {
-            return 'RSD';
-        }
+    if ( ! is_wc_endpoint_url( 'order-received' ) ) {
+        return;
     }
+    ?>
+    <script>
+        jQuery(function ($) {
 
-    return $symbol;
+            function formatRSD(value) {
+                return value.toLocaleString('sr-RS', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + ' RSD';
+            }
 
-}, 10, 2 );
+            $('.woocommerce-order-overview__total .woocommerce-Price-amount bdi').each(function () {
+
+                const el = $(this);
+                const text = el.text();
+
+                // Skip if already converted
+                if (text.includes('RSD')) {
+                    return;
+                }
+
+                // Extract number: "113858,00 €" → 113858.00
+                const number = parseFloat(
+                    text
+                        .replace(/\./g, '')
+                        .replace(',', '.')
+                        .replace(/[^\d.]/g, '')
+                );
+
+                if (!isNaN(number)) {
+                    el.text(formatRSD(number));
+                }
+            });
+
+        });
+    </script>
+    <?php
+});
 
 
 
