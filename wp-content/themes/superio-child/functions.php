@@ -627,52 +627,59 @@ add_action( 'wp_footer', function () {
     <script>
         jQuery(function ($) {
 
-            const rate = <?php echo esc_js( $rate ); ?>;
+            const RATE = <?php echo esc_js( $rate ); ?>;
 
-            function parseEUR(text) {
-                return parseFloat(
-                    text.replace(/[^\d,]/g, '').replace(',', '.')
-                );
-            }
+            function extractEUR(el) {
+                if (el.data('eur')) {
+                    return el.data('eur');
+                }
 
-            function formatRSD(value) {
-                return value.toLocaleString('sr-RS') + ' рсд';
+                const text = el.text()
+                    .replace(/\s/g, '')
+                    .replace('€', '')
+                    .replace('.', '')
+                    .replace(',', '.');
+
+                const value = parseFloat(text);
+                el.data('eur', value);
+                return value;
             }
 
             function formatEUR(value) {
                 return value.toFixed(2).replace('.', ',') + ' €';
             }
 
-            function convertToRSD() {
-                $('.woocommerce-Price-amount').each(function () {
-                    const el = $(this);
-
-                    if (!el.data('eur')) {
-                        el.data('eur', parseEUR(el.text()));
-                    }
-
-                    const eur = el.data('eur');
-                    el.text(formatRSD(Math.round(eur * rate)));
-                });
+            function formatRSD(value) {
+                return value.toLocaleString('sr-RS') + ' рсд';
             }
 
-            function restoreEUR() {
+            function applyCurrency() {
+                const method = $('input[name="payment_method"]:checked').val();
+
                 $('.woocommerce-Price-amount').each(function () {
                     const el = $(this);
-                    const eur = el.data('eur');
-                    if (eur) {
+                    const eur = extractEUR(el);
+
+                    if (method === 'bank_transfer_1') {
+                        el.text(formatRSD(Math.round(eur * RATE)));
+                    } else {
                         el.text(formatEUR(eur));
                     }
                 });
             }
 
-            $('input[name="payment_method"]').on('change', function () {
-                if ($(this).val() === 'bank_transfer_1') {
-                    convertToRSD();
-                } else {
-                    restoreEUR();
-                }
+            // 🔁 On payment method change
+            $(document).on('change', 'input[name="payment_method"]', function () {
+                applyCurrency();
             });
+
+            // 🔁 After Woo updates checkout (AJAX refresh)
+            $(document.body).on('updated_checkout', function () {
+                applyCurrency();
+            });
+
+            // 🔁 Initial run (page load)
+            applyCurrency();
 
         });
     </script>
