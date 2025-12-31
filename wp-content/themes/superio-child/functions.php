@@ -593,6 +593,34 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 /**
  * =========================================================
+ * NBS EUR → RSD exchange rate (cached daily)
+ * =========================================================
+ */
+function raspitajse_get_nbs_eur_to_rsd_rate() {
+
+    $rate = get_transient( 'raspitajse_nbs_eur_rsd_rate' );
+    if ( $rate !== false ) {
+        return (float) $rate;
+    }
+
+    $response = wp_remote_get( 'https://www.nbs.rs/kursnaListaModul/zaDevize.faces?lang=lat' );
+    if ( is_wp_error( $response ) ) {
+        return 117.5; // fallback
+    }
+
+    $body = wp_remote_retrieve_body( $response );
+
+    if ( preg_match( '/<td>EUR<\/td>.*?<td>([\d,]+)<\/td>/s', $body, $matches ) ) {
+        $rate = floatval( str_replace( ',', '.', $matches[1] ) );
+        set_transient( 'raspitajse_nbs_eur_rsd_rate', $rate, DAY_IN_SECONDS );
+        return $rate;
+    }
+
+    return 117.5; // fallback
+}
+
+/**
+ * =========================================================
  * REAL-TIME cart price switch (EUR ↔ RSD) based on payment
  * =========================================================
  */
@@ -725,6 +753,8 @@ add_action( 'wp_footer', function () {
     </script>
     <?php
 });
+
+
 
 
 
