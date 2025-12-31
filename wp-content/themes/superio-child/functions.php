@@ -619,40 +619,6 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
     return 117.5;
 }
 
-/**
- * =========================================================
- * FINAL order conversion (ONLY place PHP touches prices)
- * =========================================================
- */
-add_action( 'woocommerce_checkout_create_order', function ( $order ) {
-
-    if ( ! WC()->session ) return;
-
-    if ( WC()->session->get( 'chosen_payment_method' ) !== 'bank_transfer_1' ) {
-        return;
-    }
-
-    $rate = raspitajse_get_nbs_eur_to_rsd_rate();
-
-    foreach ( $order->get_items() as $item ) {
-        $eur = $item->get_total();
-        $rsd = round( $eur * $rate );
-
-        $item->set_total( $rsd );
-        $item->set_subtotal( $rsd );
-
-        $item->add_meta_data(
-            'Original price (EUR)',
-            wc_price( $eur, [ 'currency' => 'EUR' ] ),
-            true
-        );
-
-        $item->save();
-    }
-
-    $order->set_total( round( $order->get_total() * $rate ) );
-});
-
 add_action( 'wp_footer', function () {
     if ( ! is_checkout() ) return;
 
