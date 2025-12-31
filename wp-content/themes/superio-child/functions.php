@@ -766,3 +766,30 @@ add_filter( 'woocommerce_currency', function ( $currency ) {
 
     return $currency;
 });
+
+/**
+ * =========================================================
+ * FORCE RSD currency for RSD orders (order-received + emails)
+ * =========================================================
+ */
+add_filter( 'woocommerce_currency', function ( $currency ) {
+
+    if ( is_wc_endpoint_url( 'order-received' ) ) {
+
+        global $wp;
+
+        if ( empty( $wp->query_vars['order-received'] ) ) {
+            return $currency;
+        }
+
+        $order_id = absint( $wp->query_vars['order-received'] );
+        $order    = wc_get_order( $order_id );
+
+        if ( $order && $order->get_payment_method() === 'bank_transfer_1' ) {
+            return 'RSD';
+        }
+    }
+
+    return $currency;
+});
+
