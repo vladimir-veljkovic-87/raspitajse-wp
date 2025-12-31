@@ -743,4 +743,26 @@ add_action( 'woocommerce_checkout_create_order', function ( $order ) {
 
 }, 20 );
 
+add_filter( 'woocommerce_currency_symbol', function ( $symbol, $currency ) {
+
+    if ( is_wc_endpoint_url( 'order-received' ) ) {
+        global $wp;
+
+        if ( empty( $wp->query_vars['order-received'] ) ) {
+            return $symbol;
+        }
+
+        $order_id = absint( $wp->query_vars['order-received'] );
+        $order    = wc_get_order( $order_id );
+
+        if ( $order && $order->get_currency() === 'RSD' ) {
+            return 'RSD';
+        }
+    }
+
+    return $symbol;
+
+}, 10, 2 );
+
+
 
