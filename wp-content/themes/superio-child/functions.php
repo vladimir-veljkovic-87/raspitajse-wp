@@ -621,6 +621,16 @@ function raspitajse_get_nbs_eur_to_rsd_rate() {
 
 /**
  * =========================================================
+ * FORCE default payment method to EUR (bacs)
+ * =========================================================
+ */
+add_filter( 'woocommerce_default_payment_method', function () {
+    return 'bacs';
+});
+
+
+/**
+ * =========================================================
  * REAL-TIME cart price switch (EUR ↔ RSD) based on payment
  * =========================================================
  */
