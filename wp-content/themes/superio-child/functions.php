@@ -693,7 +693,6 @@ add_action( 'wp_footer', function () {
  */
 add_action( 'woocommerce_checkout_create_order', function ( $order ) {
 
-    // Safety
     if ( ! $order instanceof WC_Order ) {
         return;
     }
@@ -708,13 +707,12 @@ add_action( 'woocommerce_checkout_create_order', function ( $order ) {
         return;
     }
 
-    // Exchange rate
     $rate = raspitajse_get_nbs_eur_to_rsd_rate();
     if ( ! $rate || $rate <= 0 ) {
         return;
     }
 
-    // Store original currency
+    // 🔒 STORE ORIGINAL
     $order->update_meta_data( '_original_currency', 'EUR' );
     $order->update_meta_data( '_eur_to_rsd_rate', $rate );
 
@@ -722,74 +720,27 @@ add_action( 'woocommerce_checkout_create_order', function ( $order ) {
 
     foreach ( $order->get_items() as $item ) {
 
-        $eur_subtotal = (float) $item->get_subtotal();
-        $eur_total    = (float) $item->get_total();
+        $eur_total = (float) $item->get_total();
+        $rsd_total = round( $eur_total * $rate );
 
-        $rsd_subtotal = round( $eur_subtotal * $rate );
-        $rsd_total    = round( $eur_total * $rate );
-
-        // Save original values
-        $item->add_meta_data( '_subtotal_eur', $eur_subtotal, true );
         $item->add_meta_data( '_total_eur', $eur_total, true );
 
-        // Replace with RSD
-        $item->set_subtotal( $rsd_subtotal );
         $item->set_total( $rsd_total );
-
-        $new_total += $rsd_total;
+        $item->set_subtotal( $rsd_total );
 
         $item->save();
+        $new_total += $rsd_total;
     }
 
-    // Update order total
+    // ✅ SET ORDER TOTAL
     $order->set_total( $new_total );
 
-    // Mark as converted (CRITICAL)
+    // ✅ THIS IS THE MISSING LINE
+    $order->set_currency( 'RSD' );
+
+    // Mark converted
     $order->update_meta_data( '_converted_to_rsd', 1 );
 
 }, 20 );
 
-add_filter( 'woocommerce_currency', function ( $currency ) {
-
-    if ( is_wc_endpoint_url( 'order-received' ) ) {
-        global $wp;
-
-        if ( isset( $wp->query_vars['order-received'] ) ) {
-            $order_id = absint( $wp->query_vars['order-received'] );
-            $order    = wc_get_order( $order_id );
-
-            if ( $order && $order->get_payment_method() === 'bank_transfer_1' ) {
-                return 'RSD';
-            }
-        }
-    }
-
-    return $currency;
-});
-
-/**
- * =========================================================
- * FORCE RSD currency for RSD orders (order-received + emails)
- * =========================================================
- */
-add_filter( 'woocommerce_currency', function ( $currency ) {
-
-    if ( is_wc_endpoint_url( 'order-received' ) ) {
-
-        global $wp;
-
-        if ( empty( $wp->query_vars['order-received'] ) ) {
-            return $currency;
-        }
-
-        $order_id = absint( $wp->query_vars['order-received'] );
-        $order    = wc_get_order( $order_id );
-
-        if ( $order && $order->get_payment_method() === 'bank_transfer_1' ) {
-            return 'RSD';
-        }
-    }
-
-    return $currency;
-});
 
