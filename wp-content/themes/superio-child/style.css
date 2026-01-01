@@ -506,6 +506,16 @@ span.featured {
 	flex: 1;
 }
 
+/* Kandidati pronadjite posao */
+.elementor-element-3fcf0f8 p {
+	margin-bottom: 0!important;
+}
+.elementor-element-a8f1b42 .widget-features-box.style1 .item:nth-child(2) { .item-inner {
+    background-color: #fff;
+    -webkit-box-shadow: 0 0 30px 0 rgba(64, 79, 104, 0.1);
+    box-shadow: 0 0 30px 0 rgba(64, 79, 104, 0.1);
+}
+
 /*=============================*/
 /*===    Tablet ready      ===*/
 /*===========================*/
