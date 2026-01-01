@@ -142,9 +142,6 @@ html:has(> body.home) {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-.home .elementor-26 .elementor-element.elementor-element-a4ee68d > .elementor-container > .elementor-column > .elementor-widget-wrap {
-	align-content: start!important;
-}
 .home .urgent {
 	color: #202124!important;
     background: rgb(218 70 65 / 46%);
