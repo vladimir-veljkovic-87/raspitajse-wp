@@ -642,7 +642,7 @@ and (max-width : 767px) {
 		background-size: cover;
 	}
 	.elementor-element-85068ec .elementor-widget-container {
-		margin-right: 0;
-		margin-bottom: 20px;
+		margin-right: 0!important;
+		margin-bottom: 20px!important;
 	}
 }
