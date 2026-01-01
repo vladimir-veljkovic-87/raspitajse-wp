@@ -551,6 +551,9 @@ and (max-width : 767px) {
 	.home .elementor-26 .elementor-element.elementor-element-9902db3 {
 		margin-top:50px!important;
 	}
+	.home .elementor-element-1d6b941 {
+		padding: 0!important;
+	}
 	/* Fix width candidate Job Title input*/
 	.cmb2-id--candidate-job-title {
 		max-width:100%;
