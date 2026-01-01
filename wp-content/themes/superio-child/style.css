@@ -633,4 +633,16 @@ and (max-width : 767px) {
 	.page-template-page-jobs .urgent { 
 		margin-top:10px;
 	}
+	/* Kandidati pronadjite posao */
+	.elementor-9860 .elementor-element.elementor-element-d42aa63 > .elementor-widget-container {
+	    padding-top: 0;
+    	text-align: center;
+	}
+	.elementor-element-85068ec {
+		background-size: cover;
+	}
+	.elementor-element-85068ec .elementor-element-85068ec {
+		margin-right: 0;
+		margin-bottom: 20px;
+	}
 }
