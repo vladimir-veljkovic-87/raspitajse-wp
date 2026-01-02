@@ -591,6 +591,34 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 }, 10, 4);
 
+add_action( 'template_redirect', function () {
+
+    if ( ! is_checkout() || is_wc_endpoint_url() ) {
+        return;
+    }
+
+    if ( ! WC()->cart ) {
+        return;
+    }
+
+    foreach ( WC()->cart->get_cart() as $cart_item ) {
+
+        // WP Job Board Pro koristi job_id ili job_listing_id
+        if ( isset( $cart_item['job_id'] ) ) {
+            WC()->session->set( 'job_id', absint( $cart_item['job_id'] ) );
+            WC()->session->set( 'job_payment_type', 'job_listing' );
+            break;
+        }
+
+        if ( isset( $cart_item['job_listing_id'] ) ) {
+            WC()->session->set( 'job_id', absint( $cart_item['job_listing_id'] ) );
+            WC()->session->set( 'job_payment_type', 'job_listing' );
+            break;
+        }
+    }
+});
+
+
 /**
  * =========================================================
  * NBS EUR → RSD exchange rate (cached daily)
