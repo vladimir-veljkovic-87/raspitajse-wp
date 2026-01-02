@@ -591,31 +591,52 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 }, 10, 4);
 
-add_action( 'template_redirect', function () {
+add_filter( 'woocommerce_available_payment_gateways', function ( $gateways ) {
 
-    if ( ! is_checkout() || is_wc_endpoint_url() ) {
-        return;
+    if ( ! is_checkout() ) {
+        return $gateways;
     }
 
     if ( ! WC()->cart ) {
-        return;
+        return $gateways;
     }
+
+    $job_context = false;
 
     foreach ( WC()->cart->get_cart() as $cart_item ) {
 
-        // WP Job Board Pro koristi job_id ili job_listing_id
         if ( isset( $cart_item['job_id'] ) ) {
             WC()->session->set( 'job_id', absint( $cart_item['job_id'] ) );
-            WC()->session->set( 'job_payment_type', 'job_listing' );
+            $job_context = true;
             break;
         }
 
         if ( isset( $cart_item['job_listing_id'] ) ) {
             WC()->session->set( 'job_id', absint( $cart_item['job_listing_id'] ) );
-            WC()->session->set( 'job_payment_type', 'job_listing' );
+            $job_context = true;
             break;
         }
     }
+
+    if ( ! $job_context ) {
+        return $gateways;
+    }
+
+    // ✅ DOZVOLI SAMO RSD ZA JOB PURCHASE
+    foreach ( $gateways as $id => $gateway ) {
+        if ( strpos( $id, 'rsd' ) === false ) {
+            unset( $gateways[ $id ] );
+        }
+    }
+
+    return $gateways;
+}, 100 );
+
+
+add_action( 'woocommerce_review_order_before_payment', function () {
+    echo '<pre>';
+    print_r( array_keys( WC()->payment_gateways()->get_available_payment_gateways() ) );
+    echo '</pre>';
 });
 
 
