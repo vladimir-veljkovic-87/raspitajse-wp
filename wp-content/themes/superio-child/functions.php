@@ -592,6 +592,31 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 }, 10, 4);
 
 
+add_action( 'woocommerce_before_checkout_form', function () {
+
+    if ( ! is_checkout() ) {
+        return;
+    }
+
+    $gateways = WC()->payment_gateways()->get_available_payment_gateways();
+
+    echo '<pre style="background:#111;color:#0f0;padding:15px;">';
+    echo "AVAILABLE PAYMENT METHODS:\n\n";
+
+    foreach ( $gateways as $id => $gateway ) {
+        echo "ID: {$id}\n";
+        echo "Title: {$gateway->get_title()}\n";
+        echo "Enabled: " . ( $gateway->enabled ? 'yes' : 'no' ) . "\n";
+        echo "Supports: " . implode( ', ', $gateway->supports ) . "\n";
+        echo "----------------------\n";
+    }
+
+    echo '</pre>';
+
+});
+
+
+
 /**
  * =========================================================
  * FORCE RSD bank transfer to be available even if currency = EUR
