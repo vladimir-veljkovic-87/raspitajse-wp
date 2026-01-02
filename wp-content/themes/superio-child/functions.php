@@ -639,6 +639,15 @@ add_action( 'woocommerce_review_order_before_payment', function () {
     echo '</pre>';
 });
 
+add_action( 'woocommerce_review_order_before_payment', function () {
+    if ( current_user_can('administrator') ) {
+        echo '<pre style="background:#fff;padding:10px;border:1px solid #ccc">';
+        print_r( array_keys( WC()->payment_gateways()->get_available_payment_gateways() ) );
+        echo '</pre>';
+    }
+});
+
+
 
 /**
  * =========================================================
