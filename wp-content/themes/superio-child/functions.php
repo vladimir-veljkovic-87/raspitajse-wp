@@ -591,63 +591,31 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 }, 10, 4);
 
+
+/**
+ * =========================================================
+ * FORCE RSD bank transfer to be available even if currency = EUR
+ * =========================================================
+ */
 add_filter( 'woocommerce_available_payment_gateways', function ( $gateways ) {
+
+    if ( is_admin() ) {
+        return $gateways;
+    }
 
     if ( ! is_checkout() ) {
         return $gateways;
     }
 
-    if ( ! WC()->cart ) {
-        return $gateways;
-    }
+    // ako postoji RSD bank transfer
+    if ( isset( $gateways['bank_transfer_1'] ) ) {
 
-    $job_context = false;
-
-    foreach ( WC()->cart->get_cart() as $cart_item ) {
-
-        if ( isset( $cart_item['job_id'] ) ) {
-            WC()->session->set( 'job_id', absint( $cart_item['job_id'] ) );
-            $job_context = true;
-            break;
-        }
-
-        if ( isset( $cart_item['job_listing_id'] ) ) {
-            WC()->session->set( 'job_id', absint( $cart_item['job_listing_id'] ) );
-            $job_context = true;
-            break;
-        }
-    }
-
-    if ( ! $job_context ) {
-        return $gateways;
-    }
-
-    // ✅ DOZVOLI SAMO RSD ZA JOB PURCHASE
-    foreach ( $gateways as $id => $gateway ) {
-        if ( strpos( $id, 'rsd' ) === false ) {
-            unset( $gateways[ $id ] );
-        }
+        // dozvoli ga čak i kad je valuta EUR
+        $gateways['bank_transfer_1']->supports[] = 'products';
     }
 
     return $gateways;
-}, 100 );
-
-
-add_action( 'woocommerce_review_order_before_payment', function () {
-    echo '<pre>';
-    print_r( array_keys( WC()->payment_gateways()->get_available_payment_gateways() ) );
-    echo '</pre>';
-});
-
-add_action( 'woocommerce_review_order_before_payment', function () {
-    if ( current_user_can('administrator') ) {
-        echo '<pre style="background:#fff;padding:10px;border:1px solid #ccc">';
-        print_r( array_keys( WC()->payment_gateways()->get_available_payment_gateways() ) );
-        echo '</pre>';
-    }
-});
-
-
+}, 5 );
 
 /**
  * =========================================================
