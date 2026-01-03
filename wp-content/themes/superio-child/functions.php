@@ -717,41 +717,6 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $or
 });
 
 
-if ( ! function_exists( 'raspitajse_get_employer_id_by_user' ) ) {
-    function raspitajse_get_employer_id_by_user( $user_id ) {
-
-        $args = [
-            'post_type'   => 'employer',
-            'post_status' => 'publish',
-            'numberposts' => 1,
-            'author'      => (int) $user_id, // 👈 KLJUČNO
-        ];
-
-        $posts = get_posts( $args );
-
-        return ! empty( $posts ) ? (int) $posts[0]->ID : 0;
-    }
-}
-
-add_action( 'wp_footer', function () {
-
-    if ( ! is_checkout() || ! is_user_logged_in() ) return;
-
-    $user_id     = get_current_user_id();
-    $employer_id = raspitajse_get_employer_id_by_user( $user_id );
-
-    if ( ! $employer_id ) return;
-
-    $all_meta = get_post_meta( $employer_id );
-
-    echo '<pre style="background:#000;color:#0f0;padding:15px;max-height:400px;overflow:auto;">';
-    echo "EMPLOYER ID: $employer_id\n\n";
-    print_r( $all_meta );
-    echo '</pre>';
-
-});
-
-
 /**
  * =========================================================
  * FRONTEND FORCE: Prefill checkout fields from employer profile
@@ -770,27 +735,34 @@ add_action( 'wp_footer', function () {
         return;
     }
 
+    /**
+     * WP Job Board Pro – custom field mapping
+     * MB  → custom-text-2726709
+     * PIB → custom-text-2842853
+     * Email → custom-text-32314799
+     * Phone → custom-text-3318838
+     */
+
     $data = [
-        'company' => get_post_meta( $employer_id, 'company_name', true ),
-        'pib'     => get_post_meta( $employer_id, 'company_tax_number', true ),
-        'mb'      => get_post_meta( $employer_id, 'company_id_number', true ),
-        'email'   => get_post_meta( $employer_id, 'email', true ),
-        'phone'   => get_post_meta( $employer_id, 'phone', true ),
+        'company' => get_the_title( $employer_id ),
+        'mb'      => get_post_meta( $employer_id, 'custom-text-2726709', true ),
+        'pib'     => get_post_meta( $employer_id, 'custom-text-2842853', true ),
+        'email'   => get_post_meta( $employer_id, 'custom-text-32314799', true ),
+        'phone'   => get_post_meta( $employer_id, 'custom-text-3318838', true ),
     ];
     ?>
     <script>
         jQuery(function ($) {
 
             const employer = <?php echo wp_json_encode( $data ); ?>;
-
-            console.log('✅ Employer data (Employer CPT):', employer);
+            console.log('✅ Employer data (FINAL – DB):', employer);
 
             function fill() {
-                if (employer.company) $('#billing_company').val(employer.company);
-                if (employer.pib)     $('#billing_pib').val(employer.pib);
-                if (employer.mb)      $('#billing_mb').val(employer.mb);
-                if (employer.email)   $('#billing_email').val(employer.email);
-                if (employer.phone)   $('#billing_phone').val(employer.phone);
+                if (employer.company) $('#billing_company').val(employer.company).trigger('change');
+                if (employer.pib)     $('#billing_pib').val(employer.pib).trigger('change');
+                if (employer.mb)      $('#billing_mb').val(employer.mb).trigger('change');
+                if (employer.email)   $('#billing_email').val(employer.email).trigger('change');
+                if (employer.phone)   $('#billing_phone').val(employer.phone).trigger('change');
             }
 
             fill();
@@ -799,6 +771,7 @@ add_action( 'wp_footer', function () {
     </script>
     <?php
 });
+
 
 
 
