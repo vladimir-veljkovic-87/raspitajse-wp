@@ -763,6 +763,41 @@ add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
 
 });
 
+/**
+ * =========================================================
+ * FORCE checkout values from Employer profile
+ * (override WooCommerce billing meta)
+ * =========================================================
+ */
+add_filter( 'woocommerce_checkout_get_value', function ( $value, $input ) {
+
+    if ( ! is_user_logged_in() ) {
+        return $value;
+    }
+
+    $user_id = get_current_user_id();
+
+    // MAPA: checkout polje => employer user_meta
+    $map = [
+        'billing_company' => 'company_name',
+        'billing_pib'     => 'company_tax_number',
+        'billing_mb'      => 'company_id_number',
+        'billing_email'   => 'email',
+        'billing_phone'   => 'phone',
+    ];
+
+    if ( isset( $map[ $input ] ) ) {
+
+        $employer_value = get_user_meta( $user_id, $map[ $input ], true );
+
+        if ( ! empty( $employer_value ) ) {
+            return $employer_value; // 🔥 OVDE SE DEŠAVA MAGIJA
+        }
+    }
+
+    return $value;
+
+}, 999, 2 ); // ⚠️ 999 je KRITIČNO
 
 
 /**
