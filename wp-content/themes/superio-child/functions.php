@@ -716,40 +716,30 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $or
 
 });
 
-/**
- * =========================================================
- * Prefill checkout company fields from logged-in employer
- * =========================================================
- */
-add_filter( 'woocommerce_checkout_get_value', function ( $value, $input ) {
+add_action( 'woocommerce_before_checkout_form', function () {
 
-    if ( ! is_user_logged_in() ) {
-        return $value;
-    }
+    if ( ! is_user_logged_in() ) return;
 
     $user_id = get_current_user_id();
 
-    // MAPIRANJE checkout polja → user_meta ključevi
-    $map = [
-        'billing_company'   => 'company_name',          // Naziv kompanije
-        'billing_pib'       => 'company_tax_number',    // PIB
-        'billing_mb'        => 'company_id_number',     // Matični broj
-        'billing_email'     => 'email',
-        'billing_phone'     => 'phone',
-    ];
+    echo '<pre style="background:#111;color:#0f0;padding:15px;">';
+    echo "USER META DEBUG\n\n";
 
-    if ( isset( $map[ $input ] ) ) {
-
-        $meta_value = get_user_meta( $user_id, $map[ $input ], true );
-
-        if ( ! empty( $meta_value ) ) {
-            return $meta_value;
+    $meta = get_user_meta( $user_id );
+    foreach ( $meta as $key => $value ) {
+        if (
+            stripos( $key, 'company' ) !== false ||
+            stripos( $key, 'pib' ) !== false ||
+            stripos( $key, 'matic' ) !== false
+        ) {
+            echo $key . ' => ';
+            print_r( $value );
+            echo "\n";
         }
     }
 
-    return $value;
-
-}, 10, 2 );
+    echo '</pre>';
+});
 
 
 
