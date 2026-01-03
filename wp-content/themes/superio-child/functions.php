@@ -740,8 +740,14 @@ add_action( 'wp_footer', function () {
     $user_id     = get_current_user_id();
     $employer_id = raspitajse_get_employer_id_by_user( $user_id );
 
-    echo '<script>console.log("USER ID:", ' . (int) $user_id . ');</script>';
-    echo '<script>console.log("EMPLOYER ID:", ' . (int) $employer_id . ');</script>';
+    if ( ! $employer_id ) return;
+
+    $all_meta = get_post_meta( $employer_id );
+
+    echo '<pre style="background:#000;color:#0f0;padding:15px;max-height:400px;overflow:auto;">';
+    echo "EMPLOYER ID: $employer_id\n\n";
+    print_r( $all_meta );
+    echo '</pre>';
 
 });
 
