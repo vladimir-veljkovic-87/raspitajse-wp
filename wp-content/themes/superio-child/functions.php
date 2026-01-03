@@ -592,29 +592,6 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 }, 10, 4);
 
 
-add_action( 'woocommerce_before_checkout_form', function () {
-
-    if ( ! is_checkout() ) {
-        return;
-    }
-
-    $gateways = WC()->payment_gateways()->get_available_payment_gateways();
-
-    echo '<pre style="background:#111;color:#0f0;padding:15px;">';
-    echo "AVAILABLE PAYMENT METHODS:\n\n";
-
-    foreach ( $gateways as $id => $gateway ) {
-        echo "ID: {$id}\n";
-        echo "Title: {$gateway->get_title()}\n";
-        echo "Enabled: " . ( $gateway->enabled ? 'yes' : 'no' ) . "\n";
-        echo "Supports: " . implode( ', ', $gateway->supports ) . "\n";
-        echo "----------------------\n";
-    }
-
-    echo '</pre>';
-
-});
-
 /**
  * =========================================================
  * Checkout – Legal entities only (Company, PIB, MB)
@@ -642,7 +619,7 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     /**
      * COMPANY NAME – REQUIRED & FIRST
      */
-    $fields['billing']['billing_company']['label']    = 'Naziv kompanije *';
+    $fields['billing']['billing_company']['label']    = 'Puno ime kompanije *';
     $fields['billing']['billing_company']['required'] = true;
     $fields['billing']['billing_company']['priority'] = 10;
 
@@ -738,6 +715,42 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $or
     }
 
 });
+
+/**
+ * =========================================================
+ * Prefill checkout company fields from logged-in employer
+ * =========================================================
+ */
+add_filter( 'woocommerce_checkout_get_value', function ( $value, $input ) {
+
+    if ( ! is_user_logged_in() ) {
+        return $value;
+    }
+
+    $user_id = get_current_user_id();
+
+    // MAPIRANJE checkout polja → user_meta ključevi
+    $map = [
+        'billing_company'   => 'company_name',          // Naziv kompanije
+        'billing_pib'       => 'company_tax_number',    // PIB
+        'billing_mb'        => 'company_id_number',     // Matični broj
+        'billing_email'     => 'email',
+        'billing_phone'     => 'phone',
+    ];
+
+    if ( isset( $map[ $input ] ) ) {
+
+        $meta_value = get_user_meta( $user_id, $map[ $input ], true );
+
+        if ( ! empty( $meta_value ) ) {
+            return $meta_value;
+        }
+    }
+
+    return $value;
+
+}, 10, 2 );
+
 
 
 /**
