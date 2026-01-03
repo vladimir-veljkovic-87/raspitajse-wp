@@ -716,6 +716,28 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $or
 
 });
 
+
+if ( ! function_exists( 'raspitajse_get_employer_id_by_user' ) ) {
+    function raspitajse_get_employer_id_by_user( $user_id ) {
+
+        $args = [
+            'post_type'   => 'employer',
+            'post_status' => 'publish',
+            'numberposts' => 1,
+            'meta_query'  => [
+                [
+                    'key'   => '_user_id',
+                    'value' => (int) $user_id,
+                ],
+            ],
+        ];
+
+        $posts = get_posts( $args );
+
+        return ! empty( $posts ) ? (int) $posts[0]->ID : 0;
+    }
+}
+
 /**
  * =========================================================
  * FRONTEND FORCE: Prefill checkout fields from employer profile
@@ -734,7 +756,6 @@ add_action( 'wp_footer', function () {
         return;
     }
 
-    // ✅ PODACI IZ EMPLOYER PROFILA (POST META)
     $data = [
         'company' => get_post_meta( $employer_id, 'company_name', true ),
         'pib'     => get_post_meta( $employer_id, 'company_tax_number', true ),
@@ -742,52 +763,30 @@ add_action( 'wp_footer', function () {
         'email'   => get_post_meta( $employer_id, 'email', true ),
         'phone'   => get_post_meta( $employer_id, 'phone', true ),
     ];
-
-    // 🔍 PHP DEBUG (možeš kasnije obrisati)
-    echo '<pre style="background:#111;color:#0f0;padding:15px;margin:20px 0;">';
-    echo "EMPLOYER META DEBUG\n";
-    echo "Employer ID: {$employer_id}\n\n";
-    print_r( $data );
-    echo '</pre>';
     ?>
-
     <script>
         jQuery(function ($) {
 
             const employer = <?php echo wp_json_encode( $data ); ?>;
 
-            console.log('🟢 Employer data (from Employer post):', employer);
+            console.log('✅ Employer data (Employer CPT):', employer);
 
             function fill() {
-
-                if (employer.company) {
-                    $('#billing_company').val(employer.company).trigger('change');
-                }
-
-                if (employer.pib) {
-                    $('#billing_pib').val(employer.pib).trigger('change');
-                }
-
-                if (employer.mb) {
-                    $('#billing_mb').val(employer.mb).trigger('change');
-                }
-
-                if (employer.email) {
-                    $('#billing_email').val(employer.email).trigger('change');
-                }
-
-                if (employer.phone) {
-                    $('#billing_phone').val(employer.phone).trigger('change');
-                }
+                if (employer.company) $('#billing_company').val(employer.company);
+                if (employer.pib)     $('#billing_pib').val(employer.pib);
+                if (employer.mb)      $('#billing_mb').val(employer.mb);
+                if (employer.email)   $('#billing_email').val(employer.email);
+                if (employer.phone)   $('#billing_phone').val(employer.phone);
             }
 
             fill();
-
             $(document.body).on('updated_checkout', fill);
         });
     </script>
     <?php
 });
+
+
 
 
 /**
