@@ -737,40 +737,74 @@ add_action( 'wp_footer', function () {
         'phone'   => get_user_meta( $user_id, 'phone', true ),
     ];
 
+    /* ================================
+     * PHP DEBUG (VISIBLE ON PAGE)
+     * ================================ */
+    echo '<pre style="background:#111;color:#0f0;padding:15px;margin:20px 0;">';
+    echo "PHP DEBUG – Employer profile data\n";
+    echo "User ID: {$user_id}\n\n";
+    print_r( $data );
+    echo '</pre>';
     ?>
+
     <script>
         jQuery(function ($) {
 
+            /* ================================
+             * JS DEBUG – RAW DATA
+             * ================================ */
             const employer = <?php echo wp_json_encode( $data ); ?>;
 
+            console.log('🟢 Checkout JS loaded');
+            console.log('🟢 Employer data from PHP:', employer);
+
             function fill() {
+                console.log('🟡 fill() called');
 
                 if (employer.company) {
+                    console.log('✔ Setting company:', employer.company);
                     $('#billing_company').val(employer.company).trigger('change');
+                } else {
+                    console.warn('✖ No company value');
                 }
 
                 if (employer.pib) {
+                    console.log('✔ Setting PIB:', employer.pib);
                     $('#billing_pib').val(employer.pib).trigger('change');
+                } else {
+                    console.warn('✖ No PIB value');
                 }
 
                 if (employer.mb) {
+                    console.log('✔ Setting MB:', employer.mb);
                     $('#billing_mb').val(employer.mb).trigger('change');
+                } else {
+                    console.warn('✖ No MB value');
                 }
 
                 if (employer.email) {
+                    console.log('✔ Setting email:', employer.email);
                     $('#billing_email').val(employer.email).trigger('change');
+                } else {
+                    console.warn('✖ No email value');
                 }
 
                 if (employer.phone) {
+                    console.log('✔ Setting phone:', employer.phone);
                     $('#billing_phone').val(employer.phone).trigger('change');
+                } else {
+                    console.warn('✖ No phone value');
                 }
+
+                console.log('🟢 fill() finished');
             }
 
-            // Initial
+            // Initial fill
             fill();
 
-            // After Woo updates checkout via AJAX
+            // After WooCommerce AJAX refresh
             $(document.body).on('updated_checkout', function () {
+                console.log('🔄 updated_checkout event fired');
                 fill();
             });
 
