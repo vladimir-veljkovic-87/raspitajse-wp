@@ -724,12 +724,7 @@ if ( ! function_exists( 'raspitajse_get_employer_id_by_user' ) ) {
             'post_type'   => 'employer',
             'post_status' => 'publish',
             'numberposts' => 1,
-            'meta_query'  => [
-                [
-                    'key'   => '_user_id',
-                    'value' => (int) $user_id,
-                ],
-            ],
+            'author'      => (int) $user_id, // 👈 KLJUČNO
         ];
 
         $posts = get_posts( $args );
@@ -737,6 +732,19 @@ if ( ! function_exists( 'raspitajse_get_employer_id_by_user' ) ) {
         return ! empty( $posts ) ? (int) $posts[0]->ID : 0;
     }
 }
+
+add_action( 'wp_footer', function () {
+
+    if ( ! is_checkout() || ! is_user_logged_in() ) return;
+
+    $user_id     = get_current_user_id();
+    $employer_id = raspitajse_get_employer_id_by_user( $user_id );
+
+    echo '<script>console.log("USER ID:", ' . (int) $user_id . ');</script>';
+    echo '<script>console.log("EMPLOYER ID:", ' . (int) $employer_id . ');</script>';
+
+});
+
 
 /**
  * =========================================================
