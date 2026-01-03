@@ -718,96 +718,66 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $or
 
 /**
  * =========================================================
- * Prefill checkout company fields from logged-in employer
+ * FRONTEND FORCE: Prefill checkout fields from employer profile
  * =========================================================
  */
-add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
+add_action( 'wp_footer', function () {
 
-    if ( ! is_user_logged_in() ) {
-        return $fields;
-    }
-
-    $user_id = get_current_user_id();
-
-    // Employer profile meta (PROVERENO IZ DEBUG-a)
-    $company = get_user_meta( $user_id, 'company_name', true );
-    $pib     = get_user_meta( $user_id, 'company_tax_number', true );
-    $mb      = get_user_meta( $user_id, 'company_id_number', true );
-
-    if ( $company ) {
-        $fields['billing']['billing_company']['default'] = $company;
-    }
-
-    if ( $pib ) {
-        $fields['billing']['billing_pib']['default'] = $pib;
-    }
-
-    if ( $mb ) {
-        $fields['billing']['billing_mb']['default'] = $mb;
-    }
-
-    return $fields;
-}, 20 );
-
-/* Save user meta to order (billing) meta */
-
-add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
-
-    if ( ! is_user_logged_in() ) return;
-
-    $user_id = get_current_user_id();
-
-    update_post_meta( $order_id, '_billing_company', get_user_meta( $user_id, 'company_name', true ) );
-    update_post_meta( $order_id, '_billing_pib',     get_user_meta( $user_id, 'company_tax_number', true ) );
-    update_post_meta( $order_id, '_billing_mb',      get_user_meta( $user_id, 'company_id_number', true ) );
-
-});
-
-/**
- * =========================================================
- * FORCE WooCommerce customer billing data from Employer profile
- * =========================================================
- */
-add_action( 'woocommerce_before_checkout_form', function () {
-
-    if ( ! is_user_logged_in() ) {
+    if ( ! is_checkout() || ! is_user_logged_in() ) {
         return;
     }
 
     $user_id = get_current_user_id();
 
-    // Employer profile meta
-    $company = get_user_meta( $user_id, 'company_name', true );
-    $pib     = get_user_meta( $user_id, 'company_tax_number', true );
-    $mb      = get_user_meta( $user_id, 'company_id_number', true );
-    $email   = get_user_meta( $user_id, 'email', true );
-    $phone   = get_user_meta( $user_id, 'phone', true );
+    $data = [
+        'company' => get_user_meta( $user_id, 'company_name', true ),
+        'pib'     => get_user_meta( $user_id, 'company_tax_number', true ),
+        'mb'      => get_user_meta( $user_id, 'company_id_number', true ),
+        'email'   => get_user_meta( $user_id, 'email', true ),
+        'phone'   => get_user_meta( $user_id, 'phone', true ),
+    ];
 
-    // FORCE Woo customer session
-    $customer = WC()->customer;
+    ?>
+    <script>
+        jQuery(function ($) {
 
-    if ( $company ) $customer->set_billing_company( $company );
-    if ( $email )   $customer->set_billing_email( $email );
-    if ( $phone )   $customer->set_billing_phone( $phone );
+            const employer = <?php echo wp_json_encode( $data ); ?>;
 
-    // Custom fields (PIB / MB)
-    if ( $pib ) WC()->session->set( 'billing_pib', $pib );
-    if ( $mb )  WC()->session->set( 'billing_mb',  $mb );
+            function fill() {
 
+                if (employer.company) {
+                    $('#billing_company').val(employer.company).trigger('change');
+                }
+
+                if (employer.pib) {
+                    $('#billing_pib').val(employer.pib).trigger('change');
+                }
+
+                if (employer.mb) {
+                    $('#billing_mb').val(employer.mb).trigger('change');
+                }
+
+                if (employer.email) {
+                    $('#billing_email').val(employer.email).trigger('change');
+                }
+
+                if (employer.phone) {
+                    $('#billing_phone').val(employer.phone).trigger('change');
+                }
+            }
+
+            // Initial
+            fill();
+
+            // After Woo updates checkout via AJAX
+            $(document.body).on('updated_checkout', function () {
+                fill();
+            });
+
+        });
+    </script>
+    <?php
 });
-
-add_filter( 'woocommerce_checkout_get_value', function ( $value, $input ) {
-
-    if ( in_array( $input, ['billing_pib','billing_mb'], true ) ) {
-        $session_value = WC()->session->get( $input );
-        if ( $session_value ) {
-            return $session_value;
-        }
-    }
-
-    return $value;
-
-}, 20, 2 );
 
 /**
  * =========================================================
