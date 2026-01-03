@@ -765,40 +765,49 @@ add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
 
 /**
  * =========================================================
- * FORCE checkout values from Employer profile
- * (override WooCommerce billing meta)
+ * FORCE WooCommerce customer billing data from Employer profile
  * =========================================================
  */
-add_filter( 'woocommerce_checkout_get_value', function ( $value, $input ) {
+add_action( 'woocommerce_before_checkout_form', function () {
 
     if ( ! is_user_logged_in() ) {
-        return $value;
+        return;
     }
 
     $user_id = get_current_user_id();
 
-    // MAPA: checkout polje => employer user_meta
-    $map = [
-        'billing_company' => 'company_name',
-        'billing_pib'     => 'company_tax_number',
-        'billing_mb'      => 'company_id_number',
-        'billing_email'   => 'email',
-        'billing_phone'   => 'phone',
-    ];
+    // Employer profile meta
+    $company = get_user_meta( $user_id, 'company_name', true );
+    $pib     = get_user_meta( $user_id, 'company_tax_number', true );
+    $mb      = get_user_meta( $user_id, 'company_id_number', true );
+    $email   = get_user_meta( $user_id, 'email', true );
+    $phone   = get_user_meta( $user_id, 'phone', true );
 
-    if ( isset( $map[ $input ] ) ) {
+    // FORCE Woo customer session
+    $customer = WC()->customer;
 
-        $employer_value = get_user_meta( $user_id, $map[ $input ], true );
+    if ( $company ) $customer->set_billing_company( $company );
+    if ( $email )   $customer->set_billing_email( $email );
+    if ( $phone )   $customer->set_billing_phone( $phone );
 
-        if ( ! empty( $employer_value ) ) {
-            return $employer_value; // 🔥 OVDE SE DEŠAVA MAGIJA
+    // Custom fields (PIB / MB)
+    if ( $pib ) WC()->session->set( 'billing_pib', $pib );
+    if ( $mb )  WC()->session->set( 'billing_mb',  $mb );
+
+});
+
+add_filter( 'woocommerce_checkout_get_value', function ( $value, $input ) {
+
+    if ( in_array( $input, ['billing_pib','billing_mb'], true ) ) {
+        $session_value = WC()->session->get( $input );
+        if ( $session_value ) {
+            return $session_value;
         }
     }
 
     return $value;
 
-}, 999, 2 ); // ⚠️ 999 je KRITIČNO
-
+}, 20, 2 );
 
 /**
  * =========================================================
