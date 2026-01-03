@@ -615,32 +615,130 @@ add_action( 'woocommerce_before_checkout_form', function () {
 
 });
 
-
-
 /**
  * =========================================================
- * FORCE RSD bank transfer to be available even if currency = EUR
+ * Checkout – Legal entities only (Company, PIB, MB)
  * =========================================================
  */
-add_filter( 'woocommerce_available_payment_gateways', function ( $gateways ) {
 
-    if ( is_admin() ) {
-        return $gateways;
+/**
+ * Notice before billing fields
+ */
+add_action( 'woocommerce_checkout_before_customer_details', function () {
+    ?>
+    <div class="legal-entity-notice" style="margin-bottom:20px;padding:15px;background:#f5f9ff;border-left:4px solid #2a90cc;">
+        <strong>Važno obaveštenje</strong><br>
+        Molimo vas da uplatu izvršite <strong>isključivo sa računa pravnog lica</strong>.
+        Podaci koje unesete biće korišćeni za izdavanje fakture i moraju biti tačni i potpuni.
+    </div>
+    <?php
+});
+
+/**
+ * Billing fields setup
+ */
+add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
+
+    /**
+     * COMPANY NAME – REQUIRED & FIRST
+     */
+    $fields['billing']['billing_company']['label']    = 'Naziv kompanije *';
+    $fields['billing']['billing_company']['required'] = true;
+    $fields['billing']['billing_company']['priority'] = 10;
+
+    /**
+     * PIB – REQUIRED
+     */
+    $fields['billing']['billing_pib'] = [
+        'label'       => 'PIB *',
+        'required'    => true,
+        'class'       => ['form-row-first'],
+        'priority'    => 15,
+        'placeholder' => 'npr. 123456789',
+    ];
+
+    /**
+     * MATIČNI BROJ – REQUIRED
+     */
+    $fields['billing']['billing_mb'] = [
+        'label'       => 'Matični broj *',
+        'required'    => true,
+        'class'       => ['form-row-last'],
+        'priority'    => 16,
+        'placeholder' => 'npr. 98765432',
+    ];
+
+    /**
+     * REMOVE personal name fields (legal entities only)
+     */
+    unset( $fields['billing']['billing_first_name'] );
+    unset( $fields['billing']['billing_last_name'] );
+
+    /**
+     * Address & contact fields order
+     */
+    $fields['billing']['billing_country']['priority']   = 20;
+    $fields['billing']['billing_address_1']['priority'] = 30;
+    $fields['billing']['billing_city']['priority']      = 40;
+    $fields['billing']['billing_state']['priority']     = 50;
+    $fields['billing']['billing_postcode']['priority']  = 60;
+    $fields['billing']['billing_phone']['priority']     = 70;
+    $fields['billing']['billing_email']['priority']     = 80;
+
+    /**
+     * Remove apartment field
+     */
+    unset( $fields['billing']['billing_address_2'] );
+
+    /**
+     * Order notes – keep last
+     */
+    if ( isset( $fields['order']['order_comments'] ) ) {
+        $fields['order']['order_comments']['priority'] = 90;
     }
 
-    if ( ! is_checkout() ) {
-        return $gateways;
+    return $fields;
+});
+
+/**
+ * Save PIB & MB to order meta
+ */
+add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
+
+    if ( isset( $_POST['billing_pib'] ) ) {
+        update_post_meta(
+            $order_id,
+            '_billing_pib',
+            sanitize_text_field( $_POST['billing_pib'] )
+        );
     }
 
-    // ako postoji RSD bank transfer
-    if ( isset( $gateways['bank_transfer_1'] ) ) {
-
-        // dozvoli ga čak i kad je valuta EUR
-        $gateways['bank_transfer_1']->supports[] = 'products';
+    if ( isset( $_POST['billing_mb'] ) ) {
+        update_post_meta(
+            $order_id,
+            '_billing_mb',
+            sanitize_text_field( $_POST['billing_mb'] )
+        );
     }
 
-    return $gateways;
-}, 5 );
+});
+
+/**
+ * Display PIB & MB in admin order details
+ */
+add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $order ) {
+
+    $pib = $order->get_meta( '_billing_pib' );
+    $mb  = $order->get_meta( '_billing_mb' );
+
+    if ( $pib || $mb ) {
+        echo '<p><strong>Podaci o kompaniji</strong></p>';
+        if ( $pib ) echo '<p>PIB: ' . esc_html( $pib ) . '</p>';
+        if ( $mb )  echo '<p>Matični broj: ' . esc_html( $mb ) . '</p>';
+    }
+
+});
+
 
 /**
  * =========================================================
