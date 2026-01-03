@@ -619,7 +619,7 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     /**
      * COMPANY NAME – REQUIRED & FIRST
      */
-    $fields['billing']['billing_company']['label']    = 'Puno ime kompanije *';
+    $fields['billing']['billing_company']['label']    = 'Puno ime kompanije';
     $fields['billing']['billing_company']['required'] = true;
     $fields['billing']['billing_company']['priority'] = 10;
 
@@ -627,7 +627,7 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
      * PIB – REQUIRED
      */
     $fields['billing']['billing_pib'] = [
-        'label'       => 'PIB *',
+        'label'       => 'Poreski Indentifikacioni Broj (PIB)',
         'required'    => true,
         'class'       => ['form-row-first'],
         'priority'    => 15,
@@ -638,7 +638,7 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
      * MATIČNI BROJ – REQUIRED
      */
     $fields['billing']['billing_mb'] = [
-        'label'       => 'Matični broj *',
+        'label'       => 'Matični broj',
         'required'    => true,
         'class'       => ['form-row-last'],
         'priority'    => 16,
@@ -716,29 +716,51 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $or
 
 });
 
-add_action( 'woocommerce_before_checkout_form', function () {
+/**
+ * =========================================================
+ * Prefill checkout company fields from logged-in employer
+ * =========================================================
+ */
+add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
+
+    if ( ! is_user_logged_in() ) {
+        return $fields;
+    }
+
+    $user_id = get_current_user_id();
+
+    // Employer profile meta (PROVERENO IZ DEBUG-a)
+    $company = get_user_meta( $user_id, 'company_name', true );
+    $pib     = get_user_meta( $user_id, 'company_tax_number', true );
+    $mb      = get_user_meta( $user_id, 'company_id_number', true );
+
+    if ( $company ) {
+        $fields['billing']['billing_company']['default'] = $company;
+    }
+
+    if ( $pib ) {
+        $fields['billing']['billing_pib']['default'] = $pib;
+    }
+
+    if ( $mb ) {
+        $fields['billing']['billing_mb']['default'] = $mb;
+    }
+
+    return $fields;
+}, 20 );
+
+/* Save user meta to order (billing) meta */
+
+add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
 
     if ( ! is_user_logged_in() ) return;
 
     $user_id = get_current_user_id();
 
-    echo '<pre style="background:#111;color:#0f0;padding:15px;">';
-    echo "USER META DEBUG\n\n";
+    update_post_meta( $order_id, '_billing_company', get_user_meta( $user_id, 'company_name', true ) );
+    update_post_meta( $order_id, '_billing_pib',     get_user_meta( $user_id, 'company_tax_number', true ) );
+    update_post_meta( $order_id, '_billing_mb',      get_user_meta( $user_id, 'company_id_number', true ) );
 
-    $meta = get_user_meta( $user_id );
-    foreach ( $meta as $key => $value ) {
-        if (
-            stripos( $key, 'company' ) !== false ||
-            stripos( $key, 'pib' ) !== false ||
-            stripos( $key, 'matic' ) !== false
-        ) {
-            echo $key . ' => ';
-            print_r( $value );
-            echo "\n";
-        }
-    }
-
-    echo '</pre>';
 });
 
 
