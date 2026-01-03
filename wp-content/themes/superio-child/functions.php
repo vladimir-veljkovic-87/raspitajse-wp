@@ -719,59 +719,141 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $or
 
 /**
  * =========================================================
- * FRONTEND FORCE: Prefill checkout fields from employer profile
+ * HELPER: Get Employer ID by logged-in User
+ * (WP Job Board Pro compatible)
+ * =========================================================
+ */
+if ( ! function_exists( 'raspitajse_get_employer_id_by_user' ) ) {
+    function raspitajse_get_employer_id_by_user( $user_id ) {
+
+        if ( ! $user_id ) {
+            return 0;
+        }
+
+        $posts = get_posts([
+            'post_type'      => 'employer',
+            'post_status'    => 'publish',
+            'posts_per_page' => 1,
+            'meta_query'     => [
+                [
+                    // WP Job Board Pro stores user → employer link here
+                    'key'   => '_employer_user_id',
+                    'value' => (int) $user_id,
+                ],
+            ],
+        ]);
+
+        return ! empty( $posts ) ? (int) $posts[0]->ID : 0;
+    }
+}
+
+/**
+ * =========================================================
+ * FRONTEND FORCE: Prefill Woo Checkout from Employer Profile
  * =========================================================
  */
 add_action( 'wp_footer', function () {
+
+    /**
+     * 🛡 SAFETY FIRST
+     * - no AJAX
+     * - no REST
+     * - checkout only
+     * - logged-in users only
+     */
+    if ( wp_doing_ajax() || defined( 'REST_REQUEST' ) ) {
+        return;
+    }
 
     if ( ! is_checkout() || ! is_user_logged_in() ) {
         return;
     }
 
-    $user_id     = get_current_user_id();
-    $employer_id = raspitajse_get_employer_id_by_user( $user_id );
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        return;
+    }
 
+    $employer_id = raspitajse_get_employer_id_by_user( $user_id );
     if ( ! $employer_id ) {
         return;
     }
 
     /**
-     * WP Job Board Pro – custom field mapping
-     * MB  → custom-text-2726709
-     * PIB → custom-text-2842853
-     * Email → custom-text-32314799
-     * Phone → custom-text-3318838
+     * =====================================================
+     * WP Job Board Pro – VERIFIED DB META MAPPING
+     *
+     * Company title        → post_title
+     * Matični broj (MB)    → custom-text-2726709
+     * PIB                  → custom-text-2842853
+     * Email                → custom-text-32314799
+     * Phone                → custom-text-3318838
+     * =====================================================
      */
+    $company = get_the_title( $employer_id );
+
+    if ( empty( $company ) ) {
+        $company = get_post_meta( $employer_id, '_employer_title', true );
+    }
+
+    $company = $company ?: '';
 
     $data = [
-        'company' => get_the_title( $employer_id ),
-        'mb'      => get_post_meta( $employer_id, 'custom-text-2726709', true ),
-        'pib'     => get_post_meta( $employer_id, 'custom-text-2842853', true ),
-        'email'   => get_post_meta( $employer_id, 'custom-text-32314799', true ),
-        'phone'   => get_post_meta( $employer_id, 'custom-text-3318838', true ),
+        'company' => $company,
+        'mb'      => get_post_meta( $employer_id, 'custom-text-2726709', true ) ?: '',
+        'pib'     => get_post_meta( $employer_id, 'custom-text-2842853', true ) ?: '',
+        'email'   => get_post_meta( $employer_id, 'custom-text-32314799', true ) ?: '',
+        'phone'   => get_post_meta( $employer_id, 'custom-text-3318838', true ) ?: '',
     ];
+
+    // 🧪 PHP debug (wp-content/debug.log)
+    error_log( '[CHECKOUT → EMPLOYER DATA] ' . print_r( $data, true ) );
     ?>
     <script>
         jQuery(function ($) {
 
-            const employer = <?php echo wp_json_encode( $data ); ?>;
-            console.log('✅ Employer data (FINAL – DB):', employer);
+            const employer = <?php echo wp_json_encode(
+                $data,
+                JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+            ); ?>;
 
-            function fill() {
-                if (employer.company) $('#billing_company').val(employer.company).trigger('change');
-                if (employer.pib)     $('#billing_pib').val(employer.pib).trigger('change');
-                if (employer.mb)      $('#billing_mb').val(employer.mb).trigger('change');
-                if (employer.email)   $('#billing_email').val(employer.email).trigger('change');
-                if (employer.phone)   $('#billing_phone').val(employer.phone).trigger('change');
+            console.log('✅ Employer data injected into checkout:', employer);
+
+            function fillCheckoutFields() {
+
+                if (employer.company) {
+                    $('#billing_company').val(employer.company).trigger('change');
+                }
+
+                if (employer.pib) {
+                    $('#billing_pib').val(employer.pib).trigger('change');
+                }
+
+                if (employer.mb) {
+                    $('#billing_mb').val(employer.mb).trigger('change');
+                }
+
+                if (employer.email) {
+                    $('#billing_email').val(employer.email).trigger('change');
+                }
+
+                if (employer.phone) {
+                    $('#billing_phone').val(employer.phone).trigger('change');
+                }
             }
 
-            fill();
-            $(document.body).on('updated_checkout', fill);
+            // Initial fill
+            fillCheckoutFields();
+
+            // Re-fill after Woo updates checkout via AJAX
+            $(document.body).on('updated_checkout', function () {
+                fillCheckoutFields();
+            });
+
         });
     </script>
     <?php
 });
-
 
 
 
