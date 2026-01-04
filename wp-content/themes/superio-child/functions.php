@@ -1091,7 +1091,6 @@ add_action( 'wp_footer', function () {
         'broj'   => get_post_meta( $employer_id, 'custom-number-37930732', true ) ?: '',
         'postanski_broj'   => get_post_meta( $employer_id, 'custom-number-38584023', true ) ?: '',
         'grad'   => get_post_meta( $employer_id, 'custom-text-35868429', true ) ?: '',
-        'drzava'   => get_post_meta( $employer_id, 'custom-select-40692190', true ) ?: '',
     ];
 
     // PHP debug (wp-content/debug.log)
@@ -1136,10 +1135,6 @@ add_action( 'wp_footer', function () {
                 if (employer.grad) {
                     $('#billing_city').val(employer.grad).trigger('change');
                 }
-                if (employer.drzava) {  
-                    $('#select2-billing_country-container').val(employer.drzava).trigger('change');
-                    
-                }
 
                 if (employer.email) {
                     $('#billing_email').val(employer.email).trigger('change');
@@ -1163,7 +1158,71 @@ add_action( 'wp_footer', function () {
     <?php
 });
 
+/**
+ * =========================================================
+ * FIX: Prefill Employer country select from post meta
+ * =========================================================
+ */
+add_filter( 'cmb2_override_meta_value', function ( $value, $object_id, $args, $field ) {
 
+    // Target ONLY employer country select
+    if ( $args['id'] !== 'custom-select-40692190' ) {
+        return $value;
+    }
+
+    // Get saved value directly
+    $saved = get_post_meta( $object_id, 'custom-select-40692190', true );
+
+    if ( ! empty( $saved ) ) {
+        return $saved; // e.g. HR
+    }
+
+    return $value;
+
+}, 10, 4 );
+
+
+/**
+ * =========================================================
+ * WooCommerce Checkout – Prefill billing_country
+ * from Employer profile (post meta)
+ * =========================================================
+ */
+add_filter( 'woocommerce_checkout_get_value', function ( $value, $input ) {
+
+    // Only target billing_country
+    if ( $input !== 'billing_country' ) {
+        return $value;
+    }
+
+    // User must be logged in
+    if ( ! is_user_logged_in() ) {
+        return $value;
+    }
+
+    $user_id = get_current_user_id();
+
+    // Get employer ID linked to user
+    if ( ! function_exists( 'raspitajse_get_employer_id_by_user' ) ) {
+        return $value;
+    }
+
+    $employer_id = raspitajse_get_employer_id_by_user( $user_id );
+
+    if ( ! $employer_id ) {
+        return $value;
+    }
+
+    // ✅ Employer country (ISO code, e.g. RS)
+    $country = get_post_meta( $employer_id, 'custom-select-40692190', true );
+
+    if ( ! empty( $country ) ) {
+        return $country; // MUST be ISO (RS, DE, AT…)
+    }
+
+    return $value;
+
+}, 10, 2 );
 
 
 /**
