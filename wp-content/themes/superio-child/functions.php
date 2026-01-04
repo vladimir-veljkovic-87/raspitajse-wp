@@ -594,40 +594,35 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 /**
  * =========================================================
- * Employer profile – WooCommerce country select
- * (replace text country field)
+ * WP Job Board Pro – Replace employer country TEXT with WC SELECT
  * =========================================================
  */
-add_action( 'cmb2_admin_init', function () {
+add_filter( 'wp_job_board_pro_employer_fields', function ( $fields ) {
 
-    // Safety: WooCommerce must exist
-    if ( ! class_exists( 'WooCommerce' ) ) {
-        return;
+    if ( empty( $fields['_employer_address'] ) ) {
+        return $fields;
     }
 
-    // Get WC countries (ISO => Name)
-    $countries = WC()->countries->get_countries();
+    // Load WooCommerce countries
+    if ( ! class_exists( 'WC_Countries' ) ) {
+        return $fields;
+    }
 
-    // Add field to EMPLOYER post type
-    $cmb = new_cmb2_box([
-        'id'           => 'employer_country_box',
-        'title'        => 'Država kompanije',
-        'object_types' => ['employer'],
-        'context'      => 'normal',
-        'priority'     => 'high',
-    ]);
+    $countries = ( new WC_Countries() )->get_countries();
 
-    $cmb->add_field([
-        'name'             => 'Država',
-        'id'               => '_employer_country',
-        'type'             => 'select',
-        'options'          => $countries,
-        'show_option_none' => '— Izaberite državu —',
-        'attributes'       => [
-            'required' => 'required',
-        ],
-    ]);
+    // Override existing field
+    $fields['_employer_address'] = array_merge(
+        $fields['_employer_address'],
+        [
+            'type'    => 'select',
+            'options' => $countries,
+            'desc'    => 'Država u kojoj je registrovana kompanija',
+        ]
+    );
+
+    return $fields;
 });
+
 
 /**
  * =========================================================
