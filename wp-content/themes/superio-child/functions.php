@@ -746,18 +746,22 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
  * =========================================================
  */
 add_action( 'wp_footer', function () {
-
-    if ( ! is_checkout() ) {
-        return;
-    }
+    if ( ! is_checkout() ) return;
     ?>
     <script>
         jQuery(function ($) {
 
-            function reorderBillingFields() {
+            let reordered = false;
+
+            function safeReorderBillingFields() {
 
                 const wrapper = $('.woocommerce-billing-fields__field-wrapper');
                 if (!wrapper.length) return;
+
+                // Ne diraj Select2 dok je otvoren
+                if ($('body').hasClass('select2-container--open')) {
+                    return;
+                }
 
                 const company  = $('#billing_company_field');
                 const pib      = $('#billing_pib_field');
@@ -770,24 +774,22 @@ add_action( 'wp_footer', function () {
                 const email    = $('#billing_email_field');
                 const phone    = $('#billing_phone_field');
 
-                /* =================================================
-                 * HARD DOM ORDER (THIS IS WHAT WOO CAN'T BREAK)
-                 * ================================================= */
-                wrapper.append(company);
-                wrapper.append(pib);
-                wrapper.append(mb);
-                wrapper.append(street);
-                wrapper.append(number);
-                wrapper.append(postcode);
-                wrapper.append(city);
-                wrapper.append(country);
-                wrapper.append(email);
-                wrapper.append(phone);
+                // 🔒 HARD DOM ORDER – SAMO JEDNOM
+                if (!reordered) {
+                    wrapper.append(company);
+                    wrapper.append(pib);
+                    wrapper.append(mb);
+                    wrapper.append(street);
+                    wrapper.append(number);
+                    wrapper.append(postcode);
+                    wrapper.append(city);
+                    wrapper.append(country);
+                    wrapper.append(email);
+                    wrapper.append(phone);
+                    reordered = true;
+                }
 
-                /* =================================================
-                 * FORCE GRID (2 BY 2)
-                 * ================================================= */
-
+                // 🧩 SAMO KLASE (bez pomeranja)
                 company.attr('class', 'form-row form-row-wide validate-required');
 
                 pib.attr('class', 'form-row form-row-first validate-required');
@@ -805,17 +807,23 @@ add_action( 'wp_footer', function () {
                 phone.attr('class', 'form-row form-row-last validate-required');
             }
 
-            // Initial
-            reorderBillingFields();
+            // 🟢 INIT (delay da Select2 završi init)
+            setTimeout(safeReorderBillingFields, 300);
 
-            // After any Woo AJAX refresh
-            $(document.body).on('updated_checkout', reorderBillingFields);
+            // 🔁 POSLE Woo AJAX-a
+            $(document.body).on('updated_checkout', function () {
+                setTimeout(safeReorderBillingFields, 300);
+            });
+
+            // 🛡️ POSLE ZATVARANJA Select2 (kritično)
+            $(document).on('select2:close', function () {
+                setTimeout(safeReorderBillingFields, 200);
+            });
 
         });
     </script>
     <?php
 });
-
 
 
 /**
