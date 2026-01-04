@@ -1063,7 +1063,7 @@ add_action( 'wp_footer', function () {
      * Broj                 → custom-number-37930732
      * Poštanski broj       → custom-number-38584023
      * Grad                 → custom-text-35868429
-     * Drzava               → _employer_address
+     * Drzava               → custom-select-40692190
      * =====================================================
      */
 
@@ -1075,6 +1075,12 @@ add_action( 'wp_footer', function () {
 
     $company = $company ?: '';
 
+    $country = get_post_meta( $employer_id, 'custom-select-40692190', true );
+
+    if ( $country ) {
+        update_user_meta( get_current_user_id(), 'billing_country', $country );
+    }
+
     $data = [
         'company' => $company,
         'mb'      => get_post_meta( $employer_id, 'custom-text-2726709', true ) ?: '',
@@ -1085,7 +1091,7 @@ add_action( 'wp_footer', function () {
         'broj'   => get_post_meta( $employer_id, 'custom-number-37930732', true ) ?: '',
         'postanski_broj'   => get_post_meta( $employer_id, 'custom-number-38584023', true ) ?: '',
         'grad'   => get_post_meta( $employer_id, 'custom-text-35868429', true ) ?: '',
-        'drzava'   => get_post_meta( $employer_id, '_employer_address', true ) ?: '',
+        'drzava'   => get_post_meta( $employer_id, 'custom-select-40692190', true ) ?: '',
     ];
 
     // PHP debug (wp-content/debug.log)
