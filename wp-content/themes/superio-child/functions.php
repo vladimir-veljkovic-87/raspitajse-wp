@@ -594,47 +594,29 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 /**
  * =========================================================
- * FORCE Employer country field to WC-like select
- * (Frontend-safe, no WC dependency crash)
+ * Employer profile – WC Country Select (NEW FIELD)
  * =========================================================
  */
-add_filter( 'cmb2_render_text', function ( $field, $escaped_value, $object_id, $object_type, $field_type ) {
+add_filter( 'wp_job_board_pro_employer_fields', function ( $fields ) {
 
-    // Target ONLY employer country field
-    if ( $field->args['id'] !== '_employer_address' ) {
-        return;
+    if ( ! function_exists( 'WC' ) ) {
+        return $fields;
     }
 
-    // Safe country list (fallback if Woo is not loaded yet)
-    $countries = function_exists( 'WC' ) && WC()->countries
-        ? WC()->countries->get_countries()
-        : [
-            'RS' => 'Serbia',
-            'HR' => 'Croatia',
-            'BA' => 'Bosnia and Herzegovina',
-            'ME' => 'Montenegro',
-            'MK' => 'North Macedonia',
-        ];
+    $countries = WC()->countries->get_countries();
 
-    echo '<select name="_employer_address" id="_employer_address" class="regular-text" required>';
+    $fields['_employer_country'] = [
+        'name'        => 'Država',
+        'id'          => '_employer_country',
+        'type'        => 'select',
+        'options'     => $countries,
+        'required'    => true,
+        'placeholder' => 'Izaberite državu',
+        'priority'    => 25,
+    ];
 
-    echo '<option value="">— Izaberite državu —</option>';
-
-    foreach ( $countries as $code => $label ) {
-        printf(
-            '<option value="%s"%s>%s</option>',
-            esc_attr( $code ),
-            selected( $escaped_value, $code, false ),
-            esc_html( $label )
-        );
-    }
-
-    echo '</select>';
-
-    // 🔒 Prevent default text input from rendering
-    $field_type->_text( false );
-}, 10, 5 );
-
+    return $fields;
+});
 
 
 /**
