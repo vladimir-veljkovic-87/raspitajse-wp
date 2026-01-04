@@ -994,15 +994,15 @@ add_action( 'wp_footer', function () {
                 }
 
                 if (employer.ulica) {
-                    $('#billing_ulica').val(employer.ulica).trigger('change');
+                    $('#billing_address_1').val(employer.ulica).trigger('change');
                 }
 
                 if (employer.broj) {
-                    $('#billing_broj').val(employer.broj).trigger('change');
+                    $('#bbilling_house_number').val(employer.broj).trigger('change');
                 }
 
                 if (employer.postanski_broj) {
-                    $('#billing_postanski_broj').val(employer.postanski_broj).trigger('change');
+                    $('#billing_postcode').val(employer.postanski_broj).trigger('change');
                 }
 
                 if (employer.grad) {
