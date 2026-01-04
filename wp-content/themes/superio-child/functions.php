@@ -720,6 +720,67 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     return $fields;
 });
 
+/**
+ * =========================================================
+ * Checkout – FORCE layout order via JS (Woo-safe)
+ * =========================================================
+ */
+add_action( 'wp_footer', function () {
+
+    if ( ! is_checkout() ) {
+        return;
+    }
+    ?>
+    <script>
+        jQuery(function ($) {
+
+            function reorderBillingFields() {
+
+                const wrapper = $('.woocommerce-billing-fields__field-wrapper');
+                if (!wrapper.length) return;
+
+                const company  = $('#billing_company_field');
+                const street   = $('#billing_address_1_field');
+                const number   = $('#billing_house_number_field');
+                const postcode = $('#billing_postcode_field');
+                const city     = $('#billing_city_field');
+                const country  = $('#billing_country_field');
+                const email    = $('#billing_email_field');
+                const phone    = $('#billing_phone_field');
+
+                // 🔥 HARD ORDER (DOM MOVE)
+                wrapper.append(company);
+                wrapper.append(street);
+                wrapper.append(number);
+                wrapper.append(postcode);
+                wrapper.append(city);
+                wrapper.append(country);
+                wrapper.append(email);
+                wrapper.append(phone);
+
+                // 🔧 FORCE 2-COLUMN GRID
+                street.attr('class', 'form-row form-row-first validate-required');
+                number.attr('class', 'form-row form-row-last validate-required');
+
+                postcode.attr('class', 'form-row form-row-first validate-required');
+                city.attr('class', 'form-row form-row-last validate-required');
+
+                country.attr('class', 'form-row form-row-wide validate-required');
+
+                email.attr('class', 'form-row form-row-first validate-required');
+                phone.attr('class', 'form-row form-row-last validate-required');
+            }
+
+            // Initial run
+            reorderBillingFields();
+
+            // After Woo AJAX refresh
+            $(document.body).on('updated_checkout', reorderBillingFields);
+
+        });
+    </script>
+    <?php
+});
 
 
 /**
