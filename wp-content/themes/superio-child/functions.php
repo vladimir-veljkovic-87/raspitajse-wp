@@ -1163,23 +1163,48 @@ add_action( 'wp_footer', function () {
  * FIX: Prefill Employer country select from post meta
  * =========================================================
  */
-add_filter( 'cmb2_override_meta_value', function ( $value, $object_id, $args, $field ) {
+add_action( 'wp_footer', function () {
 
-    // Target ONLY employer country select
-    if ( $args['id'] !== 'custom-select-40692190' ) {
-        return $value;
+    if ( ! is_user_logged_in() ) {
+        return;
     }
 
-    // Get saved value directly
-    $saved = get_post_meta( $object_id, 'custom-select-40692190', true );
-
-    if ( ! empty( $saved ) ) {
-        return $saved; // e.g. HR
+    // samo employer profile stranica
+    if ( ! is_page( 'profile' ) ) {
+        return;
     }
 
-    return $value;
+    if ( ! function_exists( 'raspitajse_get_employer_id_by_user' ) ) {
+        return;
+    }
 
-}, 10, 4 );
+    $user_id     = get_current_user_id();
+    $employer_id = raspitajse_get_employer_id_by_user( $user_id );
+
+    if ( ! $employer_id ) {
+        return;
+    }
+
+    $country = get_post_meta( $employer_id, 'custom-select-40692190', true );
+    if ( ! $country ) {
+        return;
+    }
+    ?>
+    <script>
+        jQuery(function ($) {
+
+            const country = '<?php echo esc_js( strtoupper( $country ) ); ?>';
+
+            const select = $('#custom-select-40692190');
+
+            if (select.length) {
+                select.val(country).trigger('change.select2').trigger('change');
+            }
+
+        });
+    </script>
+    <?php
+});
 
 
 /**
