@@ -941,18 +941,37 @@ add_action( 'wp_footer', function () {
 
 
 /**
- * Save PIB & MB to order meta
+ * Save House number, PIB & MB to order meta
+ * + merge street + house number
  */
 add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
-    
+
+    // House number
     if ( isset( $_POST['billing_house_number'] ) ) {
+
+        $house_number = sanitize_text_field( $_POST['billing_house_number'] );
+
         update_post_meta(
             $order_id,
             '_billing_house_number',
-            sanitize_text_field( $_POST['billing_house_number'] )
+            $house_number
         );
+
+        // 🔥 MERGE INTO billing_address_1
+        if ( isset( $_POST['billing_address_1'] ) ) {
+
+            $street = sanitize_text_field( $_POST['billing_address_1'] );
+
+            // Nemanjina + 14 → Nemanjina 14
+            update_post_meta(
+                $order_id,
+                '_billing_address_1',
+                trim( $street . ' ' . $house_number )
+            );
+        }
     }
 
+    // PIB
     if ( isset( $_POST['billing_pib'] ) ) {
         update_post_meta(
             $order_id,
@@ -961,6 +980,7 @@ add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
         );
     }
 
+    // MB
     if ( isset( $_POST['billing_mb'] ) ) {
         update_post_meta(
             $order_id,
@@ -971,18 +991,21 @@ add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
 
 });
 
+
 /**
- * Display PIB & MB in admin order details
+ * Display House number, PIB & MB in admin order details
  */
 add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $order ) {
 
-    $pib = $order->get_meta( '_billing_pib' );
+    $house_number = $order->get_meta( '_billing_house_number' );
     $mb  = $order->get_meta( '_billing_mb' );
+    $pib = $order->get_meta( '_billing_pib' );
+
 
     if ( $pib || $mb ) {
         echo '<p><strong>Podaci o kompaniji</strong></p>';
-        if ( $pib ) echo '<p>PIB: ' . esc_html( $pib ) . '</p>';
         if ( $mb )  echo '<p>Matični broj: ' . esc_html( $mb ) . '</p>';
+        if ( $pib ) echo '<p>PIB: ' . esc_html( $pib ) . '</p>';
     }
 
 });
