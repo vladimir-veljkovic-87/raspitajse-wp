@@ -560,6 +560,12 @@ function raspitajse_quick_translate($translated, $text, $domain) {
 }
 
 
+/**
+ * =========================================================
+ * WP Job Board Pro – User Package Expiration Fix
+ * =========================================================
+ */
+
 add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_value) {
 
     // WP Job Board Pro dodeljuje paket preko user meta
@@ -590,6 +596,59 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
     );
 
 }, 10, 4);
+
+/**
+ * =========================================================
+ * WooCommerce – Serbian country names
+ * =========================================================
+ */
+add_filter( 'woocommerce_countries', function ( $countries ) {
+
+    $sr = [
+        'RS' => 'Srbija',
+        'DE' => 'Nemačka',
+        'AT' => 'Austrija',
+        'CH' => 'Švajcarska',
+        'FR' => 'Francuska',
+        'IT' => 'Italija',
+        'ES' => 'Španija',
+        'HR' => 'Hrvatska',
+        'BA' => 'Bosna i Hercegovina',
+        'ME' => 'Crna Gora',
+        'MK' => 'Severna Makedonija',
+        'SI' => 'Slovenija',
+        'HU' => 'Mađarska',
+        'PL' => 'Poljska',
+        'CZ' => 'Češka',
+        'SK' => 'Slovačka',
+        'RO' => 'Rumunija',
+        'BG' => 'Bugarska',
+        'GR' => 'Grčka',
+        'NL' => 'Holandija',
+        'BE' => 'Belgija',
+        'SE' => 'Švedska',
+        'NO' => 'Norveška',
+        'DK' => 'Danska',
+        'FI' => 'Finska',
+        'IE' => 'Irska',
+        'PT' => 'Portugal',
+        'GB' => 'Ujedinjeno Kraljevstvo',
+        'US' => 'Sjedinjene Američke Države',
+        'CA' => 'Kanada',
+        'AU' => 'Australija',
+        'TR' => 'Turska',
+        'AE' => 'Ujedinjeni Arapski Emirati',
+        'SA' => 'Saudijska Arabija',
+    ];
+
+    foreach ( $sr as $code => $name ) {
+        if ( isset( $countries[ $code ] ) ) {
+            $countries[ $code ] = $name;
+        }
+    }
+
+    return $countries;
+});
 
 
 /**
