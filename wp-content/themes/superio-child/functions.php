@@ -613,31 +613,34 @@ add_action( 'woocommerce_checkout_before_customer_details', function () {
 
 /**
  * =========================================================
- * Checkout – Address layout (2 by 2) + Serbian labels
+ * Checkout – Address layout (2 by 2) + Serbian labels (FIXED)
  * =========================================================
  */
 add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
 
-    /* =====================================================
-     * UKLANJAMO NEPOTREBNO
-     * ===================================================== */
+    /* -----------------------------------------------------
+     * UKLANJANJE
+     * ----------------------------------------------------- */
     unset( $fields['billing']['billing_state'] );      // District
     unset( $fields['billing']['billing_address_2'] ); // Apartment
     unset( $fields['billing']['billing_first_name'] );
     unset( $fields['billing']['billing_last_name'] );
 
-    /* =====================================================
-     * ADRESA – RED 1
-     * ===================================================== */
+    /* -----------------------------------------------------
+     * RED 1 – ULICA | BROJ
+     * ----------------------------------------------------- */
 
-    // Ulica
-    $fields['billing']['billing_address_1']['label']       = 'Ulica';
-    $fields['billing']['billing_address_1']['placeholder'] = 'npr. Nemanjina';
-    $fields['billing']['billing_address_1']['required']    = true;
-    $fields['billing']['billing_address_1']['class']       = ['form-row-first'];
-    $fields['billing']['billing_address_1']['priority']    = 30;
+    $fields['billing']['billing_address_1'] = array_merge(
+        $fields['billing']['billing_address_1'],
+        [
+            'label'       => 'Ulica',
+            'placeholder' => 'npr. Nemanjina',
+            'required'    => true,
+            'class'       => ['form-row-first'],
+            'priority'    => 30,
+        ]
+    );
 
-    // Broj (custom field)
     $fields['billing']['billing_house_number'] = [
         'label'       => 'Broj',
         'placeholder' => 'npr. 76/11',
@@ -646,56 +649,62 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
         'priority'    => 31,
     ];
 
-    /* =====================================================
-     * ADRESA – RED 2
-     * ===================================================== */
+    /* -----------------------------------------------------
+     * RED 2 – POŠTANSKI BROJ | GRAD
+     * ----------------------------------------------------- */
 
-    // Poštanski broj
-    $fields['billing']['billing_postcode']['label']    = 'Poštanski broj';
-    $fields['billing']['billing_postcode']['required'] = true;
-    $fields['billing']['billing_postcode']['class']    = ['form-row-first'];
-    $fields['billing']['billing_postcode']['priority'] = 40;
+    $fields['billing']['billing_postcode'] = array_merge(
+        $fields['billing']['billing_postcode'],
+        [
+            'label'    => 'Poštanski broj',
+            'required' => true,
+            'class'    => ['form-row-first'],
+            'priority' => 40,
+        ]
+    );
 
-    // Grad
-    $fields['billing']['billing_city']['label']    = 'Grad';
-    $fields['billing']['billing_city']['required'] = true;
-    $fields['billing']['billing_city']['class']    = ['form-row-last'];
-    $fields['billing']['billing_city']['priority'] = 41;
+    $fields['billing']['billing_city'] = array_merge(
+        $fields['billing']['billing_city'],
+        [
+            'label'    => 'Grad',
+            'required' => true,
+            'class'    => ['form-row-last'],
+            'priority' => 41,
+        ]
+    );
 
-    /* =====================================================
-     * ADRESA – RED 3
-     * ===================================================== */
+    /* -----------------------------------------------------
+     * RED 3 – DRŽAVA (FULL WIDTH)
+     * ----------------------------------------------------- */
 
-    // Država
-    $fields['billing']['billing_country']['label']    = 'Država';
-    $fields['billing']['billing_country']['required'] = true;
-    $fields['billing']['billing_country']['class']    = ['form-row-wide'];
-    $fields['billing']['billing_country']['priority'] = 50;
+    $fields['billing']['billing_country'] = array_merge(
+        $fields['billing']['billing_country'],
+        [
+            'label'    => 'Država',
+            'required' => true,
+            'class'    => ['form-row-wide'],
+            'priority' => 50,
+        ]
+    );
 
-    /* =====================================================
-     * KONTAKT – RED 4
-     * ===================================================== */
+    /* -----------------------------------------------------
+     * RED 4 – EMAIL | TELEFON
+     * ----------------------------------------------------- */
 
-    // Email
-    $fields['billing']['billing_email']['label']    = 'Email adresa';
-    $fields['billing']['billing_email']['class']    = ['form-row-first'];
-    $fields['billing']['billing_email']['priority'] = 60;
+    $fields['billing']['billing_email'] = array_merge(
+        $fields['billing']['billing_email'],
+        [
+            'label'    => 'Email adresa',
+            'class'    => ['form-row-first'],
+            'priority' => 60,
+        ]
+    );
 
-    // Telefon
-    $fields['billing']['billing_phone']['label']    = 'Telefon';
-    $fields['billing']['billing_phone']['class']    = ['form-row-last'];
-    $fields['billing']['billing_phone']['priority'] = 61;
+    $fields['billing']['billing_phone'] = array_merge(
+        $fields['billing']['billing_phone'],
+        [
+            'la
 
-    /* =====================================================
-     * DODATNE INFORMACIJE – NA KRAJU
-     * ===================================================== */
-    if ( isset( $fields['order']['order_comments'] ) ) {
-        $fields['order']['order_comments']['label']    = 'Napomena uz porudžbinu';
-        $fields['order']['order_comments']['priority'] = 90;
-    }
-
-    return $fields;
-});
 
 
 /**
