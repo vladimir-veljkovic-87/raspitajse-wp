@@ -941,35 +941,43 @@ add_action( 'wp_footer', function () {
 
 
 /**
- * Save House number, PIB & MB to order meta
- * + merge street + house number
+ * =========================================================
+ * FINAL FIX: Merge street + house number AFTER Woo saves order
+ * =========================================================
  */
-add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
+add_action( 'woocommerce_checkout_create_order', function ( $order ) {
 
-    // House number
-    if ( isset( $_POST['billing_house_number'] ) ) {
+    if ( ! $order instanceof WC_Order ) {
+        return;
+    }
 
-        $house_number = sanitize_text_field( $_POST['billing_house_number'] );
+    $street = isset( $_POST['billing_address_1'] )
+        ? sanitize_text_field( $_POST['billing_address_1'] )
+        : '';
 
-        update_post_meta(
-            $order_id,
+    $house_number = isset( $_POST['billing_house_number'] )
+        ? sanitize_text_field( $_POST['billing_house_number'] )
+        : '';
+
+    if ( $street && $house_number ) {
+        $order->set_billing_address_1(
+            trim( $street . ' ' . $house_number )
+        );
+
+        // opciono – čuvamo posebno
+        $order->update_meta_data(
             '_billing_house_number',
             $house_number
         );
-
-        // 🔥 MERGE INTO billing_address_1
-        if ( isset( $_POST['billing_address_1'] ) ) {
-
-            $street = sanitize_text_field( $_POST['billing_address_1'] );
-
-            // Nemanjina + 14 → Nemanjina 14
-            update_post_meta(
-                $order_id,
-                '_billing_address_1',
-                trim( $street . ' ' . $house_number )
-            );
-        }
     }
+
+}, 20 );
+
+/**
+ * 
+ * Save PIB & MB to order meta
+ */
+add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
 
     // PIB
     if ( isset( $_POST['billing_pib'] ) ) {
@@ -997,7 +1005,6 @@ add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
  */
 add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $order ) {
 
-    $house_number = $order->get_meta( '_billing_house_number' );
     $mb  = $order->get_meta( '_billing_mb' );
     $pib = $order->get_meta( '_billing_pib' );
 
