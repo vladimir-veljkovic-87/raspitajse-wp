@@ -599,24 +599,22 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
  */
 add_filter( 'wp_job_board_pro_employer_fields', function ( $fields ) {
 
-    if ( ! function_exists( 'WC' ) ) {
+    $key = 'custom-select-40692190';
+
+    if ( empty( $fields[ $key ] ) ) {
         return $fields;
     }
 
-    $countries = WC()->countries->get_countries();
+    if ( ! function_exists( 'WC' ) || ! WC()->countries ) {
+        return $fields;
+    }
 
-    $fields['_employer_country'] = [
-        'name'        => 'Država',
-        'id'          => '_employer_country',
-        'type'        => 'select',
-        'options'     => $countries,
-        'required'    => true,
-        'placeholder' => 'Izaberite državu',
-        'priority'    => 25,
-    ];
+    $fields[ $key ]['type']    = 'select';
+    $fields[ $key ]['options'] = WC()->countries->get_countries();
 
     return $fields;
 });
+
 
 
 /**
