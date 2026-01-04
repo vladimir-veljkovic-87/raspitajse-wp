@@ -594,6 +594,43 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 /**
  * =========================================================
+ * Employer profile – WooCommerce country select
+ * (replace text country field)
+ * =========================================================
+ */
+add_action( 'cmb2_admin_init', function () {
+
+    // Safety: WooCommerce must exist
+    if ( ! class_exists( 'WooCommerce' ) ) {
+        return;
+    }
+
+    // Get WC countries (ISO => Name)
+    $countries = WC()->countries->get_countries();
+
+    // Add field to EMPLOYER post type
+    $cmb = new_cmb2_box([
+        'id'           => 'employer_country_box',
+        'title'        => 'Država kompanije',
+        'object_types' => ['employer'],
+        'context'      => 'normal',
+        'priority'     => 'high',
+    ]);
+
+    $cmb->add_field([
+        'name'             => 'Država',
+        'id'               => '_employer_country',
+        'type'             => 'select',
+        'options'          => $countries,
+        'show_option_none' => '— Izaberite državu —',
+        'attributes'       => [
+            'required' => 'required',
+        ],
+    ]);
+});
+
+/**
+ * =========================================================
  * Checkout – Legal entities only (Company, PIB, MB)
  * =========================================================
  */
