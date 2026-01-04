@@ -998,7 +998,7 @@ add_action( 'wp_footer', function () {
                 }
 
                 if (employer.broj) {
-                    $('#bbilling_house_number').val(employer.broj).trigger('change');
+                    $('#billing_house_number').val(employer.broj).trigger('change');
                 }
 
                 if (employer.postanski_broj) {
@@ -1011,10 +1011,6 @@ add_action( 'wp_footer', function () {
                 if (employer.drzava) {  
                     $('#select2-billing_country-container').val(employer.drzava).trigger('change');
                     
-                }
-
-                if (employer.grad) {
-                    $('#billing_city').val(employer.grad).trigger('change');
                 }
 
                 if (employer.email) {
