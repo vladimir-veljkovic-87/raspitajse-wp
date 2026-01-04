@@ -703,7 +703,22 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     $fields['billing']['billing_phone'] = array_merge(
         $fields['billing']['billing_phone'],
         [
-            'la
+            'label'    => 'Telefon',
+            'class'    => ['form-row-last'],
+            'priority' => 61,
+        ]
+    );
+
+    /* -----------------------------------------------------
+     * NAPOMENA
+     * ----------------------------------------------------- */
+    if ( isset( $fields['order']['order_comments'] ) ) {
+        $fields['order']['order_comments']['label']    = 'Napomena uz porudžbinu';
+        $fields['order']['order_comments']['priority'] = 90;
+    }
+
+    return $fields;
+});
 
 
 
