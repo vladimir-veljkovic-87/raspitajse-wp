@@ -626,8 +626,28 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     unset( $fields['billing']['billing_first_name'] );
     unset( $fields['billing']['billing_last_name'] );
 
+    /**
+     * PIB
+     */
+    $fields['billing']['billing_pib'] = [
+        'label'    => 'Poreski Identifikacioni Broj (PIB)',
+        'required' => true,
+        'class'    => ['form-row-first'],
+        'priority' => 15,
+    ];
+
+    /**
+     * MATIČNI BROJ
+     */
+    $fields['billing']['billing_mb'] = [
+        'label'    => 'Matični broj',
+        'required' => true,
+        'class'    => ['form-row-last'],
+        'priority' => 16,
+    ];
+
     /* -----------------------------------------------------
-     * RED 1 – ULICA | BROJ
+     * RED 2 – ULICA | BROJ
      * ----------------------------------------------------- */
 
     $fields['billing']['billing_address_1'] = array_merge(
@@ -650,7 +670,7 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     ];
 
     /* -----------------------------------------------------
-     * RED 2 – POŠTANSKI BROJ | GRAD
+     * RED 3 – POŠTANSKI BROJ | GRAD
      * ----------------------------------------------------- */
 
     $fields['billing']['billing_postcode'] = array_merge(
@@ -674,7 +694,7 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     );
 
     /* -----------------------------------------------------
-     * RED 3 – DRŽAVA (FULL WIDTH)
+     * RED 4 – DRŽAVA (FULL WIDTH)
      * ----------------------------------------------------- */
 
     $fields['billing']['billing_country'] = array_merge(
@@ -688,7 +708,7 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     );
 
     /* -----------------------------------------------------
-     * RED 4 – EMAIL | TELEFON
+     * RED 5 – EMAIL | TELEFON
      * ----------------------------------------------------- */
 
     $fields['billing']['billing_email'] = array_merge(
@@ -787,7 +807,7 @@ add_action( 'wp_footer', function () {
  * Save PIB & MB to order meta
  */
 add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
-
+    
     if ( isset( $_POST['billing_house_number'] ) ) {
         update_post_meta(
             $order_id,
