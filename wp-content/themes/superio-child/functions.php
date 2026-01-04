@@ -613,7 +613,8 @@ add_action( 'woocommerce_checkout_before_customer_details', function () {
 
 /**
  * =========================================================
- * Checkout – Company billing address (street + number)
+ * Checkout billing fields – Company address structure
+ * (Street + Number, ZIP + City, Country, Email + Phone)
  * =========================================================
  */
 add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
@@ -656,52 +657,58 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
      */
     $fields['billing']['billing_address_1']['label']       = 'Ulica';
     $fields['billing']['billing_address_1']['placeholder'] = 'npr. Nemanjina';
+    $fields['billing']['billing_address_1']['required']    = true;
+    $fields['billing']['billing_address_1']['class']       = ['form-row-first'];
     $fields['billing']['billing_address_1']['priority']    = 30;
 
-    /**
-     * STREET NUMBER (Broj) – custom field
-     */
-    $fields['billing']['billing_address_number'] = [
+    /** BROJ (CUSTOM FIELD) */
+    $fields['billing']['billing_house_number'] = [
         'label'       => 'Broj',
-        'required'    => true,
-        'class'       => ['form-row-first'],
-        'priority'    => 31,
         'placeholder' => 'npr. 76/11',
+        'required'    => true,
+        'class'       => ['form-row-last'],
+        'priority'    => 31,
     ];
 
-    /**
-     * POSTCODE
-     */
+    /** POŠTANSKI BROJ */
     $fields['billing']['billing_postcode']['label']    = 'Poštanski broj';
-    $fields['billing']['billing_postcode']['priority'] = 32;
+    $fields['billing']['billing_postcode']['required'] = true;
+    $fields['billing']['billing_postcode']['class']    = ['form-row-first'];
+    $fields['billing']['billing_postcode']['priority'] = 40;
 
-    /**
-     * CITY
-     */
+    /** GRAD */
     $fields['billing']['billing_city']['label']    = 'Grad';
-    $fields['billing']['billing_city']['priority'] = 33;
+    $fields['billing']['billing_city']['required'] = true;
+    $fields['billing']['billing_city']['class']    = ['form-row-last'];
+    $fields['billing']['billing_city']['priority'] = 41;
 
-    /**
-     * COUNTRY
-     */
+    /** DRŽAVA */
     $fields['billing']['billing_country']['label']    = 'Država';
-    $fields['billing']['billing_country']['priority'] = 34;
+    $fields['billing']['billing_country']['required'] = true;
+    $fields['billing']['billing_country']['class']    = ['form-row-wide'];
+    $fields['billing']['billing_country']['priority'] = 50;
 
-    /**
-     * REMOVE District & Apartment
-     */
+    /* =====================================================
+     * CONTACT
+     * ===================================================== */
+
+    $fields['billing']['billing_email']['class']    = ['form-row-first'];
+    $fields['billing']['billing_email']['priority'] = 60;
+
+    $fields['billing']['billing_phone']['class']    = ['form-row-last'];
+    $fields['billing']['billing_phone']['priority'] = 61;
+
+    /* =====================================================
+     * REMOVE UNUSED
+     * ===================================================== */
+
+    // District
     unset( $fields['billing']['billing_state'] );
+
+    // Apartment
     unset( $fields['billing']['billing_address_2'] );
 
-    /**
-     * CONTACT
-     */
-    $fields['billing']['billing_phone']['priority'] = 40;
-    $fields['billing']['billing_email']['priority'] = 41;
-
-    /**
-     * Order notes last
-     */
+    /* Order notes last */
     if ( isset( $fields['order']['order_comments'] ) ) {
         $fields['order']['order_comments']['priority'] = 90;
     }
@@ -709,11 +716,18 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     return $fields;
 });
 
-
 /**
  * Save PIB & MB to order meta
  */
 add_action( 'woocommerce_checkout_update_order_meta', function ( $order_id ) {
+
+    if ( isset( $_POST['billing_house_number'] ) ) {
+        update_post_meta(
+            $order_id,
+            '_billing_house_number',
+            sanitize_text_field( $_POST['billing_house_number'] )
+        );
+    }
 
     if ( isset( $_POST['billing_pib'] ) ) {
         update_post_meta(
