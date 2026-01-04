@@ -613,55 +613,31 @@ add_action( 'woocommerce_checkout_before_customer_details', function () {
 
 /**
  * =========================================================
- * Checkout billing fields – Company address structure
- * (Street + Number, ZIP + City, Country, Email + Phone)
+ * Checkout – Address layout (2 by 2) + Serbian labels
  * =========================================================
  */
 add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
 
-    /**
-     * COMPANY
-     */
-    $fields['billing']['billing_company']['label']    = 'Puno ime kompanije';
-    $fields['billing']['billing_company']['required'] = true;
-    $fields['billing']['billing_company']['priority'] = 10;
-
-    /**
-     * PIB
-     */
-    $fields['billing']['billing_pib'] = [
-        'label'    => 'Poreski Identifikacioni Broj (PIB)',
-        'required' => true,
-        'class'    => ['form-row-first'],
-        'priority' => 15,
-    ];
-
-    /**
-     * MATIČNI BROJ
-     */
-    $fields['billing']['billing_mb'] = [
-        'label'    => 'Matični broj',
-        'required' => true,
-        'class'    => ['form-row-last'],
-        'priority' => 16,
-    ];
-
-    /**
-     * REMOVE personal fields
-     */
+    /* =====================================================
+     * UKLANJAMO NEPOTREBNO
+     * ===================================================== */
+    unset( $fields['billing']['billing_state'] );      // District
+    unset( $fields['billing']['billing_address_2'] ); // Apartment
     unset( $fields['billing']['billing_first_name'] );
     unset( $fields['billing']['billing_last_name'] );
 
-    /**
-     * STREET (Ulica)
-     */
+    /* =====================================================
+     * ADRESA – RED 1
+     * ===================================================== */
+
+    // Ulica
     $fields['billing']['billing_address_1']['label']       = 'Ulica';
     $fields['billing']['billing_address_1']['placeholder'] = 'npr. Nemanjina';
     $fields['billing']['billing_address_1']['required']    = true;
     $fields['billing']['billing_address_1']['class']       = ['form-row-first'];
     $fields['billing']['billing_address_1']['priority']    = 30;
 
-    /** BROJ (CUSTOM FIELD) */
+    // Broj (custom field)
     $fields['billing']['billing_house_number'] = [
         'label'       => 'Broj',
         'placeholder' => 'npr. 76/11',
@@ -670,51 +646,57 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
         'priority'    => 31,
     ];
 
-    /** POŠTANSKI BROJ */
+    /* =====================================================
+     * ADRESA – RED 2
+     * ===================================================== */
+
+    // Poštanski broj
     $fields['billing']['billing_postcode']['label']    = 'Poštanski broj';
     $fields['billing']['billing_postcode']['required'] = true;
     $fields['billing']['billing_postcode']['class']    = ['form-row-first'];
     $fields['billing']['billing_postcode']['priority'] = 40;
 
-    /** GRAD */
+    // Grad
     $fields['billing']['billing_city']['label']    = 'Grad';
     $fields['billing']['billing_city']['required'] = true;
     $fields['billing']['billing_city']['class']    = ['form-row-last'];
     $fields['billing']['billing_city']['priority'] = 41;
 
-    /** DRŽAVA */
+    /* =====================================================
+     * ADRESA – RED 3
+     * ===================================================== */
+
+    // Država
     $fields['billing']['billing_country']['label']    = 'Država';
     $fields['billing']['billing_country']['required'] = true;
     $fields['billing']['billing_country']['class']    = ['form-row-wide'];
     $fields['billing']['billing_country']['priority'] = 50;
 
     /* =====================================================
-     * CONTACT
+     * KONTAKT – RED 4
      * ===================================================== */
 
+    // Email
+    $fields['billing']['billing_email']['label']    = 'Email adresa';
     $fields['billing']['billing_email']['class']    = ['form-row-first'];
     $fields['billing']['billing_email']['priority'] = 60;
 
+    // Telefon
+    $fields['billing']['billing_phone']['label']    = 'Telefon';
     $fields['billing']['billing_phone']['class']    = ['form-row-last'];
     $fields['billing']['billing_phone']['priority'] = 61;
 
     /* =====================================================
-     * REMOVE UNUSED
+     * DODATNE INFORMACIJE – NA KRAJU
      * ===================================================== */
-
-    // District
-    unset( $fields['billing']['billing_state'] );
-
-    // Apartment
-    unset( $fields['billing']['billing_address_2'] );
-
-    /* Order notes last */
     if ( isset( $fields['order']['order_comments'] ) ) {
+        $fields['order']['order_comments']['label']    = 'Napomena uz porudžbinu';
         $fields['order']['order_comments']['priority'] = 90;
     }
 
     return $fields;
 });
+
 
 /**
  * Save PIB & MB to order meta
