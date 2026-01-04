@@ -597,24 +597,54 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
  * Employer profile – WC Country Select (NEW FIELD)
  * =========================================================
  */
-add_filter( 'wp_job_board_pro_employer_fields', function ( $fields ) {
+add_action( 'wp_footer', function () {
 
-    $key = 'custom-select-40692190';
-
-    if ( empty( $fields[ $key ] ) ) {
-        return $fields;
+    // samo na profile stranici
+    if ( ! is_page( 'profile' ) ) {
+        return;
     }
 
     if ( ! function_exists( 'WC' ) || ! WC()->countries ) {
-        return $fields;
+        return;
     }
 
-    $fields[ $key ]['type']    = 'select';
-    $fields[ $key ]['options'] = WC()->countries->get_countries();
+    $countries = WC()->countries->get_countries();
+    ?>
+    <script>
+        jQuery(function ($) {
 
-    return $fields;
+            const countries = <?php echo wp_json_encode( $countries ); ?>;
+            const select = $('#custom-select-40692190');
+
+            if (!select.length) {
+                return;
+            }
+
+            // ako su već ubačene opcije – ne diraj
+            if (select.find('option').length > 1) {
+                return;
+            }
+
+            select.empty();
+            select.append('<option></option>');
+
+            Object.entries(countries).forEach(([code, name]) => {
+                select.append(
+                    $('<option>', {
+                        value: code,
+                        text: name
+                    })
+                );
+            });
+
+            // refresh select2
+            if (select.hasClass('select2-hidden-accessible')) {
+                select.trigger('change.select2');
+            }
+        });
+    </script>
+    <?php
 });
-
 
 
 /**
