@@ -594,34 +594,47 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 /**
  * =========================================================
- * WP Job Board Pro – Replace employer country TEXT with WC SELECT
+ * FORCE Employer country field to WC-like select
+ * (Frontend-safe, no WC dependency crash)
  * =========================================================
  */
-add_filter( 'wp_job_board_pro_employer_fields', function ( $fields ) {
+add_filter( 'cmb2_render_text', function ( $field, $escaped_value, $object_id, $object_type, $field_type ) {
 
-    if ( empty( $fields['_employer_address'] ) ) {
-        return $fields;
+    // Target ONLY employer country field
+    if ( $field->args['id'] !== '_employer_address' ) {
+        return;
     }
 
-    // Load WooCommerce countries
-    if ( ! class_exists( 'WC_Countries' ) ) {
-        return $fields;
+    // Safe country list (fallback if Woo is not loaded yet)
+    $countries = function_exists( 'WC' ) && WC()->countries
+        ? WC()->countries->get_countries()
+        : [
+            'RS' => 'Serbia',
+            'HR' => 'Croatia',
+            'BA' => 'Bosnia and Herzegovina',
+            'ME' => 'Montenegro',
+            'MK' => 'North Macedonia',
+        ];
+
+    echo '<select name="_employer_address" id="_employer_address" class="regular-text" required>';
+
+    echo '<option value="">— Izaberite državu —</option>';
+
+    foreach ( $countries as $code => $label ) {
+        printf(
+            '<option value="%s"%s>%s</option>',
+            esc_attr( $code ),
+            selected( $escaped_value, $code, false ),
+            esc_html( $label )
+        );
     }
 
-    $countries = ( new WC_Countries() )->get_countries();
+    echo '</select>';
 
-    // Override existing field
-    $fields['_employer_address'] = array_merge(
-        $fields['_employer_address'],
-        [
-            'type'    => 'select',
-            'options' => $countries,
-            'desc'    => 'Država u kojoj je registrovana kompanija',
-        ]
-    );
+    // 🔒 Prevent default text input from rendering
+    $field_type->_text( false );
+}, 10, 5 );
 
-    return $fields;
-});
 
 
 /**
