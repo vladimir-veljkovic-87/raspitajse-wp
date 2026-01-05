@@ -867,7 +867,7 @@ add_action( 'wp_footer', function () {
 
             let reordered = false;
 
-            function safeReorderBillingFields() {
+            function reorderBillingFields() {
 
                 const wrapper = $('.woocommerce-billing-fields__field-wrapper');
                 if (!wrapper.length) return;
@@ -922,16 +922,17 @@ add_action( 'wp_footer', function () {
             }
 
             // 🟢 INIT (delay da Select2 završi init)
-            setTimeout(safeReorderBillingFields, 300);
+            setTimeout(reorderBillingFields, 300);
 
             // 🔁 POSLE Woo AJAX-a
             $(document.body).on('updated_checkout', function () {
-                setTimeout(safeReorderBillingFields, 300);
+                setTimeout(reorderBillingFields, 300);
             });
 
             // 🛡️ POSLE ZATVARANJA Select2 (kritično)
             $(document).on('select2:close', function () {
-                setTimeout(safeReorderBillingFields, 200);
+                reordered = false;
+                setTimeout(reorderBillingFields, 200);
             });
 
         });
