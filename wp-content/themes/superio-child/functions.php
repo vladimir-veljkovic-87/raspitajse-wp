@@ -926,6 +926,7 @@ add_action( 'wp_footer', function () {
 
             // 🔁 POSLE Woo AJAX-a
             $(document.body).on('updated_checkout', function () {
+                reordered = false;
                 setTimeout(reorderBillingFields, 300);
             });
 
