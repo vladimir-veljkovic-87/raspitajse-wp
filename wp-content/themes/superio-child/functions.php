@@ -1643,9 +1643,9 @@ function raspitajse_add_smart_qr_code( $order_id ) {
 
         $qr_payload =
             "K:PR|V:01|C:1|" .
-            "R:RS352656660310109213|" .
+            "R:265666031000109213|" .
             "N:VLADIMIR VELJKOVIC PR DOTS|" .
-            "I:RSD{$amount}|" .
+            "I:{$amount}|" .
             "SF:189|" .
             "S:PAKET {$order_id}";
 
