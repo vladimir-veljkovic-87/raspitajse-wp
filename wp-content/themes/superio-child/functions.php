@@ -1542,17 +1542,32 @@ function raspitajse_fix_rsd_currency_symbol( $symbol, $currency ) {
     return $symbol;
 }
 
-add_action( 'woocommerce_thankyou', function( $order_id ) {
+/**
+ * Force RSD currency symbol in order details table
+ * for RSD bank transfer (bank_transfer_1)
+ */
+add_filter( 'woocommerce_currency_symbol', 'raspitajse_force_rsd_symbol_for_order_details', 10, 2 );
+function raspitajse_force_rsd_symbol_for_order_details( $symbol, $currency ) {
 
-    if ( ! $order_id ) return;
+    if ( is_admin() ) {
+        return $symbol;
+    }
 
-    $order = wc_get_order( $order_id );
-    if ( ! $order ) return;
+    if ( is_order_received_page() || is_view_order_page() ) {
 
-    error_log( 'Payment method ID: ' . $order->get_payment_method() );
-    error_log( 'Payment method title: ' . $order->get_payment_method_title() );
+        if ( isset( $_GET['key'] ) ) {
+            $order_id = wc_get_order_id_by_order_key( sanitize_text_field( $_GET['key'] ) );
+            $order    = wc_get_order( $order_id );
 
-}, 5 );
+            if ( $order && $order->get_payment_method() === 'bank_transfer_1' ) {
+                return 'RSD';
+            }
+        }
+    }
+
+    return $symbol;
+}
+
 
 add_action( 'wp_footer', 'raspitajse_checkout_payment_method_debug' );
 function raspitajse_checkout_payment_method_debug() {
