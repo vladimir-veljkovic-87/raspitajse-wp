@@ -1528,17 +1528,17 @@ add_action( 'wp_footer', function () {
  * Force RSD currency symbol in order details table
  * for RSD bank transfer (bank_transfer_1)
  */
-add_filter( 'woocommerce_currency_symbol', 'raspitajse_force_rsd_symbol_for_order_details', 10, 2 );
+add_filter( 'woocommerce_currency_symbol', 'change_existing_currency_symbol', 10, 2 );
 function change_existing_currency_symbol( $currency_symbol, $currency ) {
 
     if ( is_admin() ) {
-        return $symbol;
+        return $currency_symbol;
     }
 
     switch( $currency ) {
           case 'RSD': $currency_symbol = ' RSD'; break;
     }
-    return $currency_symbol;
+    return $currency_symbol;  
 }
 
 
