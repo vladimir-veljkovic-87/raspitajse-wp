@@ -1647,7 +1647,7 @@ function raspitajse_add_smart_qr_code( $order_id ) {
             "N:VLADIMIR VELJKOVIĆ PR DOTS|" .
             "I:RSD{$amount}|" .
             "SF:189|" .
-            "S:PAKET {$order_id}";
+            "S:KUPOVINA PAKETA BR {$order_id}";
 
         $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode( $qr_payload );
 
