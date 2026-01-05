@@ -1631,7 +1631,7 @@ function raspitajse_add_smart_qr_code( $order_id ) {
     }
 
     $payment_method = $order->get_payment_method();
-    $amount = number_format( (float) $order->get_total(), 2, '.', '' );
+    $amount = number_format( (float) $order->get_total(), 2, ',', '' );
 
     echo '<section class="raspitajse-qr-container" style="margin:40px 0;padding:25px;border:2px solid #2ecc71;text-align:center;border-radius:12px;background:#fafffb;">';
 
