@@ -931,7 +931,12 @@ add_action( 'wp_footer', function () {
 
             // 🛡️ POSLE ZATVARANJA Select2 (kritično)
             $(document).on('select2:close', function () {
-                setTimeout(reorderBillingFields, 200);
+                showMiniLoader();
+
+                setTimeout(function () {
+                    reorderBillingFields();
+                    hideMiniLoader();
+                }, 200);
             });
 
         });

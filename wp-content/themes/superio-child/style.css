@@ -517,6 +517,35 @@ span.featured {
 }
 
 /*=============================*/
+/*===   Loader mini CSS    ===*/
+/*===========================*/
+.wc-mini-loader {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.6);
+    z-index: 50;
+}
+
+.wc-mini-loader::after {
+    content: '';
+    width: 32px;
+    height: 32px;
+    border: 3px solid #ddd;
+    border-top-color: #2a90cc;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg) translate(-50%, -50%); }
+}
+
+
+/*=============================*/
 /*===    Tablet ready      ===*/
 /*===========================*/
 @media only screen
