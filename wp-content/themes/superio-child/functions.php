@@ -1526,48 +1526,61 @@ add_action( 'wp_footer', function () {
 
 /**
  * =========================================================
- * WooCommerce – IPS QR Code on Thank You page
+ * WooCommerce – Dinamički QR Code (RSD IPS vs EUR Info)
  * =========================================================
  */
-add_action( 'woocommerce_thankyou', 'raspitajse_add_ips_qr_code', 20 );
+add_action( 'woocommerce_thankyou', 'raspitajse_add_smart_qr_code', 20 );
 
-function raspitajse_add_ips_qr_code( $order_id ) {
+function raspitajse_add_smart_qr_code( $order_id ) {
 
     if ( ! $order_id ) return;
-
     $order = wc_get_order( $order_id );
+    if ( ! $order ) return;
 
-    // Samo za direktnu uplatu EUR
-    if ( $order->get_payment_method() !== 'bacs' ) return;
+    // Provera da li je izabrana direktna uplata (bilo RSD ili EUR varijanta)
+    $payment_method = $order->get_payment_method();
+    if ( strpos( $payment_method, 'bacs' ) === false ) return;
 
-    $amount = number_format( $order->get_total(), 2, '.', '' );
+    $currency = strtoupper( $order->get_currency() );
+    $total = $order->get_total();
 
-    $qr_payload = 
-        "K:PR|V:01|C:1|" .
-        "R:RS35265100000003681027|" .
-        "N:VLADIMIR VELJKOVIC PR DOTS|" .
-        "I:EUR{$amount}|" .
-        "SF:189|" .
-        "S:Raspitajse paket - {$order_id}";
+    echo '<section class="raspitajse-qr-container" style="margin: 40px 0; padding: 25px; border: 2px solid #2ecc71; text-align:center; border-radius: 12px; background-color: #fafffb;">';
 
-    // Google Charts API (najjednostavnije)
-    $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($qr_payload);
-    ?>
-    
-    <section class="raspitajse-ips-qr" style="margin-top:40px;text-align:center;">
-        <h3>📲 Platite skeniranjem QR koda</h3>
-        <p>Skenirajte QR kod u vašoj bankarskoj aplikaciji.<br>
-        Svi podaci biće automatski popunjeni.</p>
+    if ( $currency === 'RSD' ) {
+        /**
+         * LOGIKA ZA DOMAĆI RSD (IPS NBS STANDARD)
+         */
+        $amount = number_format( (float)$total, 2, ',', '' );
+        $racun_rsd = str_replace('-', '', '265-1000000316812-21');
+        $primalac = "VLADIMIR VELJKOVIC PR DOTS";
+        $svrha = "Uplata po porudzbini " . $order_id;
 
-        <img src="<?php echo esc_url($qr_url); ?>" alt="IPS QR Code">
+        $payload = "K:PR|V:01|C:1|R:{$racun_rsd}|N:{$primalac}|I:RSD{$amount}|SF:189|S:{$svrha}";
+        
+        echo '<h3>📲 IPS skeniraj (Domaće uplate)</h3>';
+        echo '<p>Skenirajte kod aplikacijom vaše banke u Srbiji.</p>';
+        echo '<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode($payload) . '" style="margin: 15px 0;">';
 
-        <p style="margin-top:15px;font-size:14px;color:#666;">
-            Iznos: <strong><?php echo esc_html($amount); ?> EUR</strong><br>
-            Poziv na broj: <?php echo esc_html($order_id); ?>
-        </p>
-    </section>
+    } elseif ( $currency === 'EUR' ) {
+        /**
+         * LOGIKA ZA EUR (INFORMATIVNI QR)
+         * Pošto Srbija nije u SEPA, pravimo QR koji samo tekstualno prikazuje podatke 
+         * kako bi klijent mogao lakše da ih prepiše.
+         */
+        $iban = "RS35265100000003681027";
+        $bic = "RZBSRSBG";
+        
+        // Tekst koji će se pojaviti kada neko skenira kamerom (običan tekst)
+        $info_text = "Payment details for Order #{$order_id}:\nIBAN: {$iban}\nBIC/SWIFT: {$bic}\nRecipient: VLADIMIR VELJKOVIC PR DOTS";
 
-    <?php
+        echo '<h3>🌍 International Payment (EUR)</h3>';
+        echo '<p>You can scan this code to quickly copy bank details to your phone.</p>';
+        echo '<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode($info_text) . '" style="margin: 15px 0;">';
+        echo '<p style="font-size: 13px; color: #666;">Note: This is an information code. Please enter the details manually in your e-banking app.</p>';
+    }
+
+    echo '</section>';
 }
+
 
 
