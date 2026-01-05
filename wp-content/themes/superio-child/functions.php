@@ -1525,6 +1525,25 @@ add_action( 'wp_footer', function () {
 });
 
 /**
+ * Fix currency symbol mismatch (RSD vs EUR)
+ */
+add_filter( 'woocommerce_currency_symbol', 'raspitajse_fix_rsd_currency_symbol', 10, 2 );
+function raspitajse_fix_rsd_currency_symbol( $symbol, $currency ) {
+
+    if ( $currency === 'RSD' ) {
+        return 'RSD';
+        // ili 'дин.' ako želiš
+    }
+
+    if ( $currency === 'EUR' ) {
+        return '€';
+    }
+
+    return $symbol;
+}
+
+
+/**
  * =========================================================
  * WooCommerce – Smart QR Code (RSD IPS / EUR Info)
  * =========================================================
