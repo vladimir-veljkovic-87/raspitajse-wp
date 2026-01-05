@@ -1525,22 +1525,66 @@ add_action( 'wp_footer', function () {
 });
 
 /**
- * Force RSD currency symbol in order details table
- * for RSD bank transfer (bank_transfer_1)
+ * =========================================================
+ * FINAL FIX: RSD currency symbol fix on Order Received page
+ * (in case some theme/plugin overrides Woo templates)
+ * =========================================================
  */
-add_filter( 'woocommerce_currency_symbol', 'change_existing_currency_symbol', 10, 2 );
-function change_existing_currency_symbol( $currency_symbol, $currency ) {
+add_action( 'wp_footer', 'raspitajse_fix_rsd_currency_with_js' );
+function raspitajse_fix_rsd_currency_with_js() {
 
-    if ( is_admin() ) {
-        return $currency_symbol;
+    if ( ! is_order_received_page() ) {
+        return;
     }
+    ?>
+    <script>
+    (function() {
 
-    switch( $currency ) {
-          case 'RSD': $currency_symbol = ' RSD'; break;
-    }
-    return $currency_symbol;  
+        function fixRsdCurrency() {
+
+            // proveri da li je RSD payment method (tekstualno)
+            const paymentRow = document.querySelector(
+                '.woocommerce-order-details tfoot tr:nth-child(2) td'
+            );
+
+            if (!paymentRow) return;
+
+            const isRsdPayment = paymentRow.textContent.includes('RSD');
+
+            if (!isRsdPayment) return;
+
+            // sve cene u order details tabeli
+            document.querySelectorAll(
+                '.woocommerce-order-details .woocommerce-Price-amount bdi'
+            ).forEach(function(bdi) {
+
+                let text = bdi.textContent.trim();
+
+                if (text.includes('€')) {
+                    text = text.replace('€', 'RSD');
+                    bdi.textContent = text;
+                }
+            });
+        }
+
+        // pokreni kad se DOM učita
+        document.addEventListener('DOMContentLoaded', fixRsdCurrency);
+
+        // fallback (neki theme-i renderuju kasnije)
+        setTimeout(fixRsdCurrency, 500);
+        setTimeout(fixRsdCurrency, 1500);
+
+    })();
+    </script>
+    <?php
 }
 
+
+/**
+ * =========================================================
+ * DEBUG: Log selected payment method in console
+ * =========================================================
+ */
 
 add_action( 'wp_footer', 'raspitajse_checkout_payment_method_debug' );
 function raspitajse_checkout_payment_method_debug() {
@@ -1603,7 +1647,7 @@ function raspitajse_add_smart_qr_code( $order_id ) {
             "N:VLADIMIR VELJKOVIC PR DOTS|" .
             "I:RSD{$amount}|" .
             "SF:189|" .
-            "S:KUPOVINA PAKETA - {$order_id}";
+            "S:KUPOVINA PAKETA BROJ {$order_id}";
 
         $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode( $qr_payload );
 
