@@ -1530,7 +1530,7 @@ add_action( 'wp_footer', function () {
 add_filter( 'woocommerce_currency_symbol', 'raspitajse_fix_rsd_currency_symbol', 10, 2 );
 function raspitajse_fix_rsd_currency_symbol( $symbol, $currency ) {
 
-    if ( $currency === 'RSD' ) {
+    if ( $currency === 'рсд' ) {
         return 'RSD';
         // ili 'дин.' ako želiš
     }
@@ -1542,82 +1542,42 @@ function raspitajse_fix_rsd_currency_symbol( $symbol, $currency ) {
     return $symbol;
 }
 
-
-/**
- * =========================================================
- * WooCommerce – Smart QR Code (RSD IPS / EUR Info)
- * =========================================================
- */
-add_action( 'woocommerce_thankyou', 'raspitajse_add_smart_qr_code', 20 );
-
-function raspitajse_add_smart_qr_code( $order_id ) {
+add_action( 'woocommerce_thankyou', function( $order_id ) {
 
     if ( ! $order_id ) return;
 
     $order = wc_get_order( $order_id );
     if ( ! $order ) return;
 
-    // Samo za bank transfer
-    if ( $order->get_payment_method() !== 'bacs' ) return;
+    error_log( 'Payment method ID: ' . $order->get_payment_method() );
+    error_log( 'Payment method title: ' . $order->get_payment_method_title() );
 
-    error_log( 'WC currency: ' . $order->get_currency() );
+}, 5 );
 
-    $currency = strtoupper( $order->get_currency() );
-    $amount   = number_format( (float) $order->get_total(), 2, '.', '' );
+add_action( 'wp_footer', 'raspitajse_checkout_payment_method_debug' );
+function raspitajse_checkout_payment_method_debug() {
 
-
-    echo '<pre>';
-echo 'Order currency: ' . $order->get_currency() . "\n";
-echo 'Order total: ' . $order->get_total() . "\n";
-echo '</pre>';
-
-    echo '<section class="raspitajse-qr-container" style="margin:40px 0;padding:25px;border:2px solid #2ecc71;text-align:center;border-radius:12px;background:#fafffb;">';
-
-    /* =====================================================
-     * RSD – PRAVI IPS QR
-     * ===================================================== */
-    if ( in_array( $currency, [ 'RSD', 'DIN', 'РСД' ], true ) ) {
-
-        $qr_payload =
-            "K:PR|V:01|C:1|" .
-            "R:RS35265100000003681027|" .
-            "N:VLADIMIR VELJKOVIC PR DOTS|" .
-            "I:RSD{$amount}|" .
-            "SF:189|" .
-            "S:RASPITAJSE {$order_id}";
-
-        $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode( $qr_payload );
-
-        echo '<h3>📲 Platite skeniranjem QR koda (IPS)</h3>';
-        echo '<p>Skenirajte QR kod u vašoj bankarskoj aplikaciji.</p>';
-        echo '<img src="' . esc_url( $qr_url ) . '" width="300" height="300" alt="IPS QR">';
-        echo '<p style="margin-top:15px;font-size:14px;color:#666;">Iznos: <strong>' . esc_html( $amount ) . ' RSD</strong></p>';
-
+    if ( ! is_checkout() ) {
+        return;
     }
+    ?>
+    <script>
+        function logSelectedPaymentMethod() {
+            const checked = document.querySelector('input[name="payment_method"]:checked');
+            if (checked) {
+                console.log('Selected payment method:', checked.value);
+            }
+        }
 
-    /* =====================================================
-     * EUR – INFORMATIVNI QR
-     * ===================================================== */
-    elseif ( $currency === 'EUR' ) {
+        document.addEventListener('change', function(e) {
+            if (e.target.name === 'payment_method') {
+                logSelectedPaymentMethod();
+            }
+        });
 
-        $info_text =
-            "Order: {$order_id}\n" .
-            "Recipient: VLADIMIR VELJKOVIC PR DOTS\n" .
-            "IBAN: RS35265100000003681027\n" .
-            "BIC: RZBSRSBG\n" .
-            "Amount: {$amount} EUR";
-
-        $info_qr = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode( $info_text );
-
-        echo '<h3>🌍 International Payment (EUR)</h3>';
-        echo '<p>Scan to copy payment details (manual entry required).</p>';
-        echo '<img src="' . esc_url( $info_qr ) . '" width="250" height="250" alt="EUR Info QR">';
-        echo '<p style="font-size:13px;color:#666;">This QR code is for information only.</p>';
-    }
-
-    echo '</section>';
+        document.addEventListener('DOMContentLoaded', logSelectedPaymentMethod);
+    </script>
+    <?php
 }
-
-
 
 
