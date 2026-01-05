@@ -1631,7 +1631,7 @@ function raspitajse_add_smart_qr_code( $order_id ) {
     }
 
     $payment_method = $order->get_payment_method();
-    $amount = number_format( (float) $order->get_total(), 2, ',', '' );
+    $amount = number_format( (float) $order->get_total(), 2, '.', '' );
 
     echo '<section class="raspitajse-qr-container" style="margin:40px 0;padding:25px;border:2px solid #2ecc71;text-align:center;border-radius:12px;background:#fafffb;">';
 
@@ -1646,8 +1646,7 @@ function raspitajse_add_smart_qr_code( $order_id ) {
             "R:RS26500000031681221|" .
             "N:VLADIMIR VELJKOVIC PR DOTS|" .
             "I:RSD{$amount}|" .
-            "SF:189|" .
-            "S:KUPOVINA PAKETA BROJ {$order_id}";
+            "S:PAKET {$order_id}";
 
         $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode( $qr_payload );
 
