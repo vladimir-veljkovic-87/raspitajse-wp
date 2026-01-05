@@ -864,6 +864,19 @@ add_action( 'wp_footer', function () {
     ?>
     <script>
         jQuery(function ($) {
+            
+            // WooCommerce mini loader functions
+            function showMiniLoader() {
+                const wrapper = $('.woocommerce-billing-fields__field-wrapper');
+                if (!wrapper.find('.wc-mini-loader').length) {
+                    wrapper.css('position', 'relative');
+                    wrapper.append('<div class="wc-mini-loader"></div>');
+                }
+            }
+
+            function hideMiniLoader() {
+                $('.wc-mini-loader').remove();
+            }
 
             function reorderBillingFields() {
 
