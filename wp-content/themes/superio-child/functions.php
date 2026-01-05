@@ -1525,47 +1525,20 @@ add_action( 'wp_footer', function () {
 });
 
 /**
- * Fix currency symbol mismatch (RSD vs EUR)
- */
-add_filter( 'woocommerce_currency_symbol', 'raspitajse_fix_rsd_currency_symbol', 10, 2 );
-function raspitajse_fix_rsd_currency_symbol( $symbol, $currency ) {
-
-    if ( $currency === 'рсд' ) {
-        return 'RSD';
-        // ili 'дин.' ako želiš
-    }
-
-    if ( $currency === 'EUR' ) {
-        return '€';
-    }
-
-    return $symbol;
-}
-
-/**
  * Force RSD currency symbol in order details table
  * for RSD bank transfer (bank_transfer_1)
  */
 add_filter( 'woocommerce_currency_symbol', 'raspitajse_force_rsd_symbol_for_order_details', 10, 2 );
-function raspitajse_force_rsd_symbol_for_order_details( $symbol, $currency ) {
+function change_existing_currency_symbol( $currency_symbol, $currency ) {
 
     if ( is_admin() ) {
         return $symbol;
     }
 
-    if ( is_order_received_page() || is_view_order_page() ) {
-
-        if ( isset( $_GET['key'] ) ) {
-            $order_id = wc_get_order_id_by_order_key( sanitize_text_field( $_GET['key'] ) );
-            $order    = wc_get_order( $order_id );
-
-            if ( $order && $order->get_payment_method() === 'bank_transfer_1' ) {
-                return 'RSD';
-            }
-        }
+    switch( $currency ) {
+          case 'RSD': $currency_symbol = ' RSD'; break;
     }
-
-    return $symbol;
+    return $currency_symbol;
 }
 
 
@@ -1626,11 +1599,11 @@ function raspitajse_add_smart_qr_code( $order_id ) {
 
         $qr_payload =
             "K:PR|V:01|C:1|" .
-            "R:RS35265100000003681027|" .
+            "R:RS26500000031681221|" .
             "N:VLADIMIR VELJKOVIC PR DOTS|" .
             "I:RSD{$amount}|" .
             "SF:189|" .
-            "S:RASPITAJSE {$order_id}";
+            "S:KUPOVINA PAKETA - {$order_id}";
 
         $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode( $qr_payload );
 
