@@ -1524,6 +1524,50 @@ add_action( 'wp_footer', function () {
     <?php
 });
 
+/**
+ * =========================================================
+ * WooCommerce – IPS QR Code on Thank You page
+ * =========================================================
+ */
+add_action( 'woocommerce_thankyou', 'raspitajse_add_ips_qr_code', 20 );
 
+function raspitajse_add_ips_qr_code( $order_id ) {
+
+    if ( ! $order_id ) return;
+
+    $order = wc_get_order( $order_id );
+
+    // Samo za direktnu uplatu EUR
+    if ( $order->get_payment_method() !== 'bacs' ) return;
+
+    $amount = number_format( $order->get_total(), 2, '.', '' );
+
+    $qr_payload = 
+        "K:PR|V:01|C:1|" .
+        "R:RS35265100000003681027|" .
+        "N:VLADIMIR VELJKOVIĆ PR DOTS|" .
+        "I:EUR{$amount}|" .
+        "SF:189|" .
+        "S:Raspitajse paket - porudžbina {$order_id}";
+
+    // Google Charts API (najjednostavnije)
+    $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($qr_payload);
+    ?>
+    
+    <section class="raspitajse-ips-qr" style="margin-top:40px;text-align:center;">
+        <h3>📲 Platite skeniranjem QR koda</h3>
+        <p>Skenirajte QR kod u vašoj bankarskoj aplikaciji.<br>
+        Svi podaci biće automatski popunjeni.</p>
+
+        <img src="<?php echo esc_url($qr_url); ?>" alt="IPS QR Code">
+
+        <p style="margin-top:15px;font-size:14px;color:#666;">
+            Iznos: <strong><?php echo esc_html($amount); ?> EUR</strong><br>
+            Poziv na broj: <?php echo esc_html($order_id); ?>
+        </p>
+    </section>
+
+    <?php
+}
 
 
