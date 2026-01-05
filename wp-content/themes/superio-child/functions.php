@@ -1580,4 +1580,72 @@ function raspitajse_checkout_payment_method_debug() {
     <?php
 }
 
+/**
+ * =========================================================
+ * WooCommerce – Smart QR Code (RSD IPS / EUR Info)
+ * =========================================================
+ */
+add_action( 'woocommerce_thankyou', 'raspitajse_add_smart_qr_code', 20 );
+
+function raspitajse_add_smart_qr_code( $order_id ) {
+
+    if ( ! $order_id ) {
+        return;
+    }
+
+    $order = wc_get_order( $order_id );
+    if ( ! $order ) {
+        return;
+    }
+
+    $payment_method = $order->get_payment_method();
+    $amount = number_format( (float) $order->get_total(), 2, '.', '' );
+
+    echo '<section class="raspitajse-qr-container" style="margin:40px 0;padding:25px;border:2px solid #2ecc71;text-align:center;border-radius:12px;background:#fafffb;">';
+
+    /* =====================================================
+     * RSD – PRAVI IPS QR
+     * payment_method = bank_transfer_1
+     * ===================================================== */
+    if ( $payment_method === 'bank_transfer_1' ) {
+
+        $qr_payload =
+            "K:PR|V:01|C:1|" .
+            "R:RS35265100000003681027|" .
+            "N:VLADIMIR VELJKOVIC PR DOTS|" .
+            "I:RSD{$amount}|" .
+            "SF:189|" .
+            "S:RASPITAJSE {$order_id}";
+
+        $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode( $qr_payload );
+
+        echo '<h3>📲 Platite skeniranjem QR koda (IPS – RSD)</h3>';
+        echo '<p>Skenirajte QR kod u vašoj bankarskoj aplikaciji. Svi podaci će biti automatski popunjeni.</p>';
+        echo '<img src="' . esc_url( $qr_url ) . '" width="300" height="300" alt="IPS QR">';
+        echo '<p style="margin-top:15px;font-size:14px;color:#666;">Iznos: <strong>' . esc_html( $amount ) . ' RSD</strong></p>';
+    }
+
+    /* =====================================================
+     * EUR – INFORMATIVNI QR
+     * payment_method = bacs
+     * ===================================================== */
+    elseif ( $payment_method === 'bacs' ) {
+
+        $info_text =
+            "Order: {$order_id}\n" .
+            "Recipient: VLADIMIR VELJKOVIC PR DOTS\n" .
+            "IBAN: RS35265100000003681027\n" .
+            "BIC: RZBSRSBG\n" .
+            "Amount: {$amount} EUR";
+
+        $info_qr = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode( $info_text );
+
+        echo '<h3>🌍 International Payment (EUR)</h3>';
+        echo '<p>Scan to copy payment details (manual entry required).</p>';
+        echo '<img src="' . esc_url( $info_qr ) . '" width="250" height="250" alt="EUR Info QR">';
+        echo '<p style="font-size:13px;color:#666;">This QR code is for information only.</p>';
+    }
+
+    echo '</section>';
+}
 
