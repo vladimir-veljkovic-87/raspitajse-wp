@@ -865,8 +865,6 @@ add_action( 'wp_footer', function () {
     <script>
         jQuery(function ($) {
 
-            let reordered = false;
-
             function reorderBillingFields() {
 
                 const wrapper = $('.woocommerce-billing-fields__field-wrapper');
@@ -888,20 +886,22 @@ add_action( 'wp_footer', function () {
                 const email    = $('#billing_email_field');
                 const phone    = $('#billing_phone_field');
 
-                // 🔒 HARD DOM ORDER – SAMO JEDNOM
-                if (!reordered) {
-                    wrapper.append(company);
-                    wrapper.append(pib);
-                    wrapper.append(mb);
-                    wrapper.append(street);
-                    wrapper.append(number);
-                    wrapper.append(postcode);
-                    wrapper.append(city);
-                    wrapper.append(country);
-                    wrapper.append(email);
-                    wrapper.append(phone);
-                    reordered = true;
-                }
+                const fields = [
+                    company,
+                    pib,
+                    mb,
+                    street,
+                    number,
+                    postcode,
+                    city,
+                    country,
+                    email,
+                    phone
+                ];
+
+                fields.forEach(el => {
+                    if (el.length) wrapper.append(el);
+                });
 
                 // 🧩 SAMO KLASE (bez pomeranja)
                 company.attr('class', 'form-row form-row-wide validate-required');
@@ -926,13 +926,11 @@ add_action( 'wp_footer', function () {
 
             // 🔁 POSLE Woo AJAX-a
             $(document.body).on('updated_checkout', function () {
-                reordered = false;
                 setTimeout(reorderBillingFields, 300);
             });
 
             // 🛡️ POSLE ZATVARANJA Select2 (kritično)
             $(document).on('select2:close', function () {
-                reordered = false;
                 setTimeout(reorderBillingFields, 200);
             });
 
