@@ -1541,6 +1541,8 @@ function raspitajse_add_smart_qr_code( $order_id ) {
     // Samo za bank transfer
     if ( $order->get_payment_method() !== 'bacs' ) return;
 
+    error_log( 'WC currency: ' . $order->get_currency() );
+
     $currency = strtoupper( $order->get_currency() );
     $amount   = number_format( (float) $order->get_total(), 2, '.', '' );
 
