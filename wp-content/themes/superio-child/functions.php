@@ -1545,10 +1545,10 @@ function raspitajse_add_ips_qr_code( $order_id ) {
     $qr_payload = 
         "K:PR|V:01|C:1|" .
         "R:RS35265100000003681027|" .
-        "N:VLADIMIR VELJKOVIĆ PR DOTS|" .
+        "N:VLADIMIR VELJKOVIC PR DOTS|" .
         "I:EUR{$amount}|" .
         "SF:189|" .
-        "S:Raspitajse paket - porudžbina {$order_id}";
+        "S:Raspitajse paket - {$order_id}";
 
     // Google Charts API (najjednostavnije)
     $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($qr_payload);
