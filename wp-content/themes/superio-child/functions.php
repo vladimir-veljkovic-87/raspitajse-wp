@@ -1544,12 +1544,18 @@ function raspitajse_add_smart_qr_code( $order_id ) {
     $currency = strtoupper( $order->get_currency() );
     $amount   = number_format( (float) $order->get_total(), 2, '.', '' );
 
+
+    echo '<pre>';
+echo 'Order currency: ' . $order->get_currency() . "\n";
+echo 'Order total: ' . $order->get_total() . "\n";
+echo '</pre>';
+
     echo '<section class="raspitajse-qr-container" style="margin:40px 0;padding:25px;border:2px solid #2ecc71;text-align:center;border-radius:12px;background:#fafffb;">';
 
     /* =====================================================
      * RSD – PRAVI IPS QR
      * ===================================================== */
-    if ( $currency === 'RSD' ) {
+    if ( in_array( $currency, [ 'RSD', 'DIN', 'РСД' ], true ) ) {
 
         $qr_payload =
             "K:PR|V:01|C:1|" .
