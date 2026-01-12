@@ -674,6 +674,10 @@ and (max-width : 767px) {
 		margin-right: 0!important;
 		margin-bottom: 20px!important;
 	}
+	/* Poslodavci pronađite radnike */
+	.elementor-10425 .elementor-element.elementor-element-b349c76 {
+		padding-top: 0!important;
+	}
 	/* Register page */
 	.register-fields-wr .napravite-column {
 		width:100%!important;
