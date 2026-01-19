@@ -551,8 +551,9 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Update totals' => 'Ažuriraj ukupno',
 
         // --- Privacy policy text ---
-        'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our Privacy policy.' =>
-        'Vaši lični podaci biće korišćeni za obradu porudžbine, podršku vašem iskustvu na ovom sajtu i u druge svrhe opisane u našoj Politici privatnosti.',
+        // Privacy policy (Woo koristi placeholder za link)
+        'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our %s.' =>
+        'Vaši lični podaci biće korišćeni za obradu porudžbine, podršku vašem iskustvu na ovom sajtu i u druge svrhe opisane u našoj %s.',
         'Privacy policy' => 'Politika privatnosti',
 
         // --- Place order button ---
