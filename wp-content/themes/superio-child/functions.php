@@ -803,6 +803,21 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
     unset( $fields['billing']['billing_last_name'] );
 
     /**
+     * NAZIV KOMPANIJE (OBAVEZNO)
+     */
+    $fields['billing']['billing_company'] = array_merge(
+        $fields['billing']['billing_company'] ?? [],
+        [
+            'label'       => 'Naziv kompanije',
+            'required'    => true,
+            'class'       => ['form-row-wide'],
+            'priority'    => 30,
+            'placeholder' => 'npr. Dots Agencija',
+        ]
+    );
+
+
+    /**
      * PIB
      */
     $fields['billing']['billing_pib'] = [
