@@ -513,6 +513,27 @@ function raspitajse_quick_translate($translated, $text, $domain) {
 
     $map = [
         // --- WooCommerce checkout / cart notices ---
+        // --- Cart table headers ---
+        'Image' => 'Slika',
+        'Product Name' => 'Naziv proizvoda',
+        'Price' => 'Cena',
+        'Quantity' => 'Količina',
+
+        // --- Variations / meta ---
+        'Job Listing:' => 'Oglas za posao:',
+
+        // --- Remove link accessibility label ---
+        'Remove this item' => 'Ukloni ovu stavku',
+
+        // --- Cart actions ---
+        'Update cart' => 'Ažuriraj korpu',
+
+        // --- Totals box ---
+        'Cart totals' => 'Ukupno u korpi',
+
+        // --- Checkout button ---
+        'Proceed to Checkout' => 'Nastavi na plaćanje',
+
         '"%s" has been added to your cart.' => '"%s" je dodat u vašu korpu.',
         'View cart' => 'Pogledaj korpu',
         'Have a coupon? Click here to enter your code' => 'Imate kupon? Kliknite ovde da unesete kod',
