@@ -520,6 +520,44 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Apply coupon' => 'Primeni kupon',
         'Coupon code' => 'Kod kupona',
 
+        // --- Coupon toggle / coupon form ---
+        'Have a coupon?' => 'Imate kupon?',
+        'Click here to enter your code' => 'Kliknite ovde da unesete kod',
+        'Coupon:' => 'Kupon:',
+        'Coupon code' => 'Kod kupona',
+        'Apply coupon' => 'Primeni kupon',
+
+        // --- Billing (company field) ---
+        'Company name' => 'Naziv kompanije',
+        '(optional)' => '(opciono)',
+
+        // --- Address placeholders (Woo default) ---
+        'House number and street name' => 'Ulica i broj',
+        'npr. 76/11' => 'npr. 76/11', // ovo već jeste srpski, ali ostavljam ako se menja
+        'Select a country / region…' => 'Izaberite državu / region…',
+        'Update country / region' => 'Ažuriraj državu / region',
+
+        // --- Additional info section / notes textarea placeholder ---
+        'Additional Information' => 'Dodatne informacije',
+        'Notes about your order, e.g. special notes for delivery.' => 'Napomena uz porudžbinu, npr. dodatne informacije.',
+
+        // --- Order review variations ---
+        'Job Listing:' => 'Oglas za posao:',
+
+        // --- No-JS notice + buttons ---
+        'Since your browser does not support JavaScript, or it is disabled, please ensure you click the Update Totals button before placing your order. You may be charged more than the amount stated above if you fail to do so.' =>
+        'Pošto vaš pregledač ne podržava JavaScript ili je isključen, obavezno kliknite dugme „Ažuriraj ukupno“ pre slanja porudžbine. U suprotnom može biti naplaćen veći iznos od prikazanog.',
+        'Update Totals' => 'Ažuriraj ukupno',
+        'Update totals' => 'Ažuriraj ukupno',
+
+        // --- Privacy policy text ---
+        'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our Privacy policy.' =>
+        'Vaši lični podaci biće korišćeni za obradu porudžbine, podršku vašem iskustvu na ovom sajtu i u druge svrhe opisane u našoj Politici privatnosti.',
+        'Privacy policy' => 'Politika privatnosti',
+
+        // --- Place order button ---
+        'Place order' => 'Pošalji porudžbinu',
+
         // --- Checkout sections ---
         'Billing details' => 'Podaci za fakturisanje',
         'Additional information' => 'Dodatne informacije',
