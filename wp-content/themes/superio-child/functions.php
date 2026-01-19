@@ -505,36 +505,61 @@ function raspitajse_filter_header_buttons($content) {
 add_filter('gettext', 'raspitajse_quick_translate', 999, 3);
 function raspitajse_quick_translate($translated, $text, $domain) {
 
-    // Ako nije string – ne diramo
     if (!is_string($text) || !is_string($translated)) {
         return $translated;
     }
 
-    // Normalizacija (kritično)
     $normalized = trim(preg_replace('/\s+/', ' ', $text));
 
     $map = [
+        // --- WooCommerce checkout / cart notices ---
+        '"%s" has been added to your cart.' => '"%s" je dodat u vašu korpu.',
+        'View cart' => 'Pogledaj korpu',
+        'Have a coupon? Click here to enter your code' => 'Imate kupon? Kliknite ovde da unesete kod',
+        'If you have a coupon code, please apply it below.' => 'Ako imate kupon, unesite ga ispod.',
+        'Apply coupon' => 'Primeni kupon',
+        'Coupon code' => 'Kod kupona',
+
+        // --- Checkout sections ---
+        'Billing details' => 'Podaci za fakturisanje',
+        'Additional information' => 'Dodatne informacije',
+        'Your order' => 'Vaša porudžbina',
+
+        // --- Order table ---
+        'Product' => 'Proizvod',
+        'Subtotal' => 'Međuzbir',
+        'Total' => 'Ukupno',
+        'Payment' => 'Plaćanje',
+
+        // --- Common fields (ako se negde pojave kao stringovi) ---
+        'Company name (optional)' => 'Naziv kompanije (opciono)',
+        'First name' => 'Ime',
+        'Last name' => 'Prezime',
+        'Country / Region' => 'Država / Region',
+        'Street address' => 'Ulica',
+        'Postcode / ZIP' => 'Poštanski broj',
+        'Town / City' => 'Grad',
+        'Phone' => 'Telefon',
+        'Email address' => 'Email adresa',
+
+        // --- Existing (tvoja) ---
         'All Applicants'       => 'Svi kandidati',
         'Candidate Shortlist'  => 'Uži izbor kandidata',
         'Candidate Alerts'     => 'Obaveštenja o kandidatima',
         'My Packages'          => 'Moji paketi',
-
         'Title'                => 'Naziv',
         'Alert Query'          => 'Upit za obaveštenje',
         'Number Candidates'    => 'Broj kandidata',
         'Times'                => 'Učestalost',
         'Actions'              => 'Akcije',
-
         'Search'               => 'Pretraga',
         'Submit Job'           => 'Pošalji oglas',
         'Edit Job'             => 'Izmeni oglas',
         'Filter by job'        => 'Filtriraj po poslu',
-
         'Sort by:'             => 'Sortiraj po:',
         'Newest'               => 'Najnovije',
         'Oldest'               => 'Najstarije',
         'Default'              => 'Podrazumevano',
-
         'Total(s):'            => 'Ukupno:',
         'Approved'             => 'Odobreno',
         'Approved:'            => 'Odobreno:',
@@ -543,7 +568,6 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Applied date'         => 'Datum prijave',
         'Applied date:'        => 'Datum prijave:',
         'Pending'              => 'Na čekanju',
-
         '#'                    => '#',
         'ID'                   => 'ID',
         'Package'              => 'Paket',
