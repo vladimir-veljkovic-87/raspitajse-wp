@@ -141,6 +141,23 @@ jQuery(document).ready(function($) {
         }
         });
 
+        // ✅ Woo checkout: Privacy policy text (pre linka) – fix
+        const $p = $('.woocommerce-privacy-policy-text p');
+        if ($p.length) {
+            const en = 'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our';
+            const sr = 'Vaši lični podaci biće korišćeni za obradu porudžbine, podršku vašem iskustvu na ovom sajtu i u druge svrhe opisane u našoj';
+
+            // menjamo samo TEXT node (da link ostane netaknut)
+            $p.contents().filter(function () {
+                return this.nodeType === 3 && this.nodeValue && this.nodeValue.trim().length;
+            }).each(function () {
+                const current = this.nodeValue.trim();
+                if (current.startsWith(en)) {
+                    this.nodeValue = this.nodeValue.replace(en, sr);
+                }
+            });
+        }
+
     }
     // initial load
     document.addEventListener('DOMContentLoaded', applyTranslations);
