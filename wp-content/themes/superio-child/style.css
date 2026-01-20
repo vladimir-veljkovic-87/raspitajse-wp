@@ -546,6 +546,9 @@ span.featured {
 .woocommerce-shop .product-block.grid {
 	    border: 3px solid #f1f1f1!important;
 }
+.product-block.grid .groups-button {
+	padding: 0px 30px 23px 30px!important;
+}
 /* Product page */
 .details-product .apus-woocommerce-product-gallery-wrapper {
 	border:none!important;
