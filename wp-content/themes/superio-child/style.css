@@ -517,13 +517,13 @@ span.featured {
 }
 
 /* Shop page */
-.product.post-1728, .product.post-1729, .product.post-1730 {
+.woocommerce-shop .product.post-1728, .woocommerce-shop .product.post-1729, .woocommerce-shop  .product.post-1730 {
 	width: 33.33%!important;
 }
-.product-block.grid {
+.woocommerce-shop .product-block.grid {
 	padding: 0!important;
 }
-.product.post-1730 .name {
+.woocommerce-shop .product.post-1730 .name {
 	line-height: 300%!important;
  }
 
