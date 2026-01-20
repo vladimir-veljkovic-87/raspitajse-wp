@@ -516,6 +516,18 @@ span.featured {
     box-shadow: 0 0 30px 0 rgba(64, 79, 104, 0.1);
 }
 
+/* Shop page */
+.product.post-1728, .product.post-1729, .product.post-1730 {
+	width: 33.33%!important;
+}
+.product-block.grid {
+	padding: 0!important;
+}
+.product.post-1730 {
+	line-height: 300%!important;
+ }
+
+
 /*=============================*/
 /*===   Loader mini CSS    ===*/
 /*===========================*/
@@ -681,5 +693,9 @@ and (max-width : 767px) {
 	/* Register page */
 	.register-fields-wr .napravite-column {
 		width:100%!important;
+	}
+	/* Shop page */
+	.product.post-1728, .product.post-1729, .product.post-1730 {
+		width: 100%!important;
 	}
 }

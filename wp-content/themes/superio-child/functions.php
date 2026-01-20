@@ -518,6 +518,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Product Name' => 'Naziv proizvoda',
         'Price' => 'Cena',
         'Quantity' => 'Količina',
+        'Add to cart' => 'Dodaj u korpu',
 
         // --- Variations / meta ---
         'Job Listing:' => 'Oglas za posao:',
