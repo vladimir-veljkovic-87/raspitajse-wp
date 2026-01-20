@@ -526,8 +526,14 @@ span.featured {
 .woocommerce-shop .product.post-1728 .name, .woocommerce-shop .product.post-1729 .name {
 	font-size: 20px!important;
 }
-.woocommerce-shop .product.post-1728 .name a, .woocommerce-shop .product.post-1729 .name a {
+.woocommerce-shop .product.post-1728 .name a {
 	color: #1967d2!important;
+}
+.woocommerce-shop .product.post-1729 .name a {
+	color: #df53e1!important;
+}
+.woocommerce-shop .product.post-1730 .name a {
+	color: #848d96!important;
 }
 .woocommerce-shop .product.post-1728 .price, .woocommerce-shop .product.post-1729 .price {
 	font-size: 18px!important;
@@ -536,6 +542,13 @@ span.featured {
 .woocommerce-shop .product.post-1730 .name {
 	line-height: 300%!important;
 	font-size: 20px!important;
+}
+.woocommerce-shop .product-block.grid {
+	    border: 3px solid #f1f1f1!important;
+}
+/* Product page */
+.details-product .apus-woocommerce-product-gallery-wrapper {
+	border:none!important;
 }
 
 
