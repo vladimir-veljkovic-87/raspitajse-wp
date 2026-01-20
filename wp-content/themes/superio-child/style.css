@@ -526,6 +526,9 @@ span.featured {
 .woocommerce-shop .product.post-1728 .name, .woocommerce-shop .product.post-1729 .name {
 	font-size: 20px!important;
 }
+.woocommerce-shop .product.post-1728 .name a, .woocommerce-shop .product.post-1729 .name a {
+	color: #1967d2!important;
+}
 .woocommerce-shop .product.post-1728 .price, .woocommerce-shop .product.post-1729 .price {
 	font-size: 18px!important;
     font-weight: 500!important;
