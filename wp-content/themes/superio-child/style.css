@@ -719,7 +719,7 @@ and (max-width : 767px) {
 		width:100%!important;
 	}
 	/* Shop page */
-	.woocommerce-shop .product.post-1728, .woocommerce-shop .product.post-1729, .woocommerce-shop .product.post-1730
+	.woocommerce-shop .product.post-1728, .woocommerce-shop .product.post-1729, .woocommerce-shop .product.post-1730 {
 		width: 100%!important;
 	}
 }
