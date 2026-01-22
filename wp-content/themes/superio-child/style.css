@@ -579,7 +579,7 @@ span.featured {
     margin-top: 0!important;
 }
 .woocommerce p.stars a:before {
-	color:#1967d2;
+	color: #1967d2 !important;;
 }
 .woocommerce p.stars a:hover ~ a:before {
 	color:#e1e1e1!important;
