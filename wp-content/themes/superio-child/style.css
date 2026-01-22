@@ -578,12 +578,6 @@ span.featured {
     padding: 20px 0 0 0 !important;
     margin-top: 0!important;
 }
-.woocommerce p.stars a:before {
-	color: #1967d2 !important;;
-}
-.woocommerce p.stars a:hover ~ a:before {
-	color:#e1e1e1!important;
-}
 
 
 /*=============================*/
