@@ -515,6 +515,8 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         // --- WooCommerce checkout ---
         // --- Product detail page ---
         'You cannot add another "%s" to your cart.' => 'Ne možete dodati još jedan "%s" u vašu korpu.',
+        'Category: %s' => 'Kategorija: %s',
+        'Tags: %s' => 'Oznake: %s',
         
         // --- Cart table headers ---
         'Image' => 'Slika',
@@ -792,6 +794,16 @@ add_action( 'wp_footer', function () {
     </script>
     <?php
 });
+
+/**         
+ * =========================================================
+ * WooCommerce – Remove product tabs: Description
+ */
+add_filter('woocommerce_product_tabs', function ($tabs) {
+    unset($tabs['description']);
+    return $tabs;
+}, 98);
+
 
 
 /**
