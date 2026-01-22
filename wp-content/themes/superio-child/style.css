@@ -578,7 +578,7 @@ span.featured {
     padding: 20px 0 0 0 !important;
     margin-top: 0!important;
 }
-.woocommerce p.stars a:before.woocommerce p.stars a:hover:before {
+.woocommerce p.stars:hover a:before {
 	color:#1967d2!important;
 }
 
