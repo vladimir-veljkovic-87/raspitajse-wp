@@ -512,7 +512,10 @@ function raspitajse_quick_translate($translated, $text, $domain) {
     $normalized = trim(preg_replace('/\s+/', ' ', $text));
 
     $map = [
-        // --- WooCommerce checkout / cart notices ---
+        // --- WooCommerce checkout ---
+        // --- Product detail page ---
+        'You cannot add another "%s" to your cart.' => 'Ne možete dodati još jedan "%s" u vašu korpu.',
+        
         // --- Cart table headers ---
         'Image' => 'Slika',
         'Product Name' => 'Naziv proizvoda',
