@@ -517,8 +517,15 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'You cannot add another "%s" to your cart.' => 'Ne možete dodati još jedan "%s" u vašu korpu.',
         // --- Product meta ---
         'SKU:' => 'Šifra proizvoda:',
-        'Category:' => 'Kategorija:',
-        'Tags:' => 'Oznake:',
+        'Category:'   => 'Kategorija:',
+        'Category'    => 'Kategorija',
+        'Categories:' => 'Kategorije:',
+        'Categories'  => 'Kategorije',
+        'Tags:'       => 'Oznake:',
+        'Tags'        => 'Oznake',
+        'Tag:'        => 'Oznaka:',
+        'Tag'         => 'Oznaka',
+        'Tag(s):'     => 'Oznake:',
 
         // --- Reviews ---
         'Reviews (%d)' => 'Recenzije (%d)',
