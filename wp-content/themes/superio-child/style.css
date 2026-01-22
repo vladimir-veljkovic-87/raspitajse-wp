@@ -581,6 +581,9 @@ span.featured {
 .woocommerce p.stars a:before {
 	color:#1967d2;
 }
+.woocommerce p.stars a:hover ~ a:before {
+	color:#e1e1e1!important;
+}
 
 
 /*=============================*/
