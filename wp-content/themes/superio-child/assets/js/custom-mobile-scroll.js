@@ -168,6 +168,29 @@ jQuery(document).ready(function($) {
             if (map[text]) {
                 $(this).text(map[text]);
             }
+        });        
+        $('#reply-title').each(function () {
+            let text = $(this).text().trim();
+
+            if (text.startsWith('Be the first to review')) {
+                text = text
+                    .replace('Be the first to review', 'Budite prvi koji će oceniti')
+                    .replace(/["“”]/g, '„')
+                    .replace(/„(.+)„/, '„$1“');
+
+                $(this).text(text);
+            }
+        });
+        $('.comments-title').each(function () {
+            const text = $(this).text().trim();
+
+            // hvata: "0 Reviews", "1 Reviews", "12 Reviews", itd.
+            const match = text.match(/^(\d+)\s+Reviews$/);
+
+            if (match) {
+                const count = match[1];
+                $(this).text(`${count} recenzija`);
+            }
         });
 
 
