@@ -157,6 +157,19 @@ jQuery(document).ready(function($) {
                 }
             });
         }
+        $('.product_meta .sub_title').each(function () {
+            const map = {
+                'Category:': 'Kategorija:',
+                'Tags:': 'Oznake:',
+                'Tag:': 'Oznaka:'
+            };
+
+            const text = $(this).text().trim();
+            if (map[text]) {
+                $(this).text(map[text]);
+            }
+        });
+
 
     }
     // initial load
