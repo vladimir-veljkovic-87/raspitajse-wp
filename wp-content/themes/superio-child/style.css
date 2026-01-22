@@ -553,7 +553,32 @@ span.featured {
 .details-product .apus-woocommerce-product-gallery-wrapper {
 	border:none!important;
 }
-
+/* Product page detail */
+.woocommerce-tabs.tabs-v1 .tap-top {
+	display: none!important;
+}
+.woocommerce-tabs.tabs-v1 .tabs-list .nav-tabs {
+	background: #f6f5f8;
+    border-radius: 8px;
+    padding: 8px;
+}
+.woocommerce-tabs.tabs-v1 li.active a {
+	padding-bottom: 0!important;
+}
+.woocommerce-tabs.tabs-v1 li.active a:before { 
+	display: none!important;
+}
+.woocommerce-tabs.tabs-v1 .comments-title {
+	background: #f6f5f8;
+    border-radius: 8px;
+    padding: 15px 10px 15px 10px;
+}
+.woocommerce-tabs.tabs-v1 .comment-respond {
+	border: none!important;
+    padding-left: 0!important;
+    padding-right: 0!important;
+    margin-top: 0!!important;
+}
 
 /*=============================*/
 /*===   Loader mini CSS    ===*/

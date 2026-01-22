@@ -515,8 +515,26 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         // --- WooCommerce checkout ---
         // --- Product detail page ---
         'You cannot add another "%s" to your cart.' => 'Ne možete dodati još jedan "%s" u vašu korpu.',
-        'Category: %s' => 'Kategorija: %s',
-        'Tags: %s' => 'Oznake: %s',
+        // --- Product meta ---
+        'SKU:' => 'Šifra proizvoda:',
+        'Category:' => 'Kategorija:',
+        'Tags:' => 'Oznake:',
+
+        // --- Reviews ---
+        'Reviews (%d)' => 'Recenzije (%d)',
+        '%d Reviews' => '%d recenzija',
+        'Reviews' => 'Recenzije',
+        'There are no reviews yet.' => 'Još uvek nema recenzija.',
+        'Be the first to review “%s”' => 'Budite prvi koji će oceniti „%s“',
+        'Your Rating' => 'Vaša ocena',
+        'Rate…' => 'Oceni…',
+        'Perfect' => 'Odlično',
+        'Good' => 'Dobro',
+        'Average' => 'Prosečno',
+        'Not that bad' => 'Nije loše',
+        'Very Poor' => 'Veoma loše',
+        'submit review' => 'Pošalji recenziju',
+        'Cancel reply' => 'Otkaži odgovor',
         
         // --- Cart table headers ---
         'Image' => 'Slika',
