@@ -578,6 +578,9 @@ span.featured {
     padding: 20px 0 0 0 !important;
     margin-top: 0!important;
 }
+.woocommerce-tabs.tabs-v1 .woocommerce p.stars a:before {
+	color:#1967d2!important;
+}
 
 /*=============================*/
 /*===   Loader mini CSS    ===*/
