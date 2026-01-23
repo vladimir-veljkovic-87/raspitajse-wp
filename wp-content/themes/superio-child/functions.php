@@ -1759,7 +1759,7 @@ function raspitajse_checkout_payment_method_debug() {
  * WooCommerce – Smart QR Code (RSD IPS / EUR Info)
  * =========================================================
  */
-add_action( 'woocommerce_thankyou', 'raspitajse_add_smart_qr_code', 5 );
+add_action( 'woocommerce_thankyou', 'raspitajse_add_smart_qr_code', 2 );
 
 function raspitajse_add_smart_qr_code( $order_id ) {
 
