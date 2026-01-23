@@ -1754,6 +1754,98 @@ function raspitajse_checkout_payment_method_debug() {
     <?php
 }
 
+add_action('wp_head', function () {
+    if (!is_order_received_page()) return;
+    echo '<style>.woocommerce-bacs-bank-details{display:none !important;}</style>';
+});
+
+/**
+ * =========================================================
+ * WooCommerce – Nalog za uplatu (umesto Our bank details)
+ * =========================================================
+ */
+add_action('woocommerce_thankyou', 'raspitajse_render_payment_slip', 1);
+
+function raspitajse_render_payment_slip($order_id) {
+
+    if (!$order_id) return;
+
+    $order = wc_get_order($order_id);
+    if (!$order) return;
+
+    $payment_method = $order->get_payment_method();
+    if (!in_array($payment_method, ['bacs', 'bank_transfer_1'], true)) return;
+
+    $billing_company = trim($order->get_billing_company());
+    if ($billing_company === '') {
+        $billing_company = trim($order->get_formatted_billing_full_name());
+    }
+
+    $amount_raw = (float) $order->get_total();
+    $amount = number_format($amount_raw, 2, ',', '');
+    $order_number = $order->get_order_number();
+
+    $purpose = "KUPOVINA PAKETA BR {$order_number}";
+    $recipient_account = "265-6660310001092-13";
+
+    ?>
+    <section class="raspitajse-payment-slip" style="margin:30px 0;padding:20px;border:2px dashed #1967d2;border-radius:12px;background:#fafffb;">
+        <h2 style="margin:0 0 12px;">Nalog za uplatu</h2>
+
+        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px;">
+            <div style="flex:1;min-width:260px;">
+                <div style="font-size:13px;color:#666;margin-bottom:4px;">Platilac</div>
+                <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
+                    <?php echo esc_html($billing_company); ?>
+                </div>
+            </div>
+
+            <div style="width:160px;min-width:160px;">
+                <div style="font-size:13px;color:#666;margin-bottom:4px;">Šifra plaćanja</div>
+                <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
+                    189
+                </div>
+            </div>
+
+            <div style="width:120px;min-width:120px;">
+                <div style="font-size:13px;color:#666;margin-bottom:4px;">Valuta</div>
+                <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
+                    RSD
+                </div>
+            </div>
+
+            <div style="width:160px;min-width:160px;">
+                <div style="font-size:13px;color:#666;margin-bottom:4px;">Iznos</div>
+                <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
+                    <?php echo esc_html($amount); ?>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:260px;">
+                <div style="font-size:13px;color:#666;margin-bottom:4px;">Svrha plaćanja</div>
+                <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
+                    <?php echo esc_html($purpose); ?>
+                </div>
+            </div>
+
+            <div style="flex:1;min-width:260px;">
+                <div style="font-size:13px;color:#666;margin-bottom:4px;">Račun primaoca</div>
+                <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
+                    <?php echo esc_html($recipient_account); ?>
+                </div>
+            </div>
+        </div>
+
+        <p style="margin:12px 0 0;color:#666;font-size:13px;">
+            Uplatu možete izvršiti putem e-banking servisa ili popunjavanjem naloga za uplatu.
+        </p>
+    </section>
+    <?php
+}
+
+
 /**
  * =========================================================
  * WooCommerce – Smart QR Code (RSD IPS / EUR Info)
@@ -1788,7 +1880,7 @@ function raspitajse_add_smart_qr_code( $order_id ) {
             "R:265666031000109213|" .
             "N:VLADIMIR VELJKOVIĆ PR DOTS|" .
             "I:RSD{$amount}|" .
-            "SF:189|" .
+            "SF:221|" .
             "S:KUPOVINA PAKETA BR {$order_id}";
 
         $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode( $qr_payload );
