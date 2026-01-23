@@ -752,9 +752,9 @@ and (max-width : 767px) {
 	}
 	/* Payment page */
 	.payment-row {
-        flex-wrap: wrap;
+        flex-wrap: wrap!important;
     }
     .payment-row > div {
-        flex: 1 1 100%;
+        flex: 1 1 100%!important;
     }
 }
