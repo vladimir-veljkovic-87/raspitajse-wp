@@ -1790,9 +1790,9 @@ function raspitajse_render_payment_slip($order_id) {
 
     ?>
     <section class="raspitajse-payment-slip" style="margin:30px 0;padding:20px;border:2px solid #F5F7FC;border-radius:12px;background:#fafffb;">
-        <h3 style="margin:0 0 12px;">Nalog za uplatu</h3>
+        <h4 style="margin:0 0 12px;">Nalog za uplatu</h4>
 
-        <div style="display:flex;gap:16px;flex-wrap:nowrap;margin-bottom:12px;align-items:flex-start;">
+        <div style="display:flex;gap:16px;flex-wrap:nowrap;margin-bottom:12px;align-items:flex-start;" class="payment-row">
 
             <!-- Platilac (widest) -->
             <div style="flex:3;">
@@ -1806,7 +1806,7 @@ function raspitajse_render_payment_slip($order_id) {
             <div style="flex:1;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Šifra plaćanja</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
-                    189
+                    221
                 </div>
             </div>
 

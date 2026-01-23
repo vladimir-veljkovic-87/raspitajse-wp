@@ -750,4 +750,11 @@ and (max-width : 767px) {
 	.woocommerce-shop .product.post-1728, .woocommerce-shop .product.post-1729, .woocommerce-shop .product.post-1730 {
 		width: 100%!important;
 	}
+	/* Payment page */
+	.payment-row {
+        flex-wrap: wrap;
+    }
+    .payment-row > div {
+        flex: 1 1 100%;
+    }
 }
