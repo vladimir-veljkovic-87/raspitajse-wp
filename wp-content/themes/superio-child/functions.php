@@ -1761,7 +1761,7 @@ add_action('wp_head', function () {
 
 /**
  * =========================================================
- * WooCommerce – Nalog za uplatu (umesto Our bank details)
+ * WooCommerce – Nalog za uplatu (dinamički RSD/EUR)
  * =========================================================
  */
 add_action('woocommerce_thankyou', 'raspitajse_render_payment_slip', 1);
@@ -1776,29 +1776,50 @@ function raspitajse_render_payment_slip($order_id) {
     $payment_method = $order->get_payment_method();
     if (!in_array($payment_method, ['bacs', 'bank_transfer_1'], true)) return;
 
+    // --- Dinamički podaci iz porudžbine ---
     $billing_company = trim($order->get_billing_company());
     if ($billing_company === '') {
         $billing_company = trim($order->get_formatted_billing_full_name());
     }
 
+    $currency = strtoupper((string) $order->get_currency()); // "RSD" / "EUR"
     $amount_raw = (float) $order->get_total();
-    $amount = number_format($amount_raw, 2, ',', '');
+    $amount = number_format($amount_raw, 2, ',', ''); // npr. 49,00 / 119616,00 (bez simbola)
+
     $order_number = $order->get_order_number();
-
     $purpose = "KUPOVINA PAKETA BR {$order_number}";
-    $recipient_account = "265-6660310001092-13";
 
+    // --- Primalac (fiksno, ali možeš menjati) ---
+    $recipient_name = 'VLADIMIR VELJKOVIĆ PR DOTS';
+
+    // --- Računi po valuti ---
+    $recipient_account_rsd = '265-6660310001092-13';
+    $recipient_iban_eur    = 'RS35265100000003681027';
+    $recipient_bic_eur     = 'RZBSRSBG';
+
+    // --- Šifra plaćanja po valuti/metodu (prilagodi kako želiš) ---
+    // Ako želiš RSD=189, promeni 'RSD' => '189'
+    $payment_code_by_currency = [
+        'RSD' => '221',
+        'EUR' => '221',
+    ];
+    $payment_code = $payment_code_by_currency[$currency] ?? '221';
+
+    // Ako ti je valuta nešto treće, ne prikazuj slip (ili prikazuj default)
+    if (!in_array($currency, ['RSD', 'EUR'], true)) return;
+
+    // --- UI ---
     ?>
     <section class="raspitajse-payment-slip" style="margin:30px 0;padding:20px;border:2px solid #F5F7FC;border-radius:12px;background:#fafffb;">
         <h4 style="margin:0 0 12px;">Nalog za uplatu</h4>
 
         <div style="display:flex;gap:16px;flex-wrap:nowrap;margin-bottom:12px;align-items:flex-start;" class="payment-row">
 
-            <!-- Platilac (widest) -->
+            <!-- Platilac -->
             <div style="flex:3;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Platilac</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
-                    Test Dots Agencija
+                    <?php echo esc_html($billing_company); ?>
                 </div>
             </div>
 
@@ -1806,7 +1827,7 @@ function raspitajse_render_payment_slip($order_id) {
             <div style="flex:1;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Šifra plaćanja</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
-                    221
+                    <?php echo esc_html($payment_code); ?>
                 </div>
             </div>
 
@@ -1814,7 +1835,7 @@ function raspitajse_render_payment_slip($order_id) {
             <div style="flex:1;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Valuta</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
-                    RSD
+                    <?php echo esc_html($currency); ?>
                 </div>
             </div>
 
@@ -1822,27 +1843,52 @@ function raspitajse_render_payment_slip($order_id) {
             <div style="flex:1.5;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Iznos</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
-                    119616,00
+                    <?php echo esc_html($amount); ?>
                 </div>
             </div>
 
         </div>
 
-
         <div style="display:flex;gap:20px;flex-wrap:wrap;">
-            <div style="flex:1;min-width:260px;">
+
+            <!-- Svrha plaćanja -->
+            <div style="flex:1;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Svrha plaćanja</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
                     <?php echo esc_html($purpose); ?>
                 </div>
-            </div>
 
-            <div style="flex:1;min-width:260px;">
-                <div style="font-size:13px;color:#666;margin-bottom:4px;">Račun primaoca</div>
+                <!-- Primalac (tražio si: ispod svrhe plaćanja) -->
+                <div style="font-size:13px;color:#666;margin:12px 0 4px;">Primalac</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
-                    <?php echo esc_html($recipient_account); ?>
+                    <?php echo esc_html($recipient_name); ?>
                 </div>
             </div>
+
+            <!-- Račun / IBAN + BIC (za EUR) -->
+            <div style="flex:1;">
+                <?php if ($currency === 'RSD') : ?>
+
+                    <div style="font-size:13px;color:#666;margin-bottom:4px;">Račun primaoca</div>
+                    <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
+                        <?php echo esc_html($recipient_account_rsd); ?>
+                    </div>
+
+                <?php else : // EUR ?>
+
+                    <div style="font-size:13px;color:#666;margin-bottom:4px;">IBAN primaoca</div>
+                    <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
+                        <?php echo esc_html($recipient_iban_eur); ?>
+                    </div>
+
+                    <div style="font-size:13px;color:#666;margin:12px 0 4px;">BIC / SWIFT</div>
+                    <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
+                        <?php echo esc_html($recipient_bic_eur); ?>
+                    </div>
+
+                <?php endif; ?>
+            </div>
+
         </div>
 
         <p style="margin:12px 0 0;color:#666;font-size:13px;">
