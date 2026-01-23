@@ -1789,38 +1789,45 @@ function raspitajse_render_payment_slip($order_id) {
     $recipient_account = "265-6660310001092-13";
 
     ?>
-    <section class="raspitajse-payment-slip" style="margin:30px 0;padding:20px;border:2px dashed #1967d2;border-radius:12px;background:#fafffb;">
-        <h2 style="margin:0 0 12px;">Nalog za uplatu</h2>
+    <section class="raspitajse-payment-slip" style="margin:30px 0;padding:20px;border:2px solid #F5F7FC;border-radius:12px;background:#fafffb;">
+        <h3 style="margin:0 0 12px;">Nalog za uplatu</h3>
 
-        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px;">
-            <div style="flex:1;min-width:260px;">
+        <div style="display:flex;gap:16px;flex-wrap:nowrap;margin-bottom:12px;align-items:flex-start;">
+
+            <!-- Platilac (widest) -->
+            <div style="flex:3;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Platilac</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;">
-                    <?php echo esc_html($billing_company); ?>
+                    Test Dots Agencija
                 </div>
             </div>
 
-            <div style="width:160px;min-width:160px;">
+            <!-- Šifra plaćanja -->
+            <div style="flex:1;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Šifra plaćanja</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
                     189
                 </div>
             </div>
 
-            <div style="width:120px;min-width:120px;">
+            <!-- Valuta -->
+            <div style="flex:1;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Valuta</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
                     RSD
                 </div>
             </div>
 
-            <div style="width:160px;min-width:160px;">
+            <!-- Iznos -->
+            <div style="flex:1.5;">
                 <div style="font-size:13px;color:#666;margin-bottom:4px;">Iznos</div>
                 <div style="padding:10px 12px;border:1px solid #e6e6e6;border-radius:8px;background:#fff;text-align:center;">
-                    <?php echo esc_html($amount); ?>
+                    119616,00
                 </div>
             </div>
+
         </div>
+
 
         <div style="display:flex;gap:20px;flex-wrap:wrap;">
             <div style="flex:1;min-width:260px;">
@@ -1867,7 +1874,7 @@ function raspitajse_add_smart_qr_code( $order_id ) {
     $payment_method = $order->get_payment_method();
     $amount = number_format( (float) $order->get_total(), 2, ',', '' );
 
-    echo '<section class="raspitajse-qr-container" style="margin:40px 0;padding:25px;border:2px solid #1967d2;text-align:center;border-radius:12px;background:#fafffb;">';
+    echo '<section class="raspitajse-qr-container" style="margin:40px 0;padding:25px;border:2px solid #F5F7FC;text-align:center;border-radius:12px;background:#fafffb;">';
 
     /* =====================================================
      * RSD – PRAVI IPS QR
