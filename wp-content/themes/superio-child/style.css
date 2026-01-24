@@ -517,6 +517,7 @@ span.featured {
 }
 
 /* Shop page */
+/* Package width */
 .woocommerce-shop .product.post-1728, .woocommerce-shop .product.post-1729, .woocommerce-shop  .product.post-1730 {
 	width: 33.33%!important;
 }
@@ -526,6 +527,7 @@ span.featured {
 .woocommerce-shop .product.post-1728 .name, .woocommerce-shop .product.post-1729 .name {
 	font-size: 20px!important;
 }
+/* Package text color */
 .woocommerce-shop .product.post-1728 .name a {
 	color: #1967d2!important;
 }
@@ -553,7 +555,7 @@ span.featured {
 .details-product .apus-woocommerce-product-gallery-wrapper {
 	border:none!important;
 }
-/* Product page detail */
+/* Product page detail description */
 .woocommerce-tabs.tabs-v1 .tap-top {
 	display: none!important;
 }
@@ -578,7 +580,31 @@ span.featured {
     padding: 20px 0 0 0 !important;
     margin-top: 0!important;
 }
+/* Payment page */
+/* Order details */
+.woocommerce ul.order_details {
+	margin-bottom: 20px;
+	border: 2px solid #F5F7FC;
+	background-color: #fafffb;
+}
+/* First paragraph - payment instruction */
+.woocommerce-order-overview + p {
+    background: #f5f7fc;
+    border-left: 4px solid #1967d2;
+    padding: 14px 16px;
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    border-radius: 8px;
+}
 
+/* Drugi paragraf – aktivacija paketa */
+.woocommerce-order-overview + p + p {
+    margin-top: 10px;
+    font-weight: 600;
+    color: #2e7d32;
+    font-size: 14px;
+}
 
 /*=============================*/
 /*===   Loader mini CSS    ===*/
