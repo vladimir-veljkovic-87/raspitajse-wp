@@ -546,9 +546,9 @@ function raspitajse_quick_translate($translated, $text, $domain) {
 
         // --- Footer rows ---
         'Payment method:' => 'Način plaćanja:',
-
         // --- Order again ---
         'Order again' => 'Poruči ponovo',
+        'Billing address' => 'Adresa za fakturisanje',
 
         // --- Reviews ---
         'Reviews (%d)' => 'Recenzije (%d)',
