@@ -527,6 +527,29 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Tag'         => 'Oznaka',
         'Tag(s):'     => 'Oznake:',
 
+         // --- Thank you page ---
+        'Thank you. Your order has been received.' => 'Hvala vam. Vaša porudžbina je uspešno primljena.',
+
+        // --- Order overview ---
+        'Order number:'   => 'Broj porudžbine:',
+        'Date:'           => 'Datum:',
+        'Total:'          => 'Ukupno:',
+        'Payment method:' => 'Način plaćanja:',
+
+        // --- Order details section ---
+        'Order details' => 'Detalji porudžbine',
+
+        // --- Table headers ---
+        'Product'   => 'Proizvod',
+        'Subtotal:' => 'Međuzbir:',
+        'Total:'    => 'Ukupno:',
+
+        // --- Footer rows ---
+        'Payment method:' => 'Način plaćanja:',
+
+        // --- Order again ---
+        'Order again' => 'Poruči ponovo',
+
         // --- Reviews ---
         'Reviews (%d)' => 'Recenzije (%d)',
         '%d Reviews' => '%d recenzija',
