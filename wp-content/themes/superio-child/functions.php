@@ -699,44 +699,27 @@ function raspitajse_quick_translate($translated, $text, $domain) {
     return (string) $translated;
 }
 
-add_filter('gettext', function ($translated, $text, $domain) {
+add_filter('date_i18n', function ($date, $format, $timestamp, $gmt) {
 
     $months = [
-        'January'   => 'Januar',
-        'February'  => 'Februar',
-        'March'     => 'Mart',
-        'April'     => 'April',
-        'May'       => 'Maj',
-        'June'      => 'Jun',
-        'July'      => 'Jul',
-        'August'    => 'Avgust',
-        'September' => 'Septembar',
-        'October'   => 'Oktobar',
-        'November'  => 'Novembar',
-        'December'  => 'Decembar',
-
-        // ako negde izlazi sa zarezom
-        'January,'   => 'Januar,',
-        'February,'  => 'Februar,',
-        'March,'     => 'Mart,',
-        'April,'     => 'April,',
-        'May,'       => 'Maj,',
-        'June,'      => 'Jun,',
-        'July,'      => 'Jul,',
-        'August,'    => 'Avgust,',
-        'September,' => 'Septembar,',
-        'October,'   => 'Oktobar,',
-        'November,'  => 'Novembar,',
-        'December,'  => 'Decembar,',
+        'January '   => 'Januar ',
+        'February '  => 'Februar ',
+        'March '     => 'Mart ',
+        'April '     => 'April ',
+        'May '       => 'Maj ',
+        'June '      => 'Jun ',
+        'July '      => 'Jul ',
+        'August '    => 'Avgust ',
+        'September ' => 'Septembar ',
+        'October '   => 'Oktobar ',
+        'November '  => 'Novembar ',
+        'December '  => 'Decembar ',
     ];
 
-    if (isset($months[$text])) {
-        return $months[$text];
-    }
+    // menja samo naziv meseca, ostalo ostaje: "24, 2026"
+    return strtr($date, $months);
 
-    return $translated;
-
-}, 20, 3);
+}, 10, 4);
 
 
 /**
