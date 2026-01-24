@@ -690,7 +690,18 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Package Type'         => 'Tip paketa',
         'Package Info'         => 'Informacije o paketu',
         'Status'               => 'Status',
+    ];
 
+    if (isset($map[$normalized])) {
+        return (string) $map[$normalized];
+    }
+
+    return (string) $translated;
+}
+
+add_filter('gettext', function ($translated, $text, $domain) {
+
+    $months = [
         'January'   => 'Januar',
         'February'  => 'Februar',
         'March'     => 'Mart',
@@ -705,12 +716,14 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'December'  => 'Decembar',
     ];
 
-    if (isset($map[$normalized])) {
-        return (string) $map[$normalized];
+    if (isset($months[$text])) {
+        return $months[$text];
     }
 
-    return (string) $translated;
-}
+    return $translated;
+
+}, 20, 3);
+
 
 
 /**
