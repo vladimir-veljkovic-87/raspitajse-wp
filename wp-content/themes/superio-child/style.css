@@ -583,9 +583,9 @@ span.featured {
 /* Payment page */
 /* Order details */
 .woocommerce ul.order_details {
-	margin-bottom: 20px;
+	margin-bottom: 20px!important;
 	border: 2px solid #F5F7FC;
-	background-color: #fafffb;
+	background-color: #fafffb!important;
 }
 /* First paragraph - payment instruction */
 .woocommerce-order-overview + p {
@@ -602,7 +602,7 @@ span.featured {
 .woocommerce-order-overview + p + p {
     margin-top: 10px;
     font-weight: 600;
-    color: #2e7d32;
+    color: #1967d2;
     font-size: 14px;
 }
 
