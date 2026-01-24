@@ -583,7 +583,7 @@ span.featured {
 /* Payment page */
 /* Order details */
 .woocommerce ul.order_details {
-	margin-bottom: 20px!important;
+	margin-bottom: 30px!important;
 	border: 2px solid #F5F7FC;
 	background-color: #fafffb!important;
 }
