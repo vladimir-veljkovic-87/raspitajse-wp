@@ -725,7 +725,6 @@ add_filter('gettext', function ($translated, $text, $domain) {
 }, 20, 3);
 
 
-
 /**
  * =========================================================
  * WP Job Board Pro – User Package Expiration Fix
