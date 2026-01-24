@@ -714,6 +714,20 @@ add_filter('gettext', function ($translated, $text, $domain) {
         'October'   => 'Oktobar',
         'November'  => 'Novembar',
         'December'  => 'Decembar',
+
+        // ako negde izlazi sa zarezom
+        'January,'   => 'Januar,',
+        'February,'  => 'Februar,',
+        'March,'     => 'Mart,',
+        'April,'     => 'April,',
+        'May,'       => 'Maj,',
+        'June,'      => 'Jun,',
+        'July,'      => 'Jul,',
+        'August,'    => 'Avgust,',
+        'September,' => 'Septembar,',
+        'October,'   => 'Oktobar,',
+        'November,'  => 'Novembar,',
+        'December,'  => 'Decembar,',
     ];
 
     if (isset($months[$text])) {
