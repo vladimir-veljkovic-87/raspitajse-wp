@@ -690,18 +690,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Package Type'         => 'Tip paketa',
         'Package Info'         => 'Informacije o paketu',
         'Status'               => 'Status',
-    ];
 
-    if (isset($map[$normalized])) {
-        return (string) $map[$normalized];
-    }
-
-    return (string) $translated;
-}
-
-add_filter('date_i18n', function ($date, $format, $timestamp, $gmt) {
-
-    $months = [
         'January '   => 'Januar ',
         'February '  => 'Februar ',
         'March '     => 'Mart ',
@@ -716,11 +705,12 @@ add_filter('date_i18n', function ($date, $format, $timestamp, $gmt) {
         'December '  => 'Decembar ',
     ];
 
-    // menja samo naziv meseca, ostalo ostaje: "24, 2026"
-    return strtr($date, $months);
+    if (isset($map[$normalized])) {
+        return (string) $map[$normalized];
+    }
 
-}, 10, 4);
-
+    return (string) $translated;
+}
 
 /**
  * =========================================================
