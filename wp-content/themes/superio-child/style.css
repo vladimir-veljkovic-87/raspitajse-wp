@@ -607,9 +607,11 @@ span.featured {
 }
 .woocommerce-order-details {
 	margin-top: 30px!important;
+	background: #fafffb;
 }
 .woocommerce-customer-details {
 	margin-top: 30px!important;	
+	background: #fafffb;
 }
 
 /*=============================*/
