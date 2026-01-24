@@ -605,6 +605,12 @@ span.featured {
     color: #1967d2;
     font-size: 14px;
 }
+.woocommerce-order-details {
+	margin-top: 30px!important;
+}
+.woocommerce-customer-details {
+	margin-top: 30px!important;	
+}
 
 /*=============================*/
 /*===   Loader mini CSS    ===*/

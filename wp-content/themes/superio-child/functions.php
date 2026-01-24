@@ -1920,7 +1920,7 @@ function raspitajse_add_smart_qr_code( $order_id ) {
     $payment_method = $order->get_payment_method();
     $amount = number_format( (float) $order->get_total(), 2, ',', '' );
 
-    echo '<section class="raspitajse-qr-container" style="margin:40px 0;padding:25px;border:2px solid #F5F7FC;text-align:center;border-radius:12px;background:#fafffb;">';
+    echo '<section class="raspitajse-qr-container" style="padding:25px;border:2px solid #F5F7FC;text-align:center;border-radius:12px;background:#fafffb;">';
 
     /* =====================================================
      * RSD – PRAVI IPS QR
