@@ -538,6 +538,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Total:'          => 'Ukupno:',
         'Payment method:' => 'Način plaćanja:',
         'Invoice Number:' => 'Broj fakture:',
+        'Due Date:'       => 'Rok plaćanja:',
 
         // --- Order details section ---
         'Order details' => 'Detalji porudžbine',
@@ -2016,3 +2017,30 @@ function raspitajse_add_smart_qr_code( $order_id ) {
     echo '</section>';
 }
 
+/**
+ * WP Overnight PDF Invoices:
+ * - Attach invoice only for paid orders (total > 0)
+ * - Attach only to Completed/Processing customer emails
+ */
+add_filter('wpo_wcpdf_attach_invoice', function ($attach, $order, $email_id = '') {
+
+    if (!$order || !is_a($order, 'WC_Order')) {
+        return false;
+    }
+
+    // Ne šalji fakturu za besplatne porudžbine
+    if ((float) $order->get_total() <= 0) {
+        return false;
+    }
+
+    // Kači samo na ove emailove
+    $allowed_emails = ['customer_completed_order', 'customer_processing_order'];
+
+    // Ako plugin šalje $email_id, filtriramo
+    if (!empty($email_id) && !in_array($email_id, $allowed_emails, true)) {
+        return false;
+    }
+
+    return $attach;
+
+}, 10, 3);
