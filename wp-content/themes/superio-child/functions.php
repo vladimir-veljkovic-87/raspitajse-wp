@@ -532,6 +532,8 @@ function raspitajse_quick_translate($translated, $text, $domain) {
 
         // --- Order overview ---
         'Order number:'   => 'Broj porudžbine:',
+        'Order Number:'   => 'Broj porudžbine:',
+        'Order Date:'        => 'Datum porudžbine:',
         'Date:'           => 'Datum:',
         'Total:'          => 'Ukupno:',
         'Payment method:' => 'Način plaćanja:',
