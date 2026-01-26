@@ -539,6 +539,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Payment method:' => 'Način plaćanja:',
         'Invoice Number:' => 'Broj fakture:',
         'Due Date:'       => 'Rok plaćanja:',
+        'INVOICE'         => 'FAKTURA',
 
         // --- Order details section ---
         'Order details' => 'Detalji porudžbine',
