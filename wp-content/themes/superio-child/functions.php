@@ -2046,9 +2046,3 @@ add_filter('wpo_wcpdf_attach_invoice', function ($attach, $order, $email_id = ''
 
 }, 10, 3);
 
-add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $order ) {
-    echo '<pre>';
-    print_r( $order->get_meta_data() );
-    echo '</pre>';
-});
-
