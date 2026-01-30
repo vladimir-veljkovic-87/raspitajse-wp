@@ -555,6 +555,8 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Order again' => 'Poruči ponovo',
         'Billing address' => 'Adresa za fakturisanje',
 
+        'View Dashboard' => 'Pogledaj kontrolnu tablu',
+
         // --- Reviews ---
         'Reviews (%d)' => 'Recenzije (%d)',
         '%d Reviews' => '%d recenzija',
@@ -645,6 +647,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Billing details' => 'Podaci za fakturisanje',
         'Additional information' => 'Dodatne informacije',
         'Your order' => 'Vaša porudžbina',
+        '“%s” has been added to your cart.' => '„%s“ je dodat u vašu korpu.',
 
         // --- Order table ---
         'Product' => 'Proizvod',
@@ -721,27 +724,36 @@ function raspitajse_quick_translate($translated, $text, $domain) {
     return (string) $translated;
 }
 
-add_filter('date_i18n', function ($date, $format, $timestamp, $gmt) {
+function raspitajse_translate_months_in_string( $date_string ) {
+	$map = [
+		'January'   => 'Januar',
+		'February'  => 'Februar',
+		'March'     => 'Mart',
+		'April'     => 'April',
+		'May'       => 'Maj',
+		'June'      => 'Jun',
+		'July'      => 'Jul',
+		'August'    => 'Avgust',
+		'September' => 'Septembar',
+		'October'   => 'Oktobar',
+		'November'  => 'Novembar',
+		'December'  => 'Decembar',
+	];
 
-    $months = [
-        'January '   => 'Januar ',
-        'February '  => 'Februar ',
-        'March '     => 'Mart ',
-        'April '     => 'April ',
-        'May '       => 'Maj ',
-        'June '      => 'Jun ',
-        'July '      => 'Jul ',
-        'August '    => 'Avgust ',
-        'September ' => 'Septembar ',
-        'October '   => 'Oktobar ',
-        'November '  => 'Novembar ',
-        'December '  => 'Decembar ',
-    ];
+	$pattern = '/\b(' . implode( '|', array_keys( $map ) ) . ')\b/u';
 
-    // menja samo naziv meseca, ostalo ostaje: "24, 2026"
-    return strtr($date, $months);
+	return preg_replace_callback( $pattern, function( $m ) use ( $map ) {
+		return $map[ $m[1] ];
+	}, $date_string );
+}
 
-}, 10, 4);
+add_filter( 'wp_date', function( $date ) {
+	return raspitajse_translate_months_in_string( $date );
+}, 10, 1 );
+
+add_filter( 'date_i18n', function( $date ) {
+	return raspitajse_translate_months_in_string( $date );
+}, 10, 1 );
 
 
 /**
