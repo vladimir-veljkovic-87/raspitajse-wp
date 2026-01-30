@@ -711,7 +711,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
 
         // Addresses
         'Billing address'   => 'Adresa za naplatu',
-        'Billing Address'   => 'Adresa za naplatu',
+        'Our bank details'   => 'Podaci naše banke',
 
         // Footer
         'Thanks for shopping with us.' => 'Hvala vam na poverenju.',
