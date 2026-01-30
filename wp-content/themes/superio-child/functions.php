@@ -849,6 +849,15 @@ add_filter( 'woocommerce_countries', function ( $countries ) {
     return $countries;
 });
 
+/**
+ * =========================================================
+ * WooCommerce Emails – Custom footer text
+ * =========================================================
+ */
+add_filter( 'woocommerce_email_footer_text', function () {
+    return 'RASPITAJSE — Izgrađeno u saradnji sa AI tehnologijom za bolje iskustvo zapošljavanja.';
+});
+
 
 /**
  * =========================================================
