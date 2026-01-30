@@ -858,19 +858,31 @@ add_filter( 'woocommerce_email_footer_text', function () {
     return 'RASPITAJSE — Izgrađeno u saradnji sa AI tehnologijom za bolje iskustvo zapošljavanja.';
 });
 
-add_filter( 'gettext', function ( $translated, $text, $domain ) {
+add_filter( 'gettext', function( $translated, $text, $domain ) {
 
-	if ( $domain === 'woocommerce' ) {
+	if ( $domain !== 'woocommerce' ) {
+		return $translated;
+	}
 
-		if ( $text === 'Order' ) {
-			return 'Porudžbina';
-		}
+	$replacements = [
+		'Order'      => 'Porudžbina',
+		'Order #'    => 'Porudžbina #',
+	];
 
+	// tačna zamena
+	if ( isset( $replacements[ $text ] ) ) {
+		return $replacements[ $text ];
+	}
+
+	// fallback: ako negde dođe kao "Order #" unutar većeg stringa
+	if ( strpos( $text, 'Order #' ) !== false ) {
+		return str_replace( 'Order #', 'Porudžbina #', $text );
 	}
 
 	return $translated;
 
 }, 20, 3 );
+
 
 
 /**
