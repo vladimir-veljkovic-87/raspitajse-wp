@@ -702,6 +702,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         // --- Woocomerce emails ---
         // Order header
         'Order #%1$s'        => 'Porudžbina #%1$s',
+        '[Order #%2$s'       => 'Porudžbina #%2$s',
         'Order #%s'          => 'Porudžbina #%s',
 
         // Totals
