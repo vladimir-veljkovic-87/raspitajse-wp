@@ -851,12 +851,26 @@ add_filter( 'woocommerce_countries', function ( $countries ) {
 
 /**
  * =========================================================
- * WooCommerce Emails – Custom footer text
+ * WooCommerce Emails – Custom footer text and translations
  * =========================================================
  */
 add_filter( 'woocommerce_email_footer_text', function () {
     return 'RASPITAJSE — Izgrađeno u saradnji sa AI tehnologijom za bolje iskustvo zapošljavanja.';
 });
+
+add_filter( 'gettext', function ( $translated, $text, $domain ) {
+
+	if ( $domain === 'woocommerce' ) {
+
+		if ( $text === 'Order' ) {
+			return 'Porudžbina';
+		}
+
+	}
+
+	return $translated;
+
+}, 20, 3 );
 
 
 /**
