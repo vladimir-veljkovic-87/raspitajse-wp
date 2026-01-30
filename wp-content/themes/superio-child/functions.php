@@ -712,6 +712,8 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         // Addresses
         'Billing address'   => 'Adresa za naplatu',
         'Our bank details'   => 'Podaci naše banke',
+        'Bank'              => 'Banka',
+        'Account number'    => 'Broj računa',
 
         // Footer
         'Thanks for shopping with us.' => 'Hvala vam na poverenju.',
