@@ -695,6 +695,23 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Package Type'         => 'Tip paketa',
         'Package Info'         => 'Informacije o paketu',
         'Status'               => 'Status',
+
+        // --- Woocomerce emails ---
+        // Order header
+        'Order #%1$s'        => 'Porudžbina #%1$s',
+        'Order #%s'          => 'Porudžbina #%s',
+
+        // Totals
+        'Subtotal:'         => 'Međuzbir:',
+        'Payment method:'   => 'Način plaćanja:',
+        'Total:'            => 'Ukupno:',
+
+        // Addresses
+        'Billing address'   => 'Adresa za naplatu',
+        'Billing Address'   => 'Adresa za naplatu',
+
+        // Footer
+        'Thanks for shopping with us.' => 'Hvala vam na poverenju.',
     ];
 
     if (isset($map[$normalized])) {
@@ -2045,4 +2062,3 @@ add_filter('wpo_wcpdf_attach_invoice', function ($attach, $order, $email_id = ''
     return $attach;
 
 }, 10, 3);
-
