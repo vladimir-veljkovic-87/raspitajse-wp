@@ -614,6 +614,13 @@ span.featured {
 	background: #fafffb;
 }
 
+/* Kandidati singl - single-candidate */
+.single-candidate .featured-text {
+	padding: 3px 15px!important;
+    background: #fafffb!important;
+}
+
+
 /*=============================*/
 /*===   Loader mini CSS    ===*/
 /*===========================*/
