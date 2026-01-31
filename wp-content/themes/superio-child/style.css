@@ -618,6 +618,8 @@ span.featured {
 .single-candidate .featured-text {
 	padding: 3px 15px!important;
     background: #fafffb!important;
+	font-weight: 500;
+    border: 1px solid #d4e1f6;
 }
 
 
