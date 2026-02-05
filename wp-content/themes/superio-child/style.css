@@ -363,7 +363,7 @@ html:has(> body.home) {
 	display:none!important;
 }
 .is-featured .candidate-list.v3 {
-	border: 3px solid #c3e3ff;
+	border: 2px solid #c3e3ff;
 }
 .widget_candidate_alert_form_widget .widget-title {
 	color:#3167d1;
@@ -610,7 +610,7 @@ span.featured {
 	background: #fafffb;
 }
 .woocommerce-customer-details {
-	margin-top: 30px!important;	
+	margin-top: 30px!important;
 	background: #fafffb;
 }
 
