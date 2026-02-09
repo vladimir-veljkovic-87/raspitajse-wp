@@ -10,7 +10,7 @@ $meta_obj = WP_Job_Board_Pro_Candidate_Meta::get_instance($post->ID);
 if ( $meta_obj->check_post_meta_exist('education') && ($education = $meta_obj->get_post_meta( 'education' )) ) {
 ?>
     <div id="job-candidate-education" class="candidate-detail-education my_resume_eduarea">
-        <h4 class="title"><?php esc_html_e('Education', 'wp-job-board-pro'); ?></h4>
+        <h4 class="title"><?php esc_html_e('Obrazovanje', 'wp-job-board-pro'); ?></h4>
         <?php foreach ($education as $item) { ?>
 
             <div class="content">

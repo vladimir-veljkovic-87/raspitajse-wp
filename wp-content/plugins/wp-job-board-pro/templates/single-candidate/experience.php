@@ -10,7 +10,7 @@ $meta_obj = WP_Job_Board_Pro_Candidate_Meta::get_instance($post->ID);
 if ( $meta_obj->check_post_meta_exist('experience') && ($experience = $meta_obj->get_post_meta( 'experience' )) ) {
 ?>
     <div id="job-candidate-experience" class="candidate-detail-experience my_resume_eduarea">
-        <h4 class="title"><?php esc_html_e('Work &amp; Experience', 'wp-job-board-pro'); ?></h4>
+        <h4 class="title"><?php esc_html_e('Radno iskustvo', 'wp-job-board-pro'); ?></h4>
         <?php foreach ($experience as $item) { ?>
             <div class="content">
                 <div class="circle bgc-thm"></div>
