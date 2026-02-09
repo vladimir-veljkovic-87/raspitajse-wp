@@ -101,7 +101,7 @@ jQuery(document).ready(function($) {
         document.querySelectorAll('.social-title').forEach(el => {
             const key = el.textContent.trim();
             if (translations[key]) {
-            el.setAttribute('placeholder', translations[key]);
+            el.textContent = translations[key];
             }
         });
 
