@@ -73,7 +73,7 @@ jQuery(document).ready(function($) {
             'Contact' : 'Kontakt',
             'Subject' : 'Naslov',
             'Comment' : 'Komentar',
-            'Social Profiles' : 'Društveni profili',
+            'Social Profiles:' : 'Društveni profili:',
             'Work & Experience' : 'Radno iskustvo',
              
         };
