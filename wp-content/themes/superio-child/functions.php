@@ -731,6 +731,9 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Comment'           => 'Komentar',
         'Comments'          => 'Komentari',
         'Reply'             => 'Odgovori' ,
+        'Social Profiles'   => 'Društveni profili',
+        'Related Candidates' => 'Povezani kandidati',
+        'You must be logged in to post a review.' => 'Morate biti prijavljeni da biste ostavili recenziju.',
 
 
         // Footer

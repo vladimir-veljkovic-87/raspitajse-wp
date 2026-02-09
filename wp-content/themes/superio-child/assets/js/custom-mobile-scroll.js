@@ -68,7 +68,12 @@ jQuery(document).ready(function($) {
             'My Packages' : 'Moji paketi',
             'Active'    : 'Aktivan',
             'Expired'   : 'Istekao',
-            'Published'  : 'Objavljen',    
+            'Published'  : 'Objavljen',   
+            'Professional Skills' : 'Profesionalne veštine',
+            'Contact' : 'Kontakt',
+            'Subject' : 'Naslov',
+            'Comment' : 'Komentar',
+             
         };
 
         document.querySelectorAll('[data-original-title]').forEach(el => {
