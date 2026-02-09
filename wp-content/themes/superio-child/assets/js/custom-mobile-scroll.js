@@ -85,7 +85,7 @@ jQuery(document).ready(function($) {
             }
         });
 
-        document.querySelectorAll('label, button, h1, h2, h2 span').forEach(el => {
+        document.querySelectorAll('label, button, h1, h2, h2 span, h3, h4').forEach(el => {
             const key = el.textContent.trim();
             if (translations[key]) {
             el.textContent = translations[key];
