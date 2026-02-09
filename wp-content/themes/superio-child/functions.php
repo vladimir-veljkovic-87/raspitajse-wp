@@ -730,7 +730,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'View Profile'      => 'Pogledaj profil',
         'Comment'           => 'Komentar',
         'Comments'          => 'Komentari',
-        'Reply'             => 'Odgovori'
+        'Reply'             => 'Odgovori' ,
 
 
         // Footer
