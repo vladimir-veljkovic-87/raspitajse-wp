@@ -716,6 +716,23 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Bank'              => 'Banka',
         'Account number'    => 'Broj računa',
 
+        // Candidate page
+        'Download CV'       => 'Preuzmi CV',
+        'Invite'            => 'Pozovi',
+        'About Candidate'   => 'O kandidatu',
+        'Education'         => 'Obrazovanje',
+        'Experience'        => 'Iskustvo',
+        'Work & Experience' => 'Rad i iskustvo',
+        'Professional Skills'  => 'Veštine',
+        'Awards'            => 'Nagrade',
+        'Send Message'      => 'Pošalji poruku',
+        'Private Message'   => 'Privatna poruka',
+        'View Profile'      => 'Pogledaj profil',
+        'Comment'           => 'Komentar',
+        'Comments'          => 'Komentari',
+        'Reply'             => 'Odgovori'
+
+
         // Footer
         'Thanks for shopping with us.' => 'Hvala vam na poverenju.',
     ];
