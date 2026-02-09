@@ -99,7 +99,7 @@ jQuery(document).ready(function($) {
             }
         });
         document.querySelectorAll('.social-title').forEach(el => {
-            const key = el.getAttribute('placeholder');
+            const key = el.textContent.trim();
             if (translations[key]) {
             el.setAttribute('placeholder', translations[key]);
             }
