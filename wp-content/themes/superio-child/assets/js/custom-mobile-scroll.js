@@ -98,11 +98,20 @@ jQuery(document).ready(function($) {
             el.setAttribute('placeholder', translations[key]);
             }
         });
+        
         document.querySelectorAll('.social-title').forEach(el => {
             const key = el.textContent.trim();
             if (translations[key]) {
             el.textContent = translations[key];
             }
+        });
+        document.querySelectorAll('h2.widget-title span').forEach(el => {
+        const txt = el.textContent.trim();
+
+        // Ako počinje sa "Contact "
+        if (txt.startsWith('Contact ')) {
+            el.textContent = txt.replace(/^Contact\s+/, 'Kontaktirajte ');
+        }
         });
 
         document.querySelectorAll('.total-applicants, .approved-applicants, .rejected-applicants').forEach(el => {
