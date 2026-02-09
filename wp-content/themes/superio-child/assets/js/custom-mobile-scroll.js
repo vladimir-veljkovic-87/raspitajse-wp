@@ -98,7 +98,7 @@ jQuery(document).ready(function($) {
             el.setAttribute('placeholder', translations[key]);
             }
         });
-        
+
         document.querySelectorAll('.social-title').forEach(el => {
             const key = el.textContent.trim();
             if (translations[key]) {
@@ -113,6 +113,11 @@ jQuery(document).ready(function($) {
             el.textContent = txt.replace(/^Contact\s+/, 'Kontaktirajte ');
         }
         });
+
+        document.querySelectorAll('.must-log-in').forEach(el => {
+            el.innerHTML = 'Morate biti <a href="">prijavljeni</a> da biste ostavili recenziju.';
+        });
+
 
         document.querySelectorAll('.total-applicants, .approved-applicants, .rejected-applicants').forEach(el => {
                 const textNode = Array.from(el.childNodes)
