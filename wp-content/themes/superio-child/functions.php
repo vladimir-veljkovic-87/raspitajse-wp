@@ -735,6 +735,12 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Related Candidates' => 'Povezani kandidati',
         'You must be logged in to post a review.' => 'Morate biti prijavljeni da biste ostavili recenziju.',
 
+        // Employer page
+        'Search by Keywords' => 'Pretraži po ključnim rečima',
+        'Location'           => 'Lokacija',
+        'Category'           => 'Kategorija',
+        'Find Employers'     => 'Pronađite poslodavce',
+
 
         // Footer
         'Thanks for shopping with us.' => 'Hvala vam na poverenju.',
