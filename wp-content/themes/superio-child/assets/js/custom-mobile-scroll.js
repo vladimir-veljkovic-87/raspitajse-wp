@@ -98,6 +98,13 @@ jQuery(document).ready(function($) {
             el.setAttribute('placeholder', translations[key]);
             }
         });
+        document.querySelectorAll('social-title').forEach(el => {
+            const key = el.getAttribute('placeholder');
+            if (translations[key]) {
+            el.setAttribute('placeholder', translations[key]);
+            }
+        });
+
         document.querySelectorAll('.total-applicants, .approved-applicants, .rejected-applicants').forEach(el => {
                 const textNode = Array.from(el.childNodes)
                     .find(n => n.nodeType === 3 && n.textContent.trim().length);
