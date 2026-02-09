@@ -98,7 +98,7 @@ jQuery(document).ready(function($) {
             el.setAttribute('placeholder', translations[key]);
             }
         });
-        document.querySelectorAll('social-title').forEach(el => {
+        document.querySelectorAll('.social-title').forEach(el => {
             const key = el.getAttribute('placeholder');
             if (translations[key]) {
             el.setAttribute('placeholder', translations[key]);
