@@ -55,7 +55,7 @@ if ( ! comments_open() ) {
 					'comment_field' => ''
 				);
 
-				$comment_form['must_log_in'] = '<div class="must-log-in">' .  __( 'Morate biti <a href="">prijavljeni</a> to post a review.', 'wp-job-board-pro' ) . '</div>';
+				$comment_form['must_log_in'] = '<div class="must-log-in">' .  __( 'Morate biti <a href="">prijavljeni</a> da biste ostavili recenziju.', 'wp-job-board-pro' ) . '</div>';
 				
 				$comment_form['comment_field'] .= '<div class="form-group"><label>'.esc_html__( 'Recenzija', 'wp-job-board-pro' ).'</label><textarea id="comment" class="form-control" placeholder="'.esc_attr__( 'Napišite komentar', 'wp-job-board-pro' ).'" name="comment" cols="45" rows="5" aria-required="true"></textarea></div>';
 				
