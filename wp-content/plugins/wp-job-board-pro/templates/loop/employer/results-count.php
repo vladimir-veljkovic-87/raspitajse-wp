@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			$first = ( $per_page * $current ) - $per_page + 1;
 			$last  = min( $total, $per_page * $current );
 			/* translators: 1: first result 2: last result 3: total results */
-			printf( _nx( 'Showing the single result', 'Showing <span class="first">%1$d</span> &ndash; <span class="last">%2$d</span> of %3$d results', $total, 'with first and last result', 'wp-job-board-pro' ), $first, $last, $total );
+			printf( _nx( 'Showing the single result', 'Prikazano <span class="first">%1$d</span> &ndash; <span class="last">%2$d</span> od %3$d rezultata', $total, 'with first and last result', 'wp-job-board-pro' ), $first, $last, $total );
 		}
 	?>
 </div>
