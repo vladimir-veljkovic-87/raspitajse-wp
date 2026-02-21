@@ -75,7 +75,7 @@ jQuery(document).ready(function($) {
             'Comment' : 'Komentar',
             'Social Profiles:' : 'Društveni profili:',
             'Work & Experience' : 'Radno iskustvo',
-            'I have read and agree to the website' : 'Pročitao sam i slažem se sa uslovima sajta',
+            'I have read and agree to the website' : 'Pročitao sam i slažem se sa uslovima korisćenja sajta',
              
         };
 
@@ -222,23 +222,34 @@ jQuery(document).ready(function($) {
             }
         });
 
-        // Translate only the text node before the <a> inside Woo terms checkbox
-        document.querySelectorAll('.woocommerce-terms-and-conditions-checkbox-text').forEach(container => {
+        // Translate only the text node before the <a> inside Woo terms checkbox and change the structure to move the link above the checkbox for better mobile display
+        document.querySelectorAll('.woocommerce-form__label-for-checkbox').forEach(label => {
+
+            const container = label.querySelector('.woocommerce-terms-and-conditions-checkbox-text');
+            if (!container) return;
+
+            const link = container.querySelector('a');
+            if (!link) return;
+
+            // Promeni checkbox tekst
             container.childNodes.forEach(node => {
                 if (node.nodeType === Node.TEXT_NODE) {
-                    const original = node.textContent; // keep spaces
-                    // Normalize for matching
-                    const key = original.replace(/\s+/g, ' ').trim();
-
-                    if (translations[key]) {
-                        // Preserve original leading/trailing spaces
-                        const leading = (original.match(/^\s+/) || [''])[0];
-                        const trailing = (original.match(/\s+$/) || [''])[0];
-                        node.textContent = leading + translations[key] + trailing;
-                    }
+                    node.textContent = 'Pročitao sam i slažem se sa uslovima sajta ';
                 }
             });
+
+            // Ako već nismo prebacili link (da se ne duplira pri refresh-u)
+            if (!label.previousElementSibling || !label.previousElementSibling.classList.contains('custom-terms-link')) {
+
+                const linkWrapper = document.createElement('div');
+                linkWrapper.className = 'custom-terms-link';
+                linkWrapper.style.marginBottom = '6px';
+                linkWrapper.appendChild(link);
+
+                label.parentNode.insertBefore(linkWrapper, label);
+            }
         });
+
 
 
 
