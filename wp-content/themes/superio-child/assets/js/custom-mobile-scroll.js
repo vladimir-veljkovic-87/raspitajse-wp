@@ -226,31 +226,42 @@ jQuery(document).ready(function($) {
         document.querySelectorAll('.woocommerce-form__label-for-checkbox').forEach(label => {
 
             const container = label.querySelector('.woocommerce-terms-and-conditions-checkbox-text');
+            const required = label.querySelector('.required');
             if (!container) return;
 
             const link = container.querySelector('a');
             if (!link) return;
 
-            // Promeni checkbox tekst
+            // 1️⃣ Promeni checkbox tekst
             container.childNodes.forEach(node => {
                 if (node.nodeType === Node.TEXT_NODE) {
                     node.textContent = 'Pročitao sam i slažem se sa uslovima sajta ';
                 }
             });
 
-            // Ako već nismo prebacili link (da se ne duplira pri refresh-u)
+            // 2️⃣ Stilizuj link
+            link.style.color = '#1967D2';
+            link.style.fontWeight = '700';
+            link.style.textDecoration = 'none';
+
+            // 3️⃣ Kreiraj wrapper za link + zvezdicu
             if (!label.previousElementSibling || !label.previousElementSibling.classList.contains('custom-terms-link')) {
 
                 const linkWrapper = document.createElement('div');
                 linkWrapper.className = 'custom-terms-link';
                 linkWrapper.style.marginBottom = '6px';
+
                 linkWrapper.appendChild(link);
+
+                if (required) {
+                    required.style.color = 'red';
+                    required.style.marginLeft = '4px';
+                    linkWrapper.appendChild(required);
+                }
 
                 label.parentNode.insertBefore(linkWrapper, label);
             }
         });
-
-
 
 
     }
