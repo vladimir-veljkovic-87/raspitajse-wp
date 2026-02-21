@@ -75,6 +75,7 @@ jQuery(document).ready(function($) {
             'Comment' : 'Komentar',
             'Social Profiles:' : 'Društveni profili:',
             'Work & Experience' : 'Radno iskustvo',
+            'I have read and agree to the website ' : 'Pročitao sam i slažem se sa uslovima sajta ',
              
         };
 
