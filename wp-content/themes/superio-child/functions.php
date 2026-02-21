@@ -650,6 +650,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         '“%s” has been added to your cart.' => '„%s“ je dodat u vašu korpu.',
         'Terms and conditions' => 'Pogledaj Uslove korišćenja',
         'I have read and agree to the website ' => 'Pročitao sam i slažem se sa uslovima sajta',
+        'Please read and accept the terms and conditions to proceed with your order.' => 'Molimo pročitajte i prihvatite uslove korišćenja da biste nastavili sa porudžbinom.',
 
         // --- Order table ---
         'Product' => 'Proizvod',
