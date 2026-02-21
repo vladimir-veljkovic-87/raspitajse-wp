@@ -648,6 +648,8 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Additional information' => 'Dodatne informacije',
         'Your order' => 'Vaša porudžbina',
         '“%s” has been added to your cart.' => '„%s“ je dodat u vašu korpu.',
+        'Terms and conditions' => 'Pogledaj Uslove i odredbe',
+        'I have read and agree to the website ' => 'Pročitao sam i slažem se sa uslovima sajta',
 
         // --- Order table ---
         'Product' => 'Proizvod',
@@ -740,6 +742,10 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Location'           => 'Lokacija',
         'Category'           => 'Kategorija',
         'Find Employers'     => 'Pronađite poslodavce',
+
+        // Registration page
+        'Candidate'          => 'Kandidat',
+        'Employer'           => 'Poslodavac',
 
 
         // Footer
