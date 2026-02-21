@@ -222,6 +222,25 @@ jQuery(document).ready(function($) {
             }
         });
 
+        // Translate only the text node before the <a> inside Woo terms checkbox
+        document.querySelectorAll('.woocommerce-terms-and-conditions-checkbox-text').forEach(container => {
+            container.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const original = node.textContent; // keep spaces
+                    // Normalize for matching
+                    const key = original.replace(/\s+/g, ' ').trim();
+
+                    if (translations[key]) {
+                        // Preserve original leading/trailing spaces
+                        const leading = (original.match(/^\s+/) || [''])[0];
+                        const trailing = (original.match(/\s+$/) || [''])[0];
+                        node.textContent = leading + translations[key] + trailing;
+                    }
+                }
+            });
+        });
+
+
 
     }
     // initial load
