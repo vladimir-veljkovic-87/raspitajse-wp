@@ -834,28 +834,34 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
  * Elementor Widget Override – Custom User Packages Widget
  * =========================================================
  */
-add_action('elementor/widgets/register', function($widgets_manager) {
+add_action('elementor/widgets/widgets_registered', function() {
+
+    // marker da znamo da je hook okinuo
+    add_action('wp_head', function () {
+        echo "<!-- ELEMENTOR WIDGETS_REGISTERED HOOK RAN -->\n";
+    }, 1);
 
     $file = get_stylesheet_directory() . '/elementor/widgets/class-user-packages.php';
-    if (file_exists($file)) {
-        require_once $file;
-    } else {
+    if (!file_exists($file)) {
         return;
     }
+    require_once $file;
 
-    // Unregister original widget (parent theme)
-    if (method_exists($widgets_manager, 'unregister')) {
-        $widgets_manager->unregister('apus_element_jobs_user_packages');
-    } elseif (method_exists($widgets_manager, 'unregister_widget_type')) {
-        $widgets_manager->unregister_widget_type('apus_element_jobs_user_packages');
+    $wm = \Elementor\Plugin::instance()->widgets_manager;
+
+    // unregister original
+    if (method_exists($wm, 'unregister')) {
+        $wm->unregister('apus_element_jobs_user_packages');
+    } elseif (method_exists($wm, 'unregister_widget_type')) {
+        $wm->unregister_widget_type('apus_element_jobs_user_packages');
     }
 
-    // Register child widget (mora imati get_name() = apus_element_jobs_user_packages)
+    // register child
     if (class_exists('Superio_Elementor_Jobs_User_Packages_Child')) {
-        $widgets_manager->register(new \Superio_Elementor_Jobs_User_Packages_Child());
+        $wm->register(new \Superio_Elementor_Jobs_User_Packages_Child());
     }
 
-}, 100);
+}, 1);
 
 
 /**
