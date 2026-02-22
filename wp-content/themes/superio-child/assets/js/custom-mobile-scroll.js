@@ -282,6 +282,30 @@ jQuery(document).ready(function($) {
         });
     });
 
+    // ✅ Auto-preselect first ACTIVE package on submit-job page
+    (function () {
+
+        const $radios = $('.user-job-packaged input[type="radio"][name="wjbpwpl_listing_user_package"]');
+
+        if (!$radios.length) return;
+
+        // Ukloni checked sa disabled paketa (za svaki slučaj)
+        $radios.each(function () {
+            if (this.disabled) {
+                this.checked = false;
+            }
+        });
+
+        // Pronađi prvi koji nije disabled
+        const $firstActive = $radios.filter(function () {
+            return !this.disabled;
+        }).first();
+
+        if ($firstActive.length) {
+            $firstActive.prop('checked', true);
+        }
+
+    })();
 
 });
 
