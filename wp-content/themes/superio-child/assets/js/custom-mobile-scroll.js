@@ -309,6 +309,7 @@ jQuery(document).ready(function($) {
         }
     }
     preselectActivePackage();
+    setTimeout(preselectActivePackage, 800);
 
 });
 
