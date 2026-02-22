@@ -282,7 +282,7 @@ jQuery(document).ready(function($) {
         });
     });
 
-    // ✅ Auto-preselect first ACTIVE package on submit-job page
+    // Auto-preselect first ACTIVE package on submit-job page
     function preselectActivePackage() {
         const $radios = $('.user-job-packaged input[type="radio"][name="wjbpwpl_listing_user_package"]');
         if (!$radios.length) return;
