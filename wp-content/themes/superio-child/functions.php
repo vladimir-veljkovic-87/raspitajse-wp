@@ -834,36 +834,7 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
  * Elementor Widget Override – Custom User Packages Widget
  * =========================================================
  */
-add_action('elementor/widgets/widgets_registered', function() {
 
-    $file = get_stylesheet_directory() . '/inc/vendors/elementor/wc-paid-listings-widgets/user_packages.php';
-    if ( ! file_exists($file) ) {
-        return;
-    }
-    require_once $file;
-
-    if ( ! class_exists('Superio_Elementor_Jobs_User_Packages_Child') ) {
-        return;
-    }
-
-    $plugin = \Elementor\Plugin::instance();
-    $wm = $plugin->widgets_manager;
-
-    // 1) Unregister original
-    if ( method_exists($wm, 'unregister') ) {
-        $wm->unregister('apus_element_jobs_user_packages');
-    } elseif ( method_exists($wm, 'unregister_widget_type') ) {
-        $wm->unregister_widget_type('apus_element_jobs_user_packages');
-    }
-
-    // 2) Register child (same get_name())
-    if ( method_exists($wm, 'register') ) {
-        $wm->register(new \Superio_Elementor_Jobs_User_Packages_Child());
-    } else {
-        $wm->register_widget_type(new \Superio_Elementor_Jobs_User_Packages_Child());
-    }
-
-}, 9999);
 
 
 /**
