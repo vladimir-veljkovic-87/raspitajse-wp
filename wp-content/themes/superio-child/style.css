@@ -270,6 +270,10 @@ html:has(> body.home) {
     background: rgb(218 70 65 / 46%);
     font-weight: 500;
 }
+.action.expired{
+  color:#c00;
+  font-weight:600;
+}
 /* Package Features - main description */
 .page-template-page-dashboard .package-features {
 	margin-top: 20px!important;
