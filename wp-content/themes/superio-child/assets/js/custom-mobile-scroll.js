@@ -289,14 +289,14 @@ jQuery(document).ready(function($) {
 
         if (!$radios.length) return;
 
-        // Ukloni checked sa disabled paketa (za svaki slučaj)
+        // Ukloni checked sa svih disabled paketa
         $radios.each(function () {
             if (this.disabled) {
                 this.checked = false;
             }
         });
 
-        // Pronađi prvi koji nije disabled
+        // Prvi koji nije disabled
         const $firstActive = $radios.filter(function () {
             return !this.disabled;
         }).first();
