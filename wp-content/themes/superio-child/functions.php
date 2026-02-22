@@ -829,12 +829,6 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 }, 10, 4);
 
-/**
- * =========================================================
- * Elementor Widget Override – Custom User Packages Widget
- * =========================================================
- */
-
 
 /**
  * =========================================================
