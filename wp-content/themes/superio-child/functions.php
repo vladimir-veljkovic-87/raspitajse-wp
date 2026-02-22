@@ -836,7 +836,7 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
  */
 add_action('elementor/widgets/widgets_registered', function() {
 
-    $file = get_stylesheet_directory() . '/inc/vendors/elementor/widgets/wc-paid-listings-widgets/user_packages.php';
+    $file = get_stylesheet_directory() . '/inc/vendors/elementor/wc-paid-listings-widgets/user_packages.php';
     if ( ! file_exists($file) ) {
         return;
     }
