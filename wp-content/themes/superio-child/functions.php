@@ -836,10 +836,18 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
  */
 add_action('elementor/widgets/widgets_registered', function() {
 
-    require_once get_stylesheet_directory() . '/inc/vendors/elementor/wc-paid-listings-widgets/user_packages.php';
+    if ( ! did_action( 'elementor/loaded' ) ) {
+        return;
+    }
 
-}, 9999);
+    // Proveri da li widget postoji pre nego što ga ukloniš
+    if ( \Elementor\Plugin::$instance->widgets_manager->get_widget_types( 'wjbp-user-packages' ) ) {
+        \Elementor\Plugin::$instance->widgets_manager->unregister_widget_type( 'wjbp-user-packages' );
+    }
 
+    // Sada registruj svoj custom widget
+    require_once __DIR__ . '/widgets/class-custom-user-packages-widget.php';
+    \Elementor\Plugin::$instance->widgets_manager->register_widget_type( new \Custom_User_Packages_Widget() );
 
 /**
  * =========================================================
