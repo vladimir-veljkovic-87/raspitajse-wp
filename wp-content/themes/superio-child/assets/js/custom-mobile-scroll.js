@@ -146,7 +146,7 @@ jQuery(document).ready(function($) {
         document.querySelectorAll('.action').forEach(el => {
             const text = el.textContent.trim();
             if (text === 'Active') {
-                el.textContent = 'Aktivno';
+                el.textContent = 'Aktivan';
             }
 
             if (text === 'Expired') {

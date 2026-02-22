@@ -870,7 +870,7 @@ add_filter('the_content', function($content){
 
         // tražimo red koji sadrži <td>PID</td> pa kasnije <span class="action active">Active</span>
         $pattern = '/(<tr[^>]*>.*?<td>\s*' . preg_quote((string)$pid,'/') . '\s*<\/td>.*?)(<span class="action\s+active">Active<\/span>)/s';
-        $replacement = '$1<span class="action expired">Paket vam je istekao</span>';
+        $replacement = '$1<span class="action expired">Istekao</span>';
 
         $content = preg_replace($pattern, $replacement, $content);
     }
