@@ -829,6 +829,55 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
 
 }, 10, 4);
 
+/** 
+ * Ovaj filter menja status paketa na /packages/ stranici u zavisnosti od isteka.
+ * WP Job Board Pro ne menja status paketa na frontend-u, pa dodajemo ovu logiku da se expired paketi prikažu kao "Paket vam je istekao".
+ */
+
+add_filter('the_content', function($content){
+
+    // radi samo na /packages/ stranici (ID 1699 iz HTML-a)
+    if (!is_user_logged_in() || !is_page(1699)) {
+        return $content;
+    }
+
+    $user_id = get_current_user_id();
+
+    // pronađi sve ID-eve iz tabele (druga kolona: <td>9853</td>)
+    if (!preg_match_all('/<td>\s*(\d{3,})\s*<\/td>/', $content, $m)) {
+        return $content;
+    }
+
+    $ids = array_unique(array_map('intval', $m[1]));
+    if (!$ids) return $content;
+
+    // napravi mapu: package_id => expired(true/false/null)
+    $expired_map = [];
+    foreach ($ids as $pid) {
+        $key = '_wjbp_package_expiration_' . $pid;
+        $expires = get_user_meta($user_id, $key, true);
+        if (!$expires) {
+            $expired_map[$pid] = null;
+            continue;
+        }
+        $ts = strtotime($expires);
+        $expired_map[$pid] = ($ts && $ts < current_time('timestamp'));
+    }
+
+    // zamena statusa: za svaki red gde je expired -> "Expired"
+    foreach ($expired_map as $pid => $is_expired) {
+        if ($is_expired !== true) continue;
+
+        // tražimo red koji sadrži <td>PID</td> pa kasnije <span class="action active">Active</span>
+        $pattern = '/(<tr[^>]*>.*?<td>\s*' . preg_quote((string)$pid,'/') . '\s*<\/td>.*?)(<span class="action\s+active">Active<\/span>)/s';
+        $replacement = '$1<span class="action expired">Paket vam je istekao</span>';
+
+        $content = preg_replace($pattern, $replacement, $content);
+    }
+
+    return $content;
+}, 20);
+
 /**
  * =========================================================
  * WooCommerce – Serbian country names
