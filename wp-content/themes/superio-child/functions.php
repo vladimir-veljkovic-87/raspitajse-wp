@@ -834,23 +834,26 @@ add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_val
  * Elementor Widget Override – Custom User Packages Widget
  * =========================================================
  */
-add_action('elementor/widgets/register', function($widgets_manager){
+add_action('elementor/widgets/register', function($widgets_manager) {
 
-	// 1) ukloni originalni widget
-	if ( method_exists($widgets_manager, 'unregister') ) {
-		$widgets_manager->unregister('apus_element_jobs_user_packages');
-	} elseif ( method_exists($widgets_manager, 'unregister_widget_type') ) {
-		$widgets_manager->unregister_widget_type('apus_element_jobs_user_packages');
-	}
+    $file = get_stylesheet_directory() . '/elementor/widgets/class-user-packages.php';
+    if (file_exists($file)) {
+        require_once $file;
+    } else {
+        return;
+    }
 
-	// 2) ubaci naš override
-	$file = get_stylesheet_directory() . '/elementor/widgets/class-user-packages.php';
-	if ( file_exists($file) ) {
-		require_once $file;
+    // Unregister original widget (parent theme)
+    if (method_exists($widgets_manager, 'unregister')) {
+        $widgets_manager->unregister('apus_element_jobs_user_packages');
+    } elseif (method_exists($widgets_manager, 'unregister_widget_type')) {
+        $widgets_manager->unregister_widget_type('apus_element_jobs_user_packages');
+    }
 
-		// 3) registruj novi widget (sa ISTIM get_name)
-		$widgets_manager->register( new \Superio_Elementor_Jobs_User_Packages_Custom() );
-	}
+    // Register child widget (mora imati get_name() = apus_element_jobs_user_packages)
+    if (class_exists('Superio_Elementor_Jobs_User_Packages_Child')) {
+        $widgets_manager->register(new \Superio_Elementor_Jobs_User_Packages_Child());
+    }
 
 }, 100);
 
