@@ -291,18 +291,21 @@ jQuery(document).ready(function($) {
         const $checked = $radios.filter(':checked');
         if ($checked.length && !$checked.prop('disabled')) return;
 
-        // Ukloni checked sa disabled (da ne ostane “checked + disabled”)
+        // 1) Ukloni checked sa svih disabled (property + attribute)
         $radios.each(function () {
-            if (this.disabled) this.checked = false;
+            if (this.disabled) {
+                this.checked = false;
+                this.removeAttribute('checked');     // ✅ uklanja checked="checked" iz DOM-a
+            }
         });
 
-        // Selektuj prvi aktivan (enabled)
+        // 2) Selektuj prvi aktivan (enabled)
         const $firstActive = $radios.filter(function () {
             return !this.disabled;
         }).first();
 
         if ($firstActive.length) {
-            $firstActive.prop('checked', true).trigger('change');
+            $firstActive.prop('checked', true).attr('checked', 'checked').trigger('change');
         }
     }
     preselectActivePackage();
