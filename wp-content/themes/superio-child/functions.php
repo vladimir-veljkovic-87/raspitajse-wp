@@ -657,6 +657,8 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Subtotal' => 'Međuzbir',
         'Total' => 'Ukupno',
         'Payment' => 'Plaćanje',
+        'Your cart is currently empty.' => 'Vaša korpa je trenutno prazna.',
+        'Return to shop' => 'Povratak u prodavnicu',
 
         // --- Common fields (ako se negde pojave kao stringovi) ---
         'Company name (optional)' => 'Naziv kompanije (opciono)',
