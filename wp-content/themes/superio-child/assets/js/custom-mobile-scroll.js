@@ -378,8 +378,23 @@ jQuery(document).ready(function($) {
     });
 
     // Sakrij parent termine u select2 dropdownu (ako nisu rezultati pretrage i nisu prazni)
+     var targetSelectIds = [
+        '_candidate_category',
+        '_employer_category'
+    ];
+
+    var activeCategorySelectId = null;
+
+    function isTargetSelect(selectId) {
+        return targetSelectIds.indexOf(selectId) !== -1;
+    }
+
     function hideParentTerms() {
-        $('.select2-results__option').each(function() {
+        if (!activeCategorySelectId || !isTargetSelect(activeCategorySelectId)) {
+            return;
+        }
+
+        $('.select2-container--open .select2-results__option').each(function() {
             var text = $(this).text().trim();
 
             if (
@@ -394,11 +409,16 @@ jQuery(document).ready(function($) {
         });
     }
 
-    $(document).on('select2:open', function () {
+    $('#_candidate_category, #_employer_category').on('select2:open', function() {
+        activeCategorySelectId = this.id;
         setTimeout(hideParentTerms, 50);
     });
 
-    $(document).on('keyup', '.select2-search__field', function () {
+    $('#_candidate_category, #_employer_category').on('select2:close', function() {
+        activeCategorySelectId = null;
+    });
+
+    $(document).on('keyup', '.select2-search__field', function() {
         setTimeout(hideParentTerms, 50);
     });
 
