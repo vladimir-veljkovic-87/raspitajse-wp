@@ -315,7 +315,7 @@ jQuery(document).ready(function($) {
 
     
 
-    // ✅ Woo AJAX add to cart + update checkout (packages cards)
+    // Woo AJAX add to cart + update checkout (packages cards) na strani Paketi
     $(document).on('click', 'button[name="wjbpwpl_job_package"]', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -376,6 +376,8 @@ jQuery(document).ready(function($) {
             $btn.prop('disabled', false).removeClass('loading');
         });
     });
+
+
 
 });
 
