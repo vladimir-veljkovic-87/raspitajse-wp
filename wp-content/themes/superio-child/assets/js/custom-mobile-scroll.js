@@ -378,11 +378,7 @@ jQuery(document).ready(function($) {
     });
 
     // Sakrij parent termine u select2 dropdownu (ako nisu rezultati pretrage i nisu prazni)
-     var targetSelectIds = [
-        '_candidate_category',
-        '_employer_category'
-    ];
-
+    var targetSelectIds = ['_candidate_category', '_employer_category'];
     var activeCategorySelectId = null;
 
     function isTargetSelect(selectId) {
@@ -390,11 +386,13 @@ jQuery(document).ready(function($) {
     }
 
     function hideParentTerms() {
+
         if (!activeCategorySelectId || !isTargetSelect(activeCategorySelectId)) {
             return;
         }
 
         $('.select2-container--open .select2-results__option').each(function() {
+
             var text = $(this).text().trim();
 
             if (
@@ -406,20 +404,60 @@ jQuery(document).ready(function($) {
             } else {
                 $(this).show();
             }
+
         });
     }
 
     $('#_candidate_category, #_employer_category').on('select2:open', function() {
+
         activeCategorySelectId = this.id;
+
         setTimeout(hideParentTerms, 50);
+
     });
 
     $('#_candidate_category, #_employer_category').on('select2:close', function() {
+
         activeCategorySelectId = null;
+
     });
 
     $(document).on('keyup', '.select2-search__field', function() {
+
         setTimeout(hideParentTerms, 50);
+
+    });
+
+    // LIMIT SELECTION
+
+    $('#_candidate_category').on('change', function() {
+
+        var selected = $(this).val();
+
+        if (selected && selected.length > 5) {
+
+            selected.pop();
+            $(this).val(selected).trigger('change.select2');
+
+            alert('Možete izabrati maksimalno 5 pozicija.');
+
+        }
+
+    });
+
+    $('#_employer_category').on('change', function() {
+
+        var selected = $(this).val();
+
+        if (selected && selected.length > 10) {
+
+            selected.pop();
+            $(this).val(selected).trigger('change.select2');
+
+            alert('Možete izabrati maksimalno 10 pozicija.');
+
+        }
+
     });
 
 
