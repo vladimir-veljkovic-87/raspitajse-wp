@@ -2148,3 +2148,25 @@ add_filter('wpo_wcpdf_attach_invoice', function ($attach, $order, $email_id = ''
     return $attach;
 
 }, 10, 3);
+
+/**
+ * =========================================================
+ * FRONTEND FIX: Exclude parent terms from category lists
+ * (ako koristiš parent kategorije samo kao "grupe" bez proizvoda)
+ * =========================================================
+ */
+add_filter('get_terms', function($terms, $taxonomies, $args){
+
+    if(is_admin()) return $terms;
+
+    $filtered = [];
+
+    foreach($terms as $term){
+        if($term->parent != 0){
+            $filtered[] = $term;
+        }
+    }
+
+    return $filtered;
+
+}, 10, 3);
