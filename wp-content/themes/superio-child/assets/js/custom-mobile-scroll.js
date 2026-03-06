@@ -377,6 +377,30 @@ jQuery(document).ready(function($) {
         });
     });
 
+    // Sakrij parent termine u select2 dropdownu (ako nisu rezultati pretrage i nisu prazni)
+    function hideParentTerms() {
+        $('.select2-results__option').each(function() {
+            var text = $(this).text().trim();
+
+            if (
+                text !== '' &&
+                text !== 'No results found' &&
+                !text.startsWith('-')
+            ) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+    }
+
+    $(document).on('select2:open', function () {
+        setTimeout(hideParentTerms, 50);
+    });
+
+    $(document).on('keyup', '.select2-search__field', function () {
+        setTimeout(hideParentTerms, 50);
+    });
 
 
 });
