@@ -181,7 +181,7 @@ html:has(> body.home) {
     width: 141px;
     position: absolute;
     left: -137px;
-    top: 0;
+    top: -6px;
     color: #3f67d0;
     text-decoration: underline;
 }
