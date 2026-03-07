@@ -754,6 +754,10 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Save & Preview' => 'Sačuvaj i pregledaj',
         'Latitude' => 'Geografska širina',
         'Longitude' => 'Geografska dužina',
+        'Internal' => 'Interna - prijava preko sajta',
+        'External URL' => 'Eksterni URL',
+        'By Email' => 'Preko emaila',
+        'Call to Apply' => 'Poziv za prijavu',
 
         // Footer
         'Thanks for shopping with us.' => 'Hvala vam na poverenju.',
