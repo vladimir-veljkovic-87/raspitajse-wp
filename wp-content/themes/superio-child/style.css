@@ -176,7 +176,7 @@ html:has(> body.home) {
 	font-size: 33px;
 }
 .find-me-location::after {
-	content: "Find your location";
+	content: "Pronađite vašu lokaciju"!important;
     display: inline-block;
     width: 141px;
     position: absolute;
@@ -787,6 +787,15 @@ and (max-width : 767px) {
 	/* Poslodavci pronađite radnike */
 	.elementor-10425 .elementor-element.elementor-element-d42aa63 > .elementor-widget-container {
 		padding-top: 0!important;
+	}
+	/* Employer pages - profile */
+	.find-me-location::after {
+		display: none!important;
+	}
+	form.cmb-form .cmb-row[data-fieldtype="pw_map"] .pw-map-search {
+		padding-right: 50px;
+    	text-overflow: ellipsis;
+    	white-space: nowrap;
 	}
 	/* Register page */
 	.register-fields-wr .napravite-column {
