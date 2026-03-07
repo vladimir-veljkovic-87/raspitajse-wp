@@ -378,7 +378,7 @@ jQuery(document).ready(function($) {
     });
 
     // Sakrij parent termine u select2 dropdownu (ako nisu rezultati pretrage i nisu prazni)
-    var targetSelectIds = ['_candidate_category', '_employer_category'];
+    var targetSelectIds = ['_candidate_category', '_employer_category', '_job_category'];
     var activeCategorySelectId = null;
 
     function isTargetSelect(selectId) {

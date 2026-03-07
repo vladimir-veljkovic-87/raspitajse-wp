@@ -750,6 +750,10 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Candidate'          => 'Kandidat',
         'Employer'           => 'Poslodavac',
 
+        // Jobs page
+        'Save & Preview' => 'Sačuvaj i pregledaj',
+        'Latitude' => 'Geografska širina',
+        'Longitude' => 'Geografska dužina',
 
         // Footer
         'Thanks for shopping with us.' => 'Hvala vam na poverenju.',
