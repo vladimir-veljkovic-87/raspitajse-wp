@@ -408,7 +408,7 @@ jQuery(document).ready(function($) {
         });
     }
 
-    $('#_candidate_category, #_employer_category').on('select2:open', function() {
+    $('#_candidate_category, #_employer_category, #_job_category').on('select2:open', function() {
 
         activeCategorySelectId = this.id;
 
@@ -416,7 +416,7 @@ jQuery(document).ready(function($) {
 
     });
 
-    $('#_candidate_category, #_employer_category').on('select2:close', function() {
+    $('#_candidate_category, #_employer_category, #_job_category').on('select2:close', function() {
 
         activeCategorySelectId = null;
 
