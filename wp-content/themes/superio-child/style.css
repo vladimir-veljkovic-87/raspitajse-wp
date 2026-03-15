@@ -814,13 +814,16 @@ and (max-width : 767px) {
     }
 	/* Job Type */
 	.job-metas-bottom div {
-		display: block;
+		display: block!important;
 	}
 	/* Footer */
-	.apus-footer .logo {
-		text-align: center;
-	}
 	.apus-footer .elementor-column {
 		width: 50%!important;
+	}
+	.apus-footer .elementor-element-55498f8 {
+		width: 100%!important;
+	}
+	.apus-footer .logo {
+		text-align: center;
 	}
 }
