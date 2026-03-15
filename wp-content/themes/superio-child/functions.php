@@ -762,6 +762,10 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         // Footer
         'Thanks for shopping with us.' => 'Hvala vam na poverenju.',
         'You are not allowed to access this page.' => 'Nemate dozvolu za pristup ovoj stranici.',
+
+        // Mobile menu
+        'Post Job' => 'Objavi oglas',
+        'Back' => 'Nazad',
     ];
 
     if (isset($map[$normalized])) {
