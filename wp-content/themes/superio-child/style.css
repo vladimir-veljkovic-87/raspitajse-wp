@@ -812,4 +812,15 @@ and (max-width : 767px) {
     .payment-row > div {
         flex: 1 1 100%!important;
     }
+	/* Job Type */
+	.job-metas-bottom div {
+		display: block;
+	}
+	/* Footer */
+	.apus-footer .logo {
+		text-align: center;
+	}
+	.apus-footer .elementor-column {
+		width: 50%!important;
+	}
 }
