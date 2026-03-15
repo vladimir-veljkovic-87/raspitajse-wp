@@ -133,9 +133,7 @@ class WP_Job_Board_Pro_Candidate_Alert {
 
 							
 							$author_id = get_post_field( 'post_author', $post_id );
-							$email_to = get_the_author_meta('user_email', $author_id);
-
-							
+							$email_to = get_the_author_meta('user_email', $author_id);					
 
 							$email_frequency = get_post_meta($post_id, WP_JOB_BOARD_PRO_CANDIDATE_ALERT_PREFIX.'email_frequency', true);
 							if ( !empty($email_frequency_default[$email_frequency]['label']) ) {
@@ -305,7 +303,7 @@ class WP_Job_Board_Pro_Candidate_Alert {
 									}
 								}
 
-								$only_one_ever = true; // Set flag to true to avoid repeating emails sending twice per job_alert
+								$only_one_ever = true; 
 
 								// Prepare content arguments
 								$content_args = apply_filters('wp-job-board-pro-candidate-alert-email-content-args', array(
