@@ -759,6 +759,13 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'By Email' => 'Preko emaila',
         'Call To Apply' => 'Poziv za prijavu',
 
+        // Blog
+        'Read more' => 'Pročitaj više',
+        '#%s Comment' => '%s Komentara',
+        'Recent News Articles' => 'Nedavni članci',
+        'Fresh job related news content posted each day.' => 'Sveže vesti vezane za posao objavljene svakog dana.',
+
+
         // Footer
         'Thanks for shopping with us.' => 'Hvala vam na poverenju.',
         'You are not allowed to access this page.' => 'Nemate dozvolu za pristup ovoj stranici.',
