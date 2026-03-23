@@ -625,14 +625,6 @@ span.featured {
     border: 1px solid #d4e1f6;
 }
 
-/* Blog post page */
-.entry-blog-header .author {
-	display: none!important;
-}
-.entry-blog-header li:has(> span.comments) {
-	display: none!important;
-}
-
 /*=============================*/
 /*===   Loader mini CSS    ===*/
 /*===========================*/
@@ -832,5 +824,12 @@ and (max-width : 767px) {
 	}
 	.apus-footer .logo {
 		text-align: center;
+	}
+	/* Blog post page */
+	.entry-blog-header .author {
+		display: none!important;
+	}
+	.entry-blog-header li:has(> span.comments) {
+		display: none!important;
 	}
 }

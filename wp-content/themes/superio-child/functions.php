@@ -766,6 +766,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Fresh job related news content posted each day.' => 'Sveže vesti sa tržišta svakodnevno.',
         'Submit Comment' => 'Pošalji komentar',
         'Previous Post' => 'Prethodni članak',
+        'Next Post' => 'Sledeći članak',
         'Leave a Comment' => 'Ostavite komentar',
         'Edit your profile' => 'Izmeni profil',
         'Log out?'  => 'Odjaviti se?',
