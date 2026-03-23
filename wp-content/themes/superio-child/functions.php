@@ -763,7 +763,7 @@ function raspitajse_quick_translate($translated, $text, $domain) {
         'Read more' => 'Pročitaj više',
         '#%s Comment' => '%s Komentara',
         'Recent News Articles' => 'Nedavni članci',
-        'Fresh job related news content posted each day.' => 'Sveže vesti sa tržište svakodnevno.',
+        'Fresh job related news content posted each day.' => 'Sveže vesti sa tržišta svakodnevno.',
         'Submit Comment' => 'Pošalji komentar',
         'Previous Post' => 'Prethodni članak',
         'Leave a Comment' => 'Ostavite komentar',
