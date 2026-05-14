@@ -76,7 +76,9 @@ jQuery(document).ready(function($) {
             'Social Profiles:' : 'Društveni profili:',
             'Work & Experience' : 'Radno iskustvo',
             'I have read and agree to the website' : 'Pročitao sam i slažem se sa uslovima korisćenja sajta',
-            'Read More': 'Pročitaj više'
+            'Read More': 'Pročitaj više',
+            'Recent News Articles' : 'Nedavni članci',
+            'Fresh job related news content posted each day.' : 'Sveže vesti sa tržišta svakodnevno.'
              
         };
 
