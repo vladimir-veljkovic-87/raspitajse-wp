@@ -173,6 +173,14 @@ jQuery(document).ready(function($) {
         }
         });
 
+        document.querySelectorAll('.elementor-widget-text-editor .elementor-widget-container').forEach(el => {
+            const key = el.textContent.trim();
+
+            if (translations[key]) {
+                el.textContent = translations[key];
+            }
+        });
+
         // ✅ Woo checkout: Privacy policy text (pre linka) – fix
         const $p = $('.woocommerce-privacy-policy-text p');
         if ($p.length) {
