@@ -1,0 +1,4901 @@
+# Translation of Plugins - Elementor Website Builder &#8211; More than Just a Page Builder - Stable (latest release) in Croatian
+# This file is distributed under the same license as the Plugins - Elementor Website Builder &#8211; More than Just a Page Builder - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2024-09-03 09:25:47+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: hr\n"
+"Project-Id-Version: Plugins - Elementor Website Builder &#8211; More than Just a Page Builder - Stable (latest release)\n"
+
+#: modules/link-in-bio/widgets/link-in-bio.php:28
+msgid "Minimalist"
+msgstr "Minimalistički"
+
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1542
+msgid "Dimensions"
+msgstr "Dimenzije"
+
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:332
+msgid "CTA link"
+msgstr "Poveznica za poziv na akciju"
+
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:284
+msgid "Add item"
+msgstr "Dodaj stavku"
+
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:242
+msgid "Images Per Row"
+msgstr "Slika po retku"
+
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:227
+msgid "Add up to <b>%d</b> Images"
+msgstr "Dodajte do <b>%d</b> slika"
+
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:215
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1023
+msgid "Image Links"
+msgstr "Poveznica na sliku"
+
+#: modules/floating-buttons/widgets/contact-buttons.php:26
+msgid "Single Chat"
+msgstr "Samostalni razgovor"
+
+#: core/editor/data/globals/endpoints/base.php:34
+msgid "The Global value you are trying to use is not available."
+msgstr "Globalna vrijednost koju pokušavate koristiti nije dostupna."
+
+#. Description of the plugin
+#: elementor.php
+msgid "The Elementor Website Builder has it all: drag and drop page builder, pixel perfect design, mobile responsive editing, and more. Get started now!"
+msgstr "Elementor website sastavljač ima sve: povuci i ispusti, piksel precizno, uređivanje koji je prilagodljivo mobilnim uređajima i još mnogo toga. Započni sada!"
+
+#: core/kits/documents/tabs/global-colors.php:24
+#: core/kits/documents/tabs/global-colors.php:43
+#: assets/js/152486453d0e39071cdb.bundle.js:175 assets/js/app.js:11083
+#: assets/js/editor.js:47313
+msgid "Global Colors"
+msgstr "Globalne boje"
+
+#: core/kits/documents/tabs/settings-site-identity.php:84
+msgid "Choose description"
+msgstr "Odaberi opis"
+
+#: modules/compatibility-tag/compatibility-tag-report.php:173
+msgid "Error"
+msgstr "Greška"
+
+#: includes/widgets/social-icons.php:477
+msgid "Rows Gap"
+msgstr "Razmak između redova"
+
+#: includes/controls/groups/flex-container.php:24
+#: includes/controls/groups/grid-container.php:26
+#: includes/widgets/icon-list.php:176
+#: modules/nested-accordion/widgets/nested-accordion.php:134
+msgid "Items"
+msgstr "Stavke"
+
+#: includes/widgets/common.php:940 includes/widgets/image.php:379
+msgid "Fill"
+msgstr "Popuni"
+
+#: includes/frontend.php:1398
+msgid "Download"
+msgstr "Preuzmi"
+
+#: core/kits/documents/tabs/settings-site-identity.php:93
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1048
+msgid "Site Logo"
+msgstr "Logo web stranice"
+
+#: core/kits/documents/tabs/settings-site-identity.php:82
+msgid "Site Description"
+msgstr "Opis stranice."
+
+#: core/kits/documents/tabs/settings-site-identity.php:71
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1044
+msgid "Site Name"
+msgstr "Naziv web stranice"
+
+#: core/kits/documents/tabs/settings-site-identity.php:20
+msgid "Site Identity"
+msgstr "Identitet stranice"
+
+#: core/kits/documents/tabs/settings-layout.php:186
+#: modules/page-templates/module.php:159
+msgid "Theme"
+msgstr "Tema"
+
+#: core/kits/documents/tabs/settings-layout.php:183
+msgid "Default Page Layout"
+msgstr "Zadani tip stranica"
+
+#: core/kits/documents/tabs/settings-layout.php:47 assets/js/app.js:11083
+msgid "Layout Settings"
+msgstr "Postavke izgleda"
+
+#: core/kits/manager.php:436 includes/editor-templates/hotkeys.php:115
+#: assets/js/app.js:11081 assets/js/app.js:11562 assets/js/editor.js:47262
+#: assets/js/editor.js:47266 assets/js/editor.js:47276
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:9
+msgid "Site Settings"
+msgstr "Postavke Stranice"
+
+#: includes/frontend.php:1397
+msgid "Pin it"
+msgstr "Prikvači"
+
+#: includes/frontend.php:1396
+msgid "Share on Twitter"
+msgstr "Podijeli na Twitter"
+
+#: includes/frontend.php:1395
+msgid "Share on Facebook"
+msgstr "Podijeli na Facebooku "
+
+#: core/kits/documents/kit.php:155
+msgid "Draft"
+msgstr "Skica"
+
+#: core/kits/documents/tabs/theme-style-buttons.php:23
+#: core/kits/documents/tabs/theme-style-buttons.php:63
+#: modules/floating-buttons/base/widget-contact-button-base.php:217
+msgid "Buttons"
+msgstr "Gumbi"
+
+#: core/kits/documents/tabs/theme-style-form-fields.php:21
+#: core/kits/documents/tabs/theme-style-form-fields.php:60
+msgid "Form Fields"
+msgstr "Polja obrasca"
+
+#: core/kits/documents/tabs/theme-style-typography.php:49
+msgid "Body"
+msgstr "Tijelo"
+
+#: core/experiments/manager.php:145 includes/editor-templates/global.php:30
+#: assets/js/ai-admin.js:9721 assets/js/ai-gutenberg.js:11572
+#: assets/js/ai-media-library.js:11350 assets/js/ai.js:12766
+#: assets/js/app.js:7895 assets/js/editor.js:47574
+msgid "Back"
+msgstr "Povratak"
+
+#: core/kits/documents/tabs/settings-lightbox.php:86 includes/frontend.php:1402
+msgid "Share"
+msgstr "Podijeli "
+
+#: core/kits/documents/tabs/settings-lightbox.php:66 includes/frontend.php:1400
+msgid "Fullscreen"
+msgstr "Prikaz na cijelom zaslonu"
+
+#: includes/editor-templates/panel.php:307
+#: includes/editor-templates/panel.php:309
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:12
+msgid "Dynamic Tags"
+msgstr "Dinamičke oznake"
+
+#: includes/managers/icons.php:496
+msgid "The upgrade process includes a database update"
+msgstr "Nadogradnja uključuje i ažuriranje baze."
+
+#: includes/frontend.php:1399
+msgid "Download image"
+msgstr "Preuzmi sliku"
+
+#: includes/managers/controls.php:1201
+msgid "Attributes"
+msgstr "Atributi"
+
+#: core/kits/documents/tabs/settings-lightbox.php:102
+#: core/kits/documents/tabs/settings-lightbox.php:119
+msgid "Alt"
+msgstr "Alt"
+
+#: core/common/modules/connect/apps/base-app.php:161
+msgid "Already connected."
+msgstr "Već povezano"
+
+#: includes/widgets/image-carousel.php:445
+msgid "Pause on Interaction"
+msgstr "Pauziraj na interakciji"
+
+#. translators: %s: Video provider
+#: includes/embed.php:185
+msgid "%s Video Player"
+msgstr "%s video player"
+
+#: includes/controls/groups/background.php:702
+msgid "Background Position"
+msgstr "Pozicija pozadine"
+
+#: core/kits/documents/tabs/settings-background.php:81
+#: includes/controls/groups/background.php:486
+#: includes/controls/groups/background.php:691 includes/widgets/image.php:381
+msgid "Contain"
+msgstr "Sadrži"
+
+#: includes/controls/groups/background.php:485
+#: includes/controls/groups/background.php:690 includes/widgets/image.php:380
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:920
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:975
+msgid "Cover"
+msgstr "Prekriva"
+
+#: core/kits/documents/tabs/settings-background.php:80
+#: includes/controls/groups/background.php:484
+#: includes/controls/groups/background.php:689
+#: includes/elements/container.php:547 includes/widgets/social-icons.php:295
+#: includes/widgets/video.php:595
+msgid "Auto"
+msgstr "Auto"
+
+#: includes/controls/groups/background.php:683
+msgid "Background Size"
+msgstr "Veličina pozadine"
+
+#: includes/settings/settings-page.php:396
+msgid "Usage Data Sharing"
+msgstr "Dijeljenje podataka o korištenju"
+
+#: core/settings/editor-preferences/model.php:175 assets/js/ai-admin.js:15055
+#: assets/js/ai-gutenberg.js:16906 assets/js/ai-layout.js:5942
+#: assets/js/ai-media-library.js:16684 assets/js/ai.js:9714
+#: assets/js/ai.js:18100 assets/js/editor.js:10210
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:659
+msgid "Get Started"
+msgstr "Započni"
+
+#: core/common/modules/connect/apps/library.php:29
+#: core/common/modules/connect/apps/library.php:56
+msgid "Connecting to the Library failed. Please try reloading the page and try again"
+msgstr "Povezivanje s predlošcima nije uspjelo. Pokušajte osvježiti stranicu i pokušati ponovo."
+
+#. translators: %s: Remote user.
+#: core/common/modules/connect/apps/base-app.php:84
+msgid "Connected as %s"
+msgstr "Povezani kao %s"
+
+#: core/settings/editor-preferences/model.php:81
+msgid "Auto detect"
+msgstr "Auto detekcija"
+
+#: core/settings/editor-preferences/model.php:54
+msgid "Preferences"
+msgstr "Postavke"
+
+#: modules/promotions/admin-menu-items/custom-icons-promotion-item.php:15
+#: modules/promotions/admin-menu-items/custom-icons-promotion-item.php:19
+msgid "Custom Icons"
+msgstr "Prilagođene ikone"
+
+#: core/logger/log-reporter.php:44
+msgid "Clear Log"
+msgstr "Očisti zapisnik"
+
+#: includes/controls/groups/background.php:645
+msgid "Duration"
+msgstr "Trajanje"
+
+#: includes/controls/groups/background.php:655
+msgid "Transition"
+msgstr "Prijelaz"
+
+#: core/document-types/post.php:51
+msgid "Post"
+msgstr "Objava"
+
+#: includes/settings/tools.php:367
+msgid "Reinstall"
+msgstr "Ponovi instaliranje"
+
+#: includes/widgets/divider.php:336 modules/shapes/module.php:46
+msgid "Line"
+msgstr "Crta"
+
+#: includes/widgets/divider.php:492
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:21
+msgid "Add Element"
+msgstr "Dodaj element"
+
+#: includes/widgets/divider.php:663
+msgid "Amount"
+msgstr "Količina"
+
+#: includes/frontend.php:1404 assets/js/app.js:8708 assets/js/app.js:9503
+#: assets/js/app.js:10452
+msgid "Previous"
+msgstr "Prethodno"
+
+#: includes/frontend.php:1405 assets/js/app.js:7834 assets/js/app.js:9516
+#: assets/js/app.js:10459
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1677
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1728
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:2007
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:2284
+msgid "Next"
+msgstr "Sljedeće"
+
+#: includes/widgets/image-gallery.php:44 includes/widgets/image-gallery.php:126
+msgid "Basic Gallery"
+msgstr "Osnovna galerija"
+
+#: includes/controls/groups/background.php:528
+msgid "YouTube/Vimeo link, or link to video file (mp4 is recommended)."
+msgstr "YouTube/Vimeo poveznica ili poveznica na video datoteku (preporučuje se mp4)."
+
+#: includes/controls/groups/background.php:583 includes/widgets/video.php:371
+msgid "Play On Mobile"
+msgstr "Reproduciraj na mobilnom uređaju"
+
+#: includes/controls/groups/background.php:608
+msgid "This cover image will replace the background video in case that the video could not be loaded."
+msgstr "Ova slika će zamijeniti videozapis pozadine u slučaju da se videozapis ne može učitati."
+
+#: includes/controls/groups/background.php:738
+msgid "Ken Burns Effect"
+msgstr "Ken Burns efekt"
+
+#: includes/controls/groups/background.php:753
+msgid "In"
+msgstr "Unutra"
+
+#: includes/controls/groups/background.php:754
+msgid "Out"
+msgstr "Vani"
+
+#. translators: %s: Path to .htaccess file.
+#: core/debug/classes/htaccess.php:31
+msgid "File Path: %s"
+msgstr "Put datoteke: %s"
+
+#: includes/admin-templates/beta-tester.php:37 assets/js/beta-tester.js:65
+msgid "Sign Up"
+msgstr "Prijavite se"
+
+#: core/editor/editor.php:210
+msgid "Document not found."
+msgstr "Dokument nije pronađen."
+
+#: includes/controls/icons.php:90 includes/controls/icons.php:116
+#: includes/controls/icons.php:202 assets/js/editor.js:8826
+msgid "Icon Library"
+msgstr "Knjižnica ikona"
+
+#: includes/controls/media.php:298 includes/controls/media.php:300
+#: assets/js/editor.js:8226
+msgid "Upload"
+msgstr "Prijenos"
+
+#: includes/admin-templates/beta-tester.php:29
+msgid "Get Beta Updates"
+msgstr "Nabavi Beta ažuriranja"
+
+#: includes/admin-templates/beta-tester.php:30
+msgid "As a beta tester, you’ll receive an update that includes a testing version of Elementor and its content directly to your Email"
+msgstr "Kao beta tester, primit ćete ažuriranje koje uključuje testnu verziju Elementora i njegov sadržaj izravno u vašu e-poštu"
+
+#: includes/admin-templates/beta-tester.php:32
+msgid "Your Email"
+msgstr "Vaša e-pošta"
+
+#: includes/base/widget-base.php:1035
+msgid "Deprecated"
+msgstr "Zastarjelo"
+
+#: includes/controls/media.php:192
+msgid "Choose Video"
+msgstr "Odaberi video"
+
+#: core/kits/views/panel.php:12 includes/editor-templates/panel.php:30
+#: includes/editor-templates/panel.php:193
+msgid "Need Help"
+msgstr "Potrebna Pomoć"
+
+#: includes/managers/icons.php:132
+msgid "Font Awesome - Regular"
+msgstr "Font Awesome - Regular"
+
+#: includes/managers/icons.php:144
+msgid "Font Awesome - Solid"
+msgstr "Awesome font - Solid"
+
+#: includes/managers/icons.php:156
+msgid "Font Awesome - Brands"
+msgstr "Font Awesome - Marke"
+
+#: includes/managers/icons.php:247
+msgid "All Icons"
+msgstr "Sve ikone"
+
+#: includes/managers/icons.php:470
+msgid "Load Font Awesome 4 Support"
+msgstr "Učitavanje Font Awesome 4 podrške"
+
+#: includes/managers/icons.php:485 includes/managers/icons.php:489
+#: includes/managers/icons.php:504
+msgid "Font Awesome Upgrade"
+msgstr "Font Awesome nadogradnja"
+
+#: includes/managers/icons.php:491
+msgid "Access 1,500+ amazing Font Awesome 5 icons and enjoy faster performance and design flexibility."
+msgstr "Pristupite nevjerojatnoj količini od 1.500+  Font Awesome 5 ikona  i uživajte u bržim performansama i fleksibilnosti dizajna."
+
+#: includes/managers/icons.php:511
+msgid "Upgrade To Font Awesome 5"
+msgstr "Nadogradi na Font Awesome 5"
+
+#: core/debug/classes/htaccess.php:12
+msgid "Your site's .htaccess file appears to be missing."
+msgstr "Datoteka .htaccess vašeg web-mjesta nedostaje."
+
+#: core/debug/classes/theme-missing.php:22
+msgid "Some of your theme files are missing."
+msgstr "Neke vaše datoteke s temom nedostaju."
+
+#: includes/controls/groups/background.php:573
+msgid "Play Once"
+msgstr "Reproduciraj jednom"
+
+#: includes/template-library/sources/local.php:615
+msgid "Template not exist."
+msgstr "Predložak ne postoji."
+
+#: includes/controls/icons.php:91 includes/controls/icons.php:112
+#: includes/controls/icons.php:198
+msgid "Upload SVG"
+msgstr "Slanje SVG-a"
+
+#: includes/settings/settings.php:361
+msgid "We recommend you only enable this feature if you understand the security risks involved."
+msgstr "Preporučamo da omogućite ovu mogućnost samo ako razumijete sigurnosne rizike."
+
+#: includes/managers/icons.php:557
+msgid "Hurray! The upgrade process to Font Awesome 5 was completed successfully."
+msgstr "Huraaa! Proces nadogradnje na Font Awesome 5 je bio uspješan."
+
+#: includes/managers/icons.php:499
+msgid "This action is not reversible and cannot be undone by rolling back to previous versions."
+msgstr "Ovaj postupak nije reverzibilan i ne može se vratiti na prijašnju verziju"
+
+#: includes/managers/icons.php:494
+msgid "Please note that the upgrade process may cause some of the previously used Font Awesome 4 icons to look a bit different due to minor design changes made by Font Awesome."
+msgstr "Molimo primjetite da proces nadogradnje može proizvesti promjene u izgledu prije korištenih Font Awesome 4 ikona te one mogu izgledati nešto drugačije zbog manjih promjena u dizajnu koje je učinio Font Awesome."
+
+#: includes/managers/icons.php:492
+msgid "By upgrading, whenever you edit a page containing a Font Awesome 4 icon, Elementor will convert it to the new Font Awesome 5 icon."
+msgstr "Sa nadogradnjom, kad god da uređujete stranicu koja sadrži Font Awesome 4 ikone, Elementor će ih konvertirati u nove Font Awesome 5 ikone."
+
+#: includes/managers/icons.php:478
+msgid "Font Awesome 4 support script (shim.js) is a script that makes sure all previously selected Font Awesome 4 icons are displayed correctly while using Font Awesome 5 library."
+msgstr "Font Awesome 4 skripta podrške (shim.js) je skripta koja osigurava da sve prije izabrane Font Awesome 4 ikone budu prikazane ispravno prilikom korištenja Font Awesome 5 zbirke."
+
+#: includes/settings/settings.php:361
+msgid "Elementor will try to sanitize the unfiltered files, removing potential malicious code and scripts."
+msgstr "Elementor će pokušati sanitizirati nefiltrirane datoteke, brišući potencijalni maliciozni kod ili skripte."
+
+#: includes/settings/settings.php:361
+msgid "Please note! Allowing uploads of any files (SVG & JSON included) is a potential security risk."
+msgstr "Pažnja molimo! Dozvoljavanje slanja bilo kojih datoteka (uključujući SVG & JSON) predstavlja potencijalni sigurnosni rizik."
+
+#: includes/elements/section.php:420 includes/widgets/common.php:299
+#: includes/widgets/image-carousel.php:695
+msgid "Vertical Align"
+msgstr "Okomito poravnavanje"
+
+#: includes/controls/groups/flex-container.php:113
+#: includes/controls/groups/flex-container.php:213
+#: includes/controls/groups/grid-container.php:208
+#: includes/controls/groups/grid-container.php:248
+#: includes/elements/column.php:191 includes/elements/column.php:219
+#: includes/elements/section.php:429
+msgid "Space Around"
+msgstr "Razmak oko"
+
+#: includes/elements/column.php:826 includes/elements/container.php:1672
+#: includes/elements/section.php:1302 includes/widgets/common.php:615
+msgid "Motion Effects"
+msgstr "Efekti pokreta"
+
+#: includes/elements/container.php:541 includes/elements/section.php:448
+msgid "Overflow"
+msgstr "Prelijevanje"
+
+#: includes/elements/container.php:546 includes/elements/section.php:453
+msgid "Hidden"
+msgstr "Skriveno"
+
+#: includes/settings/controls.php:236
+msgid "Super Admin"
+msgstr "Super Administrator"
+
+#: includes/settings/admin-menu-items/get-help-menu-item.php:23
+msgid "Get Help"
+msgstr "Potraži pomoć"
+
+#: includes/controls/groups/flex-item.php:30 includes/widgets/common.php:242
+msgid "Custom Width"
+msgstr "Prilagođena širina"
+
+#: includes/elements/container.php:1376 includes/widgets/common.php:327
+msgid "Please note!"
+msgstr "Napomena!"
+
+#: includes/elements/container.php:1394 includes/widgets/common.php:344
+msgid "Absolute"
+msgstr "Apsolutno"
+
+#: includes/elements/container.php:1395 includes/widgets/common.php:345
+msgid "Fixed"
+msgstr "Fiksno"
+
+#: includes/elements/container.php:1414 includes/widgets/common.php:359
+msgid "Horizontal Orientation"
+msgstr "Vodoravna orijentacija"
+
+#: includes/elements/container.php:1515 includes/widgets/common.php:460
+msgid "Vertical Orientation"
+msgstr "Okomita orijentacija"
+
+#: includes/base/element-base.php:1000 includes/elements/container.php:1439
+#: includes/elements/container.php:1477 includes/elements/container.php:1539
+#: includes/elements/container.php:1576 includes/widgets/common.php:384
+#: includes/widgets/common.php:422 includes/widgets/common.php:484
+#: includes/widgets/common.php:521
+#: modules/floating-buttons/base/widget-contact-button-base.php:2958
+#: modules/floating-buttons/base/widget-contact-button-base.php:3012
+msgid "Offset"
+msgstr "Offset"
+
+#: includes/elements/container.php:1377 includes/widgets/common.php:328
+msgid "Custom positioning is not considered best practice for responsive web design and should not be used too frequently."
+msgstr "Prilagođeno pozicioniranje se ne smatra najboljom praksom za responzivni web dizajn i ne bi se trebalo često koristiti."
+
+#: includes/controls/groups/flex-container.php:117
+#: includes/controls/groups/flex-container.php:214
+#: includes/controls/groups/grid-container.php:212
+#: includes/controls/groups/grid-container.php:252
+#: includes/elements/column.php:192 includes/elements/column.php:220
+#: includes/elements/section.php:430
+msgid "Space Evenly"
+msgstr "Rasporedi ravnomjerno"
+
+#. translators: %s: Accepted chars.
+#: includes/widgets/menu-anchor.php:132
+msgid "Note: The ID link ONLY accepts these chars: %s"
+msgstr "Napomena: ID poveznica prihvaća samo ove znakove: %s"
+
+#: modules/safe-mode/module.php:374
+msgid "Having problems loading Elementor? Please enable Safe Mode to troubleshoot."
+msgstr "Imate problema sa učitavanjem Elementora? Molimo, omogućite Sigurni Mod za rješavanje problema."
+
+#: modules/safe-mode/module.php:272
+msgid "The issue was probably caused by one of your plugins or theme."
+msgstr "Problem je vjerojatno prouzročio jedan od pluginova (dodataka) ili tema. "
+
+#: includes/frontend.php:1534
+msgid "(more&hellip;)"
+msgstr "(more&hellip;)"
+
+#. translators: %s: Current post name.
+#: includes/frontend.php:1541
+msgid "Continue reading %s"
+msgstr "Nastavi čitanje %s"
+
+#. translators: %d: Interval in minutes.
+#: core/base/background-process/wp-background-process.php:439
+#: core/base/background-task.php:312
+msgid "Every %d minutes"
+msgstr "Svakih %d minuta"
+
+#: core/upgrade/manager.php:47
+msgid "Elementor Data Updater"
+msgstr "Elementor Data Updater"
+
+#: includes/template-library/sources/local.php:1720
+#: modules/promotions/admin-menu-items/popups-promotion-item.php:42
+#: modules/promotions/admin-menu-items/popups-promotion-item.php:46
+#: assets/js/app.js:11066
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:2250
+msgid "Popups"
+msgstr "Skočni prozori"
+
+#: modules/promotions/admin-menu-items/popups-promotion-item.php:18
+msgid "Get Popup Builder"
+msgstr "Nabavi Popup Builder"
+
+#: includes/widgets/google-maps.php:150
+#: modules/floating-buttons/base/widget-contact-button-base.php:392
+#: modules/floating-buttons/base/widget-contact-button-base.php:955
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:500
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:750
+msgid "Location"
+msgstr "Lokacija"
+
+#: includes/widgets/image-gallery.php:219
+msgid "Order By"
+msgstr "Sortiraj prema"
+
+#: includes/widgets/read-more.php:41 includes/widgets/read-more.php:88
+msgid "Read More"
+msgstr "Pročitajte više"
+
+#: includes/widgets/read-more.php:92
+msgid "Continue reading"
+msgstr "Nastavi čitanje"
+
+#: includes/widgets/read-more.php:121
+msgid "Read More Text"
+msgstr "Pročitajte više tekst"
+
+#: includes/widgets/video.php:240
+msgid "External URL"
+msgstr "Vanjski URL"
+
+#: includes/controls/media.php:198
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:387
+msgid "Choose File"
+msgstr "Odaberi datoteku"
+
+#: modules/safe-mode/module.php:42
+msgid "Safe Mode"
+msgstr "Siguran način rada"
+
+#: modules/safe-mode/module.php:102
+msgid "Cannot enable Safe Mode"
+msgstr "Nije moguće omogućiti siguran način rada"
+
+#: modules/safe-mode/module.php:260
+msgid "Safe Mode ON"
+msgstr "Siguran način rada je uključen"
+
+#: modules/safe-mode/module.php:262 modules/safe-mode/module.php:492
+msgid "Disable Safe Mode"
+msgstr "Onemogući siguran način rada"
+
+#: modules/safe-mode/module.php:269
+msgid "Editor successfully loaded?"
+msgstr "Uređivač uspješno učitan?"
+
+#: modules/safe-mode/module.php:368 modules/safe-mode/module.php:380
+msgid "Can't Edit?"
+msgstr "Ne možete urediti?"
+
+#: modules/safe-mode/module.php:370
+msgid "Enable Safe Mode"
+msgstr "Omogući siguran način rada"
+
+#: core/admin/menu/main.php:34 core/admin/menu/main.php:35
+#: includes/template-library/sources/local.php:239
+msgctxt "Template Library"
+msgid "Templates"
+msgstr "Predlošci"
+
+#: includes/template-library/sources/local.php:318
+msgctxt "Template Library"
+msgid "Categories"
+msgstr "Kategorije"
+
+#: includes/template-library/sources/local.php:319
+msgctxt "Template Library"
+msgid "Category"
+msgstr "Kategorija"
+
+#: includes/template-library/sources/local.php:320
+msgctxt "Template Library"
+msgid "All Categories"
+msgstr "Sve kategorije"
+
+#: includes/template-library/sources/local.php:1415
+msgctxt "Template Library"
+msgid "Filter by category"
+msgstr "Filtriraj po kategoriji"
+
+#. translators: %s: The `the_content` function.
+#: includes/widgets/read-more.php:112
+msgid "Note: This widget only affects themes that use `%s` in archive pages."
+msgstr "Ovaj widget će utjecati samo na teme koje koriste `%s` na stranicama arhive."
+
+#: app/admin-menu-items/theme-builder-menu-item.php:22
+#: app/modules/site-editor/module.php:31
+#: core/common/modules/finder/categories/general.php:72
+#: includes/template-library/sources/local.php:1719
+#: assets/js/app-packages.js:5925 assets/js/editor.js:47287
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:7
+msgid "Theme Builder"
+msgstr "Graditelj teme"
+
+#: modules/safe-mode/module.php:285
+msgid "Still experiencing issues?"
+msgstr "Još uvijek ima problema?"
+
+#: modules/safe-mode/module.php:51
+msgid "Safe Mode allows you to troubleshoot issues by only loading the editor, without loading the theme or any other plugin."
+msgstr "Sigurni mod omogućava da rješavate probleme samo sa učitanim editorom, bez učitavanja teme ili drugih dodataka (pluginova)."
+
+#: modules/library/documents/not-supported.php:57
+msgid "Not Supported"
+msgstr "Nije podržano"
+
+#: core/common/modules/finder/categories/site.php:76 assets/js/app.js:11570
+msgid "Plugins"
+msgstr "Dodaci"
+
+#: core/common/modules/finder/categories/site.php:82
+msgid "Users"
+msgstr "Korisnici"
+
+#: core/base/document.php:1960
+msgid "Future"
+msgstr "Budućnost"
+
+#: includes/editor-templates/hotkeys.php:167
+msgid "Go To"
+msgstr "Kreni na"
+
+#: includes/editor-templates/hotkeys.php:200 assets/js/editor.js:7524
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:16
+msgid "Keyboard Shortcuts"
+msgstr "Prečaci tipkovnice"
+
+#: includes/editor-templates/hotkeys.php:24 assets/js/ai-admin.js:12348
+#: assets/js/ai-admin.js:13412 assets/js/ai-gutenberg.js:14199
+#: assets/js/ai-gutenberg.js:15263 assets/js/ai-media-library.js:13977
+#: assets/js/ai-media-library.js:15041 assets/js/ai.js:15393
+#: assets/js/ai.js:16457 assets/js/kit-elements-defaults-editor.js:236
+msgid "Undo"
+msgstr "Poništi"
+
+#: includes/editor-templates/hotkeys.php:32 assets/js/ai-admin.js:12359
+#: assets/js/ai-admin.js:13423 assets/js/ai-gutenberg.js:14210
+#: assets/js/ai-gutenberg.js:15274 assets/js/ai-media-library.js:13988
+#: assets/js/ai-media-library.js:15052 assets/js/ai.js:15404
+#: assets/js/ai.js:16468
+msgid "Redo"
+msgstr "Ponovi"
+
+#: includes/editor-templates/hotkeys.php:99 assets/js/admin-top-bar.js:191
+#: assets/js/common.js:4759 assets/js/editor.js:38272
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:18
+msgid "Finder"
+msgstr "Traženje"
+
+#: includes/editor-templates/hotkeys.php:107
+msgid "Show / Hide Panel"
+msgstr "Prikaži / Sakrij ploču"
+
+#: includes/editor-templates/hotkeys.php:208
+msgid "Quit"
+msgstr "Zatvori"
+
+#: includes/widgets/image-gallery.php:171 includes/widgets/image.php:158
+msgid "Attachment Caption"
+msgstr "Naslov privitka"
+
+#: includes/widgets/image.php:159 includes/widgets/image.php:171
+msgid "Custom Caption"
+msgstr "Prilagođeni opis"
+
+#: includes/widgets/star-rating.php:45 includes/widgets/star-rating.php:118
+msgid "Star Rating"
+msgstr "Ocjena zvjezdicama"
+
+#: includes/widgets/rating.php:22 includes/widgets/rating.php:136
+#: includes/widgets/rating.php:160 includes/widgets/star-rating.php:149
+msgid "Rating"
+msgstr "Ocjena"
+
+#: includes/widgets/rating.php:143 includes/widgets/star-rating.php:136
+msgid "Rating Scale"
+msgstr "Razmjer ocjene"
+
+#: includes/widgets/star-rating.php:188
+msgid "Outline"
+msgstr "Kontura"
+
+#: includes/widgets/star-rating.php:315
+msgid "Stars"
+msgstr "Zvjezdice"
+
+#: includes/widgets/video.php:511
+msgid "Current Video Channel"
+msgstr "Trenutni video kanal"
+
+#: includes/widgets/video.php:512
+msgid "Any Video"
+msgstr "Bilo koji video"
+
+#: core/common/modules/connect/apps/connect.php:11
+#: core/common/modules/connect/connect-menu-item.php:24
+#: core/common/modules/connect/connect-menu-item.php:28
+#: assets/js/ai-admin.js:1681 assets/js/ai-admin.js:6773
+#: assets/js/ai-gutenberg.js:3450 assets/js/ai-gutenberg.js:8624
+#: assets/js/ai-layout.js:1472 assets/js/ai-layout.js:3196
+#: assets/js/ai-media-library.js:3310 assets/js/ai-media-library.js:8402
+#: assets/js/ai.js:4092 assets/js/ai.js:9725 assets/js/ai.js:9818
+msgid "Connect"
+msgstr "Poveži"
+
+#: core/common/modules/finder/template.php:13
+msgid "Type to find anything in Elementor"
+msgstr "Upišite nešto da biste tražili u Elementoru"
+
+#: core/common/modules/connect/apps/base-app.php:87
+msgid "Disconnect"
+msgstr "Odspoji"
+
+#: core/common/modules/finder/categories/create.php:27
+#: assets/js/editor.js:45824
+msgid "Create"
+msgstr "Izradi"
+
+#: core/common/modules/finder/categories/site.php:46
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.js:2
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.strings.js:12
+msgid "Homepage"
+msgstr "Početna stranica"
+
+#: core/common/modules/finder/categories/site.php:52
+msgid "Dashboard"
+msgstr "Nadzorna ploča"
+
+#: core/common/modules/finder/categories/site.php:58
+msgid "Menus"
+msgstr "Izbornici"
+
+#: core/common/modules/finder/categories/site.php:70
+msgid "Customizer"
+msgstr "Prilagođivač"
+
+#: includes/widgets/rating.php:118 includes/widgets/star-rating.php:386
+msgid "Unmarked Color"
+msgstr "Neoznačena boja"
+
+#: includes/widgets/star-rating.php:180
+msgid "Unmarked Style"
+msgstr "Neoznačeni stil"
+
+#: includes/widgets/video.php:614
+msgid "Poster"
+msgstr "Poster"
+
+#: core/admin/admin-notices.php:288
+msgid "Hide Notification"
+msgstr "Sakrij Obavijest"
+
+#: core/admin/admin-notices.php:282
+msgid "Happy To Help"
+msgstr "Drago nam je da možemo pomoći"
+
+#: core/admin/admin-notices.php:278
+msgid "Congrats!"
+msgstr "Čestitamo!"
+
+#: includes/widgets/video.php:176 includes/widgets/video.php:201
+#: includes/widgets/video.php:225 includes/widgets/video.php:285
+msgid "Enter your URL"
+msgstr "Unesite svoj URL"
+
+#: includes/widgets/inner-section.php:35 assets/js/editor.js:27977
+msgid "Inner Section"
+msgstr "Unutrašnja sekcija"
+
+#: includes/widgets/video.php:474
+msgid "Lazy Load"
+msgstr "Učitavanje s zakašnjenjem"
+
+#: includes/settings/admin-menu-items/getting-started-menu-item.php:61
+msgid "Welcome to Elementor"
+msgstr "Dobro došli u Elementor"
+
+#: includes/settings/admin-menu-items/getting-started-menu-item.php:23
+#: includes/settings/admin-menu-items/getting-started-menu-item.php:27
+#: includes/settings/admin-menu-items/getting-started-menu-item.php:52
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:792
+msgid "Getting Started"
+msgstr "Započnimo"
+
+#: includes/editor-templates/navigator.php:112
+msgid "Easy Navigation is Here!"
+msgstr "Jednostavna navigacija je ovdje!"
+
+#: includes/editor-templates/navigator.php:107
+msgid "Empty"
+msgstr "Prazno"
+
+#: includes/editor-templates/hotkeys.php:126
+#: includes/editor-templates/navigator.php:42
+#: includes/editor-templates/panel.php:90
+#: includes/editor-templates/panel.php:96 assets/js/editor.js:31739
+msgid "Navigator"
+msgstr "Navigator"
+
+#: includes/editor-templates/library-layout.php:13
+#: includes/settings/admin-menu-items/getting-started-menu-item.php:55
+#: includes/settings/admin-menu-items/getting-started-menu-item.php:56
+#: modules/announcements/module.php:122 assets/js/app-packages.js:2843
+#: assets/js/app.js:3965
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1269
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1488
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1580
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1823
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1998
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:2319
+msgid "Skip"
+msgstr "Preskoči"
+
+#: includes/controls/url.php:68
+#: modules/floating-buttons/base/widget-contact-button-base.php:948
+#: modules/floating-buttons/base/widget-floating-bars-base.php:162
+#: modules/floating-buttons/base/widget-floating-bars-base.php:348
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:270
+#: modules/shapes/widgets/text-path.php:165
+msgid "Paste URL or type"
+msgstr "Zalijepite URL ili upišite"
+
+#: includes/controls/groups/css-filter.php:129
+msgctxt "Filter Control"
+msgid "Hue"
+msgstr "Nijansa"
+
+#: core/debug/inspector.php:49
+msgid "Debug Bar"
+msgstr "Debug Bar"
+
+#: includes/editor-templates/navigator.php:113
+msgid "Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget."
+msgstr "Nakon što ispunite stranicu sadržajem, ovaj prozor će vam dati pregled svih elemenata stranice. Na taj način lakše se možete kretati između različitih sekcija, stupaca i widgeta."
+
+#: includes/settings/admin-menu-items/getting-started-menu-item.php:36
+msgid "Create Your First Page"
+msgstr "Izradite svoju prvu stranicu"
+
+#: includes/settings/admin-menu-items/getting-started-menu-item.php:39
+msgid "Create Your First Post"
+msgstr "Izradite svoju prvu objavu"
+
+#: includes/widgets/accordion.php:167 includes/widgets/accordion.php:171
+#: includes/widgets/icon-box.php:182 includes/widgets/image-box.php:157
+#: includes/widgets/tabs.php:166 includes/widgets/tabs.php:170
+#: includes/widgets/testimonial.php:140 includes/widgets/text-editor.php:132
+#: includes/widgets/toggle.php:170 includes/widgets/toggle.php:174
+msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo."
+msgstr "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo."
+
+#: core/kits/documents/tabs/settings-lightbox.php:76 includes/frontend.php:1401
+#: includes/widgets/google-maps.php:170 assets/js/ai-admin.js:10142
+#: assets/js/ai-admin.js:10145 assets/js/ai-gutenberg.js:11993
+#: assets/js/ai-gutenberg.js:11996 assets/js/ai-media-library.js:11771
+#: assets/js/ai-media-library.js:11774 assets/js/ai.js:13187
+#: assets/js/ai.js:13190
+msgid "Zoom"
+msgstr "Uvećanje"
+
+#: core/debug/inspector.php:57
+msgid "Debug Bar adds an admin bar menu that lists all the templates that are used on a page that is being displayed."
+msgstr "Ispravljanje grešaka dodaje izbornik u admin traku koja sadrži listu svih predložaka koji se koriste na prikazanoj stranici."
+
+#: core/document-types/page-base.php:47
+msgid "Single"
+msgstr "Jedno"
+
+#: includes/widgets/video.php:446
+msgid "Logo"
+msgstr "Logotip"
+
+#: includes/widgets/video.php:433
+msgid "Modest Branding"
+msgstr "Skromno brendiranje"
+
+#: includes/widgets/video.php:419
+msgid "Video Info"
+msgstr "Informacije videa"
+
+#: core/base/providers/social-network-provider.php:217
+#: includes/widgets/video.php:272 includes/widgets/video.php:296
+msgid "URL"
+msgstr "URL"
+
+#: includes/widgets/video.php:158
+msgid "Self Hosted"
+msgstr "Samo hostanje"
+
+#: includes/widgets/video.php:156
+msgid "Dailymotion"
+msgstr "Dailymotion"
+
+#: includes/widgets/video.php:150
+msgid "Source"
+msgstr "Izvor"
+
+#: includes/widgets/audio.php:189
+msgid "Artwork"
+msgstr "Ilustracije"
+
+#: includes/managers/elements.php:288
+#: modules/promotions/widgets/pro-widget-promotion.php:66
+#: assets/js/ai-admin.js:8139 assets/js/ai-gutenberg.js:9990
+#: assets/js/ai-layout.js:4199 assets/js/ai-media-library.js:9768
+#: assets/js/ai.js:11184
+msgid "Pro"
+msgstr "Pro verzija"
+
+#: includes/elements/column.php:404 includes/elements/container.php:825
+#: includes/elements/section.php:701 includes/widgets/heading.php:328
+msgid "Blend Mode"
+msgstr "Mod blenda"
+
+#: includes/managers/elements.php:309
+msgid "WooCommerce"
+msgstr "WooCommerce"
+
+#: app/modules/site-editor/module.php:32
+#: core/common/modules/finder/categories/site.php:26 core/kits/manager.php:437
+#: includes/managers/elements.php:302
+msgid "Site"
+msgstr "Web-stranica"
+
+#: includes/editor-templates/hotkeys.php:41 assets/js/editor.js:30644
+msgid "Copy"
+msgstr "Kopiraj"
+
+#: includes/editor-templates/global.php:51
+msgid "Drag widget here"
+msgstr "Ovdje dovucite widget"
+
+#: includes/controls/groups/css-filter.php:113
+msgctxt "Filter Control"
+msgid "Saturation"
+msgstr "Zasićenost"
+
+#: includes/controls/groups/css-filter.php:97
+msgctxt "Filter Control"
+msgid "Contrast"
+msgstr "Kontrast"
+
+#: includes/controls/groups/css-filter.php:81
+msgctxt "Filter Control"
+msgid "Brightness"
+msgstr "Svjetlost"
+
+#: includes/controls/groups/css-filter.php:62
+msgctxt "Filter Control"
+msgid "Blur"
+msgstr "Zamagljenost"
+
+#: includes/controls/groups/background.php:563 includes/widgets/video.php:336
+msgid "Specify an end time (in seconds)"
+msgstr "Odredite vrijeme završetka (u sekundama)"
+
+#: includes/controls/groups/background.php:561 includes/widgets/video.php:334
+msgid "End Time"
+msgstr "Vrijeme završetka"
+
+#: includes/controls/groups/background.php:551 includes/widgets/video.php:325
+msgid "Specify a start time (in seconds)"
+msgstr "Odredite početno vrijeme (u sekundama)"
+
+#: includes/controls/groups/background.php:549 includes/widgets/video.php:323
+msgid "Start Time"
+msgstr "Početno vrijeme"
+
+#: core/admin/feedback.php:107
+msgid "Wait! Don't deactivate Elementor. You have to activate both Elementor and Elementor Pro in order for the plugin to work."
+msgstr "Pričekajte! Nemojte deaktivirati Elementor. Trebate aktivirati Elementor i Elementor Pro kako bi dodatak funkcionirao."
+
+#: core/admin/feedback.php:105
+msgid "I have Elementor Pro"
+msgstr "Imam Elementor Pro"
+
+#: core/debug/inspector.php:115
+msgid "Elementor Debugger"
+msgstr "Elementor Debugger"
+
+#: includes/widgets/traits/button-trait.php:205
+msgid "Button ID"
+msgstr "ID Dugmeta"
+
+#: core/admin/admin.php:220 assets/js/admin.js:2124 assets/js/gutenberg.js:148
+msgid "Back to WordPress Editor"
+msgstr "Natrag na WordPress uređivač"
+
+#. translators: %s: Document title.
+#: core/documents-manager.php:389
+msgid "Elementor %s"
+msgstr "Elementor %s"
+
+#. translators: %s: Document title.
+#. translators: %s: Template type label.
+#: core/base/document.php:267
+#: core/common/modules/finder/categories/create.php:86
+#: core/document-types/page-base.php:183
+#: includes/template-library/sources/local.php:1376
+msgid "Add New %s"
+msgstr "Dodaj novo %s"
+
+#: core/kits/documents/tabs/theme-style-images.php:95
+#: core/kits/documents/tabs/theme-style-images.php:166
+#: includes/elements/column.php:373 includes/elements/column.php:447
+#: includes/elements/container.php:779 includes/elements/container.php:893
+#: includes/elements/section.php:655 includes/elements/section.php:759
+#: includes/widgets/image-box.php:425 includes/widgets/image-box.php:460
+#: includes/widgets/image.php:437 includes/widgets/image.php:471
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1006
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1499
+msgid "Opacity"
+msgstr "Prozirnost"
+
+#: includes/widgets/image.php:315
+msgid "Max Width"
+msgstr "Maksimalna širina"
+
+#: includes/template-library/sources/local.php:232
+#: assets/js/new-template.js:149
+msgid "New Template"
+msgstr "Novi predložak"
+
+#: includes/controls/groups/background.php:265
+#: includes/controls/groups/background.php:313
+#: includes/controls/groups/box-shadow.php:69
+#: includes/elements/container.php:1389 includes/widgets/common.php:339
+#: includes/widgets/common.php:986 includes/widgets/divider.php:762
+#: includes/widgets/divider.php:928 includes/widgets/image-carousel.php:555
+#: includes/widgets/image-carousel.php:619 includes/widgets/tabs.php:180
+#: includes/widgets/traits/button-trait.php:251
+#: modules/floating-buttons/base/widget-floating-bars-base.php:444
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:940
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:995
+#: modules/nested-accordion/widgets/nested-accordion.php:201
+#: modules/nested-tabs/widgets/nested-tabs.php:880
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:53
+msgid "Position"
+msgstr "Pozicija"
+
+#. translators: 1: Elementor, 2: Link to plugin review
+#: core/admin/admin.php:409
+msgid "Enjoyed %1$s? Please leave us a %2$s rating. We really appreciate your support!"
+msgstr "Uživate %1$s? Molimo Vas da nas ocijenite s %2$s ocjenom . Stvarno cijenimo vašu podršku!"
+
+#: core/common/modules/finder/categories/general.php:67
+msgid "Knowledge Base"
+msgstr "Baza znanja"
+
+#: modules/page-templates/module.php:338
+msgid "No header, no footer, just Elementor"
+msgstr "Nema zaglavlja, nema podnožja, samo Elementor"
+
+#: modules/page-templates/module.php:295
+msgid "Page Layout"
+msgstr "Izgled stranice"
+
+#: modules/page-templates/module.php:350
+msgid "This template includes the header, full-width content and footer"
+msgstr "Ova predložak uključuje zaglavlje, punu širinu stranice i podnožje"
+
+#: core/document-types/page-base.php:182
+#: includes/template-library/sources/admin-menu-items/add-new-template-menu-item.php:23
+#: modules/landing-pages/module.php:271 assets/js/app-packages.js:4610
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.js:2
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.strings.js:8
+msgid "Add New"
+msgstr "Dodaj novo"
+
+#: includes/admin-templates/new-floating-elements.php:44
+#: includes/admin-templates/new-template.php:109
+msgid "Name your template"
+msgstr "Imenuj predložak"
+
+#: includes/frontend.php:1403 includes/widgets/video.php:994
+msgid "Play Video"
+msgstr "Pokreni video"
+
+#: includes/template-library/sources/local.php:1241
+msgid "All"
+msgstr "Sve"
+
+#: includes/admin-templates/new-floating-elements.php:47
+#: includes/admin-templates/new-template.php:112
+msgid "Enter template name (optional)"
+msgstr "Unesite ime predloška (opcija)"
+
+#: includes/admin-templates/new-template.php:66
+msgid "Select the type of template you want to work on"
+msgstr "Odaberite predložak na kojem želite raditi"
+
+#: includes/admin-templates/new-template.php:57
+msgid "Use templates to create the different pieces of your site, and reuse them with one click whenever needed."
+msgstr "Upotrijebite predloške za različite dijelove vaše stranice, i ponovo ih upotrijebite s jednim klikom kad god vam zatreba."
+
+#: includes/editor-templates/templates.php:182
+msgid "More actions"
+msgstr "Više akcije"
+
+#: core/document-types/page.php:72 modules/library/documents/page.php:61
+#: assets/js/app.js:11852 assets/js/editor.js:10178
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:2222
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.js:2
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.strings.js:1
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.strings.js:3
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.strings.js:7
+msgid "Pages"
+msgstr "Stranice"
+
+#: core/role-manager/role-manager.php:239
+msgid "Want to give access only to content?"
+msgstr "Želite dati pristup samo sadržaju?"
+
+#: core/role-manager/role-manager.php:157
+msgid "No access to editor"
+msgstr "Urednik nema pristup"
+
+#: includes/template-library/sources/local.php:1336
+msgid "Add templates and reuse them across your website. Easily export and import them to any other project, for an optimized workflow."
+msgstr "Dodajte predloške i upotrebljavajte ih na svim stranicama. Lako ih izvezite i uvezite u bilo koji drugi projekt, za optimizirani radni proces."
+
+#: includes/editor-templates/global.php:122
+msgid "This tag has no settings."
+msgstr "Ova oznaka nema postavki."
+
+#. translators: %s: Document title.
+#. translators: %s: Post type label.
+#: core/base/document.php:1221 core/settings/page/model.php:127
+#: includes/editor-templates/panel.php:84
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:2
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:32
+msgid "%s Settings"
+msgstr "%s Postavke"
+
+#: core/role-manager/role-manager.php:150
+msgid "Role Excluded"
+msgstr "Uloga isključena"
+
+#: core/role-manager/role-manager.php:114
+msgid "Manage What Your Users Can Edit In Elementor"
+msgstr "Odredite što vaši korisnici mogu uređivati u Elementoru"
+
+#: includes/template-library/sources/local.php:227
+msgctxt "Template Library"
+msgid "My Templates"
+msgstr "Moji predlošci"
+
+#: core/document-types/page-base.php:230
+msgid "Featured Image"
+msgstr "Istaknuta slika"
+
+#: core/base/document.php:257
+msgid "Document"
+msgstr "Dokument"
+
+#: includes/widgets/common.php:226 includes/widgets/icon-list.php:122
+#: includes/widgets/icon-list.php:213
+msgid "Inline"
+msgstr "U redu"
+
+#: includes/widgets/counter.php:206
+msgid "Separator"
+msgstr "Separator (odjeljivanje)"
+
+#: core/kits/documents/tabs/global-typography.php:182
+#: modules/promotions/admin-menu-items/custom-fonts-promotion-item.php:15
+#: modules/promotions/admin-menu-items/custom-fonts-promotion-item.php:19
+#: assets/js/152486453d0e39071cdb.bundle.js:237
+msgid "Custom Fonts"
+msgstr "Prilagođeni fontovi"
+
+#: core/common/modules/finder/categories/general.php:61
+#: core/role-manager/role-manager-menu-item.php:28
+#: core/role-manager/role-manager-menu-item.php:32
+#: core/role-manager/role-manager.php:50
+msgid "Role Manager"
+msgstr "Upravitelj uloga"
+
+#: core/dynamic-tags/tag.php:115 includes/settings/settings.php:389
+msgid "Fallback"
+msgstr "rezervno, pričuvno"
+
+#: core/document-types/page-base.php:124
+msgid "Body Style"
+msgstr "Stil tijela stranice"
+
+#: core/common/modules/ajax/module.php:165
+msgid "Action not found."
+msgstr "Radnja nije pronađena."
+
+#: core/common/modules/ajax/module.php:131
+msgid "Token Expired."
+msgstr "Token je istekao."
+
+#: includes/admin-templates/new-template.php:64
+msgid "Choose Template Type"
+msgstr "Odaberi vrstu predloška"
+
+#: includes/admin-templates/new-template.php:115
+msgid "Create Template"
+msgstr "Izradi predložak"
+
+#: includes/editor-templates/templates.php:102
+msgid "Search Templates:"
+msgstr "Pretraživanje predložaka:"
+
+#. translators: %s: Template type label.
+#: includes/template-library/sources/local.php:1369
+msgid "Create Your First %s"
+msgstr "Izradite vaš prvi %s"
+
+#: includes/widgets/image-carousel.php:176
+msgid "Set how many slides are scrolled per swipe."
+msgstr "Postavite koliko se slajdova kliže po jednom klizanju."
+
+#: core/admin/admin.php:478
+msgid "Create New Post"
+msgstr "Izradi novu objavu"
+
+#: includes/controls/groups/background.php:448
+msgid "Note: Attachment Fixed works only on desktop."
+msgstr "Napomena: Privitak \"Fiksno\" radi samo na osobnom računalu (ne na mobitelu/tabletu)."
+
+#: modules/history/revisions-manager.php:157
+msgid "Current Version"
+msgstr "Trenutna verzija"
+
+#: includes/controls/groups/background.php:597 includes/widgets/video.php:461
+msgid "Privacy Mode"
+msgstr "Način privatnosti"
+
+#: includes/widgets/shortcode.php:106
+msgid "Enter your shortcode"
+msgstr "Unesite kratki kod"
+
+#: includes/widgets/image.php:174
+msgid "Enter your image caption"
+msgstr "Unesite opis slike"
+
+#: core/kits/documents/kit.php:156
+#: modules/history/views/revisions-panel-template.php:64
+msgid "Published"
+msgstr "Objavljeno"
+
+#: core/common/modules/finder/template.php:19 assets/js/editor.js:11251
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:1891
+msgid "No Results Found"
+msgstr "Nema rezultata"
+
+#: includes/editor-templates/templates.php:265 assets/js/app-packages.js:2531
+#: assets/js/app.js:3653
+msgid "Select File"
+msgstr "Odaberi datoteku"
+
+#: core/document-types/page-base.php:215
+msgid "Excerpt"
+msgstr "Sažetak"
+
+#: core/admin/admin.php:429
+msgid "Elementor Overview"
+msgstr "Pregled elemenata"
+
+#: core/admin/admin.php:475
+msgid "Create New Page"
+msgstr "Izradi novu stranicu"
+
+#: core/admin/admin.php:525
+msgid "Recently Edited"
+msgstr "Nedavno uređeno"
+
+#: core/admin/admin.php:566
+msgid "News & Updates"
+msgstr "Novosti i ažuriranja"
+
+#: core/admin/admin.php:598
+msgid "(opens in a new window)"
+msgstr "(otvara se u novom prozoru)"
+
+#: core/admin/admin.php:618
+msgid "Blog"
+msgstr "Blog"
+
+#: includes/controls/groups/typography.php:185
+msgctxt "Typography Control"
+msgid "Decoration"
+msgstr "Dekoracija"
+
+#: includes/controls/groups/typography.php:190
+msgctxt "Typography Control"
+msgid "Underline"
+msgstr "Podcrtano"
+
+#: includes/controls/groups/typography.php:192
+msgctxt "Typography Control"
+msgid "Line Through"
+msgstr "Linija kroz"
+
+#: includes/editor-templates/templates.php:68
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:3760
+msgid "New"
+msgstr "Novo"
+
+#: includes/editor-templates/templates.php:70
+msgid "Trend"
+msgstr "Trend"
+
+#: includes/editor-templates/templates.php:72
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:3764
+msgid "Popular"
+msgstr "Popularno"
+
+#: includes/editor-templates/templates.php:94
+msgid "My Favorites"
+msgstr "Moji favoriti"
+
+#: includes/editor-templates/templates.php:103
+msgid "Search"
+msgstr "Pretraži"
+
+#: includes/editor-templates/templates.php:119
+msgid "Created By"
+msgstr "Izradio"
+
+#: includes/editor-templates/templates.php:123
+msgid "Creation Date"
+msgstr "Datum izrade"
+
+#: includes/editor-templates/templates.php:160
+msgid "Favorite"
+msgstr "Favorit"
+
+#: includes/editor-templates/templates.php:252
+#: includes/editor-templates/templates.php:268
+#: includes/editor-templates/templates.php:281
+msgid "Want to learn more about the Elementor library?"
+msgstr "Želite li saznati više o Elementor biblioteci?"
+
+#: includes/editor-templates/templates.php:253
+#: includes/editor-templates/templates.php:269
+#: includes/editor-templates/templates.php:282
+#: includes/widgets/traits/button-trait.php:57 assets/js/app.js:7575
+#: assets/js/app.js:8581
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:2526
+msgid "Click here"
+msgstr "Kliknite ovdje"
+
+#: includes/editor-templates/templates.php:262
+msgid "Import Template to Your Library"
+msgstr "Uvezi predložak u svoju biblioteku"
+
+#: includes/editor-templates/templates.php:263
+msgid "Drag & drop your .JSON or .zip template file"
+msgstr "Povucite i ispustite datoteku predložaka .JSON ili .zip"
+
+#: includes/editor-templates/templates.php:264
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:2170
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:2514
+msgid "or"
+msgstr "ili"
+
+#: includes/widgets/html.php:103
+msgid "Enter your code"
+msgstr "Unesite svoj kod"
+
+#: includes/widgets/heading.php:186
+msgid "Add Your Heading Text Here"
+msgstr "Ovdje dodajte tekst naslova"
+
+#: includes/widgets/alert.php:146 includes/widgets/icon-box.php:183
+#: includes/widgets/image-box.php:158
+msgid "Enter your description"
+msgstr "Unesite svoj opis"
+
+#: includes/widgets/alert.php:133
+msgid "This is an Alert"
+msgstr "Ovo je upozorenje"
+
+#: includes/widgets/accordion.php:209 includes/widgets/toggle.php:212
+#: modules/nested-tabs/widgets/nested-tabs.php:126
+msgid "Active Icon"
+msgstr "Aktivna ikona"
+
+#. translators: 1: Editing date, 2: Author display name.
+#: core/base/document.php:1546
+msgid "Last edited on %1$s by %2$s"
+msgstr "Posljednje uredivano %1$s - %2$s"
+
+#. translators: 1: Saving date, 2: Author display name.
+#: core/base/document.php:1539
+msgid "Draft saved on %1$s by %2$s"
+msgstr "Skica spremljena %1$s - %2$s"
+
+#: includes/editor-templates/templates.php:11
+#: includes/editor-templates/templates.php:12
+msgid "Import Template"
+msgstr "Uvoz predloška"
+
+#. translators: %s: Document title.
+#: core/base/document.php:198
+msgid "Hurray! Your %s is live."
+msgstr "Jupi! Vaša je stranica %s aktivna."
+
+#: core/base/document.php:1533
+msgctxt "revision date format"
+msgid "M j, H:i"
+msgstr "M g, H:i"
+
+#: core/kits/views/panel.php:44 includes/controls/icons.php:83
+#: includes/controls/icons.php:85 includes/controls/media.php:215
+#: includes/controls/media.php:217 includes/controls/media.php:294
+#: includes/controls/media.php:296 includes/editor-templates/repeater.php:27
+#: modules/promotions/widgets/pro-widget-promotion.php:74
+#: assets/js/ai-admin.js:2940 assets/js/ai-admin.js:7620
+#: assets/js/ai-gutenberg.js:4709 assets/js/ai-gutenberg.js:9471
+#: assets/js/ai-layout.js:3680 assets/js/ai-media-library.js:4569
+#: assets/js/ai-media-library.js:9249 assets/js/ai.js:5351
+#: assets/js/ai.js:10665
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:919
+msgid "Remove"
+msgstr "Ukloni"
+
+#: includes/editor-templates/hotkeys.php:73
+#: includes/editor-templates/repeater.php:21 assets/js/editor.js:30629
+#: assets/js/editor.js:51296
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.js:2
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.strings.js:20
+msgid "Duplicate"
+msgstr "Dupliciraj"
+
+#: includes/editor-templates/repeater.php:14
+msgid "Drag & Drop"
+msgstr "Dovuci i ostavi"
+
+#: includes/editor-templates/panel.php:161
+#: includes/editor-templates/panel.php:163 assets/js/editor.js:36595
+msgid "Hide Panel"
+msgstr "Sakrij ploču"
+
+#: includes/editor-templates/panel.php:147 assets/js/editor.js:33304
+#: assets/js/editor.js:33803
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:2
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:23
+msgid "Save as Template"
+msgstr "Spremi kao predložak"
+
+#: includes/editor-templates/panel.php:143
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:2
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:24
+msgid "Save Draft"
+msgstr "Spremi skicu"
+
+#: includes/editor-templates/panel.php:128
+#: includes/editor-templates/panel.php:130
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:26
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:27
+msgid "Save Options"
+msgstr "Spremi opcije"
+
+#: core/base/document.php:171 includes/editor-templates/panel.php:123
+#: assets/js/editor.js:25568
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:28
+msgid "Publish"
+msgstr "Objavi"
+
+#: includes/editor-templates/panel.php:110
+#: includes/editor-templates/panel.php:113
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:2
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:30
+msgid "Preview Changes"
+msgstr "Izmjene izgleda"
+
+#: includes/controls/dimensions.php:148
+msgid "Unlinked values"
+msgstr "Odspojene vrijednosti"
+
+#: includes/editor-templates/panel-elements.php:78
+msgid "Search Widget:"
+msgstr "Widget pretraživanja:"
+
+#: core/experiments/manager.php:650 includes/controls/popover-toggle.php:71
+#: includes/controls/popover-toggle.php:73
+msgid "Back to default"
+msgstr "Povratak na izvorne postavke"
+
+#: core/admin/admin.php:533
+msgctxt "Dashboard Overview Widget Recently Date"
+msgid "M jS"
+msgstr "jS M"
+
+#: includes/controls/groups/typography.php:191
+msgctxt "Typography Control"
+msgid "Overline"
+msgstr "Preko linije"
+
+#: includes/template-library/sources/local.php:493
+#: includes/template-library/sources/local.php:609
+#: includes/template-library/sources/local.php:751
+msgid "Access denied."
+msgstr "Pristup odbijen."
+
+#: includes/settings/settings.php:288
+msgid "Disable Default Fonts"
+msgstr "Onemogući zadane fontove"
+
+#: includes/controls/groups/flex-container.php:97
+#: includes/controls/groups/flex-container.php:133
+#: includes/controls/groups/flex-container.php:210
+#: includes/controls/groups/flex-item.php:55
+#: includes/controls/groups/flex-item.php:85
+#: includes/controls/groups/grid-container.php:135
+#: includes/controls/groups/grid-container.php:163
+#: includes/controls/groups/grid-container.php:192
+#: includes/controls/groups/grid-container.php:232
+#: includes/elements/column.php:215 includes/widgets/accordion.php:419
+#: includes/widgets/common.php:303 includes/widgets/counter.php:284
+#: includes/widgets/counter.php:314 includes/widgets/counter.php:388
+#: includes/widgets/counter.php:424 includes/widgets/icon-list.php:573
+#: includes/widgets/image-carousel.php:699 includes/widgets/rating.php:199
+#: includes/widgets/tabs.php:205 includes/widgets/tabs.php:235
+#: includes/widgets/toggle.php:443 includes/widgets/traits/button-trait.php:147
+#: includes/widgets/traits/button-trait.php:287
+#: modules/floating-buttons/base/widget-floating-bars-base.php:578
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1185
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1288
+#: modules/nested-accordion/widgets/nested-accordion.php:161
+#: modules/nested-accordion/widgets/nested-accordion.php:205
+#: modules/nested-tabs/widgets/nested-tabs.php:223
+#: modules/nested-tabs/widgets/nested-tabs.php:265
+#: modules/nested-tabs/widgets/nested-tabs.php:335
+msgid "Start"
+msgstr "Početak"
+
+#: includes/controls/groups/flex-container.php:105
+#: includes/controls/groups/flex-container.php:141
+#: includes/controls/groups/flex-container.php:211
+#: includes/controls/groups/flex-item.php:63
+#: includes/controls/groups/flex-item.php:89
+#: includes/controls/groups/grid-container.php:143
+#: includes/controls/groups/grid-container.php:171
+#: includes/controls/groups/grid-container.php:200
+#: includes/controls/groups/grid-container.php:240
+#: includes/elements/column.php:217 includes/widgets/accordion.php:423
+#: includes/widgets/common.php:311 includes/widgets/counter.php:288
+#: includes/widgets/counter.php:322 includes/widgets/counter.php:396
+#: includes/widgets/counter.php:432 includes/widgets/icon-list.php:581
+#: includes/widgets/image-carousel.php:707 includes/widgets/rating.php:207
+#: includes/widgets/tabs.php:213 includes/widgets/tabs.php:243
+#: includes/widgets/toggle.php:447 includes/widgets/traits/button-trait.php:151
+#: includes/widgets/traits/button-trait.php:295
+#: modules/floating-buttons/base/widget-floating-bars-base.php:582
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1193
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1292
+#: modules/nested-accordion/widgets/nested-accordion.php:169
+#: modules/nested-accordion/widgets/nested-accordion.php:209
+#: modules/nested-tabs/widgets/nested-tabs.php:231
+#: modules/nested-tabs/widgets/nested-tabs.php:273
+#: modules/nested-tabs/widgets/nested-tabs.php:343
+msgid "End"
+msgstr "Kraj"
+
+#: core/debug/classes/inspection-base.php:25
+#: core/debug/loading-inspection-manager.php:44
+msgid "The preview could not be loaded"
+msgstr "Pretpregled nije mogao biti učitan"
+
+#: core/debug/loading-inspection-manager.php:43
+msgid "We’re sorry, but something went wrong. Click on 'Learn more' and follow each of the steps to quickly solve it."
+msgstr "Žao nam je, ali nešto je pošlo krivo. Kliknite \"Saznajte više\" i slijedite svaki od koraka kako biste riješili problem."
+
+#: core/admin/admin-notices.php:150 core/admin/admin-notices.php:185
+msgid "Update Notification"
+msgstr "Obavijest o ažuriranju"
+
+#. Author URI of the plugin
+#: elementor.php
+msgid "https://elementor.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash"
+msgstr "https://elementor.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash"
+
+#. Plugin URI of the plugin
+#: elementor.php
+msgid "https://elementor.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash"
+msgstr "https://elementor.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash"
+
+#: modules/history/views/history-panel-template.php:24
+msgid "No History Yet"
+msgstr "Još nema povijesti"
+
+#: modules/history/views/history-panel-template.php:17
+msgid "Switch to Revisions tab for older versions"
+msgstr "Prebacite se na karticu revizije za stariju verziju"
+
+#: modules/history/views/history-panel-template.php:10
+#: assets/js/editor.js:51018
+msgid "Revisions"
+msgstr "Revizija"
+
+#: includes/editor-templates/hotkeys.php:19
+#: includes/editor-templates/templates.php:126
+#: modules/history/views/history-panel-template.php:9 assets/js/editor.js:51015
+msgid "Actions"
+msgstr "Akcija"
+
+#: includes/editor-templates/hotkeys.php:144
+#: includes/editor-templates/panel.php:100
+#: includes/editor-templates/panel.php:102 assets/js/ai-admin.js:2685
+#: assets/js/ai-gutenberg.js:4454 assets/js/ai-media-library.js:4314
+#: assets/js/ai.js:5096 assets/js/editor.js:51620
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:17
+msgid "History"
+msgstr "Povijest"
+
+#: core/kits/documents/tabs/settings-lightbox.php:152
+#: includes/widgets/video.php:912
+msgid "UI Hover Color"
+msgstr "UI boja lebdenja"
+
+#: core/kits/documents/tabs/settings-lightbox.php:141
+#: includes/widgets/video.php:900
+msgid "UI Color"
+msgstr "UI boja"
+
+#: modules/history/views/history-panel-template.php:25
+msgid "Once you start working, you'll be able to redo / undo any action you make in the editor."
+msgstr "Nakon što počnete raditi, moći ćete ponoviti / poništiti bilo koju radnju koju napravite u uređivaču."
+
+#: includes/widgets/video.php:383
+msgid "Mute"
+msgstr "Bez tona"
+
+#: includes/template-library/sources/local.php:978
+msgid "Choose an Elementor template JSON file or a .zip archive of Elementor templates, and add them to the list of templates available in your library."
+msgstr "Odaberite Elementor predložak JSON datoteku ili  .zip arhivu Elementor predloška, i dodajte ga na listu dostupnih predložaka u vašoj biblioteci."
+
+#: core/kits/documents/tabs/settings-lightbox.php:45
+msgid "Image Lightbox"
+msgstr "Okvir za sliku Lightbox"
+
+#: core/kits/documents/tabs/settings-lightbox.php:48
+msgid "Open all image links in a lightbox popup window. The lightbox will automatically work on any link that leads to an image file."
+msgstr "Otvorite sve slikovne poveznice u lightbox prozoru. Lightbox će se automatski otvoriti bilo koju poveznicu prema slici."
+
+#: core/common/modules/finder/categories/settings.php:54
+#: includes/settings/settings.php:304
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:2
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:5
+msgid "Integrations"
+msgstr "Integracija"
+
+#: includes/rollback.php:165 includes/settings/tools.php:175
+#: includes/settings/tools.php:349 assets/js/admin.js:2317
+msgid "Rollback to Previous Version"
+msgstr "Povratak na prethodnu verziju"
+
+#: includes/elements/column.php:863 includes/elements/container.php:1709
+#: includes/elements/section.php:1339 includes/widgets/common.php:652
+#: modules/floating-buttons/base/widget-contact-button-base.php:1414
+#: modules/floating-buttons/base/widget-floating-bars-base.php:912
+msgid "Animation Delay"
+msgstr "Odgoda animacije"
+
+#: includes/elements/column.php:754 includes/elements/container.php:1613
+#: includes/elements/section.php:1250 includes/widgets/common.php:558
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:52
+msgid "Z-Index"
+msgstr "Z-Indeks"
+
+#: core/kits/documents/tabs/theme-style-form-fields.php:137
+#: core/kits/documents/tabs/theme-style-images.php:203
+#: includes/base/element-base.php:1254
+#: includes/controls/groups/background.php:673 includes/elements/column.php:318
+#: includes/elements/column.php:478 includes/elements/column.php:586
+#: includes/elements/container.php:705 includes/elements/container.php:924
+#: includes/elements/container.php:1073 includes/elements/section.php:603
+#: includes/elements/section.php:790 includes/elements/section.php:897
+#: includes/widgets/alert.php:442 includes/widgets/common.php:718
+#: includes/widgets/common.php:833 includes/widgets/google-maps.php:248
+#: includes/widgets/icon-list.php:467 includes/widgets/icon-list.php:694
+#: includes/widgets/image-box.php:478 includes/widgets/image.php:497
+#: includes/widgets/traits/button-trait.php:435
+#: modules/floating-buttons/base/widget-contact-button-base.php:1491
+#: modules/floating-buttons/base/widget-contact-button-base.php:2230
+#: modules/nested-tabs/widgets/nested-tabs.php:600
+#: modules/shapes/widgets/text-path.php:461
+#: modules/shapes/widgets/text-path.php:639
+msgid "Transition Duration"
+msgstr "Vrijeme tranzicije"
+
+#: core/kits/documents/tabs/settings-layout.php:101
+#: includes/elements/column.php:231
+msgid "Widgets Space"
+msgstr "Widget razmak"
+
+#: includes/controls/url.php:117
+msgid "Add nofollow"
+msgstr "Dodaj prekid pračenja"
+
+#: includes/controls/url.php:113
+msgid "Open in new window"
+msgstr "Otvori u novom prozoru"
+
+#: includes/controls/url.php:103 includes/controls/url.php:105
+msgid "Link Options"
+msgstr "Postavke poveznica"
+
+#: includes/controls/groups/box-shadow.php:72
+msgctxt "Box Shadow Control"
+msgid "Outline"
+msgstr "Struktura"
+
+#. Translators: %s: Element name.
+#. Translators: %s: Element Name.
+#. translators: %s: Element type title.
+#: core/document-types/page-base.php:184 assets/js/editor.js:30429
+#: assets/js/editor.js:30616 assets/js/editor.js:32885
+#: assets/js/editor.js:33352 assets/js/editor.js:33453
+#: assets/js/editor.js:33782 assets/js/editor.js:37193
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:2
+msgid "Edit %s"
+msgstr "Uredi %s"
+
+#: includes/settings/tools.php:393
+msgid "Beta Tester"
+msgstr "Beta Tester"
+
+#: includes/settings/tools.php:362
+msgid "Rollback Version"
+msgstr "Povrat verzije"
+
+#: core/common/modules/finder/categories/tools.php:77
+#: includes/settings/tools.php:346
+msgid "Version Control"
+msgstr "Kontrola verzije"
+
+#: includes/settings/settings.php:341
+msgid "Switch Editor Loader Method"
+msgstr "Promijeni metodu učitavanja editora"
+
+#: includes/settings/tools.php:377
+msgid "Become a Beta Tester"
+msgstr "Postanite beta tester"
+
+#: includes/settings/tools.php:370
+msgid "Warning: Please backup your database before making the rollback."
+msgstr "Upozorenje: Molimo vas da napravite sigurnosnu kopiju baze podataka prije nego što izvršite povrata na staru verziju."
+
+#. translators: %s: Elementor version.
+#: includes/settings/tools.php:353
+msgid "Experiencing an issue with Elementor version %s? Rollback to a previous version before the issue appeared."
+msgstr "Došlo je do problema s Elementor verzijom %s? Vrati na prethodnu verziju prije nego što se problem pojavio."
+
+#: includes/settings/tools.php:401
+msgid "Please Note: We do not recommend updating to a beta version on production sites."
+msgstr "Napomena: Ne preporučujemo ažuriranje na beta verziju na live web stranici."
+
+#: includes/settings/tools.php:380
+msgid "Turn-on Beta Tester, to get notified when a new beta version of Elementor or Elementor Pro is available. The Beta version will not install automatically. You always have the option to ignore it."
+msgstr "Uključivanje beta testera, kako biste dobili obavijest kada je dostupna nova beta verzija sustava Elementor ili E-Pro. Beta verzije neće se automatski instalirati. Uvijek imate mogućnost ignoriranja."
+
+#: includes/settings/settings.php:418
+msgid "External File"
+msgstr "Eksterna datoteka"
+
+#: includes/settings/settings.php:412
+msgid "CSS Print Method"
+msgstr "CSS Print Metoda"
+
+#: includes/settings/settings.php:419
+msgid "Internal Embedding"
+msgstr "Unutarnje ugrađivanje"
+
+#: includes/settings/settings.php:349
+msgid "For troubleshooting server configuration conflicts."
+msgstr "Za rješavanje sukoba konfiguracije poslužitelja."
+
+#: core/debug/inspector.php:55 includes/settings/settings.php:347
+#: includes/settings/settings.php:359 includes/settings/settings.php:370
+#: includes/settings/settings.php:434 includes/settings/settings.php:451
+#: includes/settings/settings.php:463 includes/settings/tools.php:399
+#: modules/generator-tag/module.php:81
+#: modules/nested-tabs/widgets/nested-tabs.php:371
+#: modules/safe-mode/module.php:48 assets/js/admin.js:298
+#: assets/js/app-packages.js:2839 assets/js/app.js:3961
+#: assets/js/common.js:2146 assets/js/editor.js:40049
+msgid "Enable"
+msgstr "Uključi"
+
+#: core/debug/inspector.php:54 includes/settings/settings.php:346
+#: includes/settings/settings.php:358 includes/settings/settings.php:371
+#: includes/settings/settings.php:435 includes/settings/settings.php:452
+#: includes/settings/settings.php:464 includes/settings/tools.php:398
+#: modules/generator-tag/module.php:82
+#: modules/nested-tabs/widgets/nested-tabs.php:370
+#: modules/safe-mode/module.php:47
+msgid "Disable"
+msgstr "Isključi"
+
+#: core/base/document.php:1966 modules/ai/preferences.php:67
+#: assets/js/element-manager-admin.js:2297
+#: assets/js/element-manager-admin.js:2374
+msgid "Status"
+msgstr "Status"
+
+#: includes/widgets/common.php:1091 includes/widgets/spacer.php:126
+#: includes/widgets/text-editor.php:388
+msgid "Space"
+msgstr "Razmak"
+
+#: core/kits/documents/tabs/settings-layout.php:146
+msgid "Elementor lets you hide the page title. This works for themes that have \"h1.entry-title\" selector. If your theme's selector is different, please enter it above."
+msgstr "Elementor vam dozvoljava skrivanje naslova stranice. Dostupno na temama koje koriste \"h1.entry-title\" selektor. Ako je vaš selektor teme drugačiji, molimo unesite ga iznad."
+
+#: core/kits/documents/tabs/settings-layout.php:142
+msgid "Page Title Selector"
+msgstr "Odabir naslova stranice"
+
+#: includes/admin-templates/new-template.php:75
+#: includes/settings/controls.php:155
+msgid "Select"
+msgstr "Odabir"
+
+#: core/common/modules/finder/categories/edit.php:118 assets/js/editor.js:18967
+msgid "Template"
+msgstr "Predložak"
+
+#: core/document-types/page-base.php:96
+msgid "Hide Title"
+msgstr "Sakrij naslov"
+
+#: includes/maintenance-mode.php:283
+msgid "Maintenance Mode ON"
+msgstr "Mod održavanja uključen"
+
+#: includes/maintenance-mode.php:292 includes/maintenance-mode.php:369
+#: includes/template-library/sources/local.php:231 assets/js/app.js:10321
+msgid "Edit Template"
+msgstr "Uredi predložak"
+
+#: includes/maintenance-mode.php:243
+msgid "Roles"
+msgstr "Uloge"
+
+#: includes/maintenance-mode.php:237
+msgid "Logged In"
+msgstr "Prijavljen"
+
+#: includes/maintenance-mode.php:231
+msgid "Who Can Access"
+msgstr "Tko može pristupiti"
+
+#: includes/maintenance-mode.php:226
+msgid "Coming Soon returns HTTP 200 code, meaning the site is ready to be indexed."
+msgstr "Uskoro se vraća HTTP 200 kod, što znači da je web mjesto spremno za indeksiranje."
+
+#: includes/maintenance-mode.php:223
+msgid "Maintenance Mode returns HTTP 503 code, so search engines know to come back a short time later. It is not recommended to use this mode for more than a couple of days."
+msgstr "Način održavanja vraća HTTP kod 503, tako da tražilice znaju vratiti se malo kasnije. Nije preporučljivo koristiti ovaj način dulje od nekoliko dana."
+
+#: includes/maintenance-mode.php:217
+msgid "Maintenance"
+msgstr "Održavanje"
+
+#: includes/maintenance-mode.php:216
+msgid "Coming Soon"
+msgstr "Uskoro"
+
+#: core/kits/documents/kit.php:155 includes/maintenance-mode.php:215
+#: assets/js/editor.js:51295
+msgid "Disabled"
+msgstr "Ugašeno"
+
+#: includes/maintenance-mode.php:206
+msgid "Set your entire website as MAINTENANCE MODE, meaning the site is offline temporarily for maintenance, or set it as COMING SOON mode, meaning the site is offline until it is ready to be launched."
+msgstr "Postavite cijelu web-lokaciju kao ODRŽAVANJE, što znači da je web mjesto trenutačno izvanmrežno za održavanje ili ga postavite kao \"USKORO DOSTUPNO\", što znači da je web mjesto izvan mreže dok nije spremno za pokretanje."
+
+#: core/common/modules/finder/categories/tools.php:62
+#: includes/maintenance-mode.php:201 includes/maintenance-mode.php:205
+msgid "Maintenance Mode"
+msgstr "Održavanje"
+
+#: includes/widgets/text-editor.php:138 includes/widgets/text-editor.php:295
+msgid "Drop Cap"
+msgstr "Inicijal"
+
+#: includes/maintenance-mode.php:370
+msgid "To enable maintenance mode you have to set a template for the maintenance mode page."
+msgstr "Kako bi uključili režim održavanja trebate postaviti predložak stranice za režim održavanja."
+
+#: includes/maintenance-mode.php:220
+msgid "Choose between Coming Soon mode (returning HTTP 200 code) or Maintenance Mode (returning HTTP 503 code)."
+msgstr "Odaberite između Vraćamo se uskoro (HTTP kod 200) ili Način održavanja (HTTP kod 503)."
+
+#: includes/editor-templates/hotkeys.php:57
+msgid "Paste Style"
+msgstr "Zalijepi Stil"
+
+#: includes/maintenance-mode.php:210
+msgid "Choose Mode"
+msgstr "Odaberi način rada"
+
+#: includes/maintenance-mode.php:251
+msgid "Choose Template"
+msgstr "Odaberi predložak"
+
+#: includes/elements/container.php:1283 includes/elements/section.php:1101
+msgid "Bring to Front"
+msgstr "Stavi u fokus"
+
+#: core/kits/documents/tabs/settings-lightbox.php:18
+#: includes/widgets/image-carousel.php:359
+#: includes/widgets/image-gallery.php:196 includes/widgets/image.php:221
+#: includes/widgets/video.php:728 includes/widgets/video.php:876
+msgid "Lightbox"
+msgstr "Lightbox"
+
+#: includes/controls/groups/flex-container.php:109
+#: includes/controls/groups/flex-container.php:212
+#: includes/controls/groups/grid-container.php:204
+#: includes/controls/groups/grid-container.php:244
+#: includes/elements/column.php:190 includes/elements/column.php:218
+#: includes/elements/section.php:428 includes/widgets/icon-list.php:234
+#: includes/widgets/toggle.php:313
+msgid "Space Between"
+msgstr "Razmak između"
+
+#: includes/widgets/icon-list.php:226
+msgid "List"
+msgstr "Popis"
+
+#: includes/shapes.php:212
+msgctxt "Shapes"
+msgid "Book"
+msgstr "Knjiga"
+
+#: includes/shapes.php:208
+msgctxt "Shapes"
+msgid "Split"
+msgstr "Razdvoji"
+
+#: includes/shapes.php:204
+msgctxt "Shapes"
+msgid "Arrow"
+msgstr "Strelica"
+
+#: includes/shapes.php:200
+msgctxt "Shapes"
+msgid "Waves Pattern"
+msgstr "Valoviti uzorak"
+
+#: includes/shapes.php:196
+msgctxt "Shapes"
+msgid "Waves Brush"
+msgstr "Valoviti kist"
+
+#: includes/shapes.php:191
+msgctxt "Shapes"
+msgid "Waves"
+msgstr "Valovi"
+
+#: includes/shapes.php:186
+msgctxt "Shapes"
+msgid "Curve Asymmetrical"
+msgstr "Krivulja asimetrična"
+
+#: includes/shapes.php:182
+msgctxt "Shapes"
+msgid "Curve"
+msgstr "Krivulja"
+
+#: includes/shapes.php:161
+msgctxt "Shapes"
+msgid "Triangle"
+msgstr "Trokut"
+
+#: includes/shapes.php:156
+msgctxt "Shapes"
+msgid "Pyramids"
+msgstr "Piramida"
+
+#: includes/shapes.php:153 includes/widgets/divider.php:185
+#: includes/widgets/divider.php:315
+msgctxt "Shapes"
+msgid "Zigzag"
+msgstr "CikCak"
+
+#: includes/shapes.php:147
+msgctxt "Shapes"
+msgid "Clouds"
+msgstr "Oblaci"
+
+#: includes/shapes.php:141
+msgctxt "Shapes"
+msgid "Drops"
+msgstr "Kaplice"
+
+#: includes/shapes.php:137
+msgctxt "Shapes"
+msgid "Mountains"
+msgstr "Planine"
+
+#: includes/elements/container.php:1270 includes/elements/section.php:1088
+msgid "Invert"
+msgstr "Inverzno"
+
+#: includes/elements/container.php:1256 includes/elements/section.php:1074
+msgid "Flip"
+msgstr "Zrcalno"
+
+#: includes/elements/container.php:1124 includes/elements/section.php:942
+msgid "Shape Divider"
+msgstr "Odvojnik oblika"
+
+#: includes/shapes.php:165
+msgctxt "Shapes"
+msgid "Triangle Asymmetrical"
+msgstr "Trokut asimetričan"
+
+#: includes/shapes.php:170
+msgctxt "Shapes"
+msgid "Tilt"
+msgstr "Nagib"
+
+#: includes/shapes.php:175
+msgctxt "Shapes"
+msgid "Tilt Opacity"
+msgstr "Nagib neprozirnost"
+
+#: includes/shapes.php:179
+msgctxt "Shapes"
+msgid "Fan Opacity"
+msgstr "Fan prozirnost"
+
+#: includes/widgets/tabs.php:271
+msgid "Navigation Width"
+msgstr "Širina navigacije"
+
+#: includes/elements/column.php:766 includes/elements/container.php:1625
+#: includes/elements/section.php:1262 includes/widgets/common.php:569
+#: modules/floating-buttons/base/widget-contact-button-base.php:3087
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1492
+#: modules/nested-accordion/widgets/nested-accordion.php:117
+#: modules/nested-tabs/widgets/nested-tabs.php:140
+msgid "CSS ID"
+msgstr "CSS ID"
+
+#: includes/elements/column.php:775 includes/elements/container.php:1634
+#: includes/elements/section.php:1271 includes/widgets/common.php:578
+#: includes/widgets/traits/button-trait.php:214
+#: modules/floating-buttons/base/widget-contact-button-base.php:3096
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1501
+#: modules/nested-accordion/widgets/nested-accordion.php:126
+#: modules/nested-tabs/widgets/nested-tabs.php:149
+msgid "Add your custom id WITHOUT the Pound key. e.g: my-id"
+msgstr "Dodajte svoj id BEZ znaka ljestve. Npr: moj-id"
+
+#: core/kits/documents/tabs/theme-style-buttons.php:166
+#: core/kits/documents/tabs/theme-style-images.php:134
+#: core/kits/documents/tabs/theme-style-typography.php:149
+#: includes/base/element-base.php:873 includes/elements/column.php:303
+#: includes/elements/column.php:432 includes/elements/column.php:551
+#: includes/elements/container.php:690 includes/elements/container.php:868
+#: includes/elements/container.php:1026 includes/elements/section.php:588
+#: includes/elements/section.php:744 includes/elements/section.php:862
+#: includes/widgets/alert.php:425 includes/widgets/common.php:703
+#: includes/widgets/common.php:798 includes/widgets/google-maps.php:233
+#: includes/widgets/icon-box.php:429 includes/widgets/icon-list.php:447
+#: includes/widgets/icon-list.php:675 includes/widgets/icon.php:252
+#: includes/widgets/image-box.php:445 includes/widgets/image.php:464
+#: includes/widgets/traits/button-trait.php:383
+#: modules/floating-buttons/base/widget-contact-button-base.php:1250
+#: modules/floating-buttons/base/widget-contact-button-base.php:2009
+#: modules/floating-buttons/base/widget-contact-button-base.php:2491
+#: modules/floating-buttons/base/widget-contact-button-base.php:2671
+#: modules/floating-buttons/base/widget-floating-bars-base.php:686
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1390
+#: modules/nested-accordion/widgets/nested-accordion.php:652
+#: modules/nested-accordion/widgets/nested-accordion.php:719
+#: modules/nested-tabs/widgets/nested-tabs.php:535
+#: modules/nested-tabs/widgets/nested-tabs.php:775
+#: modules/nested-tabs/widgets/nested-tabs.php:977
+#: modules/shapes/widgets/text-path.php:434
+#: modules/shapes/widgets/text-path.php:573
+msgid "Hover"
+msgstr "Hover"
+
+#: includes/controls/groups/background.php:184
+#: includes/controls/groups/background.php:213
+msgctxt "Background Control"
+msgid "Location"
+msgstr "Lokacija"
+
+#: includes/controls/groups/background.php:230
+msgctxt "Background Control"
+msgid "Type"
+msgstr "Vrsta"
+
+#: core/admin/admin.php:379
+msgid "Video Tutorials"
+msgstr "Video instrukcije"
+
+#: core/admin/admin.php:379
+msgid "View Elementor Video Tutorials"
+msgstr "Pogledaj Elementor Video instrukcije"
+
+#: core/admin/admin.php:378
+msgid "Docs & FAQs"
+msgstr "Dokumenti & ČPP"
+
+#: core/admin/admin.php:378
+msgid "View Elementor Documentation"
+msgstr "Pogledajte Elementor Documentaciju"
+
+#: includes/settings/settings.php:292
+msgid "Checking this box will disable Elementor's Default Fonts, and make Elementor inherit the fonts from your theme."
+msgstr "Označavanjem ovog okvira onemogućit ćete Elementorove Izvorne fontove, a Elementor će naslijediti fontove iz vaše teme."
+
+#: includes/settings/settings.php:284
+msgid "Checking this box will disable Elementor's Default Colors, and make Elementor inherit the colors from your theme."
+msgstr "Označavanjem ovog okvira onemogućit će se Elementor Izvorne boje i prisiliti Elementor da naslijediti boju iz teme."
+
+#: includes/settings/tools.php:333
+msgid "Update Site Address (URL)"
+msgstr "Ažurirajte adresu web mjesta (URL)"
+
+#: core/common/modules/finder/categories/tools.php:56
+#: includes/settings/tools.php:315 includes/settings/tools.php:319
+#: includes/settings/tools.php:336
+msgid "Replace URL"
+msgstr "Promijeni URL"
+
+#. translators: 1: Human readable time difference, 2: Date.
+#: modules/history/revisions-manager.php:179
+msgid "%1$s ago (%2$s)"
+msgstr "%1$s prije (%2$s)"
+
+#: modules/history/revisions-manager.php:151
+msgctxt "revision date format"
+msgid "M j @ H:i"
+msgstr "M j @ H:i"
+
+#: modules/history/revisions-manager.php:160
+msgid "Autosave"
+msgstr "Automatsko snimanje"
+
+#: modules/history/revisions-manager.php:163
+msgid "Revision"
+msgstr "Revizija"
+
+#: modules/history/views/revisions-panel-template.php:28
+msgid "It looks like the post revision feature is unavailable in your website."
+msgstr "Čini se da je značajka revizije objave nedostupna na vašoj web stranici."
+
+#: modules/history/views/revisions-panel-template.php:26
+msgid "Revision history lets you save your previous versions of your work, and restore them any time."
+msgstr "Povijest izmjena omogućuje spremanje prethodnih verzija vašeg rada i vraćanje u bilo koje vrijeme."
+
+#: modules/apps/admin-apps-page.php:179
+#: modules/history/views/revisions-panel-template.php:55
+msgid "By"
+msgstr "Od"
+
+#: modules/history/views/revisions-panel-template.php:39
+msgid "No Revisions Saved Yet"
+msgstr "Još nema izmjena"
+
+#: includes/settings/tools.php:337
+msgid "Enter your old and new URLs for your WordPress installation, to update all Elementor data (Relevant for domain transfers or move to 'HTTPS')."
+msgstr "Unesite svoje stare i nove URL-ove za instalaciju programa WordPress, da biste ažurirali sve podatke s elementima (relevantni za prijenos domena ili premještanje na \"HTTPS\")."
+
+#: modules/history/views/revisions-panel-template.php:27
+msgid "Start designing your page and you will be able to see the entire revision history here."
+msgstr "Započnite s projektiranjem svoje stranice i moći ćete vidjeti cijelu povijest revizije ovdje."
+
+#: includes/widgets/counter.php:195
+msgid "Thousand Separator"
+msgstr "Separator tisuća"
+
+#: includes/editor-templates/panel-elements.php:101
+msgid "With this feature, you can save a widget as global, then add it to multiple areas. All areas will be editable from one single place."
+msgstr "Pomoću te značajke možete spremiti widget kao globalni, a zatim je dodati u više područja. Sva se područja mogu uređivati s jednog mjesta."
+
+#: includes/editor-templates/panel-elements.php:100
+msgid "Meet Our Global Widget"
+msgstr "Upoznajte naš globalni widget"
+
+#: modules/promotions/widgets/pro-widget-promotion.php:75
+#: assets/js/ai-admin.js:8070 assets/js/ai-gutenberg.js:9921
+#: assets/js/ai-layout.js:4130 assets/js/ai-media-library.js:9699
+#: assets/js/ai.js:11115
+msgid "Go Pro"
+msgstr "Probajte Pro"
+
+#: includes/editor-templates/panel-elements.php:28
+msgid "Get more with Elementor Pro"
+msgstr "Saznajte više s Elementor Pro"
+
+#: includes/base/element-base.php:917 includes/base/element-base.php:1081
+#: includes/widgets/common.php:877 includes/widgets/icon-list.php:281
+#: includes/widgets/icon.php:325 includes/widgets/text-editor.php:140
+#: includes/widgets/video.php:731 modules/shapes/widgets/text-path.php:221
+msgid "Off"
+msgstr "Ugašeno"
+
+#: includes/base/element-base.php:916 includes/base/element-base.php:1080
+#: includes/widgets/common.php:876 includes/widgets/icon-list.php:282
+#: includes/widgets/icon.php:326 includes/widgets/text-editor.php:141
+#: includes/widgets/video.php:732 modules/shapes/widgets/text-path.php:220
+msgid "On"
+msgstr "Upaljeno"
+
+#: includes/managers/controls.php:1090
+msgid "Meet Our Custom CSS"
+msgstr "Upoznajte naš prilagođeni CSS"
+
+#: core/kits/documents/tabs/settings-custom-css.php:17
+#: includes/managers/controls.php:1072
+msgid "Custom CSS"
+msgstr "Prilagođeni CSS"
+
+#: includes/managers/controls.php:1078
+msgid "Custom CSS lets you add CSS code to any widget, and see it render live right in the editor."
+msgstr "Prilagođeni CSS vam omogućuje dodavanje CSS-a bilo kojem widgetu, a promijene možete odmah vidjeti uređivaču."
+
+#: includes/widgets/traits/button-trait.php:38
+msgid "Extra Large"
+msgstr "Ekstra veliko"
+
+#: includes/widgets/traits/button-trait.php:34
+msgid "Extra Small"
+msgstr "Ekstra malo"
+
+#: includes/settings/settings.php:298
+msgid "Improve Elementor"
+msgstr "Poboljšajte Elementor"
+
+#: includes/frontend.php:1246
+msgid "Invalid Data: The Template ID cannot be the same as the currently edited template. Please choose a different one."
+msgstr "Nevažeći podaci: ID predloška ne može biti isti kao trenutačno uređivani predložak. Odaberite neki drugi."
+
+#: includes/base/widget-base.php:311 includes/base/widget-base.php:320
+msgid "Skin"
+msgstr "Skin"
+
+#: includes/editor-templates/panel.php:183
+msgid "Update changes to page"
+msgstr "Ažurirajte izmjene na stranici"
+
+#: includes/editor-templates/panel.php:219
+msgid "%s are disabled"
+msgstr "%s je onemogućen"
+
+#: core/admin/admin-notices.php:245
+msgid "No thanks"
+msgstr "Ne hvala"
+
+#: core/kits/documents/tabs/settings-layout.php:164
+msgid "Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width."
+msgstr ""
+"Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width.\n"
+"Unesite odabir roditeljskog elementa na koji se proteže dodak (npr. #primary / .wrapper / main itd.). Ostavite prazno kako biste prilagodili širini stranice."
+
+#: includes/elements/section.php:472
+msgid "Stretch the section to the full width of the page using JS."
+msgstr "Proširite sekciju na punu širinu stranice pomoću JS."
+
+#: core/kits/documents/tabs/settings-layout.php:161
+msgid "Stretched Section Fit To"
+msgstr "Prošireni sekciju da se prilagodi"
+
+#: includes/elements/section.php:464
+msgid "Stretch Section"
+msgstr "Rastegni sekciju"
+
+#: core/settings/editor-preferences/model.php:126
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:4307
+msgid "Mobile"
+msgstr "Mobilni"
+
+#: includes/elements/section.php:1370
+msgid "Reverse Columns"
+msgstr "Obrnuti stupce"
+
+#: core/admin/admin-notices.php:234
+msgid "Learn more."
+msgstr "Saznajte više."
+
+#: includes/controls/dimensions.php:141 includes/controls/dimensions.php:144
+msgid "Link values together"
+msgstr "Poveži vrijednosti zajedno"
+
+#: includes/widgets/shortcode.php:42 includes/widgets/shortcode.php:99
+msgid "Shortcode"
+msgstr "Kratki kod"
+
+#: includes/template-library/sources/local.php:228
+msgctxt "Template Library"
+msgid "Template"
+msgstr "Predložak"
+
+#: includes/template-library/sources/local.php:209
+msgid "Local"
+msgstr "Lokalno"
+
+#: includes/editor-templates/templates.php:16
+#: includes/editor-templates/templates.php:17 includes/settings/tools.php:303
+#: includes/settings/tools.php:306
+msgid "Sync Library"
+msgstr "Sinkroniziraj biblioteku"
+
+#: core/common/modules/finder/categories/tools.php:28
+#: core/common/modules/finder/categories/tools.php:50
+#: includes/settings/admin-menu-items/tools-menu-item.php:29
+#: includes/settings/admin-menu-items/tools-menu-item.php:33
+#: includes/settings/tools.php:32 includes/settings/tools.php:33
+#: includes/settings/tools.php:434
+msgid "Tools"
+msgstr "Alati"
+
+#: core/document-types/page.php:58 modules/library/documents/page.php:57
+#: assets/js/editor.js:10458
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.js:2
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.strings.js:2
+msgid "Page"
+msgstr "Stranica"
+
+#: includes/editor-templates/templates.php:243
+msgid "Enter Template Name"
+msgstr "Unesite naziv predloška"
+
+#: includes/editor-templates/templates.php:192
+#: includes/template-library/sources/local.php:1163 assets/js/app.js:12048
+msgid "Export"
+msgstr "Izvoz"
+
+#: includes/editor-templates/templates.php:136
+msgid "Stay tuned! More awesome templates coming real soon."
+msgstr "Ostanite u tijeku! Ubrzo dolazit još sjajnijih predložaka."
+
+#: includes/editor-templates/templates.php:178
+#: includes/editor-templates/templates.php:202
+#: includes/editor-templates/templates.php:216 assets/js/ai-admin.js:6844
+#: assets/js/ai-gutenberg.js:8695 assets/js/ai-media-library.js:8473
+#: assets/js/ai.js:9889 assets/js/editor.js:8644
+msgid "Insert"
+msgstr "Umetni"
+
+#: core/common/modules/connect/apps/library.php:16 assets/js/editor.js:10792
+msgid "Library"
+msgstr "Biblioteka"
+
+#: core/base/document.php:170 includes/editor-templates/global.php:23
+#: includes/editor-templates/responsive-bar.php:68
+#: includes/editor-templates/responsive-bar.php:69 includes/frontend.php:1406
+#: assets/js/ai-admin.js:1190 assets/js/ai-gutenberg.js:2959
+#: assets/js/ai-layout.js:1118 assets/js/ai-media-library.js:2819
+#: assets/js/ai.js:3601 assets/js/app-packages.js:2029
+#: assets/js/app-packages.js:4006 assets/js/app-packages.js:4527
+#: assets/js/app.js:2906 assets/js/app.js:5024 assets/js/app.js:5427
+#: assets/js/app.js:7559 assets/js/app.js:8391 assets/js/app.js:11949
+#: assets/js/bdd4030576f6a94a4f0d.bundle.js:221 assets/js/editor.js:47577
+#: assets/js/import-export-admin.js:328
+msgid "Close"
+msgstr "Zatvori"
+
+#: includes/editor-templates/global.php:47
+msgid "Add Template"
+msgstr "Dodaj predložak"
+
+#: includes/editor-templates/templates.php:39
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:1485
+msgid "Back to Library"
+msgstr "Povratak u biblioteku"
+
+#: includes/template-library/sources/local.php:985
+msgid "Import Now"
+msgstr "Uvezi odmah"
+
+#: includes/template-library/sources/local.php:976
+msgid "Import Templates"
+msgstr "Uvezi predloške"
+
+#: includes/template-library/sources/local.php:497
+msgid "(no title)"
+msgstr "(bez naslova)"
+
+#: includes/editor-templates/hotkeys.php:181
+msgid "Template Library"
+msgstr "Biblioteka predložaka"
+
+#: includes/template-library/sources/remote.php:61
+msgid "Remote"
+msgstr "Daljinski"
+
+#: includes/template-library/sources/local.php:277
+msgctxt "Template Library"
+msgid "Type"
+msgstr "Vrsta"
+
+#: includes/settings/tools.php:307
+msgid "Elementor Library automatically updates on a daily basis. You can also manually update it by clicking on the sync button."
+msgstr "Elementor biblioteka automatski se ažurira svakodnevno. Možete i ručno ažurirati klikom na dugme za sinkronizaciju."
+
+#: core/common/modules/finder/categories/general.php:49
+#: includes/template-library/sources/admin-menu-items/saved-templates-menu-item.php:23
+#: includes/template-library/sources/local.php:1718 assets/js/app.js:11065
+msgid "Saved Templates"
+msgstr "Spremljeni Predlošci"
+
+#: includes/template-library/sources/local.php:948
+msgid "Export Template"
+msgstr "Izvezi predloške"
+
+#: core/kits/documents/tabs/global-typography.php:28
+#: core/kits/documents/tabs/global-typography.php:47
+#: assets/js/152486453d0e39071cdb.bundle.js:224 assets/js/app.js:11083
+#: assets/js/editor.js:47322
+msgid "Global Fonts"
+msgstr "Globalni fontovi"
+
+#: app/modules/import-export/module.php:152
+#: app/modules/import-export/module.php:164 core/admin/admin-notices.php:331
+#: modules/apps/admin-apps-page.php:189 modules/safe-mode/module.php:375
+#: modules/safe-mode/module.php:384
+#: modules/safe-mode/mu-plugin/elementor-safe-mode.php:106
+#: assets/js/app-packages.js:2710 assets/js/app-packages.js:5696
+#: assets/js/app-packages.js:5805 assets/js/app.js:3832 assets/js/app.js:7843
+#: assets/js/app.js:8985 assets/js/app.js:10483 assets/js/app.js:10793
+#: assets/js/app.js:10839 assets/js/app.js:11948 assets/js/editor.js:14659
+#: assets/js/editor.js:28507 assets/js/editor.js:28538
+#: assets/js/editor.js:40770 assets/js/element-manager-admin.js:2184
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:3795
+msgid "Learn More"
+msgstr "Nauči više"
+
+#: core/base/traits/shared-widget-controls-trait.php:288
+#: includes/widgets/icon-box.php:465 includes/widgets/icon.php:290
+#: includes/widgets/image-box.php:499 includes/widgets/image.php:515
+#: includes/widgets/social-icons.php:569
+#: includes/widgets/traits/button-trait.php:450
+#: modules/floating-buttons/base/widget-contact-button-base.php:1473
+#: modules/floating-buttons/base/widget-contact-button-base.php:2509
+#: modules/floating-buttons/base/widget-floating-bars-base.php:744
+#: modules/nested-tabs/widgets/nested-tabs.php:592
+#: modules/shapes/widgets/text-path.php:453
+msgid "Hover Animation"
+msgstr "Hover animacija"
+
+#: modules/floating-buttons/base/widget-contact-button-base.php:2213
+msgid "Animation"
+msgstr "Animacija"
+
+#: includes/elements/column.php:851 includes/elements/container.php:1697
+#: includes/elements/section.php:1327 includes/widgets/common.php:640
+#: modules/floating-buttons/base/widget-contact-button-base.php:1405
+#: modules/floating-buttons/base/widget-contact-button-base.php:2788
+#: modules/floating-buttons/base/widget-floating-bars-base.php:885
+msgid "Fast"
+msgstr "Brzo"
+
+#: includes/elements/column.php:849 includes/elements/container.php:1695
+#: includes/elements/section.php:1325 includes/widgets/common.php:638
+#: modules/floating-buttons/base/widget-contact-button-base.php:1403
+#: modules/floating-buttons/base/widget-contact-button-base.php:2786
+#: modules/floating-buttons/base/widget-floating-bars-base.php:883
+msgid "Slow"
+msgstr "Polagano"
+
+#: includes/elements/column.php:836 includes/elements/container.php:1682
+#: includes/elements/section.php:1312 includes/widgets/common.php:625
+#: includes/widgets/video.php:924
+#: modules/floating-buttons/base/widget-contact-button-base.php:1389
+#: modules/floating-buttons/base/widget-floating-bars-base.php:869
+msgid "Entrance Animation"
+msgstr "Ulazna animacija"
+
+#: includes/controls/groups/box-shadow.php:73
+msgctxt "Box Shadow Control"
+msgid "Inset"
+msgstr "Umetak"
+
+#: includes/controls/box-shadow.php:68 includes/controls/text-shadow.php:71
+#: includes/widgets/tabs.php:189
+msgid "Horizontal"
+msgstr "Horizontalno"
+
+#: includes/controls/box-shadow.php:83
+msgid "Spread"
+msgstr "Širenje"
+
+#: includes/controls/box-shadow.php:78 includes/controls/text-shadow.php:66
+msgid "Blur"
+msgstr "Zamagljeno"
+
+#: includes/settings/settings.php:280
+msgid "Disable Default Colors"
+msgstr "Onemogući izvorne boje"
+
+#: includes/controls/box-shadow.php:73 includes/controls/text-shadow.php:76
+#: includes/widgets/tabs.php:185
+msgid "Vertical"
+msgstr "Okomito"
+
+#: includes/widgets/testimonial.php:217
+msgid "Aside"
+msgstr "Ustranu"
+
+#: includes/widgets/social-icons.php:208 includes/widgets/social-icons.php:357
+msgid "Official Color"
+msgstr "Službena boja"
+
+#: includes/widgets/icon-box.php:148 includes/widgets/icon.php:146
+#: includes/widgets/social-icons.php:281
+#: modules/floating-buttons/base/widget-contact-button-base.php:2083
+#: modules/floating-buttons/base/widget-contact-button-base.php:2174
+#: modules/floating-buttons/base/widget-contact-button-base.php:2867
+#: modules/floating-buttons/base/widget-floating-bars-base.php:841
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:119
+msgid "Rounded"
+msgstr "Zaokruženo"
+
+#: includes/widgets/social-icons.php:42 includes/widgets/social-icons.php:103
+#: includes/widgets/social-icons.php:246
+msgid "Social Icons"
+msgstr "Društvene ikone"
+
+#: includes/widgets/progress.php:119
+msgid "My Skill"
+msgstr "Moja vještina"
+
+#: includes/widgets/testimonial.php:45 includes/widgets/testimonial.php:127
+msgid "Testimonial"
+msgstr "Preporuka"
+
+#: includes/widgets/audio.php:236
+#: modules/floating-buttons/base/widget-contact-button-base.php:354
+#: modules/floating-buttons/base/widget-contact-button-base.php:908
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:521
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:774
+msgid "Username"
+msgstr "Korisničko ime"
+
+#: includes/widgets/audio.php:214
+msgid "Comments"
+msgstr "Komentari"
+
+#: includes/widgets/audio.php:203
+msgid "Share Button"
+msgstr "Podijeli"
+
+#: includes/widgets/audio.php:156
+msgid "Buy Button"
+msgstr "Kupi"
+
+#: includes/widgets/audio.php:126
+msgid "Visual Player"
+msgstr "Vizualni preglednik"
+
+#: core/base/providers/social-network-provider.php:169
+#: includes/widgets/audio.php:53 includes/widgets/audio.php:100
+msgid "SoundCloud"
+msgstr "SoundCloud"
+
+#: includes/elements/column.php:345 includes/elements/container.php:741
+#: includes/elements/section.php:630
+#: modules/floating-buttons/base/widget-floating-bars-base.php:977
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1480
+msgid "Background Overlay"
+msgstr "Prekrivanje pozadine"
+
+#: includes/elements/section.php:290
+msgid "Extended"
+msgstr "Produžen"
+
+#: core/admin/feedback.php:127
+msgid "If you have a moment, please share why you are deactivating Elementor:"
+msgstr "Ako imate trenutak, recite nam zašto deaktivirate Elementor:"
+
+#: core/admin/feedback.php:119
+msgid "Quick Feedback"
+msgstr "Brza povratna informacija"
+
+#: core/admin/feedback.php:111
+msgid "Please share the reason"
+msgstr "Podjelite razlog"
+
+#: core/admin/feedback.php:110
+msgid "Other"
+msgstr "Drugo"
+
+#: core/admin/feedback.php:101
+msgid "It's a temporary deactivation"
+msgstr "To je privremeno isključivanje"
+
+#: core/admin/feedback.php:97
+msgid "I couldn't get the plugin to work"
+msgstr "Nisam mogao podesiti dodatak za rad"
+
+#: core/admin/feedback.php:94
+msgid "Please share which plugin"
+msgstr "Recite nam o kojem dodatku se radi"
+
+#: core/admin/feedback.php:89
+msgid "I no longer need the plugin"
+msgstr "Više mi nije potreban ovaj dodatak"
+
+#: core/admin/admin-notices.php:146 core/admin/admin-notices.php:154
+#: core/base/db-upgrades-manager.php:97
+msgid "Update Now"
+msgstr "Ažurirati sada"
+
+#. translators: %s: Elementor version.
+#: core/admin/admin-notices.php:141
+msgid "View Elementor version %s details"
+msgstr "Prikaži pojedinosti Elementor verzije %s"
+
+#. translators: 1: Details URL, 2: Accessibility text, 3: Version number, 4:
+#. Update URL, 5: Accessibility text.
+#: core/admin/admin-notices.php:137
+msgid "There is a new version of Elementor Page Builder available. <a href=\"%1$s\" class=\"thickbox open-plugin-details-modal\" aria-label=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s\" class=\"update-link\" aria-label=\"%5$s\">update now</a>."
+msgstr "Ovdje je dostupna nova verzija Elementor Page Buildera.. <a href=\"%1$s\" class=\"thickbox open-plugin-details-modal\" aria-label=\"%2$s\">Pogledaj verziju %3$s details</a> or <a href=\"%4$s\" class=\"update-link\" aria-label=\"%5$s\">ažuriraj sada</a>."
+
+#: core/admin/feedback.php:93
+msgid "I found a better plugin"
+msgstr "Pronašao sam bolji dodatak"
+
+#: includes/widgets/audio.php:225
+msgid "Play Counts"
+msgstr "Broj izvođenja"
+
+#: includes/widgets/audio.php:167
+msgid "Like Button"
+msgstr "Dugme \"Sviđa mi se\""
+
+#: includes/widgets/audio.php:178 includes/widgets/video.php:578
+msgid "Download Button"
+msgstr "Dugme \"Preuzimanje\""
+
+#: includes/widgets/image-carousel.php:336 includes/widgets/image.php:194
+msgid "Custom URL"
+msgstr "Prilagođeni URL"
+
+#: core/kits/documents/tabs/settings-background.php:18
+#: includes/elements/column.php:270 includes/elements/container.php:629
+#: includes/elements/section.php:533 includes/widgets/accordion.php:322
+#: includes/widgets/accordion.php:493 includes/widgets/common.php:676
+#: includes/widgets/toggle.php:354 includes/widgets/toggle.php:517
+#: modules/floating-buttons/base/widget-contact-button-base.php:1675
+#: modules/floating-buttons/base/widget-floating-bars-base.php:948
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1461
+#: assets/js/ai-admin.js:11137 assets/js/ai-gutenberg.js:12988
+#: assets/js/ai-media-library.js:12766 assets/js/ai.js:14182
+msgid "Background"
+msgstr "Pozadina"
+
+#: includes/elements/section.php:292
+msgid "Wider"
+msgstr "Šire"
+
+#: core/common/modules/finder/categories/general.php:29
+#: core/role-manager/role-manager.php:69 includes/managers/elements.php:294
+#: includes/settings/settings.php:252 includes/settings/settings.php:255
+#: includes/settings/tools.php:290
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:3
+msgid "General"
+msgstr "Obično"
+
+#: includes/editor-templates/hotkeys.php:49 assets/js/editor.js:30656
+#: assets/js/editor.js:32814 assets/js/editor.js:42155
+#: assets/js/editor.js:43196
+msgid "Paste"
+msgstr "Zalijepi"
+
+#: includes/widgets/video.php:552
+msgid "Intro Byline"
+msgstr "Intro Byline"
+
+#: includes/widgets/accordion.php:459 includes/widgets/divider.php:786
+#: includes/widgets/divider.php:953 includes/widgets/image-carousel.php:723
+#: includes/widgets/image-carousel.php:857
+#: includes/widgets/image-gallery.php:242
+#: includes/widgets/image-gallery.php:396 includes/widgets/image.php:648
+#: includes/widgets/rating.php:81 includes/widgets/social-icons.php:449
+#: includes/widgets/star-rating.php:348 includes/widgets/toggle.php:483
+#: modules/nested-accordion/widgets/nested-accordion.php:616
+#: modules/nested-tabs/widgets/nested-tabs.php:938
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:44
+msgid "Spacing"
+msgstr "Razmak"
+
+#: includes/widgets/image-carousel.php:560
+#: includes/widgets/image-carousel.php:623
+msgid "Outside"
+msgstr "Izvana"
+
+#: includes/widgets/image-carousel.php:559
+#: includes/widgets/image-carousel.php:624
+msgid "Inside"
+msgstr "Unutra"
+
+#: includes/controls/groups/background.php:749
+#: includes/controls/groups/flex-container.php:29
+#: includes/widgets/image-carousel.php:517
+#: modules/nested-tabs/widgets/nested-tabs.php:180
+msgid "Direction"
+msgstr "Usmjerenje"
+
+#: includes/elements/container.php:533 includes/widgets/audio.php:139
+#: includes/widgets/image-carousel.php:399
+msgid "Additional Options"
+msgstr "Dodatne opcije"
+
+#: includes/widgets/image-carousel.php:208
+msgid "Arrows and Dots"
+msgstr "Strelice i točke"
+
+#: includes/widgets/alert.php:236
+msgid "Left Border Width"
+msgstr "Širina lijevog ruba"
+
+#: includes/elements/column.php:845 includes/elements/container.php:1691
+#: includes/elements/section.php:1321 includes/widgets/common.php:634
+#: includes/widgets/counter.php:184
+#: modules/floating-buttons/base/widget-contact-button-base.php:1399
+#: modules/floating-buttons/base/widget-contact-button-base.php:2782
+#: modules/floating-buttons/base/widget-floating-bars-base.php:879
+#: modules/nested-accordion/widgets/nested-accordion.php:355
+msgid "Animation Duration"
+msgstr "Trajanje animacije"
+
+#: includes/widgets/image-carousel.php:191
+msgid "Image Stretch"
+msgstr "Razvlačenje fotografije"
+
+#: includes/widgets/image-carousel.php:45
+#: includes/widgets/image-carousel.php:127
+msgid "Image Carousel"
+msgstr "Vrtuljak slika"
+
+#: includes/widgets/image-carousel.php:506
+msgid "Animation Speed"
+msgstr "Brzina animacije"
+
+#: includes/controls/groups/image-size.php:303
+msgid "You can crop the original image size to any custom size. You can also set a single value for height or width in order to keep the original size ratio."
+msgstr "Veličinu slike možete obrezati na bilo koju prilagođenu veličinu. Također možete postaviti jednu vrijednost za visinu ili širinu kako bi zadržali omjer izvornog slike."
+
+#: includes/widgets/audio.php:247 includes/widgets/video.php:566
+msgid "Controls Color"
+msgstr "Boja kontrola"
+
+#: includes/widgets/video.php:538
+msgid "Intro Portrait"
+msgstr "U portret"
+
+#: includes/widgets/video.php:524
+msgid "Intro Title"
+msgstr "U naslov"
+
+#: includes/widgets/video.php:392
+msgid "Loop"
+msgstr "Petlja"
+
+#: includes/widgets/video.php:347
+msgid "Video Options"
+msgstr "Video opcije"
+
+#: core/base/providers/social-network-provider.php:187
+#: includes/widgets/video.php:155
+msgid "Vimeo"
+msgstr "Vimeo"
+
+#: includes/controls/groups/background.php:103 includes/widgets/video.php:44
+#: includes/widgets/video.php:143 includes/widgets/video.php:746
+msgid "Video"
+msgstr "Video"
+
+#: includes/controls/image-dimensions.php:81
+msgid "The server does not have ImageMagick or GD installed and/or enabled! Any of these libraries are required for WordPress to be able to resize images. Please contact your server administrator to enable this before continuing."
+msgstr "Poslužitelj nema ImageMagick ili GD instaliran i/ili omogućen! Bilo koja od tih biblioteka potrebna je za WordPress da bi mogla promijeniti veličinu slika. Obratite se administratoru vašeg poslužitelja da biste to omogućili prije nastavka."
+
+#: includes/widgets/image-carousel.php:489
+msgid "Effect"
+msgstr "Efekt"
+
+#: includes/controls/media.php:343
+msgctxt "Image Size Control"
+msgid "Full"
+msgstr "Sve"
+
+#: includes/widgets/image-carousel.php:494
+msgid "Fade"
+msgstr "Iščezavanje"
+
+#: includes/controls/groups/background.php:634
+#: includes/widgets/image-carousel.php:476
+msgid "Infinite Loop"
+msgstr "Beskonačna petlja"
+
+#: includes/widgets/image-carousel.php:210
+msgid "Dots"
+msgstr "Točke"
+
+#: includes/elements/column.php:182 includes/widgets/icon-box.php:261
+#: includes/widgets/icon-list.php:569 includes/widgets/image-box.php:236
+msgid "Vertical Alignment"
+msgstr "Okomiti razmak"
+
+#: includes/widgets/accordion.php:239 includes/widgets/counter.php:238
+#: includes/widgets/icon-box.php:203 includes/widgets/image-box.php:178
+#: includes/widgets/progress.php:127 includes/widgets/toggle.php:242
+#: modules/nested-accordion/widgets/nested-accordion.php:258
+msgid "Title HTML Tag"
+msgstr "Naslov HTML oznake"
+
+#: includes/widgets/icon-box.php:168 includes/widgets/image-box.php:143
+msgid "This is the heading"
+msgstr "Ovo je naslov"
+
+#: includes/elements/column.php:794 includes/elements/container.php:1653
+#: includes/elements/section.php:1290 includes/widgets/common.php:596
+#: modules/floating-buttons/base/widget-contact-button-base.php:3113
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1518
+msgid "Add your custom class WITHOUT the dot. e.g: my-class"
+msgstr "Dodajte svoju prilagođenu klasu BEZ točke. npr. moja-klasa"
+
+#: core/kits/documents/tabs/global-typography.php:200
+msgid "The list of fonts used if the chosen font is not available."
+msgstr "Popis fontova koji se koriste ako odabrani font nije dostupan."
+
+#: includes/widgets/wordpress.php:214
+msgid "Form"
+msgstr "Formular"
+
+#: includes/editor-templates/panel-elements.php:14 assets/js/editor.js:19619
+#: assets/js/editor.js:21593 assets/js/editor.js:22024
+#: assets/js/editor.js:37358
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:19
+msgid "Elements"
+msgstr "Elementi"
+
+#: core/admin/admin.php:344 core/admin/menu/main.php:75
+#: core/common/modules/finder/categories/settings.php:29
+#: core/dynamic-tags/base-tag.php:171 includes/editor-templates/panel.php:82
+#: includes/editor-templates/responsive-bar.php:64
+#: includes/managers/controls.php:334
+#: includes/settings/admin-menu-items/admin-menu-item.php:28
+#: includes/settings/settings.php:216 modules/usage/settings-reporter.php:13
+#: assets/js/editor.js:9708 assets/js/editor.js:38256 assets/js/editor.js:47701
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:13
+msgid "Settings"
+msgstr "Postavke"
+
+#: includes/controls/groups/typography.php:179
+msgctxt "Typography Control"
+msgid "Italic"
+msgstr "Kurziv"
+
+#: includes/controls/groups/typography.php:167
+msgctxt "Typography Control"
+msgid "Capitalize"
+msgstr "Veliko slovo"
+
+#: includes/controls/groups/typography.php:166
+msgctxt "Typography Control"
+msgid "Lowercase"
+msgstr "Mala slova - kurent"
+
+#: includes/controls/groups/typography.php:165
+msgctxt "Typography Control"
+msgid "Uppercase"
+msgstr "Velika slova - verzal"
+
+#: includes/controls/groups/typography.php:180
+msgctxt "Typography Control"
+msgid "Oblique"
+msgstr "Ukošeno"
+
+#. Author of the plugin
+#: elementor.php
+msgid "Elementor.com"
+msgstr "Elementor.com"
+
+#: includes/widgets/video.php:677 includes/widgets/video.php:804
+#: modules/floating-buttons/base/widget-floating-bars-base.php:263
+msgid "Play Icon"
+msgstr "Ikona reprodukcije"
+
+#: includes/widgets/video.php:630 includes/widgets/video.php:637
+#: includes/widgets/video.php:792
+msgid "Image Overlay"
+msgstr "Prekrivanje slika"
+
+#: includes/widgets/video.php:508
+msgid "Suggested Videos"
+msgstr "Predloženi video zapisi"
+
+#: includes/widgets/video.php:754
+msgid "Aspect Ratio"
+msgstr "Omjer slike"
+
+#: core/base/providers/social-network-provider.php:139
+#: includes/widgets/video.php:154
+msgid "YouTube"
+msgstr "YouTube"
+
+#: includes/widgets/toggle.php:143
+msgid "Toggle Content"
+msgstr "Prebacivanje sadržaja"
+
+#: includes/widgets/toggle.php:130
+msgid "Toggle Title"
+msgstr "Prebacivanje naslova"
+
+#: includes/widgets/toggle.php:173
+msgid "Toggle #2"
+msgstr "Prebacivanje #2"
+
+#: includes/widgets/toggle.php:169
+msgid "Toggle #1"
+msgstr "Prebacivanje #1"
+
+#: includes/widgets/toggle.php:164
+msgid "Toggle Items"
+msgstr "Prebacivanje stavki"
+
+#: includes/widgets/toggle.php:46 includes/widgets/toggle.php:119
+#: includes/widgets/toggle.php:272
+msgid "Toggle"
+msgstr "Prebacivanje"
+
+#: includes/widgets/text-editor.php:46 includes/widgets/text-editor.php:123
+#: includes/widgets/text-editor.php:223
+msgid "Text Editor"
+msgstr "Uređivač teksta"
+
+#: includes/widgets/tabs.php:138 includes/widgets/tabs.php:139
+msgid "Tab Content"
+msgstr "Sadržaj kartice"
+
+#: includes/widgets/tabs.php:125 includes/widgets/tabs.php:126
+#: modules/nested-tabs/widgets/nested-tabs.php:104
+#: modules/nested-tabs/widgets/nested-tabs.php:105
+msgid "Tab Title"
+msgstr "Naslov kartice"
+
+#: includes/widgets/tabs.php:169
+#: modules/nested-tabs/widgets/nested-tabs.php:164
+msgid "Tab #2"
+msgstr "Kartica #2"
+
+#: includes/widgets/tabs.php:165
+#: modules/nested-tabs/widgets/nested-tabs.php:161
+msgid "Tab #1"
+msgstr "Kartica #1"
+
+#: includes/widgets/tabs.php:160
+#: modules/nested-tabs/widgets/nested-tabs.php:156
+msgid "Tabs Items"
+msgstr "Stavke kartica"
+
+#: includes/widgets/tabs.php:46 includes/widgets/tabs.php:114
+#: includes/widgets/tabs.php:263 modules/nested-tabs/widgets/nested-tabs.php:32
+#: modules/nested-tabs/widgets/nested-tabs.php:96
+#: modules/nested-tabs/widgets/nested-tabs.php:433
+msgid "Tabs"
+msgstr "Kartice"
+
+#: includes/widgets/image-carousel.php:428
+msgid "Pause on Hover"
+msgstr "Pauziraj kod prijelaza mišem"
+
+#: includes/widgets/image-carousel.php:461
+msgid "Autoplay Speed"
+msgstr "Brzina auto reprodukcije"
+
+#: includes/widgets/image-carousel.php:209
+#: includes/widgets/image-carousel.php:543
+msgid "Arrows"
+msgstr "Strelice"
+
+#: includes/widgets/image-carousel.php:493
+msgid "Slide"
+msgstr "Klizanje"
+
+#: includes/widgets/sidebar.php:87
+msgid "No sidebars were found"
+msgstr "Nisu pronađene bočne trake"
+
+#: includes/widgets/sidebar.php:42 includes/widgets/sidebar.php:102
+msgid "Sidebar"
+msgstr "Bočna traka"
+
+#: includes/widgets/progress.php:311
+msgid "Title Style"
+msgstr "Stil naslova"
+
+#: includes/widgets/progress.php:203
+msgid "Web Designer"
+msgstr "Web dizajner"
+
+#: includes/widgets/progress.php:202
+msgid "e.g. Web Designer"
+msgstr "npr. Web dizajner"
+
+#: includes/widgets/progress.php:197 includes/widgets/progress.php:270
+msgid "Inner Text"
+msgstr "Unutarnji tekst"
+
+#: includes/widgets/progress.php:185
+msgid "Display Percentage"
+msgstr "Prikaži postotak"
+
+#: includes/widgets/progress.php:170
+msgid "Percentage"
+msgstr "Postotak"
+
+#: includes/widgets/progress.php:45 includes/widgets/progress.php:106
+#: includes/widgets/progress.php:213
+msgid "Progress Bar"
+msgstr "Traka za napredak"
+
+#: includes/widgets/menu-anchor.php:116
+msgid "For Example: About"
+msgstr "Na primjer: O nama"
+
+#: includes/fonts.php:71
+msgid "System"
+msgstr "Sistem"
+
+#: includes/fonts.php:76
+msgid "Google"
+msgstr "Google"
+
+#: includes/controls/groups/border.php:66 includes/widgets/divider.php:339
+#: includes/widgets/icon-list.php:297
+msgid "Double"
+msgstr "Duplo"
+
+#: includes/editor-templates/global.php:36
+msgid "Add New Section"
+msgstr "Dodaj novu sekciju"
+
+#: includes/editor-templates/panel-elements.php:79
+msgid "Search Widget..."
+msgstr "Widget za pretraživanje..."
+
+#: includes/editor-templates/panel.php:70
+#: includes/editor-templates/panel.php:71
+msgid "Menu"
+msgstr "Izbornik"
+
+#: includes/editor-templates/panel.php:76
+#: includes/editor-templates/panel.php:77
+msgid "Widgets Panel"
+msgstr "Ploča widgeta"
+
+#: core/experiments/manager.php:496
+#: core/kits/documents/tabs/settings-background.php:78
+#: core/settings/editor-preferences/model.php:125
+#: includes/base/widget-base.php:296 includes/controls/animation.php:154
+#: includes/controls/font.php:66 includes/controls/groups/background.php:319
+#: includes/controls/groups/background.php:432
+#: includes/controls/groups/background.php:462
+#: includes/controls/groups/background.php:483
+#: includes/controls/groups/background.php:688
+#: includes/controls/groups/background.php:707
+#: includes/controls/groups/border.php:63
+#: includes/controls/groups/flex-container.php:208
+#: includes/controls/groups/flex-item.php:23
+#: includes/controls/groups/typography.php:151
+#: includes/controls/groups/typography.php:164
+#: includes/controls/groups/typography.php:177
+#: includes/controls/groups/typography.php:189
+#: includes/editor-templates/panel.php:264 includes/elements/column.php:186
+#: includes/elements/column.php:214 includes/elements/column.php:252
+#: includes/elements/container.php:545 includes/elements/container.php:568
+#: includes/elements/container.php:1393 includes/elements/section.php:287
+#: includes/elements/section.php:325 includes/elements/section.php:365
+#: includes/elements/section.php:424 includes/elements/section.php:452
+#: includes/elements/section.php:492 includes/settings/settings.php:386
+#: includes/widgets/common.php:224 includes/widgets/common.php:343
+#: includes/widgets/divider.php:831 includes/widgets/heading.php:210
+#: includes/widgets/icon-box.php:129 includes/widgets/icon-list.php:118
+#: includes/widgets/icon.php:130 includes/widgets/image-carousel.php:160
+#: includes/widgets/image-carousel.php:178
+#: includes/widgets/image-carousel.php:369
+#: includes/widgets/image-carousel.php:726
+#: includes/widgets/image-gallery.php:206
+#: includes/widgets/image-gallery.php:222
+#: includes/widgets/image-gallery.php:245 includes/widgets/image.php:231
+#: includes/widgets/image.php:378 includes/widgets/progress.php:153
+#: includes/widgets/text-editor.php:154 includes/widgets/text-editor.php:309
+#: includes/widgets/traits/button-trait.php:71
+#: modules/element-cache/module.php:109
+#: modules/floating-buttons/base/widget-contact-button-base.php:1210
+#: modules/floating-buttons/base/widget-contact-button-base.php:1262
+#: modules/floating-buttons/base/widget-contact-button-base.php:1349
+#: modules/floating-buttons/base/widget-contact-button-base.php:1558
+#: modules/floating-buttons/base/widget-contact-button-base.php:1724
+#: modules/floating-buttons/base/widget-contact-button-base.php:2288
+#: modules/floating-buttons/base/widget-contact-button-base.php:2614
+#: modules/floating-buttons/base/widget-contact-button-base.php:2683
+#: modules/floating-buttons/base/widget-contact-button-base.php:2814
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:179
+#: modules/page-templates/module.php:299
+#: modules/shapes/widgets/text-path.php:204 assets/js/editor.js:45642
+#: assets/js/editor.js:45653
+msgid "Default"
+msgstr "Zadano"
+
+#: includes/base/element-base.php:1320 includes/controls/dimensions.php:83
+#: includes/elements/column.php:700 includes/elements/container.php:1406
+#: includes/elements/section.php:1191 includes/widgets/common.php:353
+#: includes/widgets/common.php:354 includes/widgets/divider.php:478
+#: includes/widgets/divider.php:774 includes/widgets/divider.php:940
+#: includes/widgets/heading.php:269 includes/widgets/icon-box.php:247
+#: includes/widgets/icon-box.php:301 includes/widgets/icon-list.php:268
+#: includes/widgets/icon-list.php:550 includes/widgets/icon.php:193
+#: includes/widgets/image-box.php:221 includes/widgets/image-box.php:276
+#: includes/widgets/image-carousel.php:522
+#: includes/widgets/image-carousel.php:808
+#: includes/widgets/image-gallery.php:335 includes/widgets/image.php:267
+#: includes/widgets/image.php:585 includes/widgets/social-icons.php:328
+#: includes/widgets/star-rating.php:223 includes/widgets/tabs.php:430
+#: includes/widgets/testimonial.php:250 includes/widgets/text-editor.php:243
+#: includes/widgets/traits/button-trait.php:263
+#: modules/floating-buttons/base/widget-contact-button-base.php:1137
+#: modules/floating-buttons/base/widget-contact-button-base.php:2403
+#: modules/floating-buttons/base/widget-contact-button-base.php:2945
+#: modules/floating-buttons/base/widget-floating-bars-base.php:452
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1053
+#: modules/shapes/widgets/text-path.php:186
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:33
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:49
+msgid "Right"
+msgstr "Desno"
+
+#: includes/base/element-base.php:1348 includes/controls/dimensions.php:84
+#: includes/elements/column.php:189 includes/elements/container.php:1141
+#: includes/elements/container.php:1525 includes/elements/section.php:408
+#: includes/elements/section.php:427 includes/elements/section.php:959
+#: includes/widgets/common.php:470 includes/widgets/counter.php:351
+#: includes/widgets/icon-box.php:273 includes/widgets/image-box.php:248
+#: modules/floating-buttons/base/widget-contact-button-base.php:2999
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1437
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:50
+msgid "Bottom"
+msgstr "Dolje"
+
+#: includes/editor-templates/hotkeys.php:172
+#: includes/editor-templates/panel.php:104
+#: includes/editor-templates/panel.php:107
+msgid "Responsive Mode"
+msgstr "Responsiv način rada"
+
+#: core/base/traits/shared-widget-controls-trait.php:269
+#: core/settings/editor-preferences/model.php:128
+#: includes/base/element-base.php:1376 includes/editor-templates/panel.php:293
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:4291
+#: assets/js/packages/editor-responsive/editor-responsive.js:2
+#: assets/js/packages/editor-responsive/editor-responsive.strings.js:1
+msgid "Desktop"
+msgstr "Desktop"
+
+#: core/settings/editor-preferences/model.php:127
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:4298
+msgid "Tablet"
+msgstr "Tablet"
+
+#: core/admin/admin.php:622 core/admin/menu/main.php:41
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:2
+msgid "Help"
+msgstr "Pomoć"
+
+#: includes/editor-templates/hotkeys.php:81
+#: includes/editor-templates/templates.php:20
+#: includes/editor-templates/templates.php:21
+#: includes/editor-templates/templates.php:237
+#: includes/editor-templates/templates.php:248 assets/js/e-home-screen.js:248
+#: assets/js/editor.js:5117 assets/js/editor.js:45080
+#: assets/js/element-manager-admin.js:2427
+#: assets/js/kit-elements-defaults-editor.js:615
+msgid "Save"
+msgstr "Spremi"
+
+#: includes/base/element-base.php:1312 includes/controls/dimensions.php:85
+#: includes/elements/column.php:692 includes/elements/container.php:1405
+#: includes/elements/section.php:1183 includes/widgets/common.php:353
+#: includes/widgets/common.php:354 includes/widgets/divider.php:470
+#: includes/widgets/divider.php:766 includes/widgets/divider.php:932
+#: includes/widgets/heading.php:261 includes/widgets/icon-box.php:239
+#: includes/widgets/icon-box.php:293 includes/widgets/icon-list.php:260
+#: includes/widgets/icon-list.php:542 includes/widgets/icon.php:185
+#: includes/widgets/image-box.php:213 includes/widgets/image-box.php:268
+#: includes/widgets/image-carousel.php:521
+#: includes/widgets/image-carousel.php:800
+#: includes/widgets/image-gallery.php:327 includes/widgets/image.php:259
+#: includes/widgets/image.php:577 includes/widgets/social-icons.php:320
+#: includes/widgets/star-rating.php:215 includes/widgets/tabs.php:422
+#: includes/widgets/testimonial.php:242 includes/widgets/text-editor.php:235
+#: includes/widgets/traits/button-trait.php:255
+#: modules/floating-buttons/base/widget-contact-button-base.php:1133
+#: modules/floating-buttons/base/widget-contact-button-base.php:2399
+#: modules/floating-buttons/base/widget-contact-button-base.php:2937
+#: modules/floating-buttons/base/widget-floating-bars-base.php:448
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1049
+#: modules/shapes/widgets/text-path.php:178
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:31
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:51
+msgid "Left"
+msgstr "Lijevo"
+
+#: core/kits/documents/tabs/theme-style-typography.php:110
+#: includes/elements/container.php:595 includes/widgets/audio.php:107
+#: includes/widgets/heading.php:193 includes/widgets/icon-box.php:191
+#: includes/widgets/icon-list.php:165 includes/widgets/icon.php:160
+#: includes/widgets/image-box.php:166 includes/widgets/image-carousel.php:330
+#: includes/widgets/image-carousel.php:344
+#: includes/widgets/image-gallery.php:182 includes/widgets/image.php:188
+#: includes/widgets/image.php:205 includes/widgets/social-icons.php:190
+#: includes/widgets/testimonial.php:199
+#: includes/widgets/traits/button-trait.php:99 includes/widgets/video.php:167
+#: includes/widgets/video.php:192 includes/widgets/video.php:216
+#: modules/floating-buttons/base/widget-contact-button-base.php:414
+#: modules/floating-buttons/base/widget-contact-button-base.php:930
+#: modules/floating-buttons/base/widget-contact-button-base.php:1058
+#: modules/floating-buttons/base/widget-floating-bars-base.php:160
+#: modules/floating-buttons/base/widget-floating-bars-base.php:346
+#: modules/floating-buttons/base/widget-floating-bars-base.php:564
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:263
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:405
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:640
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1096
+#: modules/shapes/widgets/text-path.php:159
+msgid "Link"
+msgstr "Poveznica"
+
+#: core/kits/documents/tabs/settings-background.php:79
+#: core/kits/documents/tabs/settings-lightbox.php:99
+#: core/kits/documents/tabs/settings-lightbox.php:116
+#: includes/controls/animation.php:155 includes/controls/groups/border.php:64
+#: includes/controls/groups/flex-item.php:130
+#: includes/controls/groups/typography.php:193
+#: includes/controls/hover-animation.php:129 includes/controls/icons.php:108
+#: includes/controls/icons.php:194 includes/elements/container.php:1132
+#: includes/elements/section.php:950 includes/widgets/divider.php:497
+#: includes/widgets/image-carousel.php:211
+#: includes/widgets/image-carousel.php:334
+#: includes/widgets/image-carousel.php:386
+#: includes/widgets/image-gallery.php:170
+#: includes/widgets/image-gallery.php:188 includes/widgets/image.php:157
+#: includes/widgets/image.php:192 includes/widgets/video.php:596
+#: modules/nested-tabs/widgets/nested-tabs.php:395 assets/js/ai-admin.js:11121
+#: assets/js/ai-admin.js:11127 assets/js/ai-admin.js:11139
+#: assets/js/ai-admin.js:11150 assets/js/ai-admin.js:11161
+#: assets/js/ai-admin.js:11177 assets/js/ai-gutenberg.js:12972
+#: assets/js/ai-gutenberg.js:12978 assets/js/ai-gutenberg.js:12990
+#: assets/js/ai-gutenberg.js:13001 assets/js/ai-gutenberg.js:13012
+#: assets/js/ai-gutenberg.js:13028 assets/js/ai-media-library.js:12750
+#: assets/js/ai-media-library.js:12756 assets/js/ai-media-library.js:12768
+#: assets/js/ai-media-library.js:12779 assets/js/ai-media-library.js:12790
+#: assets/js/ai-media-library.js:12806 assets/js/ai.js:14166
+#: assets/js/ai.js:14172 assets/js/ai.js:14184 assets/js/ai.js:14195
+#: assets/js/ai.js:14206 assets/js/ai.js:14222
+msgid "None"
+msgstr "Ništa"
+
+#: core/editor/loader/v1/templates/editor-body-v1.view.php:31
+#: core/editor/loader/v2/templates/editor-body-v2.view.php:33
+#: includes/editor-templates/templates.php:174 assets/js/ai-admin.js:7711
+#: assets/js/ai-gutenberg.js:9562 assets/js/ai-layout.js:3771
+#: assets/js/ai-media-library.js:9340 assets/js/ai.js:10756
+#: assets/js/editor.js:28164
+msgid "Preview"
+msgstr "Pregled"
+
+#: includes/controls/structure.php:65
+msgid "Reset"
+msgstr "Reset"
+
+#: modules/history/views/revisions-panel-template.php:11
+#: assets/js/editor.js:5118 assets/js/editor.js:45081
+msgid "Discard"
+msgstr "Odbaci"
+
+#. Plugin Name of the plugin
+#: elementor.php app/view.php:23 core/admin/admin.php:293
+#: core/admin/admin.php:410 core/admin/admin.php:488
+#: core/admin/menu/main.php:17 core/admin/menu/main.php:18
+#: core/documents-manager.php:385 core/upgrade/custom-tasks-manager.php:29
+#: core/upgrade/manager.php:43 includes/editor-templates/navigator.php:111
+#: includes/editor-templates/panel-elements.php:99
+#: includes/editor-templates/panel.php:218
+#: includes/editor-templates/templates.php:135 includes/plugin.php:882
+#: includes/settings/admin-menu-items/admin-menu-item.php:29
+#: includes/settings/settings.php:91 includes/settings/settings.php:92
+#: includes/settings/settings.php:487 modules/compatibility-tag/module.php:36
+#: modules/history/views/history-panel-template.php:23
+#: modules/history/views/revisions-panel-template.php:38
+#: assets/js/app-packages.js:1821 assets/js/app.js:2698
+msgid "Elementor"
+msgstr "Elementor"
+
+#: core/admin/admin.php:224 core/admin/admin.php:232 core/base/document.php:651
+#: modules/admin-bar/module.php:123 modules/gutenberg/module.php:101
+#: modules/gutenberg/module.php:112 modules/gutenberg/module.php:134
+#: assets/js/e-wc-product-editor.js:3062
+msgid "Edit with Elementor"
+msgstr "Uredi s Elementorom"
+
+#: includes/controls/groups/background.php:428
+msgctxt "Background Control"
+msgid "Attachment"
+msgstr "Prilog"
+
+#: includes/controls/groups/background.php:433
+msgctxt "Background Control"
+msgid "Scroll"
+msgstr "Pomakni"
+
+#: includes/controls/groups/background.php:457
+msgctxt "Background Control"
+msgid "Repeat"
+msgstr "Ponovi"
+
+#: includes/controls/groups/background.php:434
+msgctxt "Background Control"
+msgid "Fixed"
+msgstr "Fiksirano"
+
+#: core/kits/views/trash-kit-confirmation.php:30
+#: includes/editor-templates/hotkeys.php:66
+#: includes/editor-templates/templates.php:187 assets/js/editor.js:10594
+#: assets/js/editor.js:28225 assets/js/editor.js:30721
+#: assets/js/editor.js:47892 assets/js/import-export-admin.js:287
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.js:2
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.strings.js:21
+#: assets/js/packages/editor-site-navigation/editor-site-navigation.strings.js:29
+msgid "Delete"
+msgstr "Obriši"
+
+#: includes/controls/icon.php:876 includes/controls/icon.php:877
+msgid "Select Icon"
+msgstr "Odaberi ikonu"
+
+#: core/kits/documents/tabs/theme-style-buttons.php:91
+#: core/kits/documents/tabs/theme-style-form-fields.php:117
+#: core/kits/documents/tabs/theme-style-images.php:63
+#: core/kits/documents/tabs/theme-style-typography.php:120
+#: includes/base/element-base.php:873
+#: includes/controls/groups/typography.php:152
+#: includes/controls/groups/typography.php:168
+#: includes/controls/groups/typography.php:178 includes/elements/column.php:280
+#: includes/elements/column.php:358 includes/elements/column.php:407
+#: includes/elements/column.php:514 includes/elements/column.php:850
+#: includes/elements/container.php:642 includes/elements/container.php:754
+#: includes/elements/container.php:828 includes/elements/container.php:970
+#: includes/elements/container.php:1696 includes/elements/section.php:543
+#: includes/elements/section.php:640 includes/elements/section.php:704
+#: includes/elements/section.php:827 includes/elements/section.php:1326
+#: includes/widgets/alert.php:408 includes/widgets/common.php:639
+#: includes/widgets/common.php:686 includes/widgets/common.php:761
+#: includes/widgets/google-maps.php:217 includes/widgets/heading.php:331
+#: includes/widgets/icon-box.php:388 includes/widgets/icon-list.php:422
+#: includes/widgets/icon-list.php:651 includes/widgets/icon.php:209
+#: includes/widgets/image-box.php:410 includes/widgets/image.php:430
+#: includes/widgets/traits/button-trait.php:339
+#: modules/floating-buttons/base/widget-contact-button-base.php:1198
+#: modules/floating-buttons/base/widget-contact-button-base.php:1404
+#: modules/floating-buttons/base/widget-contact-button-base.php:1976
+#: modules/floating-buttons/base/widget-contact-button-base.php:2471
+#: modules/floating-buttons/base/widget-contact-button-base.php:2602
+#: modules/floating-buttons/base/widget-contact-button-base.php:2787
+#: modules/floating-buttons/base/widget-floating-bars-base.php:652
+#: modules/floating-buttons/base/widget-floating-bars-base.php:884
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1370
+#: modules/nested-accordion/widgets/nested-accordion.php:660
+#: modules/nested-accordion/widgets/nested-accordion.php:714
+#: modules/nested-tabs/widgets/nested-tabs.php:482
+#: modules/nested-tabs/widgets/nested-tabs.php:729
+#: modules/nested-tabs/widgets/nested-tabs.php:960
+#: modules/shapes/widgets/text-path.php:410
+#: modules/shapes/widgets/text-path.php:502
+msgid "Normal"
+msgstr "Normalno"
+
+#: includes/controls/groups/typography.php:173
+msgctxt "Typography Control"
+msgid "Style"
+msgstr "Stil"
+
+#: includes/controls/groups/typography.php:160
+msgctxt "Typography Control"
+msgid "Transform"
+msgstr "Promijeni"
+
+#: includes/controls/groups/typography.php:138
+#: includes/controls/groups/typography.php:299
+msgctxt "Typography Control"
+msgid "Weight"
+msgstr "Debljina"
+
+#: includes/controls/groups/typography.php:106
+msgctxt "Typography Control"
+msgid "Family"
+msgstr "Vrsta"
+
+#: includes/controls/groups/typography.php:113
+msgctxt "Typography Control"
+msgid "Size"
+msgstr "Veličina"
+
+#: modules/gutenberg/module.php:98
+msgid "&#8592; Back to WordPress Editor"
+msgstr "&#8592; Povratak na WordPress uređivač"
+
+#: modules/floating-buttons/base/widget-contact-button-base.php:1206
+#: modules/floating-buttons/base/widget-contact-button-base.php:1258
+#: modules/floating-buttons/base/widget-contact-button-base.php:1345
+#: modules/floating-buttons/base/widget-contact-button-base.php:1554
+#: modules/floating-buttons/base/widget-contact-button-base.php:1720
+#: modules/floating-buttons/base/widget-contact-button-base.php:2610
+#: modules/floating-buttons/base/widget-contact-button-base.php:2679
+#: assets/js/152486453d0e39071cdb.bundle.js:450
+msgid "Colors"
+msgstr "Boje"
+
+#: includes/controls/image-dimensions.php:102
+#: includes/editor-templates/panel.php:185
+#: includes/editor-templates/templates.php:209
+#: modules/history/views/revisions-panel-template.php:14
+#: assets/js/editor.js:10367 assets/js/editor.js:38337
+msgid "Apply"
+msgstr "Prihvati"
+
+#: includes/elements/column.php:664 includes/elements/section.php:1155
+msgid "Link Color"
+msgstr "Boja poveznice"
+
+#: includes/elements/column.php:640 includes/elements/section.php:1131
+msgid "Heading Color"
+msgstr "Boja zaglavlja"
+
+#: core/kits/documents/tabs/settings-lightbox.php:163
+#: core/kits/documents/tabs/theme-style-buttons.php:98
+#: core/kits/documents/tabs/theme-style-buttons.php:173
+#: core/kits/documents/tabs/theme-style-form-fields.php:176
+#: core/kits/documents/tabs/theme-style-typography.php:56
+#: includes/elements/column.php:652 includes/elements/section.php:1143
+#: includes/widgets/alert.php:266 includes/widgets/alert.php:306
+#: includes/widgets/counter.php:495 includes/widgets/counter.php:549
+#: includes/widgets/heading.php:287 includes/widgets/image-carousel.php:826
+#: includes/widgets/image-gallery.php:356 includes/widgets/image.php:603
+#: includes/widgets/progress.php:319 includes/widgets/star-rating.php:254
+#: includes/widgets/testimonial.php:275 includes/widgets/testimonial.php:373
+#: includes/widgets/testimonial.php:418 includes/widgets/text-editor.php:260
+#: includes/widgets/traits/button-trait.php:347
+#: includes/widgets/traits/button-trait.php:391
+#: modules/floating-buttons/base/widget-contact-button-base.php:1580
+#: modules/floating-buttons/base/widget-contact-button-base.php:1612
+#: modules/floating-buttons/base/widget-contact-button-base.php:1743
+#: modules/floating-buttons/base/widget-contact-button-base.php:1774
+#: modules/floating-buttons/base/widget-contact-button-base.php:1805
+#: modules/floating-buttons/base/widget-contact-button-base.php:2113
+#: modules/floating-buttons/base/widget-contact-button-base.php:2320
+#: modules/floating-buttons/base/widget-contact-button-base.php:2348
+#: modules/floating-buttons/base/widget-contact-button-base.php:2641
+#: modules/floating-buttons/base/widget-contact-button-base.php:2710
+#: modules/floating-buttons/base/widget-floating-bars-base.php:659
+#: modules/floating-buttons/base/widget-floating-bars-base.php:693
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1377
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1397
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1105
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1301
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1329
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1357
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:2
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:30
+msgid "Text Color"
+msgstr "Boja teksta"
+
+#: core/kits/documents/tabs/theme-style-typography.php:19
+#: core/kits/documents/tabs/theme-style-typography.php:38
+#: includes/controls/groups/typography.php:436 includes/elements/column.php:631
+#: includes/elements/section.php:1123 assets/js/editor-modules.js:1439
+#: assets/js/editor.js:42865
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:24
+msgid "Typography"
+msgstr "Pismo"
+
+#: includes/controls/gaps.php:58
+#: includes/controls/groups/grid-container.php:119
+#: includes/elements/column.php:60
+msgid "Column"
+msgstr "Kolona"
+
+#: includes/elements/section.php:78 modules/library/documents/section.php:43
+#: assets/js/container-converter.js:99 assets/js/editor.js:10459
+msgid "Section"
+msgstr "Područje"
+
+#: includes/editor-templates/hotkeys.php:125
+#: includes/editor-templates/navigator.php:41
+#: includes/editor-templates/panel.php:89
+#: includes/editor-templates/panel.php:95 includes/elements/section.php:511
+#: includes/elements/section.php:519 assets/js/editor.js:31739
+#: assets/js/packages/editor-app-bar/editor-app-bar.js:12
+#: assets/js/packages/editor-app-bar/editor-app-bar.strings.js:8
+msgid "Structure"
+msgstr "Struktura"
+
+#: includes/elements/column.php:881 includes/elements/container.php:1734
+#: includes/elements/section.php:1358 includes/managers/controls.php:332
+#: includes/widgets/common.php:1115
+#: modules/floating-buttons/base/widget-contact-button-base.php:3058
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1463
+msgid "Responsive"
+msgstr "Responzivno"
+
+#: core/common/modules/finder/categories/settings.php:59
+#: core/dynamic-tags/tag.php:88 includes/elements/column.php:720
+#: includes/elements/section.php:1211 includes/managers/controls.php:331
+#: includes/settings/settings.php:329 includes/settings/settings.php:332
+#: modules/floating-buttons/base/widget-contact-button-base.php:2918
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1415
+#: modules/floating-buttons/module.php:92
+#: modules/floating-buttons/module.php:97 assets/js/editor.js:9714
+#: assets/js/editor.js:37163
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:1442
+msgid "Advanced"
+msgstr "Napredno"
+
+#: includes/managers/controls.php:330 includes/widgets/divider.php:381
+#: includes/widgets/icon-list.php:293 assets/js/ai-admin.js:10424
+#: assets/js/ai-gutenberg.js:12275 assets/js/ai-media-library.js:12053
+#: assets/js/ai.js:13469 assets/js/atomic-widgets-editor.js:3190
+#: assets/js/editor.js:9711 assets/js/editor.js:37160
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:2
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:29
+msgid "Style"
+msgstr "Stil"
+
+#: includes/managers/controls.php:329 includes/widgets/accordion.php:141
+#: includes/widgets/accordion.php:485 includes/widgets/alert.php:144
+#: includes/widgets/icon-box.php:592 includes/widgets/image-box.php:513
+#: includes/widgets/tabs.php:137 includes/widgets/tabs.php:446
+#: includes/widgets/testimonial.php:134 includes/widgets/testimonial.php:267
+#: includes/widgets/toggle.php:141 includes/widgets/toggle.php:509
+#: modules/atomic-widgets/widgets/atomic-heading.php:50
+#: modules/atomic-widgets/widgets/atomic-image.php:53
+#: modules/nested-accordion/widgets/nested-accordion.php:481
+#: modules/nested-tabs/widgets/nested-tabs.php:1013 assets/js/app.js:11073
+#: assets/js/app.js:11566 assets/js/editor.js:37157
+msgid "Content"
+msgstr "Sadržaj"
+
+#: includes/controls/groups/grid-container.php:42
+#: includes/widgets/image-gallery.php:156 includes/widgets/social-icons.php:291
+#: includes/widgets/text-editor.php:150
+msgid "Columns"
+msgstr "Kolone"
+
+#: includes/elements/section.php:288
+msgid "No Gap"
+msgstr "Bez razmaka"
+
+#: includes/elements/section.php:283 includes/widgets/text-editor.php:175
+msgid "Columns Gap"
+msgstr "Razmak među kolonama"
+
+#: core/kits/documents/tabs/settings-layout.php:55
+#: includes/elements/container.php:377 includes/elements/section.php:249
+#: includes/widgets/video.php:949
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1587
+msgid "Content Width"
+msgstr "Širina sadržaja"
+
+#: includes/elements/container.php:382 includes/elements/section.php:254
+#: includes/widgets/common.php:225 includes/widgets/icon-list.php:212
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1551
+msgid "Full Width"
+msgstr "Puna širina"
+
+#: core/settings/editor-preferences/model.php:93
+#: includes/controls/groups/background.php:499
+#: includes/controls/image-dimensions.php:95
+#: includes/elements/container.php:391 includes/elements/container.php:1196
+#: includes/elements/section.php:263 includes/elements/section.php:1014
+#: includes/widgets/common.php:220 includes/widgets/divider.php:439
+#: includes/widgets/icon-list.php:340 includes/widgets/image-box.php:358
+#: includes/widgets/image.php:280
+#: modules/floating-buttons/base/widget-contact-button-base.php:2839
+#: modules/nested-tabs/widgets/nested-tabs.php:301
+#: modules/shapes/widgets/text-path.php:541
+#: modules/shapes/widgets/text-path.php:612
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:2
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:17
+msgid "Width"
+msgstr "Širina"
+
+#: core/kits/documents/tabs/settings-layout.php:24
+#: includes/elements/column.php:117 includes/elements/container.php:1325
+#: includes/elements/section.php:231 includes/managers/controls.php:333
+#: includes/managers/elements.php:280 includes/widgets/common.php:175
+#: includes/widgets/icon-list.php:113
+#: modules/floating-buttons/base/widget-contact-button-base.php:2925
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1421
+#: modules/nested-accordion/widgets/nested-accordion.php:95
+#: assets/js/editor.js:37166
+msgid "Layout"
+msgstr "Izgled"
+
+#: includes/elements/column.php:160
+msgid "Column Width"
+msgstr "Širina kolone"
+
+#: includes/elements/column.php:784 includes/elements/container.php:1643
+#: includes/elements/section.php:1280 includes/widgets/common.php:587
+#: modules/floating-buttons/base/widget-contact-button-base.php:3104
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1509
+msgid "CSS Classes"
+msgstr "CSS klase"
+
+#: core/document-types/page-base.php:132 includes/elements/column.php:729
+#: includes/elements/container.php:1333 includes/elements/section.php:1219
+#: includes/widgets/common.php:193
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:46
+msgid "Margin"
+msgstr "Margina"
+
+#: includes/elements/column.php:688 includes/elements/section.php:1179
+msgid "Text Align"
+msgstr "Poravnavanje teksta"
+
+#: includes/elements/column.php:676 includes/elements/section.php:1167
+msgid "Link Hover Color"
+msgstr "Boja dodirnute poveznice"
+
+#: core/kits/documents/tabs/global-colors.php:82
+#: core/kits/documents/tabs/global-typography.php:135
+msgid "Secondary"
+msgstr "Drugi"
+
+#: core/kits/documents/tabs/global-colors.php:77
+#: core/kits/documents/tabs/global-typography.php:128
+msgid "Primary"
+msgstr "Prvi"
+
+#: includes/managers/elements.php:343
+msgid "WordPress"
+msgstr "WordPress"
+
+#: core/settings/editor-preferences/model.php:218
+#: includes/widgets/image-carousel.php:204
+#: includes/widgets/image-carousel.php:532
+msgid "Navigation"
+msgstr "Navigacija"
+
+#: includes/managers/elements.php:284
+msgid "Basic"
+msgstr "Bazno"
+
+#: includes/elements/container.php:1742 includes/elements/section.php:1382
+msgid "Visibility"
+msgstr "Vidljivo"
+
+#: core/document-types/page-base.php:144
+#: core/kits/documents/tabs/theme-style-buttons.php:243
+#: core/kits/documents/tabs/theme-style-form-fields.php:159
+#: includes/elements/column.php:742 includes/elements/container.php:1345
+#: includes/elements/section.php:1238 includes/widgets/accordion.php:390
+#: includes/widgets/accordion.php:537 includes/widgets/common.php:205
+#: includes/widgets/divider.php:866 includes/widgets/icon-box.php:495
+#: includes/widgets/icon.php:339 includes/widgets/social-icons.php:414
+#: includes/widgets/toggle.php:414 includes/widgets/toggle.php:561
+#: includes/widgets/traits/button-trait.php:495
+#: modules/floating-buttons/base/widget-contact-button-base.php:1458
+#: modules/floating-buttons/base/widget-contact-button-base.php:2183
+#: modules/floating-buttons/base/widget-contact-button-base.php:2198
+#: modules/floating-buttons/base/widget-contact-button-base.php:2746
+#: modules/floating-buttons/base/widget-contact-button-base.php:2886
+#: modules/floating-buttons/base/widget-floating-bars-base.php:853
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1237
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1176
+#: modules/nested-accordion/widgets/nested-accordion.php:462
+#: modules/nested-accordion/widgets/nested-accordion.php:527
+#: modules/nested-tabs/widgets/nested-tabs.php:693
+#: modules/nested-tabs/widgets/nested-tabs.php:1074
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:45
+msgid "Padding"
+msgstr "Okolna bjelina"
+
+#: includes/base/element-base.php:1316 includes/base/element-base.php:1344
+#: includes/controls/groups/flex-container.php:101
+#: includes/controls/groups/flex-container.php:137
+#: includes/controls/groups/flex-container.php:209
+#: includes/controls/groups/flex-item.php:59
+#: includes/controls/groups/grid-container.php:139
+#: includes/controls/groups/grid-container.php:167
+#: includes/elements/column.php:216 includes/elements/column.php:696
+#: includes/elements/section.php:1187 includes/widgets/common.php:307
+#: includes/widgets/counter.php:318 includes/widgets/counter.php:392
+#: includes/widgets/counter.php:428 includes/widgets/divider.php:474
+#: includes/widgets/divider.php:770 includes/widgets/divider.php:936
+#: includes/widgets/heading.php:265 includes/widgets/icon-box.php:297
+#: includes/widgets/icon-list.php:264 includes/widgets/icon-list.php:546
+#: includes/widgets/icon-list.php:577 includes/widgets/icon.php:189
+#: includes/widgets/image-box.php:272 includes/widgets/image-carousel.php:703
+#: includes/widgets/image-carousel.php:804
+#: includes/widgets/image-gallery.php:331 includes/widgets/image.php:263
+#: includes/widgets/image.php:581 includes/widgets/rating.php:203
+#: includes/widgets/social-icons.php:324 includes/widgets/star-rating.php:219
+#: includes/widgets/tabs.php:209 includes/widgets/tabs.php:239
+#: includes/widgets/tabs.php:426 includes/widgets/testimonial.php:246
+#: includes/widgets/text-editor.php:239
+#: includes/widgets/traits/button-trait.php:259
+#: includes/widgets/traits/button-trait.php:291 includes/widgets/video.php:973
+#: modules/floating-buttons/base/widget-contact-button-base.php:2941
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1189
+#: modules/nested-accordion/widgets/nested-accordion.php:165
+#: modules/nested-tabs/widgets/nested-tabs.php:227
+#: modules/nested-tabs/widgets/nested-tabs.php:269
+#: modules/nested-tabs/widgets/nested-tabs.php:339
+#: modules/shapes/widgets/text-path.php:182
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:32
+msgid "Center"
+msgstr "Centar"
+
+#: includes/widgets/video.php:969
+msgid "Content Position"
+msgstr "Pozicija sadržaja"
+
+#: includes/controls/groups/grid-container.php:196
+#: includes/controls/groups/grid-container.php:236
+#: includes/elements/column.php:188 includes/elements/section.php:407
+#: includes/elements/section.php:426 includes/widgets/counter.php:347
+#: includes/widgets/icon-box.php:269 includes/widgets/image-box.php:244
+#: modules/floating-buttons/base/widget-contact-button-base.php:2995
+msgid "Middle"
+msgstr "Sredina"
+
+#: includes/controls/groups/flex-container.php:145
+#: includes/controls/groups/flex-item.php:67
+#: includes/controls/groups/grid-container.php:147
+#: includes/controls/groups/grid-container.php:175
+#: includes/elements/section.php:405 includes/widgets/counter.php:400
+#: includes/widgets/tabs.php:217 includes/widgets/tabs.php:247
+#: includes/widgets/traits/button-trait.php:267
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1197
+#: modules/nested-accordion/widgets/nested-accordion.php:173
+#: modules/nested-tabs/widgets/nested-tabs.php:235
+#: modules/nested-tabs/widgets/nested-tabs.php:277
+msgid "Stretch"
+msgstr "Rastegnuto"
+
+#: includes/elements/section.php:401
+msgid "Column Position"
+msgstr "Pozicija kolone"
+
+#: includes/elements/section.php:337 includes/elements/section.php:377
+msgid "Minimum Height"
+msgstr "Minimalna visina"
+
+#: includes/elements/section.php:326 includes/elements/section.php:366
+msgid "Fit To Screen"
+msgstr "Stisni na veličinu ekrana"
+
+#: includes/controls/image-dimensions.php:100
+#: includes/elements/container.php:1230 includes/elements/section.php:321
+#: includes/elements/section.php:361 includes/elements/section.php:1048
+#: includes/widgets/google-maps.php:188 includes/widgets/icon-list.php:359
+#: includes/widgets/image.php:350 includes/widgets/progress.php:246
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:2
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:18
+msgid "Height"
+msgstr "Visina"
+
+#: includes/elements/section.php:291
+msgid "Wide"
+msgstr "Dužina"
+
+#: core/common/modules/finder/categories/general.php:55
+#: modules/system-info/module.php:157
+#: modules/system-info/system-info-menu-item.php:29
+#: modules/system-info/system-info-menu-item.php:33
+msgid "System Info"
+msgstr "Informacije o sistemu"
+
+#: includes/editor-templates/templates.php:111
+#: includes/widgets/testimonial.php:169 includes/widgets/testimonial.php:365
+#: modules/floating-buttons/base/widget-contact-button-base.php:117
+#: modules/floating-buttons/base/widget-contact-button-base.php:205
+#: modules/floating-buttons/base/widget-contact-button-base.php:652
+#: modules/floating-buttons/base/widget-contact-button-base.php:1734
+msgid "Name"
+msgstr "Ime"
+
+#: core/base/traits/shared-widget-controls-trait.php:159
+#: core/settings/editor-preferences/model.php:142
+#: core/settings/editor-preferences/model.php:154
+#: core/settings/editor-preferences/model.php:165
+#: core/settings/editor-preferences/model.php:210
+#: includes/controls/switcher.php:73 includes/managers/icons.php:475
+#: includes/widgets/audio.php:131 includes/widgets/image-carousel.php:195
+#: includes/widgets/image-carousel.php:371
+#: includes/widgets/image-carousel.php:418
+#: includes/widgets/image-carousel.php:431
+#: includes/widgets/image-carousel.php:448
+#: includes/widgets/image-carousel.php:479
+#: includes/widgets/image-gallery.php:208 includes/widgets/image.php:233
+#: modules/floating-buttons/base/widget-contact-button-base.php:3045
+#: modules/floating-buttons/base/widget-floating-bars-base.php:760
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1452
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1554
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1612
+#: modules/nested-accordion/widgets/nested-accordion.php:298
+#: modules/styleguide/module.php:127
+msgid "No"
+msgstr "Ne"
+
+#: core/base/traits/shared-widget-controls-trait.php:158
+#: core/settings/editor-preferences/model.php:141
+#: core/settings/editor-preferences/model.php:153
+#: core/settings/editor-preferences/model.php:164
+#: core/settings/editor-preferences/model.php:209
+#: includes/controls/switcher.php:74 includes/managers/icons.php:476
+#: includes/widgets/audio.php:130 includes/widgets/image-carousel.php:196
+#: includes/widgets/image-carousel.php:370
+#: includes/widgets/image-carousel.php:417
+#: includes/widgets/image-carousel.php:430
+#: includes/widgets/image-carousel.php:447
+#: includes/widgets/image-carousel.php:478
+#: includes/widgets/image-gallery.php:207 includes/widgets/image.php:232
+#: modules/floating-buttons/base/widget-contact-button-base.php:3044
+#: modules/floating-buttons/base/widget-floating-bars-base.php:759
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1451
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1553
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1611
+#: modules/nested-accordion/widgets/nested-accordion.php:297
+#: modules/styleguide/module.php:128 assets/js/app.js:9672
+msgid "Yes"
+msgstr "Da"
+
+#: core/role-manager/role-manager.php:74
+msgid "Exclude Roles"
+msgstr "Isključi uloge"
+
+#: core/base/document.php:1936
+#: core/common/modules/finder/categories/settings.php:49
+msgid "General Settings"
+msgstr "Opće postavke"
+
+#: includes/elements/section.php:289
+msgid "Narrow"
+msgstr "Usko"
+
+#: includes/elements/container.php:381 includes/elements/section.php:253
+msgid "Boxed"
+msgstr "U okviru"
+
+#: modules/system-info/module.php:164
+msgid "Copy & Paste Info"
+msgstr "Kopiraj i zalijepi informacije"
+
+#: includes/settings/settings.php:271
+msgid "Post Types"
+msgstr "Vrste objava"
+
+#: modules/system-info/module.php:160 modules/system-info/module.php:184
+msgid "Download System Info"
+msgstr "Preuzmite informacije o sistemu"
+
+#: core/kits/documents/tabs/global-colors.php:92
+#: core/kits/documents/tabs/global-typography.php:149
+msgid "Accent"
+msgstr "Naglašeno"
+
+#: core/kits/documents/tabs/global-colors.php:87
+#: core/kits/documents/tabs/global-typography.php:142
+#: includes/widgets/divider.php:501 includes/widgets/divider.php:519
+#: includes/widgets/divider.php:718 includes/widgets/icon-list.php:138
+#: includes/widgets/icon-list.php:622
+#: includes/widgets/traits/button-trait.php:58
+#: modules/floating-buttons/base/widget-contact-button-base.php:141
+#: modules/floating-buttons/base/widget-contact-button-base.php:1041
+#: modules/floating-buttons/base/widget-floating-bars-base.php:59
+#: modules/floating-buttons/base/widget-floating-bars-base.php:147
+#: modules/floating-buttons/base/widget-floating-bars-base.php:333
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1349
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:326
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:582
+#: modules/shapes/widgets/text-path.php:112
+#: modules/shapes/widgets/text-path.php:305 assets/js/ai-admin.js:4263
+#: assets/js/ai-gutenberg.js:6032 assets/js/ai-media-library.js:5892
+#: assets/js/ai.js:6708
+msgid "Text"
+msgstr "Tekst"
+
+#: core/admin/admin-notices.php:240
+msgid "Sure! I'd love to help"
+msgstr "Naravno! Želim pomoći"
+
+#: modules/system-info/module.php:166
+msgid "You can copy the below info as simple text with Ctrl+C / Ctrl+V:"
+msgstr "Možete kopirati donju informaciju kao tekst sa Ctrl+C / Ctrl+V:"
+
+#: includes/widgets/alert.php:121 includes/widgets/progress.php:157
+#: includes/widgets/traits/button-trait.php:75
+msgid "Danger"
+msgstr "Opasnost"
+
+#: includes/widgets/alert.php:120 includes/widgets/progress.php:156
+#: includes/widgets/traits/button-trait.php:74
+msgid "Warning"
+msgstr "Upozorenje"
+
+#: includes/widgets/alert.php:119 includes/widgets/progress.php:155
+#: includes/widgets/traits/button-trait.php:73
+msgid "Success"
+msgstr "Uspjeh"
+
+#: includes/widgets/alert.php:118 includes/widgets/progress.php:154
+#: includes/widgets/traits/button-trait.php:72 assets/js/app-packages.js:5685
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:3390
+msgid "Info"
+msgstr "Info"
+
+#: includes/editor-templates/templates.php:115
+#: includes/elements/container.php:1155 includes/elements/section.php:973
+#: includes/template-library/sources/local.php:1689
+#: includes/widgets/alert.php:114 includes/widgets/progress.php:150
+#: includes/widgets/traits/button-trait.php:67
+#: modules/floating-buttons/base/widget-floating-bars-base.php:559
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1091
+msgid "Type"
+msgstr "Vrsta"
+
+#: includes/widgets/alert.php:46 includes/widgets/alert.php:107
+#: includes/widgets/alert.php:206
+msgid "Alert"
+msgstr "Upozorenje"
+
+#: includes/widgets/accordion.php:348 includes/widgets/accordion.php:447
+#: includes/widgets/image-carousel.php:671 includes/widgets/tabs.php:376
+#: includes/widgets/toggle.php:381 includes/widgets/toggle.php:471
+msgid "Active Color"
+msgstr "Aktivna boja"
+
+#: core/base/traits/shared-widget-controls-trait.php:207
+#: includes/controls/groups/border.php:90 includes/widgets/accordion.php:299
+#: includes/widgets/alert.php:225 includes/widgets/social-icons.php:554
+#: includes/widgets/tabs.php:330 includes/widgets/toggle.php:301
+#: includes/widgets/traits/button-trait.php:420
+#: modules/floating-buttons/base/widget-floating-bars-base.php:718
+#: modules/floating-buttons/base/widget-floating-bars-base.php:810
+#: modules/nested-accordion/widgets/nested-accordion.php:503
+#: modules/nested-tabs/widgets/nested-tabs.php:511
+#: modules/nested-tabs/widgets/nested-tabs.php:570
+#: modules/nested-tabs/widgets/nested-tabs.php:655
+#: modules/nested-tabs/widgets/nested-tabs.php:1039
+msgid "Border Color"
+msgstr "Boja obruba"
+
+#: includes/widgets/heading.php:214
+msgid "XL"
+msgstr "XL"
+
+#: includes/widgets/divider.php:828 includes/widgets/icon-box.php:126
+#: includes/widgets/icon.php:127 includes/widgets/text-editor.php:306
+msgid "View"
+msgstr "Pogled"
+
+#: includes/widgets/heading.php:213 includes/widgets/traits/button-trait.php:37
+#: modules/floating-buttons/base/widget-contact-button-base.php:1119
+#: modules/floating-buttons/base/widget-contact-button-base.php:1544
+#: modules/floating-buttons/base/widget-contact-button-base.php:1926
+#: modules/floating-buttons/base/widget-contact-button-base.php:2276
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1406
+msgid "Large"
+msgstr "Veliko"
+
+#: includes/widgets/heading.php:212 includes/widgets/traits/button-trait.php:36
+#: modules/floating-buttons/base/widget-contact-button-base.php:1118
+#: modules/floating-buttons/base/widget-contact-button-base.php:1543
+#: modules/floating-buttons/base/widget-contact-button-base.php:1925
+#: modules/floating-buttons/base/widget-contact-button-base.php:2275
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1405
+msgid "Medium"
+msgstr "Srednje"
+
+#: includes/widgets/heading.php:211 includes/widgets/traits/button-trait.php:35
+#: modules/floating-buttons/base/widget-contact-button-base.php:1117
+#: modules/floating-buttons/base/widget-contact-button-base.php:1542
+#: modules/floating-buttons/base/widget-contact-button-base.php:1924
+#: modules/floating-buttons/base/widget-contact-button-base.php:2274
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1404
+msgid "Small"
+msgstr "Malo"
+
+#: core/common/modules/finder/categories/edit.php:30
+#: includes/controls/popover-toggle.php:68 assets/js/ai-admin.js:2963
+#: assets/js/ai-admin.js:10115 assets/js/ai-admin.js:10122
+#: assets/js/ai-gutenberg.js:4732 assets/js/ai-gutenberg.js:11966
+#: assets/js/ai-gutenberg.js:11973 assets/js/ai-media-library.js:4592
+#: assets/js/ai-media-library.js:11744 assets/js/ai-media-library.js:11751
+#: assets/js/ai.js:5374 assets/js/ai.js:13160 assets/js/ai.js:13167
+#: assets/js/element-manager-admin.js:2516
+#: assets/js/element-manager-admin.js:2573
+msgid "Edit"
+msgstr "Uredi"
+
+#: core/kits/documents/tabs/theme-style-buttons.php:152
+#: core/kits/documents/tabs/theme-style-buttons.php:227
+#: core/kits/documents/tabs/theme-style-form-fields.php:233
+#: core/kits/documents/tabs/theme-style-images.php:83
+#: core/kits/documents/tabs/theme-style-images.php:154
+#: includes/elements/column.php:529 includes/elements/column.php:566
+#: includes/elements/container.php:1002 includes/elements/container.php:1053
+#: includes/elements/section.php:841 includes/elements/section.php:877
+#: includes/widgets/common.php:776 includes/widgets/common.php:813
+#: includes/widgets/divider.php:1021 includes/widgets/icon-box.php:574
+#: includes/widgets/icon.php:403 includes/widgets/image-box.php:395
+#: includes/widgets/image-carousel.php:771
+#: includes/widgets/image-gallery.php:298 includes/widgets/image.php:536
+#: includes/widgets/progress.php:258 includes/widgets/social-icons.php:501
+#: includes/widgets/testimonial.php:350 includes/widgets/text-editor.php:415
+#: includes/widgets/traits/button-trait.php:473
+#: modules/nested-accordion/widgets/nested-accordion.php:449
+#: modules/nested-accordion/widgets/nested-accordion.php:515
+#: modules/nested-tabs/widgets/nested-tabs.php:680
+#: modules/nested-tabs/widgets/nested-tabs.php:1051
+msgid "Border Radius"
+msgstr "Radius okvira"
+
+#: core/kits/documents/tabs/settings-lightbox.php:103
+#: core/kits/documents/tabs/settings-lightbox.php:113
+#: core/kits/documents/tabs/settings-lightbox.php:120
+#: includes/compatibility.php:163 includes/widgets/alert.php:298
+#: includes/widgets/icon-box.php:177 includes/widgets/icon-box.php:651
+#: includes/widgets/image-box.php:152 includes/widgets/image-box.php:572
+#: includes/widgets/image-carousel.php:389
+#: modules/floating-buttons/base/widget-contact-button-base.php:2339
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:892
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:897
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1348
+msgid "Description"
+msgstr "Opis"
+
+#: includes/widgets/counter.php:142
+msgid "Ending Number"
+msgstr "Zadnji broj"
+
+#: includes/widgets/counter.php:130
+msgid "Starting Number"
+msgstr "Početni broj"
+
+#: core/kits/documents/tabs/settings-lightbox.php:56
+#: includes/widgets/counter.php:45 includes/widgets/counter.php:123
+#: includes/widgets/counter.php:263
+msgid "Counter"
+msgstr "Brojač"
+
+#: includes/controls/groups/background.php:292 includes/widgets/common.php:899
+#: includes/widgets/image-box.php:347 includes/widgets/image-carousel.php:687
+#: includes/widgets/image.php:45 includes/widgets/image.php:122
+#: includes/widgets/image.php:247 includes/widgets/testimonial.php:312
+msgid "Image"
+msgstr "Slika"
+
+#: core/base/traits/shared-widget-controls-trait.php:156
+#: includes/elements/column.php:504 includes/elements/container.php:957
+#: includes/elements/section.php:817 includes/widgets/common.php:751
+#: modules/floating-buttons/base/widget-floating-bars-base.php:757
+msgid "Border"
+msgstr "Okvir"
+
+#: core/base/document.php:1944
+#: core/kits/documents/tabs/settings-lightbox.php:96
+#: core/kits/documents/tabs/settings-lightbox.php:100
+#: core/kits/documents/tabs/settings-lightbox.php:117
+#: includes/elements/column.php:126 includes/elements/section.php:240
+#: includes/widgets/accordion.php:128 includes/widgets/accordion.php:314
+#: includes/widgets/alert.php:130 includes/widgets/alert.php:258
+#: includes/widgets/common.php:184 includes/widgets/counter.php:224
+#: includes/widgets/counter.php:538 includes/widgets/heading.php:177
+#: includes/widgets/icon-box.php:163 includes/widgets/icon-box.php:600
+#: includes/widgets/image-box.php:138 includes/widgets/image-box.php:521
+#: includes/widgets/image-carousel.php:387 includes/widgets/progress.php:113
+#: includes/widgets/star-rating.php:199 includes/widgets/star-rating.php:243
+#: includes/widgets/tabs.php:123 includes/widgets/tabs.php:353
+#: includes/widgets/testimonial.php:184 includes/widgets/testimonial.php:410
+#: includes/widgets/toggle.php:128 includes/widgets/toggle.php:346
+#: modules/atomic-widgets/widgets/atomic-heading.php:82
+#: modules/floating-buttons/base/widget-contact-button-base.php:125
+#: modules/floating-buttons/base/widget-contact-button-base.php:206
+#: modules/floating-buttons/base/widget-contact-button-base.php:2311
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:866
+#: modules/nested-accordion/widgets/nested-accordion.php:103
+#: modules/nested-accordion/widgets/nested-accordion.php:552
+#: modules/nested-tabs/widgets/nested-tabs.php:102
+msgid "Title"
+msgstr "Naslov"
+
+#: core/kits/documents/tabs/settings-lightbox.php:130
+#: core/kits/documents/tabs/theme-style-form-fields.php:200
+#: includes/controls/groups/background.php:174 includes/widgets/alert.php:214
+#: includes/widgets/image.php:618 includes/widgets/progress.php:235
+#: includes/widgets/tabs.php:341 includes/widgets/video.php:889
+#: modules/floating-buttons/base/widget-contact-button-base.php:1234
+#: modules/floating-buttons/base/widget-contact-button-base.php:1286
+#: modules/floating-buttons/base/widget-contact-button-base.php:1327
+#: modules/floating-buttons/base/widget-contact-button-base.php:1373
+#: modules/floating-buttons/base/widget-contact-button-base.php:1689
+#: modules/floating-buttons/base/widget-contact-button-base.php:1959
+#: modules/floating-buttons/base/widget-contact-button-base.php:1995
+#: modules/floating-buttons/base/widget-contact-button-base.php:2028
+#: modules/floating-buttons/base/widget-contact-button-base.php:2132
+#: modules/floating-buttons/base/widget-contact-button-base.php:2158
+#: modules/floating-buttons/base/widget-contact-button-base.php:2367
+#: modules/floating-buttons/base/widget-contact-button-base.php:2654
+#: modules/floating-buttons/base/widget-contact-button-base.php:2723
+#: modules/floating-buttons/base/widget-contact-button-base.php:2810
+#: modules/floating-buttons/base/widget-contact-button-base.php:2824
+#: modules/floating-buttons/base/widget-floating-bars-base.php:670
+#: modules/floating-buttons/base/widget-floating-bars-base.php:704
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1106
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1151
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1125
+#: modules/nested-tabs/widgets/nested-tabs.php:495
+#: modules/nested-tabs/widgets/nested-tabs.php:554
+#: modules/nested-tabs/widgets/nested-tabs.php:639
+#: modules/nested-tabs/widgets/nested-tabs.php:1026
+msgid "Background Color"
+msgstr "Boja pozadine"
+
+#: core/settings/editor-preferences/model.php:187
+#: includes/base/element-base.php:1389
+#: includes/controls/groups/grid-container.php:34
+#: includes/widgets/alert.php:160 includes/widgets/audio.php:158
+#: includes/widgets/audio.php:169 includes/widgets/audio.php:180
+#: includes/widgets/audio.php:191 includes/widgets/audio.php:205
+#: includes/widgets/audio.php:216 includes/widgets/audio.php:227
+#: includes/widgets/audio.php:238 includes/widgets/counter.php:199
+#: includes/widgets/progress.php:188 includes/widgets/video.php:406
+#: includes/widgets/video.php:421 includes/widgets/video.php:448
+#: includes/widgets/video.php:526 includes/widgets/video.php:540
+#: includes/widgets/video.php:554 includes/widgets/video.php:580
+#: includes/widgets/video.php:639 includes/widgets/video.php:680
+#: modules/floating-buttons/base/widget-contact-button-base.php:518
+#: modules/floating-buttons/base/widget-contact-button-base.php:628
+#: modules/floating-buttons/base/widget-contact-button-base.php:693
+#: modules/floating-buttons/base/widget-contact-button-base.php:2525
+#: modules/floating-buttons/base/widget-floating-bars-base.php:227
+#: modules/floating-buttons/base/widget-floating-bars-base.php:294
+msgid "Hide"
+msgstr "Sakrij"
+
+#: core/settings/editor-preferences/model.php:186
+#: includes/base/element-base.php:1390
+#: includes/controls/groups/grid-container.php:33
+#: includes/widgets/alert.php:159 includes/widgets/audio.php:159
+#: includes/widgets/audio.php:170 includes/widgets/audio.php:181
+#: includes/widgets/audio.php:192 includes/widgets/audio.php:206
+#: includes/widgets/audio.php:217 includes/widgets/audio.php:228
+#: includes/widgets/audio.php:239 includes/widgets/counter.php:198
+#: includes/widgets/progress.php:187 includes/widgets/video.php:407
+#: includes/widgets/video.php:422 includes/widgets/video.php:449
+#: includes/widgets/video.php:527 includes/widgets/video.php:541
+#: includes/widgets/video.php:555 includes/widgets/video.php:581
+#: includes/widgets/video.php:640 includes/widgets/video.php:681
+#: modules/floating-buttons/base/widget-contact-button-base.php:517
+#: modules/floating-buttons/base/widget-contact-button-base.php:627
+#: modules/floating-buttons/base/widget-contact-button-base.php:692
+#: modules/floating-buttons/base/widget-contact-button-base.php:2524
+#: modules/floating-buttons/base/widget-floating-bars-base.php:226
+#: modules/floating-buttons/base/widget-floating-bars-base.php:293
+#: assets/js/element-manager-admin.js:2091
+msgid "Show"
+msgstr "Pokaži"
+
+#: core/dynamic-tags/tag.php:105 includes/widgets/counter.php:279
+#: modules/nested-tabs/widgets/nested-tabs.php:192
+#: modules/nested-tabs/widgets/nested-tabs.php:888
+msgid "After"
+msgstr "Poslije"
+
+#: core/dynamic-tags/tag.php:95 includes/widgets/counter.php:275
+#: modules/nested-tabs/widgets/nested-tabs.php:196
+#: modules/nested-tabs/widgets/nested-tabs.php:896
+msgid "Before"
+msgstr "Prije"
+
+#: includes/widgets/image-gallery.php:187
+msgid "Attachment Page"
+msgstr "Stranica privitka"
+
+#: includes/widgets/image-carousel.php:335
+#: includes/widgets/image-gallery.php:186 includes/widgets/image.php:193
+msgid "Media File"
+msgstr "Medijski zapis"
+
+#: core/base/traits/shared-widget-controls-trait.php:23
+#: includes/elements/column.php:258 includes/elements/container.php:574
+#: includes/elements/section.php:498 includes/widgets/divider.php:534
+#: includes/widgets/heading.php:227
+msgid "HTML Tag"
+msgstr "HTML oznaka"
+
+#: includes/widgets/icon-box.php:233
+#: includes/widgets/traits/button-trait.php:142
+#: modules/floating-buttons/base/widget-contact-button-base.php:1129
+#: modules/floating-buttons/base/widget-contact-button-base.php:2395
+#: modules/floating-buttons/base/widget-floating-bars-base.php:572
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1282
+msgid "Icon Position"
+msgstr "Pozicija ikone"
+
+#: includes/widgets/accordion.php:181 includes/widgets/accordion.php:404
+#: includes/widgets/alert.php:169 includes/widgets/divider.php:505
+#: includes/widgets/divider.php:557 includes/widgets/divider.php:817
+#: includes/widgets/icon-box.php:113 includes/widgets/icon-box.php:375
+#: includes/widgets/icon-list.php:152 includes/widgets/icon-list.php:412
+#: includes/widgets/icon.php:44 includes/widgets/icon.php:107
+#: includes/widgets/icon.php:114 includes/widgets/icon.php:173
+#: includes/widgets/rating.php:48 includes/widgets/rating.php:173
+#: includes/widgets/social-icons.php:112 includes/widgets/social-icons.php:345
+#: includes/widgets/star-rating.php:164 includes/widgets/toggle.php:184
+#: includes/widgets/toggle.php:428 includes/widgets/traits/button-trait.php:126
+#: includes/widgets/video.php:693
+#: modules/floating-buttons/base/widget-contact-button-base.php:494
+#: modules/floating-buttons/base/widget-floating-bars-base.php:109
+#: modules/floating-buttons/base/widget-floating-bars-base.php:177
+#: modules/floating-buttons/base/widget-floating-bars-base.php:321
+#: modules/floating-buttons/base/widget-floating-bars-base.php:395
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1263
+#: modules/nested-accordion/widgets/nested-accordion.php:193
+#: modules/nested-accordion/widgets/nested-accordion.php:584
+#: modules/nested-tabs/widgets/nested-tabs.php:115
+#: modules/nested-tabs/widgets/nested-tabs.php:870
+msgid "Icon"
+msgstr "Ikona"
+
+#: includes/controls/groups/flex-item.php:125 includes/widgets/alert.php:349
+#: includes/widgets/common.php:936 includes/widgets/divider.php:635
+#: includes/widgets/divider.php:843 includes/widgets/heading.php:207
+#: includes/widgets/icon-box.php:477 includes/widgets/icon-list.php:488
+#: includes/widgets/icon.php:302 includes/widgets/image-carousel.php:572
+#: includes/widgets/image-carousel.php:636 includes/widgets/rating.php:56
+#: includes/widgets/social-icons.php:395 includes/widgets/star-rating.php:323
+#: includes/widgets/text-editor.php:359
+#: includes/widgets/traits/button-trait.php:114 includes/widgets/video.php:832
+#: modules/floating-buttons/base/widget-contact-button-base.php:1113
+#: modules/floating-buttons/base/widget-contact-button-base.php:1538
+#: modules/floating-buttons/base/widget-contact-button-base.php:1920
+#: modules/floating-buttons/base/widget-contact-button-base.php:2270
+#: modules/floating-buttons/base/widget-floating-bars-base.php:486
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1084
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1309
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1400
+#: modules/nested-accordion/widgets/nested-accordion.php:592
+#: modules/nested-tabs/widgets/nested-tabs.php:918
+#: modules/shapes/widgets/text-path.php:252
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:2
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:16
+msgid "Size"
+msgstr "Veličina"
+
+#: includes/elements/column.php:704 includes/elements/section.php:1195
+#: includes/widgets/heading.php:273 includes/widgets/icon-box.php:305
+#: includes/widgets/image-box.php:280 includes/widgets/image-carousel.php:812
+#: includes/widgets/image-gallery.php:339 includes/widgets/image.php:589
+#: includes/widgets/star-rating.php:227 includes/widgets/text-editor.php:247
+msgid "Justified"
+msgstr "Obostrano poravnato"
+
+#: includes/widgets/accordion.php:415 includes/widgets/divider.php:466
+#: includes/widgets/heading.php:257 includes/widgets/icon-box.php:289
+#: includes/widgets/icon-list.php:256 includes/widgets/icon.php:181
+#: includes/widgets/image-box.php:264 includes/widgets/image-carousel.php:796
+#: includes/widgets/image-gallery.php:323 includes/widgets/image.php:255
+#: includes/widgets/image.php:573 includes/widgets/rating.php:195
+#: includes/widgets/social-icons.php:316 includes/widgets/star-rating.php:211
+#: includes/widgets/tabs.php:201 includes/widgets/tabs.php:231
+#: includes/widgets/tabs.php:418 includes/widgets/testimonial.php:237
+#: includes/widgets/text-editor.php:231 includes/widgets/toggle.php:439
+#: includes/widgets/traits/button-trait.php:283
+#: modules/shapes/widgets/text-path.php:173
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:35
+msgid "Alignment"
+msgstr "Centriranje"
+
+#: includes/widgets/heading.php:215
+msgid "XXL"
+msgstr "XXL"
+
+#: includes/controls/gallery.php:95 includes/controls/gallery.php:97
+#: includes/widgets/image-carousel.php:134
+#: includes/widgets/image-gallery.php:133
+msgid "Add Images"
+msgstr "Dodaj slike"
+
+#: includes/widgets/divider.php:601 includes/widgets/icon-list.php:315
+#: modules/floating-buttons/base/widget-contact-button-base.php:2549
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1215
+msgid "Weight"
+msgstr "Debljina"
+
+#: includes/widgets/spacer.php:42 includes/widgets/spacer.php:119
+msgid "Spacer"
+msgstr "Razmak"
+
+#: includes/widgets/counter.php:487
+#: modules/floating-buttons/base/widget-contact-button-base.php:329
+#: modules/floating-buttons/base/widget-contact-button-base.php:884
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:481
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:728
+msgid "Number"
+msgstr "Broj"
+
+#: includes/widgets/html.php:93 includes/widgets/html.php:100
+msgid "HTML Code"
+msgstr "HTML kod"
+
+#: includes/widgets/html.php:42
+msgid "HTML"
+msgstr "HTML"
+
+#: includes/widgets/alert.php:132 includes/widgets/heading.php:185
+#: includes/widgets/icon-box.php:169 includes/widgets/image-box.php:144
+#: includes/widgets/progress.php:118
+msgid "Enter your title"
+msgstr "Unesite naslov"
+
+#: includes/widgets/google-maps.php:146
+msgid "London Eye, London, United Kingdom"
+msgstr "London Eye, London, United Kingdom"
+
+#: core/kits/documents/tabs/theme-style-form-fields.php:78
+#: core/kits/documents/tabs/theme-style-typography.php:127
+#: core/kits/documents/tabs/theme-style-typography.php:156
+#: core/kits/documents/tabs/theme-style-typography.php:201
+#: includes/controls/box-shadow.php:104
+#: includes/controls/groups/background.php:170
+#: includes/controls/text-shadow.php:97 includes/elements/column.php:415
+#: includes/elements/container.php:836 includes/elements/container.php:1182
+#: includes/elements/section.php:712 includes/elements/section.php:1000
+#: includes/widgets/accordion.php:333 includes/widgets/accordion.php:435
+#: includes/widgets/accordion.php:504 includes/widgets/alert.php:414
+#: includes/widgets/alert.php:431 includes/widgets/divider.php:585
+#: includes/widgets/divider.php:729 includes/widgets/heading.php:339
+#: includes/widgets/icon-box.php:609 includes/widgets/icon-box.php:660
+#: includes/widgets/icon-list.php:392 includes/widgets/icon-list.php:429
+#: includes/widgets/icon-list.php:454 includes/widgets/icon-list.php:658
+#: includes/widgets/icon-list.php:682 includes/widgets/image-box.php:530
+#: includes/widgets/image-box.php:581 includes/widgets/image-carousel.php:592
+#: includes/widgets/image-carousel.php:656 includes/widgets/progress.php:221
+#: includes/widgets/progress.php:279 includes/widgets/rating.php:106
+#: includes/widgets/social-icons.php:204 includes/widgets/social-icons.php:353
+#: includes/widgets/star-rating.php:374 includes/widgets/tabs.php:362
+#: includes/widgets/tabs.php:455 includes/widgets/toggle.php:366
+#: includes/widgets/toggle.php:459 includes/widgets/toggle.php:528
+#: includes/widgets/video.php:816
+#: modules/floating-buttons/base/widget-contact-button-base.php:1885
+#: modules/floating-buttons/base/widget-contact-button-base.php:2284
+#: modules/floating-buttons/base/widget-contact-button-base.php:2297
+#: modules/floating-buttons/base/widget-contact-button-base.php:2535
+#: modules/floating-buttons/base/widget-floating-bars-base.php:418
+#: modules/floating-buttons/base/widget-floating-bars-base.php:536
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1070
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1271
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1204
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1389
+#: modules/nested-accordion/widgets/nested-accordion.php:675
+#: modules/nested-accordion/widgets/nested-accordion.php:742
+#: modules/nested-tabs/widgets/nested-tabs.php:736
+#: modules/nested-tabs/widgets/nested-tabs.php:782
+#: modules/nested-tabs/widgets/nested-tabs.php:829
+#: modules/nested-tabs/widgets/nested-tabs.php:965
+#: modules/nested-tabs/widgets/nested-tabs.php:982
+#: modules/nested-tabs/widgets/nested-tabs.php:999
+#: modules/shapes/widgets/text-path.php:417
+#: modules/shapes/widgets/text-path.php:441
+#: modules/shapes/widgets/text-path.php:509
+#: modules/shapes/widgets/text-path.php:529
+#: modules/shapes/widgets/text-path.php:580
+#: modules/shapes/widgets/text-path.php:600 assets/js/editor.js:47839
+#: assets/js/editor.js:47882
+msgid "Color"
+msgstr "Boja"
+
+#: includes/widgets/google-maps.php:44 includes/widgets/google-maps.php:121
+#: includes/widgets/google-maps.php:208
+msgid "Google Maps"
+msgstr "Google karte"
+
+#: core/kits/documents/tabs/theme-style-images.php:21
+#: core/kits/documents/tabs/theme-style-images.php:51
+#: includes/controls/groups/background.php:623
+#: includes/widgets/image-gallery.php:234 assets/js/ai-admin.js:4264
+#: assets/js/ai-gutenberg.js:6033 assets/js/ai-media-library.js:5893
+#: assets/js/ai.js:6709
+msgid "Images"
+msgstr "Slike"
+
+#: includes/widgets/image-gallery.php:223
+msgid "Random"
+msgstr "Slučajno"
+
+#: includes/widgets/divider.php:911 includes/widgets/icon-box.php:411
+#: includes/widgets/icon-box.php:449 includes/widgets/icon.php:233
+#: includes/widgets/icon.php:273 includes/widgets/social-icons.php:231
+#: includes/widgets/social-icons.php:380 includes/widgets/social-icons.php:538
+#: includes/widgets/text-editor.php:336
+msgid "Secondary Color"
+msgstr "Druga boja"
+
+#: includes/widgets/divider.php:894 includes/widgets/icon-box.php:395
+#: includes/widgets/icon-box.php:436 includes/widgets/icon.php:216
+#: includes/widgets/icon.php:259 includes/widgets/social-icons.php:217
+#: includes/widgets/social-icons.php:366 includes/widgets/social-icons.php:523
+#: includes/widgets/text-editor.php:321
+msgid "Primary Color"
+msgstr "Prva boja"
+
+#: includes/widgets/icon-box.php:147 includes/widgets/icon.php:145
+#: includes/widgets/social-icons.php:280
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1676
+#: assets/js/ai-admin.js:11191 assets/js/ai-gutenberg.js:13042
+#: assets/js/ai-media-library.js:12820 assets/js/ai.js:14236
+msgid "Square"
+msgstr "Kvadrat"
+
+#: includes/widgets/common.php:128 includes/widgets/icon-box.php:149
+#: includes/widgets/icon.php:147 includes/widgets/social-icons.php:282
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1675
+#: modules/shapes/module.php:45
+msgid "Circle"
+msgstr "Krug"
+
+#: includes/widgets/common.php:885 includes/widgets/icon-box.php:144
+#: includes/widgets/icon.php:142 includes/widgets/social-icons.php:276
+msgid "Shape"
+msgstr "Oblik"
+
+#: includes/widgets/menu-anchor.php:43 includes/widgets/menu-anchor.php:104
+msgid "Menu Anchor"
+msgstr "Sidro izbornika"
+
+#: includes/widgets/image-box.php:208 includes/widgets/testimonial.php:212
+msgid "Image Position"
+msgstr "Pozicija slike"
+
+#: includes/widgets/image-box.php:294 includes/widgets/image-carousel.php:739
+msgid "Image Spacing"
+msgstr "Razmak slike"
+
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1648
+msgid "Image Size"
+msgstr "Veličina slike"
+
+#: includes/widgets/menu-anchor.php:111
+msgid "The ID of Menu Anchor."
+msgstr "ID sidrišta izbornika."
+
+#: includes/widgets/image-box.php:45 includes/widgets/image-box.php:106
+msgid "Image Box"
+msgstr "Mjesto za sliku"
+
+#: core/base/traits/shared-widget-controls-trait.php:179
+#: includes/controls/groups/border.php:77 includes/widgets/accordion.php:277
+#: includes/widgets/divider.php:998 includes/widgets/icon-box.php:559
+#: includes/widgets/icon.php:388 includes/widgets/tabs.php:307
+#: includes/widgets/text-editor.php:437 includes/widgets/toggle.php:280
+#: modules/floating-buttons/base/widget-floating-bars-base.php:773
+#: modules/nested-accordion/widgets/nested-accordion.php:506
+#: modules/nested-tabs/widgets/nested-tabs.php:514
+#: modules/nested-tabs/widgets/nested-tabs.php:573
+#: modules/nested-tabs/widgets/nested-tabs.php:658
+#: modules/nested-tabs/widgets/nested-tabs.php:1042
+msgid "Border Width"
+msgstr "Širina linije"
+
+#: includes/base/element-base.php:880 includes/base/element-base.php:892
+#: includes/widgets/divider.php:977 includes/widgets/icon-box.php:537
+#: includes/widgets/icon.php:367 modules/shapes/widgets/text-path.php:284
+msgid "Rotate"
+msgstr "Rotacija"
+
+#: includes/widgets/divider.php:833 includes/widgets/icon-box.php:131
+#: includes/widgets/icon.php:132 includes/widgets/text-editor.php:311
+msgid "Framed"
+msgstr "Uokvireno"
+
+#: includes/controls/repeater.php:178
+#: modules/floating-buttons/base/widget-contact-button-base.php:1004
+#: modules/floating-buttons/base/widget-floating-bars-base.php:363
+msgid "Add Item"
+msgstr "Dodaj stavku"
+
+#: core/kits/manager.php:139 includes/controls/groups/background.php:329
+#: includes/controls/groups/background.php:487
+#: includes/controls/groups/flex-item.php:24
+#: includes/controls/groups/flex-item.php:93
+#: includes/controls/groups/flex-item.php:142
+#: includes/controls/groups/image-size.php:383
+#: includes/elements/section.php:293 includes/maintenance-mode.php:238
+#: includes/widgets/common.php:137 includes/widgets/common.php:227
+#: includes/widgets/common.php:941 includes/widgets/common.php:998
+#: includes/widgets/image-carousel.php:727
+#: includes/widgets/image-gallery.php:246 includes/widgets/social-icons.php:209
+#: includes/widgets/social-icons.php:358
+#: modules/floating-buttons/base/widget-contact-button-base.php:1211
+#: modules/floating-buttons/base/widget-contact-button-base.php:1263
+#: modules/floating-buttons/base/widget-contact-button-base.php:1350
+#: modules/floating-buttons/base/widget-contact-button-base.php:1559
+#: modules/floating-buttons/base/widget-contact-button-base.php:1725
+#: modules/floating-buttons/base/widget-contact-button-base.php:2289
+#: modules/floating-buttons/base/widget-contact-button-base.php:2615
+#: modules/floating-buttons/base/widget-contact-button-base.php:2684
+#: modules/floating-buttons/base/widget-contact-button-base.php:2815
+#: modules/shapes/module.php:52 assets/js/editor.js:45650
+msgid "Custom"
+msgstr "Prilagođeno"
+
+#: includes/widgets/social-icons.php:515
+msgid "Icon Hover"
+msgstr "Lebdjenje ikone"
+
+#: includes/widgets/divider.php:832 includes/widgets/icon-box.php:130
+#: includes/widgets/icon.php:131 includes/widgets/text-editor.php:310
+msgid "Stacked"
+msgstr "Naslagano"
+
+#: includes/widgets/icon-list.php:141 includes/widgets/icon-list.php:142
+msgid "List Item"
+msgstr "Stavka popisa"
+
+#: includes/widgets/icon-list.php:195
+msgid "List Item #3"
+msgstr "Stavka popisa #3"
+
+#: includes/widgets/icon-list.php:188
+msgid "List Item #2"
+msgstr "Stavka popisa #2"
+
+#: includes/widgets/icon-list.php:181
+msgid "List Item #1"
+msgstr "Stavka popisa #1"
+
+#: includes/widgets/icon-list.php:45 includes/widgets/icon-list.php:106
+msgid "Icon List"
+msgstr "Lista ikona"
+
+#: includes/widgets/icon-box.php:319
+#: includes/widgets/traits/button-trait.php:175
+#: modules/floating-buttons/base/widget-contact-button-base.php:1159
+#: modules/floating-buttons/base/widget-contact-button-base.php:2415
+#: modules/floating-buttons/base/widget-floating-bars-base.php:602
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1327
+msgid "Icon Spacing"
+msgstr "Razmak ikona"
+
+#: includes/widgets/icon-box.php:45 includes/widgets/icon-box.php:106
+msgid "Icon Box"
+msgstr "Okvir ikone"
+
+#: includes/widgets/heading.php:46 includes/widgets/heading.php:170
+#: includes/widgets/heading.php:249
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:846
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:851
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1292
+msgid "Heading"
+msgstr "Zaglavlje"
+
+#: core/kits/documents/tabs/settings-lightbox.php:101
+#: core/kits/documents/tabs/settings-lightbox.php:118
+#: includes/widgets/image-carousel.php:382
+#: includes/widgets/image-carousel.php:388
+#: includes/widgets/image-carousel.php:785
+#: includes/widgets/image-gallery.php:166
+#: includes/widgets/image-gallery.php:312 includes/widgets/image.php:154
+#: includes/widgets/image.php:561
+msgid "Caption"
+msgstr "Tekst opisa"
+
+#: includes/widgets/divider.php:46 includes/widgets/divider.php:374
+#: includes/widgets/divider.php:524 includes/widgets/divider.php:574
+#: includes/widgets/icon-list.php:279
+msgid "Divider"
+msgstr "Razdjelnik"
+
+#: includes/widgets/counter.php:231
+msgid "Cool Number"
+msgstr "Odličan broj"
+
+#: includes/widgets/counter.php:169
+msgid "Number Suffix"
+msgstr "Sufiks broja"
+
+#: includes/widgets/counter.php:154
+msgid "Number Prefix"
+msgstr "Prefiks broja"
+
+#: includes/widgets/audio.php:148 includes/widgets/image-carousel.php:415
+#: includes/widgets/video.php:356
+msgid "Autoplay"
+msgstr "Automatsko izvođenje"
+
+#: includes/widgets/image-carousel.php:174
+msgid "Slides to Scroll"
+msgstr "Slajdovi za pomicanje"
+
+#: includes/widgets/image-carousel.php:157
+msgid "Slides to Show"
+msgstr "Slajdovi za prikazivanje"
+
+#: includes/widgets/accordion.php:143
+msgid "Accordion Content"
+msgstr "Sadržaj harmonike"
+
+#: includes/widgets/accordion.php:130
+msgid "Accordion Title"
+msgstr "Naslov harmonike"
+
+#: includes/widgets/accordion.php:170
+msgid "Accordion #2"
+msgstr "Harmonika #2"
+
+#: includes/widgets/accordion.php:166
+msgid "Accordion #1"
+msgstr "Harmonika #1"
+
+#: includes/widgets/accordion.php:161
+msgid "Accordion Items"
+msgstr "Stavke harmonike"
+
+#: includes/widgets/accordion.php:46 includes/widgets/accordion.php:119
+#: includes/widgets/accordion.php:269
+#: modules/nested-accordion/widgets/nested-accordion.php:36
+#: modules/nested-accordion/widgets/nested-accordion.php:381
+msgid "Accordion"
+msgstr "Harmonika"
+
+#: includes/widgets/divider.php:695 includes/widgets/icon-list.php:515
+#: includes/widgets/star-rating.php:287
+msgid "Gap"
+msgstr "Prazni prostor"
+
+#: includes/elements/container.php:470 includes/elements/section.php:327
+#: includes/elements/section.php:367
+msgid "Min Height"
+msgstr "Min. visina"
+
+#: includes/base/element-base.php:1340 includes/controls/dimensions.php:82
+#: includes/elements/column.php:187 includes/elements/container.php:1140
+#: includes/elements/container.php:1521 includes/elements/section.php:406
+#: includes/elements/section.php:425 includes/elements/section.php:958
+#: includes/widgets/common.php:466 includes/widgets/counter.php:343
+#: includes/widgets/icon-box.php:243 includes/widgets/icon-box.php:265
+#: includes/widgets/image-box.php:217 includes/widgets/image-box.php:240
+#: includes/widgets/testimonial.php:221 includes/widgets/video.php:974
+#: modules/floating-buttons/base/widget-contact-button-base.php:2991
+#: modules/floating-buttons/base/widget-floating-bars-base.php:1433
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:48
+msgid "Top"
+msgstr "Gore"
+
+#: includes/widgets/video.php:404
+msgid "Player Controls"
+msgstr "Kontrola reproduktora"
+
+#: modules/system-info/module.php:202
+msgid "You do not have permission to download this file."
+msgstr "Nemate dopuštenja za preuzimanje ove datoteke"
+
+#: core/admin/admin.php:243
+#: core/editor/loader/v1/templates/editor-body-v1.view.php:23
+#: core/editor/loader/v2/templates/editor-body-v2.view.php:23
+#: includes/editor-templates/templates.php:52 modules/gutenberg/module.php:123
+#: assets/js/ai-admin.js:2356 assets/js/ai-gutenberg.js:4125
+#: assets/js/ai-media-library.js:3985 assets/js/ai.js:4767
+#: assets/js/app-packages.js:5312
+#: assets/js/kit-library.ac1a4cd5deae5526ce49.bundle.js:236
+#: assets/js/onboarding.5ceee1b219b66e943cb0.bundle.js:46
+msgid "Loading"
+msgstr "Učitavanje"
+
+#: includes/controls/media.php:189 includes/widgets/image-box.php:113
+#: includes/widgets/image.php:129 includes/widgets/testimonial.php:147
+#: includes/widgets/video.php:648
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:251
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:341
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:929
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:984
+msgid "Choose Image"
+msgstr "Odaberi sliku"
+
+#: includes/widgets/alert.php:147
+msgid "I am a description. Click the edit button to change this text."
+msgstr "Ja sam opis. Kliknite dugme \"Uredi\" da promijenite ovaj tekst."
+
+#: includes/widgets/button.php:47 includes/widgets/button.php:110
+#: includes/widgets/button.php:121
+#: modules/floating-buttons/base/widget-floating-bars-base.php:563
+#: modules/link-in-bio/base/widget-link-in-bio-base.php:1095
+msgid "Button"
+msgstr "Dugme"
+
+#: includes/controls/groups/border.php:65 includes/widgets/divider.php:338
+#: includes/widgets/icon-list.php:296 includes/widgets/star-rating.php:184
+msgid "Solid"
+msgstr "Jednobojno"
+
+#: includes/controls/groups/border.php:67 includes/widgets/divider.php:340
+#: includes/widgets/icon-list.php:298
+msgid "Dotted"
+msgstr "Točkasto"
+
+#: includes/controls/groups/border.php:68 includes/widgets/divider.php:341
+#: includes/widgets/icon-list.php:299
+msgid "Dashed"
+msgstr "Isprekidanao"
+
+#: includes/widgets/menu-anchor.php:117
+msgid "This ID will be the CSS ID you will have to use in your own page, Without #."
+msgstr "Ovaj ID će biti CSS ID koji ćete upotrijebiti na vašoj stranici, bez #."
+
+#: includes/widgets/sidebar.php:89 includes/widgets/sidebar.php:109
+msgid "Choose Sidebar"
+msgstr "Odaberi bočnu traku"
+
+#: core/common/modules/finder/categories/site.php:64
+msgid "Themes"
+msgstr "Teme"
+
+#: modules/nested-tabs/widgets/nested-tabs.php:219
+#: modules/nested-tabs/widgets/nested-tabs.php:261
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.js:4
+#: assets/js/packages/editor-editing-panel/editor-editing-panel.strings.js:34
+msgid "Justify"
+msgstr "Poravnanje"
+
+#: core/experiments/manager.php:498 core/experiments/manager.php:787
+#: modules/element-cache/module.php:110 assets/js/editor.js:27957
+#: assets/js/element-manager-admin.js:2239
+msgid "Inactive"
+msgstr "Neaktivno"
+
+#: core/experiments/manager.php:497 core/experiments/manager.php:786
+#: modules/element-cache/module.php:111
+#: modules/floating-buttons/base/widget-contact-button-base.php:1309
+#: modules/nested-accordion/widgets/nested-accordion.php:656
+#: modules/nested-accordion/widgets/nested-accordion.php:723
+#: modules/nested-tabs/widgets/nested-tabs.php:620
+#: modules/nested-tabs/widgets/nested-tabs.php:822
+#: modules/nested-tabs/widgets/nested-tabs.php:994 assets/js/editor.js:27959
+#: assets/js/element-manager-admin.js:2236
+msgid "Active"
+msgstr "Aktivno"

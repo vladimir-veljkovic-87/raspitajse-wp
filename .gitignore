@@ -1,71 +1,57 @@
-##################################
-# Ignore everything
-##################################
-*
+# =========================================
+# WORDPRESS RUNTIME / GENERATED CONTENT
+# =========================================
 
-!.gitignore
+/wp-content/uploads/
+/wp-content/cache/
+/wp-content/litespeed/
+/wp-content/upgrade/
+/wp-content/upgrade-temp-backup/
+/wp-content/ai1wm-backups/
+/wp-content/backups/
+/wp-content/wflogs/
 
-##################################
-# Allow wp-content structure
-##################################
-!wp-content/
-!wp-content/themes/
-!wp-content/plugins/
+/wp-content/.litespeed_conf.dat
+/wp-content/object-cache.php
 
-##################################
-# Allow ONLY child theme
-##################################
-!wp-content/themes/superio-child/
-!wp-content/themes/superio-child/**
+# =========================================
+# LOGS
+# =========================================
 
-##################################
-# Ignore ALL plugins by default
-##################################
-wp-content/plugins/*
+*.log
+/wp-content/debug.log
+/wp-content/ses-smtp.log
 
-##################################
-# Allow ONLY these plugins
-##################################
-!wp-content/plugins/wp-job-board-pro/
-!wp-content/plugins/wp-job-board-pro/**
-!wp-content/plugins/wp-job-board-pro-wc-paid-listings/
-!wp-content/plugins/wp-job-board-pro-wc-paid-listings/**
+# =========================================
+# SECRETS
+# =========================================
 
-##################################
-# Ignore runtime
-##################################
-wp-content/uploads/
-wp-content/cache/
-wp-content/upgrade/
-wp-content/ai1wm-backups/
-wp-content/wflogs/
-wp-content/debug.log
-wp-content/object-cache.php
-wp-content/ses-smtp.log
+/wp-config.php
+.env
+.env.*
+!.env.example
 
-##################################
-# Ignore WordPress core
-##################################
-wp-admin/
-wp-includes/
-wp-*.php
-index.php
-xmlrpc.php
-license.txt
-readme.html
+.htpasswd
+*.pem
+*.key
 
-##################################
-# Ignore system / local
-##################################
+# =========================================
+# DATABASE / BACKUPS
+# =========================================
+
+*.sql
+*.sql.gz
+*.bak
+*.tar
+*.tar.gz
+*.zip
+
+# =========================================
+# LOCAL DEVELOPMENT
+# =========================================
+
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
 node_modules/
-vendor/
-
-##################################
-# Ignore staging
-##################################
-public_html_stage/
-stage/

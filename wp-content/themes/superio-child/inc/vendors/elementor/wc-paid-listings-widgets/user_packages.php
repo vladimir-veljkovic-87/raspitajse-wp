@@ -280,14 +280,32 @@ class Superio_Elementor_Jobs_User_Packages extends \Elementor\Widget_Base {
                                 </table>
                             </div>
                         </div>
+			
 
                     <?php else : ?>
-                        <div class="not-found"><?php esc_html_e('Don\'t have any packages', 'superio'); ?></div>
+                        <div class="not-found"><?php esc_html_e('Nemate aktiviran paket.', 'superio'); ?></div>
                     <?php endif; ?>
 
                 <?php endif; ?>
 
             </div>
+			
+			<?php
+			// Prikaži "Dostupni paketi" ispod tabele (sa formom)
+				// Dostupni paketi (sa formom)
+				$products = WP_Job_Board_Pro_Wc_Paid_Listings_Submit_Form::get_products();
+			?>
+
+			<form method="post" class="wjbpwpl-packages-form" action="">
+				<?php wp_nonce_field('wp-job-board-pro-job-submit-package-nonce', 'security-job-submit-package'); ?>
+
+				<?php
+				echo WP_Job_Board_Pro_Wc_Paid_Listings_Template_Loader::get_template_part(
+					'packages',
+					array('packages' => $products)
+				);
+				?>
+			</form>
         </div>
         <?php
     }

@@ -1,0 +1,555 @@
+# Translation of Plugins - Yoast Duplicate Post - Stable (latest release) in Croatian
+# This file is distributed under the same license as the Plugins - Yoast Duplicate Post - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2026-01-27 17:47:25+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"X-Generator: GlotPress/4.0.3\n"
+"Language: hr\n"
+"Project-Id-Version: Plugins - Yoast Duplicate Post - Stable (latest release)\n"
+
+#. translators: %1$s and %2$s are replaced by opening and closing anchor tags.
+#: src/ui/newsletter.php:33
+msgid "Yoast respects your privacy. Read %1$sour privacy policy%2$s on how we handle your personal information."
+msgstr "Yoast poštuje vašu privatnost. Pročitajte %1$snašu politiku privatnosti%2$s da biste saznali kako obrađujemo vaše osobne podatke."
+
+#: src/admin/views/options.php:236
+msgid "Welcome notice"
+msgstr "Obavijest dobrodošlice"
+
+#: src/admin/options.php:262
+msgid "Show welcome notice"
+msgstr "Prikaži obavijest dobrodošlice"
+
+#. translators: %s: Yoast Duplicate Post.
+#: admin-functions.php:224
+msgid "You've successfully installed %s!"
+msgstr "Uspješno ste instalirali %s!"
+
+#: src/ui/newsletter.php:137
+msgid "You have successfully subscribed to the newsletter. Please check your inbox."
+msgstr "Uspješno ste se pretplatili na bilten. Provjerite svoju ulaznu poštu."
+
+#: src/ui/newsletter.php:97
+msgid "Please enter valid e-mail address."
+msgstr "Unesite valjanu adresu e-pošte."
+
+#: src/ui/newsletter.php:81 src/ui/newsletter.php:131
+msgid "Something went wrong. Please try again later."
+msgstr "Došlo je do greške. Pokušajte ponovno kasnije."
+
+#: src/handlers/check-changes-handler.php:134
+msgid "Added"
+msgstr "Dodano"
+
+#: src/handlers/check-changes-handler.php:133
+msgid "Removed"
+msgstr "Uklonjeno"
+
+#: src/post-republisher.php:224
+msgid "An error occurred while deleting the Rewrite & Republish copy."
+msgstr "Došlo je do greške pri brisanju kopije za Prepiši i ponovno objavi."
+
+#. Description of the plugin
+#: duplicate-post.php
+msgid "The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature."
+msgstr "Glavni alat za kloniranje objava i stranica, uključujući moćnu značajku Prepiši i ponovno objavi."
+
+#. translators: 1: The page title with a link to the frontend page, 2: The
+#. scheduled date and time.
+#: src/ui/classic-editor.php:291
+msgid "This rewritten page %1$s is now scheduled to replace the original page. It will be published on %2$s."
+msgstr "Ova prepisana stranica %1$s sada je zakazana da zamjeni izvorne stranice. Bit će objavljena dana %2$s."
+
+#. translators: 1: The post title with a link to the frontend page, 2: The
+#. scheduled date and time.
+#: src/ui/classic-editor.php:278
+msgid "This rewritten post %1$s is now scheduled to replace the original post. It will be published on %2$s."
+msgstr "Ova prepisana objava %1$s sada je zakazana da zamjeni izvorne objave. Bit će objavljena dana %2$s."
+
+#: src/ui/classic-editor.php:252 js/dist/duplicate-post-strings-450.js:1
+msgid "Schedule republish"
+msgstr "Zakaži ponovno objavljivanje"
+
+#. translators: %s: Date on which the post is to be republished.
+#: src/ui/classic-editor.php:229
+msgid "Republish on: %s"
+msgstr "Ponovno objavi dana: %s"
+
+#: src/ui/classic-editor.php:201
+msgid "Compare"
+msgstr "Usporedi"
+
+#: src/ui/classic-editor.php:198
+msgid "Do you want to compare your changes with the original version before merging? Please save any changes first."
+msgstr "Želite li usporediti svoje promjene s izvornom inačicom prije spajanja? Najprije spremite sve promjene."
+
+#. translators: %s: Original item link (to view or edit) or title.
+#: src/ui/post-states.php:61
+msgid "Rewrite & Republish of %s"
+msgstr "Prepiši i ponovno objavi %s"
+
+#: src/ui/row-actions.php:145
+msgctxt "verb"
+msgid "Rewrite & Republish"
+msgstr "Prepiši i ponovno objavi"
+
+#. translators: %s: Post title.
+#: src/ui/row-actions.php:143
+msgid "Rewrite & Republish &#8220;%s&#8221;"
+msgstr "Prepiši i ponovno objavi &#8220;%s&#8221;"
+
+#: src/admin/views/options.php:190
+msgid "Show these links"
+msgstr "Prikaži ove poveznice"
+
+#: src/admin/views/options.php:153
+msgid "Warning: users will be able to copy, rewrite and republish all posts, even those of other users."
+msgstr "Upozorenje: korisnici će moći kopirati, prepisivati i ponovno objavljivati sve objave, uključujući i objave drugih korisnika."
+
+#: src/admin/options.php:281 src/ui/admin-bar.php:105 src/ui/admin-bar.php:125
+#: src/ui/bulk-actions.php:74 src/ui/classic-editor.php:173
+#: js/dist/duplicate-post-edit-450.js:1
+msgid "Rewrite & Republish"
+msgstr "Prepiši i ponovno objavi"
+
+#: src/admin/options.php:236
+msgid "In a metabox in the Edit screen"
+msgstr "U metaboxu na zaslonu za uređivanje"
+
+#: src/admin/options.php:142
+msgid "Post format"
+msgstr "Oblik objave"
+
+#: src/watchers/original-post-watcher.php:51
+msgid "The original post has been edited in the meantime. If you click \"Republish\", this rewritten post will replace the original post."
+msgstr "Izvorna objava je u međuvremenu uređena. Ako kliknete „Ponovno objavi”, ova prepisana objava zamijenit će izvornu objavu."
+
+#. translators: %s: Number of posts copied.
+#: src/watchers/bulk-actions-watcher.php:79
+msgid "%s post duplicated. You can now start rewriting your post in the duplicate of the original post. Once you choose to republish it your changes will be merged back into the original post."
+msgid_plural "%s posts duplicated. You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post."
+msgstr[0] "%s objava je duplicirana. Sada možete započeti s prepisivanjem objave u dupliciranoj inačici izvorne objave. Kada odaberete ponovno objavljivanje, vaše će se promjene spojiti natrag u izvornu objavu."
+msgstr[1] "%s objave su duplicirane. Sada možete započeti s prepisivanjem objava u dupliciranim inačicama izvornih objava. Kada odaberete ponovno objavljivanje, vaše će se promjene spojiti natrag u izvornu objavu."
+msgstr[2] "%s objava je duplicirano. Sada možete započeti s prepisivanjem objava u dupliciranim inačicama izvornih objava. Kada odaberete ponovno objavljivanje, vaše će se promjene spojiti natrag u izvornu objavu."
+
+#: src/watchers/republished-post-watcher.php:65
+msgid "Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post."
+msgstr "Vaša izvorna objava zamijenjena je prepisanom objavom. Trenutno gledate (prepisanu) izvornu objavu."
+
+#. translators: %1$s: scheduled date of the copy, %2$s: scheduled time of the
+#. copy.
+#: src/watchers/copied-post-watcher.php:66
+msgid "A duplicate of this post was made, which is scheduled to replace this post on %1$s at %2$s."
+msgstr "Napravljena je duplicirana inačica ove objave koja je zakazana da zamijeni ovu objavu dana %1$s u %2$s."
+
+#: src/watchers/copied-post-watcher.php:58
+msgid "A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished."
+msgstr "Napravljena je duplicirana inačica ove objave. Imajte na umu da će sve promjene koje napravite na ovoj objavi biti zamijenjene kada se duplicirana inačica ponovno objavi."
+
+#: src/watchers/copied-post-watcher.php:50
+msgid "You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate."
+msgstr "Moguće je napraviti samo jednu dupliciranu inačicu s Prepiši i ponovno objavi u isto vrijeme, a duplicirana inačica ove objave već postoji u smeću. Trajno je obrišite ako želite napraviti novu dupliciranu inačicu."
+
+#: src/watchers/link-actions-watcher.php:113
+msgid "You can now start rewriting your post in this duplicate of the original post. If you click \"Republish\", this rewritten post will replace the original post."
+msgstr "Sada možete započeti s prepisivanjem objave u ovoj dupliciranoj inačici izvorne objave. Ako kliknete \"Ponovno objavi\", ova prepisana objava zamijenit će izvornu objavu."
+
+#: src/watchers/link-actions-watcher.php:97
+msgid "You can now start rewriting your post in this duplicate of the original post. If you click \"Republish\", your changes will be merged into the original post and you’ll be redirected there."
+msgstr "Sada možete započeti s prepisivanjem objave u ovoj dupliciranoj inačici izvorne objave. Ako kliknete \"Ponovno objavi\", vaše će se promjene spojiti u izvornu objavu i bit ćete preusmjereni tamo."
+
+#: src/post-republisher.php:332
+msgid "An error occurred while republishing the post."
+msgstr "Došlo je do greške pri ponovnom objavljivanju objave."
+
+#: src/post-republisher.php:83 src/ui/classic-editor.php:224
+#: js/dist/duplicate-post-strings-450.js:1
+msgid "Republish"
+msgstr "Ponovno objavi"
+
+#: src/handlers/link-handler.php:213
+msgid "You cannot create a copy for Rewrite & Republish if the original is not published or if it already has a copy."
+msgstr "Ne možete izraditi kopiju s Prepiši i ponovno objavi ako izvorna objava nije objavljena ili ako već ima kopiju."
+
+#: src/handlers/link-handler.php:91 src/handlers/link-handler.php:147
+#: src/handlers/link-handler.php:221
+msgid "Copy creation failed, could not create a copy."
+msgstr "Izrada kopije nije uspjela, nije moguće izraditi kopiju."
+
+#: src/handlers/link-handler.php:83 src/handlers/link-handler.php:139
+msgid "You cannot create a copy of a post which is intended for Rewrite & Republish."
+msgstr "Ne možete izraditi kopiju objave koja je namijenjena za Prepiši i ponovno objavi."
+
+#: src/handlers/check-changes-handler.php:116
+msgid "&larr; Return to editor"
+msgstr "&larr; Povratak u uređivač"
+
+#. translators: %s: original item link (to view or edit) or title.
+#: src/handlers/check-changes-handler.php:111
+msgid "Compare changes of duplicated post with the original (&#8220;%s&#8221;)"
+msgstr "Usporedi promjene duplicirane objave s izvornom (&#8220;%s&#8221;)"
+
+#: src/handlers/check-changes-handler.php:97
+msgid "Changes overview failed, could not find original post."
+msgstr "Pregled promjena nije uspio, nije moguće pronaći izvornu objavu."
+
+#. translators: %s: post ID.
+#: src/handlers/check-changes-handler.php:84
+msgid "Changes overview failed, could not find post with ID %s."
+msgstr "Pregled promjena nije uspio, nije moguće pronaći objavu s ID-om %s."
+
+#: src/handlers/check-changes-handler.php:68
+msgid "No post has been supplied!"
+msgstr "Ni jedna objava nije navedena!"
+
+#: admin-functions.php:597
+msgid "You aren't allowed to duplicate this post"
+msgstr "Nemate dopuštenje za dupliciranje ove objave"
+
+#: src/ui/newsletter.php:58
+msgid "Subscribe"
+msgstr "Pretplati se"
+
+#. translators: 1: Code start tag, 2: Code closing tag, 3: Link start tag to
+#. the template tag documentation, 4: Link closing tag.
+#: src/admin/views/options.php:216
+msgid "You can also use the template tag %1$sduplicate_post_clone_post_link( $link, $before, $after, $id )%2$s. %3$sMore info on the template tag%4$s."
+msgstr "Također možete koristiti oznaku predloška %1$sduplicate_post_clone_post_link( $link, $before, $after, $id )%2$s. %3$sViše informacija o oznaci predloška %4$s."
+
+#. translators: %s: Post title.
+#: src/ui/row-actions.php:112
+msgid "New draft of &#8220;%s&#8221;"
+msgstr "Novi nacrt od &#8220;%s&#8221;"
+
+#: src/ui/row-actions.php:87
+msgctxt "verb"
+msgid "Clone"
+msgstr "Kloniraj"
+
+#. translators: %s: post title
+#: src/ui/metabox.php:100
+msgid "The original item this was copied from is: <span class=\"duplicate_post_original_item_title_span\">%s</span>"
+msgstr "Izvorna stavka iz koje je ovo kopirano je: <span class=\"duplicate_post_original_item_title_span\">%s</span>"
+
+#: src/ui/column.php:135
+msgid "The original item this was copied from is: <span class=\"duplicate_post_original_item_title_span\"></span>"
+msgstr "Izvorna stavka iz koje je ovo kopirano je: <span class=\"duplicate_post_original_item_title_span\"></span>"
+
+#: src/ui/column.php:130 src/ui/metabox.php:89
+msgid "Delete reference to original item."
+msgstr "Obriši referencu na izvornu stavku."
+
+#: src/ui/newsletter.php:29
+msgid "Email address"
+msgstr "Adresa e-pošte"
+
+#. translators: 1: Yoast
+#: src/ui/newsletter.php:22
+msgid "If you want to stay up to date about all the exciting developments around Duplicate Post, subscribe to the %1$s newsletter!"
+msgstr "Ako želite biti u tijeku sa svim uzbudljivim događanjima oko Duplicate Posta, pretplatite se na %1$s bilten!"
+
+#. Author URI of the plugin
+#: duplicate-post.php
+msgid "https://yoast.com"
+msgstr "https://yoast.com"
+
+#. Author of the plugin
+#: duplicate-post.php
+msgid "Enrico Battocchi & Team Yoast"
+msgstr "Enrico Battocchi & Yoast tim"
+
+#. Plugin URI of the plugin
+#: duplicate-post.php
+msgid "https://yoast.com/wordpress/plugins/duplicate-post/"
+msgstr "https://yoast.com/wordpress/plugins/duplicate-post/"
+
+#. Plugin Name of the plugin
+#: duplicate-post.php
+msgid "Yoast Duplicate Post"
+msgstr "Yoast Duplicate Post"
+
+#. translators: %s: Post title.
+#: src/ui/row-actions.php:85
+msgid "Clone &#8220;%s&#8221;"
+msgstr "Kloniraj &#8220;%s&#8221;"
+
+#. translators: %s: Original item link (to view or edit) or title.
+#: src/ui/post-states.php:67
+msgid "Original: %s"
+msgstr "Original: %s"
+
+#: src/ui/column.php:68
+msgid "Original item"
+msgstr "Originalna stavka"
+
+#: src/admin/options.php:256
+msgid "After the title in the Post list"
+msgstr "Nakon naslova na popisu objava"
+
+#: src/admin/options.php:249
+msgid "You'll also be able to delete the reference to the original item with a checkbox in Quick Edit"
+msgstr "Također ćete moći izbrisati referencu na izvornu stavku pomoću potvrdnog okvira u Brzom uređivanju"
+
+#: src/admin/options.php:246
+msgid "In a column in the Post list"
+msgstr "U stupcu na popisu objava"
+
+#: src/admin/options.php:239
+msgid "You'll also be able to delete the reference to the original item with a checkbox"
+msgstr "Također ćete moći obrisati referencu na izvornu stavku pomoću potvrdnog okvira"
+
+#: src/admin/views/options.php:227
+msgid "Show original item:"
+msgstr "Prikaži originalnu stavku:"
+
+#: src/admin/views/options.php:20
+msgid "Settings sections"
+msgstr "Odjeljci postavki"
+
+#: duplicate-post.php:98
+msgid "Settings for Duplicate Post"
+msgstr "Postavke za Duplicate Post"
+
+#. translators: %s: post title
+#: src/utils.php:144
+msgid "View &#8220;%s&#8221;"
+msgstr "Prikaz &#8220;%s&#8221;"
+
+#. translators: %s: post title
+#: src/utils.php:134
+msgid "Preview &#8220;%s&#8221;"
+msgstr "Pred-pregled &#8220;%s&#8221;"
+
+#. translators: %s: post title
+#: src/utils.php:122
+msgid "Edit &#8220;%s&#8221;"
+msgstr "Uredi &#8220;%s&#8221;"
+
+#: src/handlers/link-handler.php:58 src/handlers/link-handler.php:114
+#: src/handlers/link-handler.php:188
+msgid "Current user is not allowed to copy posts."
+msgstr "Trenutni korisnik nema dopuštenje za kopiranje objava."
+
+#: src/admin/options.php:165
+msgid "you probably want this unchecked, unless you have very special requirements"
+msgstr "vjerojatno želite da ovo nije označeno, osim ako nemate vrlo posebne zahtjeve"
+
+#: admin-functions.php:750
+msgid "Documentation"
+msgstr "Dokumentacija"
+
+#: src/admin/options.php:307
+msgid "Bulk Actions"
+msgstr "Skupne radnje"
+
+#: src/admin/options.php:217
+msgid "You can use * to match zero or more alphanumeric characters or underscores: e.g. field*"
+msgstr "Možete koristiti * za pronalaženje nule ili više alfanumeričkih znakova ili podcrta: npr. field*"
+
+#: src/admin/options.php:186
+msgid "Menu order"
+msgstr "Redoslijed izbornika"
+
+#: src/admin/options.php:149
+msgid "Author"
+msgstr "Autor"
+
+#: src/admin/options.php:135
+msgid "Template"
+msgstr "Predložak"
+
+#: src/admin/options.php:128
+msgid "Featured Image"
+msgstr "Istaknuta slika"
+
+#. translators: %s: Number of posts copied.
+#: src/watchers/bulk-actions-watcher.php:55
+#: src/watchers/link-actions-watcher.php:73
+msgid "%s item copied."
+msgid_plural "%s items copied."
+msgstr[0] "%s stavka kopirana."
+msgstr[1] "%s stavke kopirane."
+msgstr[2] "%s stavki kopirano."
+
+#: src/admin/views/options.php:174 src/admin/views/options.php:211
+msgid "Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements."
+msgstr "Prikazuju li se poveznice za prilagođene vrste objava registrirane temama ili dodacima ovisi o njihovoj upotrebi standardnih WordPress UI elemenata."
+
+#: src/admin/views/options.php:172
+msgid "Select the post types you want the plugin to be enabled for."
+msgstr "Odaberite vrste objava za koje želite omogućiti dodatak."
+
+#: src/admin/views/options.php:162 src/admin/views/options.php:166
+msgid "Enable for these post types"
+msgstr "Omogući za ove vrste objava"
+
+#: src/admin/views/options.php:155
+msgid "Passwords and contents of password-protected posts may become visible to undesired users and visitors."
+msgstr "Lozinke i sadržaj objava zaštićenih lozinkom mogu postati vidljivi neželjenim korisnicima i posjetiteljima."
+
+#: src/admin/views/options.php:127
+msgid "Show/hide private taxonomies"
+msgstr "Prikaži/sakrij privatne taksonomije"
+
+#: src/admin/options.php:208
+msgid "Add this number to the original menu order (blank or zero to retain the value)"
+msgstr "Dodajtovaj broj izvornom redoslijedu izbornika (prazno ili nula za zadržavanje vrijednosti)"
+
+#: src/admin/options.php:206 src/admin/views/options.php:93
+msgid "Increase menu order by"
+msgstr "Povećaj redoslijed izbornika za"
+
+#: src/admin/options.php:180
+msgid "except pingbacks and trackbacks"
+msgstr "osim pingbackova i trackbackova"
+
+#: src/admin/options.php:178
+msgid "Comments"
+msgstr "Komentari"
+
+#: src/admin/options.php:171
+msgid "Children"
+msgstr "Podređeno"
+
+#: src/admin/options.php:163
+msgid "Attachments"
+msgstr "Privici"
+
+#: src/admin/options.php:156
+msgid "Password"
+msgstr "Lozinka"
+
+#: src/admin/options.php:121 src/handlers/check-changes-handler.php:127
+msgid "Content"
+msgstr "Sadržaj"
+
+#: src/admin/options.php:114 src/handlers/check-changes-handler.php:128
+msgid "Excerpt"
+msgstr "Izvadak"
+
+#: src/admin/options.php:107
+msgid "Slug"
+msgstr "Slug"
+
+#: src/admin/options.php:100
+msgid "Status"
+msgstr "Status"
+
+#: src/admin/options.php:93
+msgid "Date"
+msgstr "Datum"
+
+#: src/admin/options.php:86 src/handlers/check-changes-handler.php:126
+msgid "Title"
+msgstr "Naslov"
+
+#: src/admin/views/options.php:58 src/admin/views/options.php:61
+msgid "Post/page elements to copy"
+msgstr "Elementi objave/stranice za kopiranje"
+
+#: src/admin/views/options.php:46 src/admin/views/options.php:187
+msgid "Display"
+msgstr "Prikaz"
+
+#: src/admin/views/options.php:37 src/admin/views/options.php:140
+msgid "Permissions"
+msgstr "Dopuštenja"
+
+#: src/admin/views/options.php:28 src/admin/views/options.php:55
+msgid "What to copy"
+msgstr "Što kopirati"
+
+#: admin-functions.php:603
+msgid "Copy features for this post type are not enabled in options page"
+msgstr "Značajke kopiranja za ovu vrstu objave nisu omogućene na stranici s opcijama"
+
+#: duplicate-post.php:99
+msgid "Settings"
+msgstr "Postavke"
+
+#: src/admin/views/options.php:247
+msgid "Save changes"
+msgstr "Spremi promjene"
+
+#: src/admin/options.php:297
+msgid "Admin bar"
+msgstr "Admin traka"
+
+#: src/admin/options.php:302
+msgid "Edit screen"
+msgstr "Uredi zaslon"
+
+#: src/admin/options.php:292
+msgid "Post list"
+msgstr "Popis objava"
+
+#: src/admin/views/options.php:202
+msgid "Show links in"
+msgstr "Prikaži poveznice u"
+
+#: src/admin/views/options.php:144 src/admin/views/options.php:147
+msgid "Roles allowed to copy"
+msgstr "Uloge kojima je dopušteno kopiranje"
+
+#: src/admin/options.php:201
+msgid "Suffix to be added after the title, e.g. \"(dup)\" (blank for no suffix)"
+msgstr "Suefiks koji se dodaje poslije naslova, npr. \"dup\" (prazno ako nema sufiksa)"
+
+#: src/admin/options.php:199 src/admin/views/options.php:82
+msgid "Title suffix"
+msgstr "Sufiks naslova"
+
+#: src/admin/options.php:194
+msgid "Prefix to be added before the title, e.g. \"Copy of\" (blank for no prefix)"
+msgstr "Prefiks koji se dodaje prije naslova, npr. \"Kopija\" (prazno ako nema prefiksa)"
+
+#: src/admin/options.php:192 src/admin/views/options.php:71
+msgid "Title prefix"
+msgstr "Prefiks naslova"
+
+#: src/admin/views/options.php:116 src/admin/views/options.php:120
+msgid "Do not copy these taxonomies"
+msgstr "Ne kopiraj ove taksonomije"
+
+#: src/admin/options.php:216
+msgid "Comma-separated list of meta fields that must not be copied."
+msgstr "Popis meta polja odvojenih zarezima koja se ne smiju kopirati."
+
+#: src/admin/options.php:213 src/admin/views/options.php:105
+msgid "Do not copy these fields"
+msgstr "Ne kopiraj ova polja"
+
+#: src/admin/options-page.php:77 src/ui/admin-bar.php:89 src/ui/metabox.php:59
+msgid "Duplicate Post"
+msgstr "Duplicate Post"
+
+#: src/admin/options-page.php:76 src/admin/views/options.php:14
+msgid "Duplicate Post Options"
+msgstr "Opcije Duplicate Posta"
+
+#: src/handlers/link-handler.php:75 src/handlers/link-handler.php:131
+#: src/handlers/link-handler.php:205
+msgid "Copy creation failed, could not find original:"
+msgstr "Izrada kopije nije uspjela, nije pronađen original:"
+
+#: src/handlers/link-handler.php:63 src/handlers/link-handler.php:119
+#: src/handlers/link-handler.php:193
+msgid "No post to duplicate has been supplied!"
+msgstr "Nije navedena ni jedna objava za dupliciranje!"
+
+#: src/admin/options.php:271 src/ui/row-actions.php:114
+msgid "New Draft"
+msgstr "Nova skica"
+
+#: common-functions.php:79 src/ui/admin-bar.php:97 src/ui/admin-bar.php:115
+#: src/ui/classic-editor.php:144 js/dist/duplicate-post-edit-450.js:1
+msgid "Copy to a new draft"
+msgstr "Kopiraj u novu skicu"
+
+#: src/admin/options.php:276 src/ui/bulk-actions.php:69
+msgid "Clone"
+msgstr "Klon"

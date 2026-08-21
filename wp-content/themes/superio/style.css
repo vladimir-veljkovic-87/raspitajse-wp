@@ -1,0 +1,646 @@
+/*
+Theme Name: Superio
+Theme URI: https://themeforest.net/item/superio-job-board-wordpress-theme/32180231
+Author: ApusTheme
+Author URI: https://themeforest.net/user/apustheme/portfolio
+Description: Superio is a complete Job Board WordPress theme that allows you to create a useful and easy to use job listings website.
+Version: 1.3.17
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: custom-background, custom-colors, custom-header, custom-menu, editor-style, featured-images, microformats, post-formats, rtl-language-support, sticky-post, threaded-comments, translation-ready
+Text Domain: superio
+
+This theme, like WordPress, is licensed under the GPL.
+Use it to make something cool, have fun, and share what you've learned with others.
+*/
+.alignnone {
+    margin: 5px 20px 20px 0;
+}
+
+.aligncenter,
+div.aligncenter {
+    clear: both;
+    display: block;
+    margin: 5px auto 5px auto;
+}
+
+.alignright {
+    float:right;
+    margin: 5px 0 32px 2em;
+}
+.wp-block-image .alignright{
+    margin-left: 2em;
+}
+.alignleft {
+    float: left;
+    margin: 5px 2em 32px 0;
+}
+.wp-block-image .alignleft{
+    margin-right: 2em;
+}
+a img.alignright {
+    float: right;
+    margin: 5px 0 20px 20px;
+}
+
+a img.alignnone {
+    margin: 5px 20px 20px 0;
+}
+
+a img.alignleft {
+    float: left;
+    margin: 5px 20px 20px 0;
+}
+
+a img.aligncenter {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.wp-caption {
+    background: #fff;
+    max-width: 96%; /* Image does not overflow the content area */
+    padding: 5px 3px 10px;
+    text-align: center;
+}
+
+.wp-caption.alignnone {
+    margin: 5px 20px 20px 0;
+}
+
+.wp-caption.alignleft {
+    margin: 5px 20px 20px 0;
+}
+
+.wp-caption.alignright {
+    margin: 5px 0 20px 20px;
+}
+
+.wp-caption img {
+    border: 0 none;
+    height: auto;
+    margin: 0;
+    max-width: 98.5%;
+    padding: 0;
+    width: auto;
+}
+
+.wp-caption p.wp-caption-text {
+    font-size: 11px;
+    line-height: 17px;
+    margin: 0;
+    padding: 0 4px 5px;
+}
+
+/* Text meant only for screen readers. */
+.screen-reader-text {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}
+
+.screen-reader-text:focus {
+    background-color: #f1f1f1;
+    border-radius: 3px;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+    clip: auto !important;
+    color: #21759b;
+    display: block;
+    font-size: 14px;
+    font-size: 0.875rem;
+    font-weight: bold;
+    height: auto;
+    left: 5px;
+    line-height: normal;
+    padding: 15px 23px 14px;
+    text-decoration: none;
+    top: 5px;
+    width: auto;
+    z-index: 100000; /* Above WP toolbar. */
+}
+.gallery-caption {
+    box-sizing: border-box;
+}
+.bypostauthor{
+    box-sizing: border-box;
+}
+.wp-block-pullquote{
+    border:none;
+}
+.wp-block-archives.aligncenter, .wp-block-categories.aligncenter, .wp-block-latest-posts.aligncenter {
+    text-align: center;
+}
+.wp-block-cover{
+    margin-bottom: 28px;
+}
+.wp-block-embed{
+    margin-bottom: 28px;
+}
+.product-block.grid .product-image{
+    width: 100%;
+}
+.product-block.grid .product-image img{
+    width: 100%;
+}
+.wp-block-cover.has-background-dim .wp-block-cover-text{
+    color: #fff;
+}
+.wp-block-button {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.wp-block-image, .wp-block-gallery {
+    margin-bottom: 28px;
+}
+figcaption {
+    margin-top: 15px;
+}
+
+.contact-form-wrapper {
+  position: relative;
+}
+.contact-form-wrapper:before {
+  display: block;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9) url("images/loading.gif") no-repeat center 100px/30px auto;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  -o-transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
+  z-index: 1;
+  visibility: hidden;
+}
+.contact-form-wrapper.loading:before {
+  visibility: visible;
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+
+.filter-listing-form .list-item .list-item-inner .caret-wrapper {
+  padding: 0px 8px;
+  float: right;
+  cursor: pointer;
+}
+.rtl .filter-listing-form .list-item .list-item-inner .caret-wrapper {
+  float: left;
+}
+.filter-listing-form .list-item > .terms-list {
+    margin-top: 18px;
+    padding-left: 30px !important;
+    display: none;
+}
+.wp-block-button.is-style-squared .wp-block-button__link, 
+.wp-block-button__link.wp-block-button.is-style-squared .wp-block-button__link{
+  border-radius: 8px;
+}
+
+body.no-breadcrumbs #main-container.layout-type-default:not(.has-filter-top) {
+    margin-top: 50px;
+}
+.select2-container--default.select2-container .select2-selection--single .select2-selection__clear {
+    z-index: 1;
+}
+
+.filter-listing-form .toggle-filter-viewmore {
+  margin-top: 10px;
+  display: block;
+  color: var(--superio-theme-color);
+  font-size: 13px;
+}
+.filter-listing-form .toggle-filter-viewmore .icon-more {
+  margin-right: 5px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  line-height: 26px;
+  font-size: 10px;
+  color: var(--superio-theme-color);
+  background: var(--superio-theme-color-015);
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  -o-transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
+}
+.rtl .filter-listing-form .toggle-filter-viewmore .icon-more {
+  margin-left: 5px;
+  margin-right: 0;
+}
+.filter-listing-form .toggle-filter-viewmore:hover .icon-more {
+  background: var(--superio-theme-color);
+  color: #fff;
+}
+.tax-viewmore-field.show-more .terms-list-wrapper {
+    height: 230px;
+    overflow: hidden;
+}
+.tax-viewmore-field .toggle-filter-viewmore {
+    display: none;
+}
+.tax-viewmore-field.show-more .toggle-filter-viewmore, .tax-viewmore-field.show-less .toggle-filter-viewmore {
+    display: block;
+}
+
+.filter-listing-form.vertical .heading-label {
+    display: block;
+}
+
+.filter-listing-form.vertical .heading-label > i {
+    float: right;
+}
+
+.filter-listing-form .form-group.hide-content .form-group-inner {
+  display: none;
+}
+
+.meesage-meeting-wrapper {
+    max-height: 400px;
+}
+
+.user-short-profile-top {
+    margin-bottom: 30px;
+}
+.user-short-profile-top .employer-logo, .user-short-profile-top .candidate-logo {
+    width: 90px;
+    height: 90px;
+    margin-right: 30px;
+}
+.user-short-profile-top .title {
+    font-size: 18px;
+    margin: 0;
+}
+
+.job-table .title-wrapper {
+    margin: 0 0 5px;
+}
+
+.job-table .title-wrapper .urgent {
+    font-size: 11px;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    padding: 0;
+}
+
+.btn-toggle-canvas i {
+    font-size: 18px;
+}
+.cmb-th span.required {
+    color: red;
+}
+.widget_apus_user_short_profile .skill-percents h4 {
+    color: #202124;
+}
+
+.wp-job-board-pro-uploaded-file-name .candidate-detail-cv {
+  width: 400px;
+  display: inline-block;
+  margin-bottom: 0;
+}
+
+.message-top .notifications-wrapper.active {
+    max-height: 350px;
+}
+
+.close-filter-sidebar {
+    color: #e44343;
+    margin-bottom: 10px;
+}
+
+
+.apus-mfp-zoom-in.apus-mfp-zoom-call-in .mfp-content {
+    padding: 20px; 
+    width: 400px;
+}
+.apus-mfp-zoom-in.apus-mfp-zoom-call-in .widget-title {
+    margin-bottom: 10px;
+}
+.apus-mfp-zoom-in .widget-content {
+    text-align: center;
+}
+.apus-mfp-zoom-in .widget-content .phone {
+    margin-top: 10px;
+    font-size: 20px;
+}
+#apus-footer .widget-nav-menu .menu li.active > a{
+  padding-left: 25px;
+}
+.rtl #apus-footer .widget-nav-menu .menu li.active > a{
+  padding-left: 0;
+  padding-right: 25px;
+}
+.infor-account .name-acount{
+    max-width: 150px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.sliding-menu__panel-root > li > a > .text-label,
+.sliding-menu__panel-root > li > button > .text-label{
+    position: static !important;
+    margin: -10px 10px 0;
+    vertical-align: top;
+}
+.sliding-menu__panel-root > li > a > .text-label:before,
+.sliding-menu__panel-root > li > button > .text-label:before{
+    display: none;
+}
+
+.show_hide_password_wrapper,
+.show_hide_password{
+    display: block;
+    position: relative;
+}
+.show_hide_password_wrapper .toggle-password,
+.show_hide_password .toggle-password{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+.rtl .show_hide_password_wrapper .toggle-password,
+.rtl .show_hide_password .toggle-password{
+    right: inherit;
+    left: 22px;
+}
+[class*="meeting-form"] .select2-container--default.select2-container .select2-selection--single .select2-selection__rendered{
+    color: #77838F;
+}
+@media (min-width: 1200px){
+    [class*="meeting-form"] .select2-container--default.select2-container .select2-selection--single{
+        height: 60px;
+    }
+    [class*="meeting-form"] .select2-container.select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 38px;
+    }
+    [class*="meeting-form"] .select2-container.select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 16px;
+    }
+}
+.widget-team .content {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 20px;
+}
+.widget-team .name-team {
+  font-size: 20px;
+  color: #fff;
+  margin: 0;
+}
+.widget-team .job {
+  font-size: 15px;
+  color: #fff;
+}
+.widget-team .description {
+    color: #fff;
+}
+.widget-team .social {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+  z-index: 3;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+.widget-team .social li:nth-child(2n+1) {
+  -webkit-transition-delay: 0.1s;
+  /* Safari */
+  transition-delay: 0.1s;
+}
+.widget-team .social li:nth-child(2n+2) {
+  -webkit-transition-delay: 0.2s;
+  /* Safari */
+  transition-delay: 0.2s;
+}
+.widget-team .social li:nth-child(2n+3) {
+  -webkit-transition-delay: 0.3s;
+  /* Safari */
+  transition-delay: 0.3s;
+}
+.widget-team .social li:nth-child(2n+4) {
+  -webkit-transition-delay: 0.4s;
+  /* Safari */
+  transition-delay: 0.4s;
+}
+.widget-team .social li:nth-child(2n+5) {
+  -webkit-transition-delay: 0.5s;
+  /* Safari */
+  transition-delay: 0.5s;
+}
+.widget-team .social li:nth-child(2n+6) {
+  -webkit-transition-delay: 0.6s;
+  /* Safari */
+  transition-delay: 0.6s;
+}
+.widget-team .social li:nth-child(2n+7) {
+  -webkit-transition-delay: 0.7s;
+  /* Safari */
+  transition-delay: 0.7s;
+}
+.widget-team .social li:nth-child(2n+8) {
+  -webkit-transition-delay: 0.8s;
+  /* Safari */
+  transition-delay: 0.8s;
+}
+.widget-team .social li:nth-child(2n+9) {
+  -webkit-transition-delay: 0.9s;
+  /* Safari */
+  transition-delay: 0.9s;
+}
+.widget-team .social li:nth-child(2n+10) {
+  -webkit-transition-delay: 1s;
+  /* Safari */
+  transition-delay: 1s;
+}
+.widget-team .social li {
+  display: inline-block;
+  margin: 0 5px;
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  -o-transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  -o-transform: scale(0);
+  transform: scale(0);
+}
+.widget-team .social li a {
+  color: #fff;
+  font-size: 18px;
+  background: transparent !important;
+}
+@media (min-width: 1200px) {
+  .widget-team .social li {
+    margin: 0 15px;
+  }
+}
+.widget-team .team-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 7px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  -ms-border-radius: 7px;
+  -o-border-radius: 7px;
+}
+.widget-team .team-item:before {
+  opacity: 0;
+  filter: alpha(opacity=0);
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  -webkit-transition: all 0.3s ease-in-out 0.15s;
+  -o-transition: all 0.3s ease-in-out 0.15s;
+  transition: all 0.3s ease-in-out 0.15s;
+  background-color: #1967D2;
+}
+.widget-team .team-item:hover:before {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+.widget-team .team-item:hover .social li {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1);
+}
+.filled-text{
+    color: #e44343;
+}
+.filter-listing-form .select2-container--default.select2-container .select2-selection--multiple {
+  background-color: #fff;
+}
+@media (min-width: 1200px) {
+  .filter-listing-form .select2-container--default.select2-container .select2-selection--multiple {
+    min-height: 60px;
+  }
+  .filter-listing-form .select2-container--default.select2-container .select2-selection--multiple .select2-selection__rendered {
+    padding: 10px 20px;
+  }
+}
+.filter-listing-form .select2-container--default.select2-container .select2-selection--multiple .select2-selection__rendered,
+.filter-listing-form .select2-container--default.select2-container .select2-selection--multiple .select2-selection__placeholder {
+  color: #696969;
+}
+.filter-listing-form .select2-container--default.select2-container .select2-selection--multiple .select2-selection__arrow {
+  right: 0;
+}
+.rtl .filter-listing-form .select2-container--default.select2-container .select2-selection--multiple .select2-selection__arrow {
+  left: 0;
+  right: auto;
+}
+@media (min-width: 1200px) {
+  .filter-listing-form .select2-container--default.select2-container .select2-selection--multiple .select2-selection__arrow {
+    top: 19px;
+  }
+}
+.filter-listing-form .select2-selection--multiple .select2-search--inline:first-child,
+.filter-listing-form .select2-selection--multiple .select2-search--inline:first-child .select2-search__field{
+    width: 100% !important;
+}
+#ui-datepicker-div {
+    display: none;
+}
+
+.select2-selection--multiple:before {
+content: "";
+position: absolute;
+right: 17px;
+top: 42%;
+border-top: 5px solid #77838F;
+border-left: 4px solid transparent;
+border-right: 4px solid transparent;
+}
+
+.wp-job-board-pro-uploaded-files .wp-job-board-pro-uploaded-file {
+    width: inherit;
+}
+.wp-job-board-pro-uploaded-file-name .candidate-detail-cv {
+    width: inherit;
+}
+.wp-job-board-pro-uploaded-file-name .candidate-detail-cv .filename {
+  margin-right: 50px;
+}
+
+form.cmb-form .cmb-row .cmb-th label {
+    font-weight:  600;
+    margin: 0px;
+}
+
+span.featured {
+    min-width: 25px;
+}
+
+#main-container.container-fluid {
+/*   padding-left: 0; */
+  padding-right: 0;
+}
+
+#main-container.container-fluid > .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#main-container.container-fluid > .row > div {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Added CSS for header buttons */
+.role-employer #browse-job-btn-1 {
+	display:none!important;
+}
+.role-employer .elementor-element-62604f1:has(#browse-job-btn-1) {
+	display:none!important;
+}
+
+.role-candidate .job-post-btn-1 {
+	display:none!important;
+}
+.role-candidate .elementor-element-ad2c1d9:has(.job-post-btn-1) {
+	display:none!important;
+}
+
+.elementor-element-4074490 .btn-login {
+	color: #1967d2!important;
+    background-color: #34A85312!important;
+	border-color:transparent!important;
+}
+.elementor-element-4074490 .btn-login:hover {
+	color: #ffffff!important;
+    background-color: #1967d2!important;
+	border-color:transparent!important;
+}

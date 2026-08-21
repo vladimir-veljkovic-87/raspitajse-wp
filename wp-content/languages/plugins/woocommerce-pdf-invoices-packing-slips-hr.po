@@ -1,0 +1,901 @@
+# Translation of Plugins - PDF Invoices &amp; Packing Slips for WooCommerce - Stable (latest release) in Croatian
+# This file is distributed under the same license as the Plugins - PDF Invoices &amp; Packing Slips for WooCommerce - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2024-04-16 07:31:20+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"X-Generator: GlotPress/4.0.3\n"
+"Language: hr\n"
+"Project-Id-Version: Plugins - PDF Invoices &amp; Packing Slips for WooCommerce - Stable (latest release)\n"
+
+#. translators: document title
+#: includes/Admin.php:1200
+msgid "Set %s number & date"
+msgstr "Postavi %s broj i datum"
+
+#. translators: document title
+#: includes/Main.php:1789
+msgid "Order %s Saved"
+msgstr "Narudžba %s Spremljena"
+
+#: includes/Main.php:932
+msgid "Please check your directories write permissions or contact your hosting service provider."
+msgstr "Molimo provjerite dozvole za pisanje direktorija ili se obratite davatelju usluga hostinga."
+
+#: includes/Admin.php:532
+msgid "PDF document data"
+msgstr "Podaci PDF dokumenta"
+
+#: woocommerce-pdf-invoices-packingslips.php:373
+msgid "To protect them, you must click the button below."
+msgstr "Da biste ih zaštitili, morate kliknuti na dugme ispod."
+
+#: includes/Settings/SettingsDebug.php:268
+msgid "Temporary folder moved to"
+msgstr "Privremena (temp) mapa premještena u %s"
+
+#: woocommerce-pdf-invoices-packingslips.php:374
+msgid "Generate random temporary folder name"
+msgstr "Generiraj slučajnim odabirom naziv privremene mape"
+
+#. translators: zero number
+#: includes/Documents/Invoice.php:510
+msgid "Disable document when the order total is %s"
+msgstr "Onemogući dokument kada narudžba ukupno je %s"
+
+#: includes/Documents/Invoice.php:306 includes/Documents/PackingSlip.php:169
+msgid "Display customer notes"
+msgstr "Prikaži napomenu kupca"
+
+#. translators: directory path
+#: woocommerce-pdf-invoices-packingslips.php:372
+msgid "The PDF files in %s are not currently protected due to your site running on <strong>NGINX</strong>."
+msgstr "PDF datoteke u %s trenutno nisu zaštićene jer je vaša web-stranica na <strong>NGINX</strong>."
+
+#: includes/Documents/Invoice.php:275 views/setup-wizard/display-options.php:21
+msgid "Only when different from billing address"
+msgstr "Samo kada se razlikuje od adrese za naplatu"
+
+#: includes/Documents/PackingSlip.php:138
+msgid "Only when different from shipping address"
+msgstr "Samo kada se razlikuje od adrese za dostavu"
+
+#: includes/Settings/SettingsDebug.php:1010
+msgid "You can also add <code>&output=html</code> to the URL to apply this on a per-order basis."
+msgstr "Također možete dodati <code>&output=html</code> u URL da biste to primijenili na bazi po-narudžbi."
+
+#: includes/Settings/SettingsDocuments.php:64 views/advanced-numbers.php:13
+msgid "untitled"
+msgstr "bez naslova"
+
+#: includes/Settings/SettingsGeneral.php:208
+msgid "Enter the total height of the logo in mm, cm or in and use a dot for decimals.<br/>For example: 1.15in or 40mm"
+msgstr "Unesi ukupnu visinu logo slike u mm, cm ili in (inčima) i koristite točku za decimale.<br/> Na primjer: 1.15in ili 40mm"
+
+#: includes/Settings/SettingsGeneral.php:200
+msgid "Logo height"
+msgstr "Logo visina"
+
+#: includes/Assets.php:91
+msgid "Are you sure you want to regenerate this document? This will make the document reflect the most current settings (such as footer text, document name, etc.) rather than using historical settings."
+msgstr "Jeste li sigurni da želite ponovno generirati ovaj dokument? To će učiniti da dokument odražava najnovije postavke (kao što je tekst podnožja, naziv dokumenta itd.), umjesto da koristi povijesne postavke."
+
+#. translators: 1. document title
+#: includes/Documents/OrderDocument.php:546
+msgid "%s was regenerated"
+msgstr "%s je obnovljeno (nanovo generirano)"
+
+#: includes/Documents/Invoice.php:366
+msgid "More information"
+msgstr "Više informacija"
+
+#: includes/Documents/Invoice.php:364
+#: includes/Settings/SettingsCallbacks.php:39
+msgid "Warning!"
+msgstr "Upozorenje!"
+
+#: includes/Documents/Invoice.php:328
+#: includes/Documents/OrderDocumentMethods.php:1360
+#: views/setup-wizard/display-options.php:63
+msgid "Order Date"
+msgstr "Datum narudžbe"
+
+#: includes/Documents/Invoice.php:365
+msgid "Using the Order Number as invoice number is not recommended as this may lead to gaps in the invoice number sequence (even when order numbers are sequential)."
+msgstr "Korištenje Broja Narudžbe kao broja računa nije preporučljivo jer to može dovesti do praznina u nizu brojeva računa (čak i kada su brojevi narudžbi uzastopni)."
+
+#: includes/Documents/Invoice.php:360 views/setup-wizard/display-options.php:84
+msgid "Order Number"
+msgstr "Broj narudžbe"
+
+#: includes/Documents/Invoice.php:274 includes/Documents/Invoice.php:326
+#: includes/Documents/Invoice.php:358 includes/Documents/PackingSlip.php:137
+#: views/advanced-status.php:156 views/advanced-status.php:160
+#: views/advanced-status.php:186 views/advanced-status.php:211
+#: views/setup-wizard/display-options.php:20
+#: views/setup-wizard/display-options.php:61
+#: views/setup-wizard/display-options.php:82
+msgid "No"
+msgstr "Ne"
+
+#: includes/Documents/Invoice.php:261
+msgid "Select one or more statuses"
+msgstr "Označi jedan ili više statusa"
+
+#: views/setup-wizard/show-action-buttons.php:30
+msgid "Show action buttons"
+msgstr "Prikaži dugmad akcije"
+
+#: views/setup-wizard/show-action-buttons.php:5
+msgid "(You can always change this setting later via the Screen Options menu)"
+msgstr "(Ovu postavku uvijek možete promijeniti kasnije putem izbornika Opcije Zaslona)"
+
+#: views/setup-wizard/show-action-buttons.php:4
+msgid "Would you like to display the action buttons in your WooCommerce order list? The action buttons allow you to manually create a PDF."
+msgstr "Želite li prikazati dugmad akcije na vašem WooCommerce popisu narudžbi? Akcijske radnje omogućuju vam ručno stvaranje PDF-a."
+
+#: includes/Documents/Invoice.php:252
+msgid "Disable for:"
+msgstr "Isključi za:"
+
+#: includes/SetupWizard.php:79 views/setup-wizard/show-action-buttons.php:3
+msgid "Action buttons"
+msgstr "Dugmad akcije"
+
+#: includes/Settings/SettingsGeneral.php:151
+msgid "With test mode enabled, any document generated will always use the latest settings, rather than using the settings as configured at the time the document was first created."
+msgstr "Ako je omogućen testni način, svaki generirani dokument uvijek će koristiti najnovije postavke, umjesto da koristi postavke konfigurirane u vrijeme kad je dokument kreiran."
+
+#: includes/Settings/SettingsGeneral.php:143
+msgid "Test mode"
+msgstr "Testni način rada"
+
+#: includes/Admin.php:1734
+msgid "DEBUG output enabled"
+msgstr "ISPRAVLJAČ izlaza uključen"
+
+#: includes/Documents/Invoice.php:562
+msgid "When enabled, the document will always reflect the most current settings (such as footer text, document name, etc.) rather than using historical settings."
+msgstr "Kad je omogućeno, dokument će uvijek odražavati najnovije postavke (kao što je tekst podnožja, naziv dokumenta, itd.) umjesto da koristi povijesne postavke."
+
+#: includes/Documents/Invoice.php:554
+msgid "Always use most current settings"
+msgstr "Uvijek koristi najnovije postavke"
+
+#: includes/Assets.php:90
+msgid "Are you sure you want to delete this document? This cannot be undone."
+msgstr "Jeste li sigurni da želite izbrisati ovaj dokument? Ova radnja ne može se vratiti."
+
+#: includes/Admin.php:177
+msgid "I am the wizard"
+msgstr "Ja sam čarobnjak"
+
+#: includes/Admin.php:177 views/advanced-tools.php:150
+#: views/advanced-tools.php:152
+msgid "Run the Setup Wizard"
+msgstr "Pokrenite Čarobnjaka za Postavljanje"
+
+#: includes/Admin.php:176
+msgid "Jumpstart the plugin by following our wizard!"
+msgstr "Brzo pokrenite dodatak slijedeći našeg čarobnjaka!"
+
+#: wpo-ips-functions.php:367
+msgid "Error creating PDF, please contact the site owner."
+msgstr "Pogreška prilikom stvaranja PDF-a, molimo kontaktirajte vlasnika web-stranice."
+
+#: includes/Admin.php:362 includes/Documents/Invoice.php:327
+#: includes/Main.php:1353 views/setup-wizard/display-options.php:62
+msgid "Invoice Date"
+msgstr "Datum Računa"
+
+#: includes/Settings/SettingsDebug.php:986
+msgid "Enable automatic cleanup"
+msgstr "Omogući automatsko brisanje"
+
+#. translators: number of days
+#: includes/Settings/SettingsDebug.php:993
+msgid "every %s days"
+msgstr "svakih %s dana"
+
+#. translators: %s: Document type
+#: includes/Frontend.php:250
+msgid "Download %s (PDF)"
+msgstr "Preuzimanje %s (PDF)"
+
+#: views/setup-wizard/good-to-go.php:3
+msgid "You are good to go!"
+msgstr "Spreman si za krenuti dalje!"
+
+#: includes/SetupWizard.php:277
+msgid "Finish"
+msgstr "Završi"
+
+#: includes/SetupWizard.php:274
+msgid "Next"
+msgstr "Sljedeće"
+
+#: includes/SetupWizard.php:269
+msgid "Previous"
+msgstr "Prethodno"
+
+#: includes/SetupWizard.php:75 views/setup-wizard/paper-format.php:3
+msgid "Paper format"
+msgstr "Format papira"
+
+#: includes/SetupWizard.php:71 views/setup-wizard/display-options.php:3
+msgid "Display options"
+msgstr "Opcije prikaza"
+
+#: includes/SetupWizard.php:67
+msgid "Attachments"
+msgstr "Privitci"
+
+#: views/setup-wizard/good-to-go.php:6
+msgid "Happy selling!"
+msgstr "Sretna prodaja!"
+
+#: views/setup-wizard/good-to-go.php:4
+msgid "If you have any questions please have a look at our documentation:"
+msgstr "Ukoliko imate bilo kakvih pitanja, molimo pogledajte našu dokumentaciju:"
+
+#: includes/SetupWizard.php:83
+msgid "Ready!"
+msgstr "Spreman!"
+
+#: languages/strings.php:11
+msgid "Send email"
+msgstr "Pošalji e-poštu"
+
+#: includes/Admin.php:583
+msgid "Save order & send email"
+msgstr "Spremi narudžbu i pošalji e-poštu"
+
+#: includes/Admin.php:511
+msgid "Send order email"
+msgstr "Pošalji e-poštu narudžbe"
+
+#: views/setup-wizard/shop-name.php:4
+msgid "Lets quickly setup your invoice. Please enter the name and address of your shop in the fields on the right."
+msgstr "Hajde da brzo postavimo vaš račun. Molimo da u polja s desne strane unesete naziv i adresu trgovine."
+
+#: views/setup-wizard/shop-name.php:3
+msgid "Enter your shop name"
+msgstr "Unesi naziv trgovine"
+
+#: views/setup-wizard/paper-format.php:4
+msgid "Select the paper format for your invoice."
+msgstr "Odaberi format papira za račun."
+
+#: views/setup-wizard/logo.php:4
+msgid "Set the header image that will display on your invoice."
+msgstr "Postavi sliku zaglavlja koja će se prikazati na računu."
+
+#: views/setup-wizard/display-options.php:4
+msgid "Select some additional display options for your invoice."
+msgstr "Odaberi dodatne opcije prikaza za račun."
+
+#: views/setup-wizard/attach-to.php:4
+msgid "Select to which emails you would like to attach your invoice."
+msgstr "Odaberi uz koju poruku e-pošte želiš priložiti račun."
+
+#: includes/SetupWizard.php:275
+msgid "Skip this step"
+msgstr "Preskoči ovaj korak"
+
+#: includes/SetupWizard.php:63 views/setup-wizard/logo.php:3
+msgid "Your logo"
+msgstr "Vaš logo"
+
+#. translators: %s: email title
+#: includes/Admin.php:1526
+msgid "%s email notification manually sent."
+msgstr "%s obavijest poslana ručno e-poštom."
+
+#: includes/Admin.php:134
+msgid "Already did!"
+msgstr "Već učinjeno!"
+
+#: includes/Admin.php:133
+msgid "Yes you deserve it!"
+msgstr "Da, ti to zaslužuješ!"
+
+#. translators: rounded count
+#: includes/Admin.php:126
+msgid "Wow, you have created more than %d invoices with our plugin!"
+msgstr "Sjajno, stvorili ste više od %d računa s našim dodatkom!"
+
+#: includes/Admin.php:135
+msgid "Actually, I have a complaint..."
+msgstr "Zapravo, imam pritužbu..."
+
+#: includes/Admin.php:131
+msgid "It would mean a lot to us if you would quickly give our plugin a 5-star rating. Help us spread the word and boost our motivation!"
+msgstr "Puno će nam značiti ako na brzinu ocjenite naš dodatak s 5 zvjezdica. Pomozite nam da širimo riječ i pojačamo motivaciju!"
+
+#: includes/Settings/SettingsDebug.php:930
+msgid "Calculate document numbers (slow)"
+msgstr "Izračunaj brojeve dokumenta (sporo)"
+
+#: includes/Settings/SettingsGeneral.php:179
+msgid "Font subsetting can reduce file size by only including the characters that are used in the PDF, but limits the ability to edit PDF files later. Recommended if you're using an Asian font."
+msgstr "Pod-postavke fonta mogu smanjiti veličinu datoteke samo uključivanjem znakova koji se koriste u PDF-u, ali ograničava mogućnost uređivanja PDF datoteka kasnije. Preporučuje se ako koristite neki azijski font."
+
+#: includes/Settings/SettingsGeneral.php:173
+msgid "Enable font subsetting"
+msgstr "Omogući pod-postavke fonta"
+
+#: includes/Main.php:1259
+msgid "Nothing to delete!"
+msgstr "Ništa za obrisati!"
+
+#: views/advanced-tools.php:49 views/advanced-tools.php:53
+msgid "Remove temporary files"
+msgstr "Ukloni privremene datoteke"
+
+#: includes/Admin.php:134 includes/Main.php:933
+#: includes/Settings/SettingsDebug.php:1415
+#: includes/Settings/SettingsGeneral.php:804
+#: views/attachment-settings-hint.php:12 views/extensions.php:135
+#: views/promo.php:34 woocommerce-pdf-invoices-packingslips.php:375
+#: woocommerce-pdf-invoices-packingslips.php:434
+#: woocommerce-pdf-invoices-packingslips.php:472
+#: woocommerce-pdf-invoices-packingslips.php:611
+msgid "Hide this message"
+msgstr "Sakrij ovu poruku"
+
+#: views/extensions.php:72
+msgid "Integrates seamlessly with the PDF Invoices & Packing Slips plugin"
+msgstr "Besprijekorno se integrira s dodatkom PDF Računi i Otpremnice "
+
+#: views/extensions.php:74
+msgid "Get WooCommerce Smart Reminder Emails"
+msgstr "Primi WooCommerce e-poštu Pametnog Podsjetnika"
+
+#: views/extensions.php:71
+msgid "<b>Super versatile!</b> Can be used for any kind of reminder email (review reminders, repeat purchases)"
+msgstr "<b>Svestrano!</b> Može se koristiti za bilo koju vrstu e-poštu podsjetnika (pregled podsjetnika, ponovljene kupovine)"
+
+#: views/extensions.php:70
+msgid "Fully <b>WPML Compatible</b> – emails will be automatically sent in the order language."
+msgstr "Potpuno <b>WPML kompatibilan</b> – e-pošta će se automatski poslati na jeziku narudžbe."
+
+#: views/extensions.php:69
+msgid "Configure the exact requirements for sending an email (time after order, order status, payment method)"
+msgstr "Konfigurirajte točne zahtjeve za slanje e-pošte (vrijeme nakon narudžbe, status narudžbe, način plaćanja)"
+
+#: includes/Documents/Invoice.php:433
+msgid "Reset invoice number yearly"
+msgstr "Ponovno postavi brojeve računa godišnje"
+
+#: includes/Documents/Invoice.php:385
+msgid "Number format"
+msgstr "Format broja"
+
+#: includes/Documents/Invoice.php:379
+msgid "This is the number that will be used for the next document. By default, numbering starts from 1 and increases for every new document. Note that if you override this and set it lower than the current/highest number, this could create duplicate numbers!"
+msgstr "Ovo je broj koji će se koristiti za sljedeći dokument. Prema zadanim postavkama, numeriranje počinje od 1 i povećava se za svaki novi dokument. Imajte na umu da ako nadjačate ovo i postavite ga niže od trenutnog/najvišeg broja, to bi moglo stvoriti duplicirane brojeve!"
+
+#: includes/Documents/Invoice.php:351
+msgid "Display invoice number"
+msgstr "Prikaži broj računa"
+
+#: includes/Documents/OrderDocument.php:1848
+msgid "Manual email"
+msgstr "Ručna e-pošta"
+
+#: includes/Settings.php:131
+msgid "Support Forum"
+msgstr "Forum za podršku"
+
+#: includes/Settings.php:130
+msgid "Documentation"
+msgstr "Dokumentacija"
+
+#: includes/Settings/SettingsGeneral.php:161
+msgid "Extended currency symbol support"
+msgstr "Proširena podrška simbola valute"
+
+#: includes/Settings.php:184
+msgid "Documents"
+msgstr "Dokumenti"
+
+#: includes/Admin.php:2135 includes/Settings/SettingsCallbacks.php:913
+msgid "Save"
+msgstr "Spremi"
+
+#: views/extensions.php:68
+msgid "<b>Rich text editor</b> for the email text, including placeholders for data from the order (name, order total, etc)"
+msgstr "<b> Uređivač obogaćenog teksta </b> za tekst e-pošte, uključujući zamjenska mjesta za podatke iz narudžbe (ime, narudžba ukupno, itd.)"
+
+#: views/extensions.php:67
+msgid "<b>Completely automatic</b> scheduled emails"
+msgstr "<b>Potpuno automatski</b> zakazane poruke e-pošte"
+
+#: views/extensions.php:65
+msgid "WooCommerce Smart Reminder emails"
+msgstr "WooCommerce e-pošta Pametnog Podsjetnika"
+
+#: views/extensions.php:63
+msgid "Automatically send payment reminders to your customers"
+msgstr "Automatski pošalji kupcima podsjetnike za plaćanje"
+
+#: views/extensions.php:15
+msgid "Professional features:"
+msgstr "Profesionalne značajke:"
+
+#: views/extensions.php:12
+msgid "Premium PDF Invoice bundle: Everything you need for a perfect invoicing system"
+msgstr "Premium paket PDF Računi: Sve što trebate za savršeni sustav računa"
+
+#. translators: link
+#: includes/Documents/Invoice.php:621
+msgid "Configure it <a href=\"%s\">here</a>."
+msgstr "Konfiguriraj to <a href=\"%s\">ovdje</a>."
+
+#: includes/Documents/Invoice.php:618
+msgid "Invoice numbers are created by a third-party extension."
+msgstr "Brojevi računa su kreirani s proširenjem od treće strane."
+
+#: includes/Documents/Invoice.php:238 includes/Documents/PackingSlip.php:194
+msgid "Attach to:"
+msgstr "Priloži uz:"
+
+#: includes/Documents/Invoice.php:227 includes/Documents/PackingSlip.php:119
+#: includes/Settings/SettingsGeneral.php:475
+msgid "Enable"
+msgstr "Omogući"
+
+#: includes/Documents/OrderDocument.php:1845
+msgid "Admin email"
+msgstr "Admin e-pošta"
+
+#. translators: %s: tax information
+#: includes/Documents/OrderDocumentMethods.php:1002
+msgid "(includes %s)"
+msgstr "(uključuje %s)"
+
+#: includes/Settings/SettingsGeneral.php:167
+msgid "Enable this if your currency symbol is not displaying properly"
+msgstr "Omogući ovo ako se simbol valute ne prikazuje pravilno"
+
+#: includes/Settings/SettingsDebug.php:277
+msgid "Fonts reinstalled!"
+msgstr "Fontovi ponovo instalirani!"
+
+#: views/advanced-tools.php:25
+msgid "Reinstall fonts"
+msgstr "Ponovo instaliraj fontove"
+
+#. translators: document type
+#: includes/Main.php:541
+msgid "Document of type '%s' for the selected order(s) could not be generated"
+msgstr "Dokument vrste \"%s\" za odabrane narudžbe nije moguće generirati"
+
+#: includes/Main.php:382
+msgid "You haven't selected any orders"
+msgstr "Niste odabrali nijednu narudžbu"
+
+#: languages/strings.php:14 wpo-ips-functions.php:1002
+msgid "Product"
+msgstr "Proizvod"
+
+#: includes/Documents/OrderDocumentMethods.php:96
+#: includes/Documents/OrderDocumentMethods.php:206
+msgid "N/A"
+msgstr "N/A"
+
+#: languages/strings.php:12
+msgid "Description"
+msgstr "Opis"
+
+#: includes/Documents/Invoice.php:295 includes/Documents/PackingSlip.php:158
+msgid "Display phone number"
+msgstr "Prikaži broj telefona"
+
+#: includes/Documents/Invoice.php:284 includes/Documents/PackingSlip.php:147
+msgid "Display email address"
+msgstr "Prikaži email adresu"
+
+#: includes/Settings/SettingsGeneral.php:192 views/setup-wizard/logo.php:13
+msgid "Set image"
+msgstr "Postavi sliku"
+
+#: includes/Settings/SettingsGeneral.php:193 views/setup-wizard/logo.php:14
+msgid "Remove image"
+msgstr "Ukloni sliku"
+
+#: languages/strings.php:9
+msgid "Payment method"
+msgstr "Način plačanja"
+
+#: languages/strings.php:10
+msgid "Shipping method"
+msgstr "Način dostave"
+
+#: includes/Documents/OrderDocumentMethods.php:1058
+msgid "Shipping"
+msgstr "Dostava"
+
+#: includes/Documents/OrderDocumentMethods.php:1089
+msgid "Discount"
+msgstr "Popust"
+
+#: includes/Documents/OrderDocumentMethods.php:1168 includes/Settings.php:451
+msgid "Total"
+msgstr "Ukupno"
+
+#: includes/Documents/OrderDocument.php:974
+msgid "Shipping Address:"
+msgstr "Adresa dostave:"
+
+#: includes/Documents/OrderDocument.php:989
+msgid "Shipping Method:"
+msgstr "Način dostave:"
+
+#: languages/strings.php:15 wpo-ips-functions.php:1003
+msgid "Quantity"
+msgstr "Količina"
+
+#: languages/strings.php:16 wpo-ips-functions.php:1004
+msgid "Price"
+msgstr "Cijena"
+
+#: includes/Documents/OrderDocument.php:995
+msgid "Weight:"
+msgstr "Težina:"
+
+#: languages/strings.php:6
+msgid "Tax rate"
+msgstr "Porezna stopa"
+
+#: includes/Documents/PackingSlip.php:24 includes/Documents/PackingSlip.php:44
+msgid "Packing Slip"
+msgstr "Otpremnica"
+
+#: includes/Settings/SettingsCallbacks.php:828
+msgid "Image resolution"
+msgstr "Rezolucija slike"
+
+#: includes/Admin.php:522
+msgid "Create PDF"
+msgstr "Izradi PDF"
+
+#: includes/Admin.php:1337
+msgid "h"
+msgstr "h"
+
+#: includes/Admin.php:1341
+msgid "m"
+msgstr "m"
+
+#: includes/Documents/OrderDocument.php:977
+msgid "Order Number:"
+msgstr "Broj narudžbe:"
+
+#: includes/Documents/OrderDocument.php:980
+msgid "Order Date:"
+msgstr "Datum narudžbe:"
+
+#: languages/strings.php:13
+msgid "SKU"
+msgstr "SKU"
+
+#: includes/Documents/OrderDocument.php:992
+msgid "SKU:"
+msgstr "SKU:"
+
+#: languages/strings.php:5
+msgid "VAT"
+msgstr "VAT"
+
+#: includes/Documents/OrderDocumentMethods.php:1165
+msgid "Total ex. VAT"
+msgstr "Ukupno bez VAT"
+
+#. translators: email link
+#: views/extensions.php:122
+msgid "For custom templates, contact us at %s."
+msgstr "Za prilagođene predloške, kontaktirajte nas na %s."
+
+#: views/extensions.php:90
+msgid "WooCommerce Automatic Order Printing"
+msgstr "WooCommerce Automatic Order Printing"
+
+#. translators: Premium Templates link
+#: views/extensions.php:113
+msgid "Check out the Premium PDF Invoice & Packing Slips templates at %s."
+msgstr "Pogledajte Premium PDF Invoice & Packing Slips predloške na %s."
+
+#: includes/Settings/SettingsGeneral.php:445
+msgid "Extra field 2"
+msgstr "Dodatno polje 2"
+
+#: includes/Settings/SettingsGeneral.php:430
+msgid "Extra field 1"
+msgstr "Dodatno polje 1"
+
+#: includes/Documents/OrderDocumentMethods.php:1033
+msgid "Subtotal"
+msgstr "Zbroj"
+
+#: includes/Documents/OrderDocument.php:983
+msgid "Payment Method:"
+msgstr "Način plaćanja:"
+
+#: includes/Documents/Invoice.php:87
+#: includes/Documents/OrderDocumentMethods.php:1374
+msgid "Invoice Number:"
+msgstr "Broj računa:"
+
+#: includes/Documents/Invoice.php:111
+msgid "Ship To:"
+msgstr "Dostava na:"
+
+#: includes/Documents/OrderDocument.php:971
+msgid "Billing Address:"
+msgstr "Adresa za naplatu:"
+
+#: views/extensions.php:27 views/extensions.php:108
+msgid "Two extra stylish premade templates (Modern & Business)"
+msgstr "Dva dodatna stilska već napravljena predloška (Moderno i Poslovno)"
+
+#: views/extensions.php:26 views/extensions.php:107
+msgid "Completely customize the invoice contents (prices, taxes, thumbnails) to your needs with a drag & drop customizer"
+msgstr "Kompletno prilagođava sadržaj računa (cijene, porez, sličice) prema potrebama sa povuci i ispusti prilagoditeljem."
+
+#: views/extensions.php:24 views/extensions.php:104
+msgid "Advanced, customizable templates"
+msgstr "Napredni, prilagodljivi predlošci"
+
+#: views/extensions.php:89
+msgid "Check out the WooCommerce Automatic Order Printing extension from our partners at Simba Hosting"
+msgstr "Pogledaj WooCommerce Automatic Order Printing proširenje od naših partnera na Simba Hostingu"
+
+#: views/extensions.php:83
+msgid "Automatically send new orders or packing slips to your printer, as soon as the customer orders!"
+msgstr "Automatski pošalji nove narudžbe ili otpremince na pisač, odmah nakon što kupac izvrši narudžbu!"
+
+#: views/extensions.php:22 views/extensions.php:52
+msgid "Use the plugin in multilingual <b>WPML</b> setups"
+msgstr "Koristi dodatak u višejezičnoj <b>WPML</b> postavci"
+
+#: views/extensions.php:21 views/extensions.php:51
+msgid "<b>Customize</b> the <b>shipping & billing address</b> format to include additional custom fields, font sizes etc. without the need to create a custom template."
+msgstr "<b>Prilagodi</b> format<b>adresu za naplatu i dostavu</b> s uključenjem dodatnih prilagođenih polja, veličine slova, itd. bez potrebe kreiranja prilagođenog predloška."
+
+#: views/extensions.php:20 views/extensions.php:50
+msgid "Use <b>separate numbering systems</b> and/or format for proforma invoices and credit notes or utilize the main invoice numbering system"
+msgstr "Koristi <b> odvojene sustave numeriranja </b> i / ili format za proforma račune i kredit bilješke ili koristi brojčani sustav glavnog računa"
+
+#: views/extensions.php:19 views/extensions.php:49
+msgid "Attach <b>up to 3 static files</b> (for example a terms & conditions document) to the WooCommerce emails of your choice."
+msgstr "Priloži <b>do 3 statične datoteke</b> (na primjer dokument o uvjetima korištenja) uz WooCommerce e-poštu po vašem izboru."
+
+#: views/extensions.php:18 views/extensions.php:48
+msgid "Send out a separate <b>notification email</b> with (or without) PDF invoices/packing slips, for example to a drop-shipper or a supplier."
+msgstr "Pošaljite zasebnu <b>obavijesnu e-poštu</b> sa (ili bez) PDF računa/otpremnice, na primjer za dobavljače."
+
+#: views/extensions.php:17 views/extensions.php:47
+msgid "Email/print/download <b>PDF Credit Notes & Proforma invoices</b>"
+msgstr "E-pošta/ispiši/preuzmi <b>PDF Credit Notes & Proforma invoices</b>"
+
+#: views/extensions.php:43
+msgid "Go Pro: Proforma invoices, credit notes (=refunds) & more!"
+msgstr "Idi s Pro: Proforma računi, kredit napomene (=povrat) i više!"
+
+#: views/extensions.php:7
+msgid "click items to read more"
+msgstr "klikni na stavke za pročitati više"
+
+#: views/extensions.php:6
+msgid "Check out these premium extensions!"
+msgstr "Pogledajte ova premium proširenja!"
+
+#: includes/Documents/Invoice.php:99
+msgid "Invoice Date:"
+msgstr "Datum računa:"
+
+#: includes/Admin.php:361 includes/Admin.php:1932 includes/Assets.php:371
+#: includes/Documents/Invoice.php:359 includes/Main.php:1352
+#: views/setup-wizard/display-options.php:83
+msgid "Invoice Number"
+msgstr "Broj računa"
+
+#: includes/Settings/SettingsDebug.php:1009
+msgid "Send the template output as HTML to the browser instead of creating a PDF."
+msgstr "Pošalji izlaz predloška kao HTML u preglednik umjesto kreiranja PDF dokumenta."
+
+#: includes/Settings/SettingsDebug.php:1003
+msgid "Output to HTML"
+msgstr "Izlaz kao HTML"
+
+#: includes/Settings/SettingsDebug.php:1069
+msgid "Enable debug output"
+msgstr "Omogući ispravljanje grešaka"
+
+#: includes/Settings/SettingsGeneral.php:460
+msgid "Extra field 3"
+msgstr "Dodatno polje 3"
+
+#: includes/Settings/SettingsGeneral.php:438
+msgid "This is footer column 1 in the <i>Modern (Premium)</i> template"
+msgstr "Ovo je 1. stupac podnožja u <i>Modern (Premium)</i> predlošku"
+
+#: includes/Settings/SettingsGeneral.php:453
+msgid "This is footer column 2 in the <i>Modern (Premium)</i> template"
+msgstr "Ovo je 2. stupac podnožja u <i>Modern (Premium)</i> predlošku"
+
+#: includes/Settings/SettingsGeneral.php:468
+msgid "This is footer column 3 in the <i>Modern (Premium)</i> template"
+msgstr "Ovo je 3. stupac podnožja u <i>Modern (Premium)</i> predlošku"
+
+#: includes/Settings/SettingsGeneral.php:424
+msgid "Extra template fields"
+msgstr "Dodatna polja predloška"
+
+#: includes/Documents/PackingSlip.php:130
+msgid "Display billing address"
+msgstr "Prikaži adresu za naplatu računa"
+
+#: includes/Documents/Invoice.php:411
+msgid "Padding"
+msgstr "Podstava (padding)"
+
+#: includes/Documents/Invoice.php:373
+msgid "Next invoice number (without prefix/suffix etc.)"
+msgstr "Sljedeći broj računa (bez prefiksa/sufiksa itd.)"
+
+#: includes/Documents/Invoice.php:402
+msgid "Suffix"
+msgstr "Sufiks (dodatak iza)"
+
+#: includes/Documents/Invoice.php:393
+msgid "Prefix"
+msgstr "Prefiks (dodatak ispred)"
+
+#: includes/Documents/Invoice.php:319
+msgid "Display invoice date"
+msgstr "Prikaži datum računa"
+
+#: includes/Documents/Invoice.php:267
+msgid "Display shipping address"
+msgstr "Prikaži adresu za dostavu"
+
+#: includes/Documents/Invoice.php:24 includes/Documents/Invoice.php:75
+#: includes/Frontend.php:84 includes/Settings/SettingsDebug.php:957
+#: views/settings-page.php:175
+msgid "Invoice"
+msgstr "Račun"
+
+#: includes/Settings/SettingsGeneral.php:410
+msgid "Footer: terms & conditions, policies, etc."
+msgstr "Podnožje: uvjeti korištenja, pravila, itd."
+
+#: includes/Settings/SettingsGeneral.php:214 includes/SetupWizard.php:59
+msgid "Shop Name"
+msgstr "Naziv trgovine"
+
+#: includes/Settings/SettingsGeneral.php:191 views/setup-wizard/logo.php:12
+msgid "Select or upload your invoice header/logo"
+msgstr "Odaberi ili učitaj logo zaglavlja računa"
+
+#: includes/Settings/SettingsGeneral.php:185
+msgid "Shop header/logo"
+msgstr "Logo zaglavlja trgovine"
+
+#: includes/Settings/SettingsGeneral.php:89
+msgid "Choose a template"
+msgstr "Odaberi predložak"
+
+#: includes/Settings/SettingsGeneral.php:128
+msgid "Paper size"
+msgstr "Veličina papira"
+
+#: includes/Settings/SettingsGeneral.php:135
+#: views/setup-wizard/paper-format.php:13
+msgid "A4"
+msgstr "A4"
+
+#: includes/Settings/SettingsGeneral.php:81
+msgid "Download the PDF"
+msgstr "Preuzmi PDF"
+
+#: includes/Documents/Invoice.php:276 includes/Documents/Invoice.php:453
+#: includes/Documents/PackingSlip.php:139 includes/Settings/SettingsEDI.php:400
+#: views/setup-wizard/display-options.php:22
+msgid "Always"
+msgstr "Uvijek"
+
+#: includes/Settings/SettingsDebug.php:1562 views/advanced-status.php:52
+#: views/advanced-status.php:246
+msgid "Status"
+msgstr "Status"
+
+#: includes/Documents/PackingSlip.php:76
+msgid "packing-slip"
+msgid_plural "packing-slips"
+msgstr[0] "otpremnica"
+msgstr[1] "otpremnice"
+msgstr[2] "otpremnica"
+
+#: includes/Documents/Invoice.php:454
+msgid "Never"
+msgstr "Nikad"
+
+#: includes/Settings.php:104 includes/Settings.php:105
+msgid "PDF Invoices"
+msgstr "PDF Računi"
+
+#. translators: document type
+#: includes/Documents/Invoice.php:142 includes/Documents/Invoice.php:398
+#: includes/Documents/Invoice.php:407 includes/Documents/Invoice.php:415
+#: includes/Documents/Invoice.php:426
+msgid "invoice"
+msgid_plural "invoices"
+msgstr[0] "račun"
+msgstr[1] "računa"
+msgstr[2] "računa"
+
+#: includes/Settings/SettingsGeneral.php:136
+#: views/setup-wizard/paper-format.php:14
+msgid "Letter"
+msgstr "Papir za dopis"
+
+#: includes/Documents/Invoice.php:469
+msgid "Enable invoice number column in the orders list"
+msgstr "Omogući stupac broja računa u popisu narudžbi"
+
+#: includes/Documents/Invoice.php:452
+msgid "Only for specific order statuses (define below)"
+msgstr "Samo za određene statuse narudžbe (definiraj ispod)"
+
+#: includes/Documents/Invoice.php:451
+msgid "Only when an invoice is already created/emailed"
+msgstr "Samo kada je račun već izrađen/poslan e-poštom"
+
+#: includes/Documents/Invoice.php:444
+msgid "Allow My Account invoice download"
+msgstr "Dozvoli preuzimanje računa u Mojem Računu"
+
+#: includes/Documents/Invoice.php:503
+msgid "Disable for free orders"
+msgstr "Onemogući za besplatne narudžbe"
+
+#. translators: directory path
+#: includes/Documents/Invoice.php:246
+msgid "It looks like the temp folder (<code>%s</code>) is not writable, check the permissions for this folder! Without having write access to this folder, the plugin will not be able to email invoices."
+msgstr "Izgleda da u privremenoj (temp) mapi (<code>%s</code>) nije moguće zapisivati, provjerite dopuštenja za ovu mapu! Bez pristupa zapisivanja, dodatak nije u mogućnosti slati račune e-poštom."
+
+#: includes/Settings/SettingsGeneral.php:82
+msgid "Open the PDF in a new browser tab/window"
+msgstr "Otvori PDF u novoi kartici preglednika/prozoru"
+
+#: includes/Settings/SettingsGeneral.php:74
+msgid "How do you want to view the PDF?"
+msgstr "Kako želite prikazati PDF?"
+
+#: includes/Settings/SettingsGeneral.php:68
+msgid "General settings"
+msgstr "Opće postavke"
+
+#: includes/Documents/Invoice.php:646 includes/Documents/PackingSlip.php:233
+#: includes/Settings.php:180 includes/Settings/SettingsDebug.php:788
+msgid "General"
+msgstr "Općenito"
+
+#: includes/Assets.php:131 includes/Settings.php:117
+#: includes/Settings/SettingsDebug.php:1561
+#: includes/Settings/SettingsEDI.php:34
+msgid "Settings"
+msgstr "Postavke"
+
+#: includes/Main.php:387
+msgid "Some of the export parameters are missing."
+msgstr "Nedostaju neki od parametara za izvoz."
+
+#: includes/Main.php:486 includes/Settings.php:231 includes/Settings.php:392
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Nemate dovoljnu razinu dopuštenja za pristup ovoj stranici."

@@ -1,0 +1,71 @@
+# Translation of Plugins - MonsterInsights &#8211; Google Analytics Dashboard for WordPress (Website Stats Made Easy) - Stable (latest release) in Croatian
+# This file is distributed under the same license as the Plugins - MonsterInsights &#8211; Google Analytics Dashboard for WordPress (Website Stats Made Easy) - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2026-03-27 08:36:32+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"X-Generator: GlotPress/4.0.3\n"
+"Language: hr\n"
+"Project-Id-Version: Plugins - MonsterInsights &#8211; Google Analytics Dashboard for WordPress (Website Stats Made Easy) - Stable (latest release)\n"
+
+#. Author of the plugin
+#: googleanalytics.php includes/admin/admin.php:55 includes/admin/admin.php:102
+#: includes/admin/eea-compliance.php:213 includes/admin/wp-site-health.php:35
+#: includes/emails/class-emails.php:255
+#: lite/includes/admin/dashboard-widget.php:99
+#: lite/includes/admin/wp-site-health.php:231
+#: lite/includes/admin/wp-site-health.php:283
+#: lite/includes/admin/wp-site-health.php:310
+#: lite/includes/admin/wp-site-health.php:348
+#: lite/includes/admin/wp-site-health.php:375
+#: lite/includes/admin/wp-site-health.php:405
+#: lite/includes/admin/wp-site-health.php:449
+msgid "MonsterInsights"
+msgstr "MonsterInsights"
+
+#: includes/admin/admin.php:55 includes/admin/admin.php:105
+#: includes/admin/admin.php:278 includes/admin/admin.php:281
+#: includes/admin/admin.php:322
+msgid "Insights"
+msgstr "Uvidi"
+
+#: includes/gutenberg/headline-tool/headline-tool.php:323
+msgid "General"
+msgstr "Osnovno"
+
+#: includes/admin/admin.php:102 includes/admin/admin.php:429
+msgid "Settings"
+msgstr "Postavke"
+
+#: includes/admin/reports/overview.php:34
+msgid "Overview"
+msgstr "Pregled"
+
+#: includes/gutenberg/site-insights/templates/scorecard/class-scorecard-pageviews.php:36
+#: lite/includes/emails/summaries.php:786
+#: lite/includes/emails/templates/body-summaries-test-plain.php:32
+#: lite/includes/emails/templates/body-summaries-test.php:35
+#: assets/gutenberg/js/editor.js:2651
+#: lite/assets/vue3/js/chunks/DashboardCreate-CUFgSUbN.js:333
+#: lite/assets/vue3/js/chunks/DashboardCreate-DS2q8PCa.js:332
+#: lite/assets/vue3/js/chunks/DashboardCreate-hcZoS4x7.js:330
+#: lite/assets/vue3/js/chunks/useAuthGate-Bvb6NIwm.js:19477
+#: lite/assets/vue3/js/chunks/useAuthGate-Bvb6NIwm.js:20079
+#: lite/assets/vue3/js/chunks/useAuthGate-CBzUzN1E.js:41874
+#: lite/assets/vue3/js/chunks/useAuthGate-CBzUzN1E.js:42458
+#: lite/assets/vue3/js/chunks/useAuthGate-DnRIAAvE.js:14990
+#: lite/assets/vue3/js/chunks/useAuthGate-DnRIAAvE.js:15574
+msgid "Bounce Rate"
+msgstr "Bounce rate"
+
+#: includes/admin/admin.php:66 includes/admin/admin.php:73
+#: includes/admin/admin.php:326
+msgid "Reports"
+msgstr "Izvještaji"
+
+#: includes/gutenberg/headline-tool/headline-tool.php:1005
+msgid "first"
+msgstr "Prvo"

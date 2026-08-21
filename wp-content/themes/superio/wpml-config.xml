@@ -1,0 +1,297 @@
+<wpml-config>
+    <custom-types>
+        <custom-type translate="1">apus_brand</custom-type>
+        <custom-type translate="1">apus_footer</custom-type>
+        <custom-type translate="1">apus_megamenu</custom-type>
+        <custom-type translate="1">apus_testimonial</custom-type>
+    </custom-types>
+
+    <elementor-widgets>
+        <widget name="apus_element_jobs_user_packages">
+            <conditions>
+                <condition key="widgetType">apus_element_jobs_user_packages</condition>
+            </conditions>
+            <fields>
+                <field type="User Package: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_achievements">
+            <conditions>
+                <condition key="widgetType">apus_element_achievements</condition>
+            </conditions>
+            <fields>
+                <field type="Achievements: Title" editor_type="LINE">title</field>
+                <field type="Achievements: Description" editor_type="AREA">description</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_banner">
+            <conditions>
+                <condition key="widgetType">apus_element_banner</condition>
+            </conditions>
+            <fields>
+                <field type="Banner: Title" editor_type="LINE">title</field>
+                <field type="Banner: Description" editor_type="AREA">des</field>
+                <field type="Banner: Button Text" editor_type="LINE">btn_text</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_banner_account">
+            <conditions>
+                <condition key="widgetType">apus_element_banner_account</condition>
+            </conditions>
+            <fields>
+                <field type="Banner Account: Title" editor_type="LINE">title</field>
+                <field type="Banner Account: Content" editor_type="AREA">content</field>
+                <field type="Banner Account: Button Text" editor_type="LINE">btn_text</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_brands">
+            <conditions>
+                <condition key="widgetType">apus_element_brands</condition>
+            </conditions>
+            <fields-in-item items_of="brands">
+                <field type="Brands: Title" editor_type="LINE">list_title</field>
+            </fields-in-item>
+        </widget>
+        <widget name="apus_element_call_to_action">
+            <conditions>
+                <condition key="widgetType">apus_element_call_to_action</condition>
+            </conditions>
+            <fields>
+                <field type="Call To Action: Title" editor_type="LINE">title</field>
+                <field type="Call To Action: Description" editor_type="VISUAL">description</field>
+                <field type="Call To Action: Button Text" editor_type="LINE">btn_text</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_countdown">
+            <conditions>
+                <condition key="widgetType">apus_element_countdown</condition>
+            </conditions>
+            <fields>
+                <field type="Countdown: Title" editor_type="LINE">title</field>
+                <field type="Countdown: Price" editor_type="LINE">price</field>
+                <field type="Countdown: Description" editor_type="AREA">des</field>
+                <field type="Countdown: Button Text" editor_type="LINE">btn_text</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_features_box">
+            <conditions>
+                <condition key="widgetType">apus_element_features_box</condition>
+            </conditions>
+            <fields-in-item items_of="features">
+                <field type="Features Box: Title" editor_type="LINE">title_text</field>
+                <field type="Features Box: Description" editor_type="AREA">description_text</field>
+            </fields-in-item>
+        </widget>
+        <widget name="apus_element_heading">
+            <conditions>
+                <condition key="widgetType">apus_element_heading</condition>
+            </conditions>
+            <fields>
+                <field type="Heading: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_nav_menu">
+            <conditions>
+                <condition key="widgetType">apus_element_nav_menu</condition>
+            </conditions>
+            <fields>
+                <field type="Navigation Menu: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_popup_video">
+            <conditions>
+                <condition key="widgetType">apus_element_popup_video</condition>
+            </conditions>
+            <fields>
+                <field type="Popup Video: Title" editor_type="LINE">title</field>
+                <field type="Popup Video: Content" editor_type="AREA">content</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_posts">
+            <conditions>
+                <condition key="widgetType">apus_element_posts</condition>
+            </conditions>
+            <fields>
+                <field type="Posts: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_social_links">
+            <conditions>
+                <condition key="widgetType">apus_element_social_links</condition>
+            </conditions>
+            <fields-in-item items_of="socials">
+                <field type="Social Links: Title" editor_type="LINE">title</field>
+            </fields-in-item>
+        </widget>
+        <widget name="apus_element_team">
+            <conditions>
+                <condition key="widgetType">apus_element_team</condition>
+            </conditions>
+            <fields-in-item items_of="socials">
+                <field type="Teams: Title" editor_type="LINE">title</field>
+            </fields-in-item>
+            <fields>
+                <field type="Teams: Name" editor_type="LINE">name</field>
+                <field type="Teams: Job" editor_type="LINE">job</field>
+                <field type="Teams: Description" editor_type="AREA">description</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_testimonials">
+            <conditions>
+                <condition key="widgetType">apus_element_testimonials</condition>
+            </conditions>
+            <fields-in-item items_of="testimonials">
+                <field type="Testimonials: Title" editor_type="LINE">title</field>
+                <field type="Testimonials: Name" editor_type="LINE">name</field>
+                <field type="Testimonials: Content" editor_type="AREA">content</field>
+                <field type="Testimonials: Name" editor_type="LINE">name</field>
+                <field type="Testimonials: Job" editor_type="LINE">job</field>
+            </fields-in-item>
+        </widget>
+        <widget name="apus_element_add_job_btn">
+            <conditions>
+                <condition key="widgetType">apus_element_add_job_btn</condition>
+            </conditions>
+            <fields>
+                <field type="Add Job Button: Button Text" editor_type="LINE">button_text</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_job_board_pro_candidate_category_banner">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_candidate_category_banner</condition>
+            </conditions>
+            <fields>
+                <field type="Candidate Category Banner: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_job_board_pro_candidate_city_banner">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_candidate_city_banner</condition>
+            </conditions>
+            <fields>
+                <field type="Candidate City Banner: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_job_board_pro_candidate_search_form">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_candidate_search_form</condition>
+            </conditions>
+            <fields>
+                <field type="Candidate Search Form: Title" editor_type="LINE">title</field>
+                <field type="Candidate Search Form: Description" editor_type="AREA">des</field>
+                <field type="Candidate Search Form: Button Text" editor_type="LINE">filter_btn_text</field>
+                <field type="Candidate Search Form: Advanced Button Text" editor_type="LINE">advanced_btn_text</field>
+                <field type="Employer Search Form: Popular Searches Title" editor_type="LINE">popular_searches_title</field>
+                <field type="Employer Search Form: Popular Searches Keywords" editor_type="LINE">popular_searches_keywords</field>
+            </fields>
+            <fields-in-item items_of="search_fields">
+                <field type="Candidate Search Form: Title" editor_type="LINE">title</field>
+                <field type="Candidate Search Form: Placeholder" editor_type="LINE">placeholder</field>
+            </fields-in-item>
+        </widget>
+        <widget name="apus_element_job_board_pro_candidates">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_candidates</condition>
+            </conditions>
+            <fields>
+                <field type="Candidates: Title" editor_type="LINE">title</field>
+                <field type="Candidates: View More Button Text" editor_type="LINE">view_more_text</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_job_board_pro_employer_search_form">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_employer_search_form</condition>
+            </conditions>
+            <fields>
+                <field type="Employer Search Form: Title" editor_type="LINE">title</field>
+                <field type="Employer Search Form: Description" editor_type="AREA">des</field>
+                <field type="Employer Search Form: Button Text" editor_type="LINE">filter_btn_text</field>
+                <field type="Employer Search Form: Advanced Button Text" editor_type="LINE">advanced_btn_text</field>
+                <field type="Employer Search Form: Popular Searches Title" editor_type="LINE">popular_searches_title</field>
+                <field type="Employer Search Form: Popular Searches Keywords" editor_type="LINE">popular_searches_keywords</field>
+            </fields>
+            <fields-in-item items_of="search_fields">
+                <field type="Employer Search Form: Title" editor_type="LINE">title</field>
+                <field type="Employer Search Form: Placeholder" editor_type="LINE">placeholder</field>
+            </fields-in-item>
+        </widget>
+        <widget name="apus_element_job_board_pro_employers">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_employers</condition>
+            </conditions>
+            <fields>
+                <field type="Employers: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_job_board_pro_job_category_banner">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_job_category_banner</condition>
+            </conditions>
+            <fields>
+                <field type="Job Category Banner: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_job_board_pro_job_city_banner">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_job_city_banner</condition>
+            </conditions>
+            <fields>
+                <field type="Job City Banner: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_job_board_pro_search_form">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_search_form</condition>
+            </conditions>
+            <fields>
+                <field type="Job Search Form: Title" editor_type="LINE">title</field>
+                <field type="Job Search Form: Description" editor_type="AREA">des</field>
+                <field type="Job Search Form: Button Text" editor_type="LINE">filter_btn_text</field>
+                <field type="Job Search Form: Advanced Button Text" editor_type="LINE">advanced_btn_text</field>
+                <field type="Job Search Form: Popular Searches Title" editor_type="LINE">popular_searches_title</field>
+                <field type="Job Search Form: Popular Searches Keywords" editor_type="LINE">popular_searches_keywords</field>
+            </fields>
+            <fields-in-item items_of="search_fields">
+                <field type="Job Search Form: Title" editor_type="LINE">title</field>
+                <field type="Job Search Form: Placeholder" editor_type="LINE">placeholder</field>
+            </fields-in-item>
+        </widget>
+        <widget name="apus_element_job_board_pro_jobs">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_jobs</condition>
+            </conditions>
+            <fields>
+                <field type="Jobs: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_job_board_pro_jobs_tabs">
+            <conditions>
+                <condition key="widgetType">apus_element_job_board_pro_jobs_tabs</condition>
+            </conditions>
+            <fields>
+                <field type="Jobs Tabs: Title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_upload_cv_btn">
+            <conditions>
+                <condition key="widgetType">apus_element_upload_cv_btn</condition>
+            </conditions>
+            <fields>
+                <field type="Header Upload CV Button: Button Text" editor_type="LINE">button_text</field>
+            </fields>
+        </widget>
+        <widget name="apus_element_user_info">
+            <conditions>
+                <condition key="widgetType">apus_element_user_info</condition>
+            </conditions>
+            <fields>
+                <field type="Header User Info: Login Register Text" editor_type="LINE">login_register_text</field>
+                <field type="Header User Info: Login Text" editor_type="LINE">login_text</field>
+                <field type="Header User Info: Register Text" editor_type="LINE">register_text</field>
+                <field type="Header User Info: Login Popup Title" editor_type="LINE">login_title</field>
+                <field type="Header User Info: Register Popup Title" editor_type="LINE">register_title</field>
+            </fields>
+        </widget>
+
+    </elementor-widgets>
+</wpml-config>

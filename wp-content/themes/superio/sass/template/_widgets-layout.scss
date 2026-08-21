@@ -1,0 +1,92 @@
+/* block */
+.#{$block-selector} {
+    margin-bottom: $block-module-margin-bottom;
+    position: relative;
+    padding: $block-module-padding;
+    background: transparent;
+    .#{$block-heading-selector}{
+        font-size: 18px;
+        margin:0 0 18px;
+    }
+}
+.releated-candidates{
+  margin-top: 25px;
+  @media(min-width: 1200px){
+    margin-top: 50px;
+  }
+}
+// Sidebar
+.sidebar,
+.#{$app-prefix}-sidebar {
+  overflow: hidden;
+  background-color: #F5F7FC;
+  @include border-radius($border-radius-base);
+  padding:26px 30px 0;
+  .group-wrapper-filter{
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    .field-region{
+      margin:0 0 10px;
+      &:last-child{
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+.layout-job-sidebar-v2{
+  @media(min-width: 992px){
+    .sidebar,
+    .#{$app-prefix}-sidebar{
+      padding:0;
+      background: transparent;
+      @include border-radius(0);
+      .#{$block-selector}{
+        overflow: hidden;
+        background-color: #F5F7FC;
+        @include border-radius($border-radius-base);      
+        padding:26px 30px 30px;
+      }
+    }
+  }
+}
+#apus-footer{
+    // custom menu
+    .widget-nav-menu{
+      .menu{
+        li{
+          margin:0 0 12px;
+          &:last-child{
+            margin:0;
+          }
+          a{
+            &:after{
+                display: none !important;
+            }
+            &:before{
+              @include transition(all 0.3s ease-in-out 0s);
+              background-color: $theme-color;
+              content:'';
+              @include size(0,2px);
+              display: inline-block;
+              position: absolute;
+              top: 50%;
+              @include rtl-left(0);
+              @include translateY(-50%);
+            }
+            &:hover,&:focus{
+              @include rtl-padding-left(25px);
+              &:before{
+                width: 15px;
+              }
+            }
+          }
+          &.active{
+            > a:before{
+                width: 15px;
+            }
+          }
+        }
+      }
+    }
+}

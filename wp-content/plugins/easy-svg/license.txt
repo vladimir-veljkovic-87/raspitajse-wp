@@ -1,0 +1,21 @@
+Easy SVG Support - License Terms
+Copyright (C) 2025 Benjamin Zekavica
+
+This plugin is released under the GNU General Public License Version 3 (GPL-3.0), 
+as published by the Free Software Foundation.
+
+License Conditions: 
+This is free software. You can redistribute it and/or modify it under the terms of the GNU General Public License Version 3, 
+which is provided along with this plugin. A copy of the license can be found at: http://www.gnu.org/licenses/
+
+Usage Rights: 
+You are free to use, copy, modify, and distribute this plugin under the following conditions:
+- You may use the plugin, including for commercial purposes, as long as you adhere to the terms of this license.
+- If you modify and distribute the plugin, you must ensure that the modified code is also distributed under the same license.
+- The plugin is provided without any warranty, either express or implied.
+
+Disclaimer: 
+In no event will the authors or copyright holders be held liable for any damages arising from the use of this plugin. 
+This plugin is provided "as is," without any warranty of any kind. The developers assume no responsibility for any damages, 
+including, but not limited to, damage to your website, loss of data, or any other issues that may arise from the use of this 
+plugin. Use this plugin at your own risk.

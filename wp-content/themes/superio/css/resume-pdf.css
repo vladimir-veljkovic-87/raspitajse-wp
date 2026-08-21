@@ -1,0 +1,247 @@
+body{
+	font-size: 13px;
+}
+.candidate-information{
+	float: left;
+    width: calc(100% - 210px);
+}
+
+.candidate-thumbnail {
+	width: 230px;
+	float: left;
+    margin-right: 30px;
+}
+.candidate-thumbnail .inner-image {
+	width: 200px;
+}
+#headerimg .description{
+	margin-bottom: 20px;
+}
+img{
+	max-width: 100%;
+	height: auto;
+}
+.candidate-title{
+	margin:0 0 5px;
+	font-size: 22px;
+}
+.candidate-detail-header .title-wrapper > * {
+    display: inline-block;
+    margin-right: 3px;
+    vertical-align: middle;
+}
+.candidate-detail-header .title-wrapper .urgent {
+    background: #e44343;
+    color: #fff;
+    padding: 1px 15px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    color: #fff;
+    font-size: 14px;
+}
+.candidate-phone{
+	margin:0 0 10px;
+}
+.candidate-detail-detail .list{
+	padding:0;
+	margin:0 0 20px;
+	list-style: none;
+	clear: both;
+	overflow:h;
+}
+.candidate-detail-detail .list li{
+	margin-bottom: 10px;
+	width:28%;
+	float: left;
+}
+.candidate-detail-detail .list .icon{
+	margin-right: 5px;
+	display: inline-block;
+	vertical-align: top;
+}
+.candidate-detail-detail .list .details{
+	display: inline-block;
+	vertical-align: top;
+}
+.candidate-detail-detail .list li .text{
+	font-weight: 700;
+	margin-bottom: 3px;
+	font-size: 18px;
+}
+.edu_stats{
+	font-weight: 600;
+	font-size: 15px;
+	margin: 0;
+}
+.my_resume_eduarea .top-info{
+	display: ruby;
+	margin-bottom: 5px;
+}
+.my_resume_eduarea .top-info .edu_stats {
+    font-size: 14px;
+}
+.circle{
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	-ms-border-radius: 50%;
+	-o-border-radius: 50%;
+	background: rgba(217, 48, 37, 0.15);
+	color: #D93025;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	font-size: 11px;
+	font-weight: 700;
+	margin-left: -76px;
+	margin-bottom: -30px;
+}
+p{
+	margin: 0 0 14px;
+}
+.edu_center{
+	color: #D93025;
+}
+.my_resume_eduarea .year {
+    font-size: 13px;
+    color: #D93025;
+}
+.my_resume_eduarea.color-blue .year, 
+.my_resume_eduarea.color-blue .edu_center{
+	color: #1967D2;
+}
+.my_resume_eduarea.color-award .year, 
+.my_resume_eduarea.color-award .edu_center{
+	color: #F9AB00;
+}
+.row::before, .row::after {
+    content: " ";
+    display: table;
+}
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.job-metas-cadidate{
+	margin-top: 7px;
+}
+[class*="candidate-detail"] {
+    margin-bottom: 30px;
+    overflow:hidden;
+    clear: both;
+}
+.candidate-detail-header {
+	margin: 30px 0 0;
+}
+.candidate_resume_skill .progress-box .box-title{
+	margin:0 0 10px;
+	font-size: 16px;
+	font-weight: 400;
+	color: #6a6a6a;
+}
+.candidate_resume_skill .progress-box .inner{
+	background-color: #eeeeee;
+	width: 100%;
+	height: 6px;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	-ms-border-radius: 6px;
+	-o-border-radius: 6px;
+	position: relative;
+}
+.candidate_resume_skill .progress-box .bar-fill{
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: #82b440;
+	width: 50%;
+	height: 6px;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	-ms-border-radius: 6px;
+	-o-border-radius: 6px;
+}
+.candidate_resume_skill .progress-box .bar-fill .percent{
+	color: #fff;
+	font-weight: bold;
+	font-size: 12px;
+	padding:3px;
+	top: -35px;
+	right: 0;
+	-webkit-transition: all 0.4s ease-in-out 0s;
+	-o-transition: all 0.4s ease-in-out 0s;
+	transition: all 0.4s ease-in-out 0s;
+	position: absolute;
+}
+.education-item{
+	margin-bottom: 20px;
+}
+.row-portfolio{
+	margin-left: -10px;
+	margin-right: -10px;
+	clear: both;
+	overflow: hidden;
+}
+.row-portfolio .item{
+	width: 16%;
+	float: left;
+	padding: 0 10px;
+}
+.title{
+	font-size: 17px;
+	margin-top: 26px;
+	margin-bottom: 21px;
+	font-weight: 600;
+}
+.my_resume_eduarea .content {
+    padding-left: 60px;
+    padding-bottom: 20px;
+    position: relative;
+    border-left: 2px dashed rgba(218, 49, 37, 0.08);
+    margin-left: 15px;
+}
+.my_resume_eduarea.color-blue .content {
+	border-left: 2px dashed rgba(25, 102, 210, 0.1);
+}
+.my_resume_eduarea.color-award .content {
+	border-left: 2px dashed rgba(250, 171, 0, 0.11);
+}
+.my_resume_eduarea .mb0{
+	margin-top: 15px;
+}
+.my_resume_eduarea.color-blue .circle {
+    background: rgba(25, 103, 210, 0.15);
+    color: #1967D2;
+}
+.my_resume_eduarea.color-award .circle {
+    background: rgba(249, 171, 0, 0.15);
+    color: #F9AB00;
+}
+.list{
+	list-style: none;
+	padding:0;
+	margin:20px 0 0;
+	width: 100%;
+	overflow: hidden;
+	clear: both;
+}
+.list li{
+	float: left;
+	width: 33.33%;
+	color: #77838F;
+	margin-bottom: 15px;
+	font-size: 12px;
+}
+.list li .text{
+	font-size: 14px;
+	font-weight: 600;
+	color: #202124;
+	margin: 0 0 5px;
+}
