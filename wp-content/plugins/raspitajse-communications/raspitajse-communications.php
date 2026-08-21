@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.1.0
+ * Version: 0.2.0
  * Author: Raspitajse.com
  */
 
@@ -12,7 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Raspitajse_Communications_Transport {
 
-    const ENABLE_FLAG = 'RASPITAJSE_COMMUNICATIONS_TRANSPORT_ENABLED';
+    const ENABLE_FLAG   = 'RASPITAJSE_COMMUNICATIONS_TRANSPORT_ENABLED';
+    const ENABLE_OPTION = 'raspitajse_communications_transport_enabled';
 
     /**
      * Headers captured from the current wp_mail call.
@@ -22,33 +23,86 @@ final class Raspitajse_Communications_Transport {
     private static $mail_headers = '';
 
     /**
+     * Original wp_mail payloads, kept as a stack so nested mail calls remain safe.
+     *
+     * @var array
+     */
+    private static $mail_context_stack = array();
+
+    /**
      * Register transport hooks only after an explicit migration flag is enabled.
      */
     public static function boot() {
-        if ( ! defined( self::ENABLE_FLAG ) || true !== constant( self::ENABLE_FLAG ) ) {
+        if ( ! self::is_enabled() ) {
             return;
         }
 
         add_filter( 'wp_mail', array( __CLASS__, 'capture_mail_args' ), PHP_INT_MIN );
+
+        // Restore a payload corrupted by legacy callbacks before the staging
+        // mail-safety MU plugin applies its final redirect/prefix at PHP_INT_MAX.
+        add_filter( 'wp_mail', array( __CLASS__, 'restore_mail_args' ), PHP_INT_MAX - 100 );
+
         add_filter( 'wp_mail_from', array( __CLASS__, 'filter_from' ), PHP_INT_MAX );
         add_filter( 'wp_mail_from_name', array( __CLASS__, 'filter_from_name' ), PHP_INT_MAX );
         add_action( 'phpmailer_init', array( __CLASS__, 'configure_phpmailer' ), 20 );
     }
 
     /**
-     * Capture mail headers without mutating the wp_mail payload.
+     * Whether the new communications transport is explicitly enabled.
+     *
+     * Production remains fail-closed unless the wp-config constant is set.
+     * Staging can use a reversible WordPress option during migration testing.
+     */
+    public static function is_enabled() {
+        if ( defined( self::ENABLE_FLAG ) ) {
+            return true === constant( self::ENABLE_FLAG );
+        }
+
+        if ( ! self::is_staging() ) {
+            return false;
+        }
+
+        return '1' === (string) get_option( self::ENABLE_OPTION, '0' );
+    }
+
+    /**
+     * Capture the original mail payload without mutating it.
      *
      * The legacy child-theme callback was registered on wp_mail without
-     * returning $args. Because wp_mail is a filter hook, that can corrupt
-     * the payload for callbacks that execute afterwards.
+     * returning $args. Because wp_mail is a filter hook, that callback can
+     * replace the payload with null. Keep an original copy so we can restore
+     * it before later filters run.
      */
     public static function capture_mail_args( $args ) {
-        $headers = isset( $args['headers'] ) ? $args['headers'] : array();
+        $context = is_array( $args ) ? $args : array();
 
-        if ( is_array( $headers ) ) {
-            self::$mail_headers = implode( "\n", $headers );
-        } else {
-            self::$mail_headers = (string) $headers;
+        self::$mail_context_stack[] = $context;
+        self::$mail_headers         = self::headers_to_string(
+            isset( $context['headers'] ) ? $context['headers'] : array()
+        );
+
+        return $args;
+    }
+
+    /**
+     * Restore required wp_mail fields if a legacy callback corrupted them.
+     */
+    public static function restore_mail_args( $args ) {
+        if ( empty( self::$mail_context_stack ) ) {
+            return $args;
+        }
+
+        $original = end( self::$mail_context_stack );
+
+        if ( ! is_array( $args ) ) {
+            return $original;
+        }
+
+        foreach ( array( 'to', 'subject', 'message', 'headers', 'attachments' ) as $key ) {
+            if ( ! array_key_exists( $key, $args ) && array_key_exists( $key, $original ) ) {
+                $args[ $key ] = $original[ $key ];
+            }
         }
 
         return $args;
@@ -63,6 +117,7 @@ final class Raspitajse_Communications_Transport {
         foreach ( $required as $constant ) {
             if ( ! defined( $constant ) ) {
                 error_log( '[Raspitajse Communications] SMTP transport skipped: missing ' . $constant . '.' );
+                self::finish_mail_context();
                 return;
             }
         }
@@ -76,8 +131,7 @@ final class Raspitajse_Communications_Transport {
         $phpmailer->SMTPSecure = 'tls';
         $phpmailer->isHTML( true );
 
-        // Preserve explicitly supplied From headers. On staging, keep the
-        // current fallback identity until sender policy is migrated fully.
+        // Preserve the current staging behavior while sender policy is migrated.
         if (
             self::is_staging()
             && ( empty( $phpmailer->From ) || false === strpos( $phpmailer->From, '@stage.raspitajse.com' ) )
@@ -85,6 +139,8 @@ final class Raspitajse_Communications_Transport {
             $phpmailer->From     = 'noreply@stage.raspitajse.com';
             $phpmailer->FromName = self::default_from_name();
         }
+
+        self::finish_mail_context();
     }
 
     /**
@@ -128,6 +184,36 @@ final class Raspitajse_Communications_Transport {
     private static function has_custom_from_header() {
         return '' !== self::$mail_headers
             && false !== stripos( self::$mail_headers, 'From:' );
+    }
+
+    /**
+     * Convert wp_mail headers to the string format used by sender detection.
+     */
+    private static function headers_to_string( $headers ) {
+        if ( is_array( $headers ) ) {
+            return implode( "\n", $headers );
+        }
+
+        return (string) $headers;
+    }
+
+    /**
+     * Close the current mail context and restore the previous nested context.
+     */
+    private static function finish_mail_context() {
+        if ( ! empty( self::$mail_context_stack ) ) {
+            array_pop( self::$mail_context_stack );
+        }
+
+        if ( empty( self::$mail_context_stack ) ) {
+            self::$mail_headers = '';
+            return;
+        }
+
+        $previous = end( self::$mail_context_stack );
+        self::$mail_headers = self::headers_to_string(
+            isset( $previous['headers'] ) ? $previous['headers'] : array()
+        );
     }
 
     /**
