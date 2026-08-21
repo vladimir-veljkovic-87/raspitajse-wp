@@ -123,14 +123,15 @@ class MonsterInsights_Cache_Cleanup {
 		$table_name = $wpdb->prefix . 'monsterinsights_cache';
 		$now        = current_time( 'mysql' );
 
-		$total = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $table_name ) );
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safely constructed.
+		$total = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
 		$valid = $wpdb->get_var(
 			$wpdb->prepare(
-				'SELECT COUNT(*) FROM %i WHERE expires_at >= %s',
-				$table_name,
+				"SELECT COUNT(*) FROM {$table_name} WHERE expires_at >= %s",
 				$now
 			)
 		);
+		// phpcs:enable
 
 		return array(
 			'total_entries'   => (int) $total,

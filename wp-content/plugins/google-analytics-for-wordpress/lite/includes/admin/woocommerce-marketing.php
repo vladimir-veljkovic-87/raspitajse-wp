@@ -30,7 +30,7 @@ class MonsterInsights_WooCommerce_Marketing {
 	 * @return void
 	 */
 	public function handle_enqueuing_assets( $page ) {
-		if ( ! monsterinsights_check_is_it_monsterinsights_lite() ) {
+		if ( ! check_is_it_monsterinsights_lite() ) {
 			return;
 		}
 

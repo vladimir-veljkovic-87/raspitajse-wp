@@ -1,10 +1,34 @@
-/*!*****************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/assets/scss/exactmetrics/editor.scss ***!
-  \*****************************************************************************************************************************************************************************************************************************************************************/
-.monsterinsights-block-error-placeholder-content {
-  text-align: center;
+/*!********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/assets/scss/monsterinsights/editor.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************************/
+.monsterinsights-inline-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 
+.monsterinsights-switcher-button {
+  border: 0;
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: normal;
+  color: #393F4C;
+  padding: 17px 15px;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+.monsterinsights-switcher-button.active, .monsterinsights-switcher-button:hover, .monsterinsights-switcher-button:active, .monsterinsights-switcher-button:focus {
+  outline: none;
+  border-bottom: 3px solid #117DB8;
+}
+.monsterinsights-switcher-button.active {
+  font-weight: bold;
+}
+
+.monsterinsights-block-placeholder .monsterinsights-block-error-placeholder-content {
+  text-align: center;
+}
 .monsterinsights-block-placeholder .components-placeholder__fieldset {
   align-items: center;
   justify-content: center;
@@ -16,49 +40,34 @@
   font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   position: relative;
 }
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-metabox-pro-badge {
-  margin-top: 0;
-  margin-left: 16px;
-  margin-right: 16px;
-}
-
 .monsterinsights-headline-analyzer-wrapper p {
   font-size: 13px;
   color: #393F4C;
 }
-
 .monsterinsights-headline-analyzer-wrapper .green {
   color: #1EC185;
 }
-
 .monsterinsights-headline-analyzer-wrapper .orange {
   color: #F2994A;
 }
-
 .monsterinsights-headline-analyzer-wrapper .red {
   color: #EB5757;
 }
-
 .monsterinsights-headline-analyzer-wrapper .green-bg {
   background: #1EC185;
 }
-
 .monsterinsights-headline-analyzer-wrapper .orange-bg {
   background: #F2994A;
 }
-
 .monsterinsights-headline-analyzer-wrapper .red-bg {
   background: #EB5757;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body-toggle.components-button {
   font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: bold;
   font-size: 13px;
   color: #393F4C;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-empty-title-warning {
   text-align: center;
   padding: 0 20px;
@@ -66,95 +75,42 @@
   font-size: 13px;
   color: #393F4C;
 }
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 14px;
-  border-radius: 0;
-  background: #fff;
-  width: 100%;
+.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab p {
+  text-align: center;
 }
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab.is-low-score {
-  background: #FFF2F5;
+.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-current-title {
+  text-align: center;
+  font-size: 16px;
+  color: #393F4C;
+  margin: 0 0 28px 0;
 }
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-score-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-pie-chart-container {
   position: relative;
-  width: 56px;
-  height: 56px;
-  flex: 0 0 56px;
-  margin: 0;
+  width: 160px;
+  height: 80px;
+  margin: 0 auto;
+  margin-bottom: 18px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-current-score {
   position: absolute;
   top: 50%;
   left: 0;
   right: 0;
   text-align: center;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 30px;
   font-family: "Roboto", sans-serif;
-  line-height: 0;
+  line-height: 0%;
   z-index: 10;
 }
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-current-score.red {
-  color: #D82F5A;
-}
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-current-score.orange {
-  color: #F89655;
-}
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-current-score.green {
-  color: #58CB92;
-}
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-current-score p {
   margin-bottom: 0;
 }
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-score-label {
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 20px;
-}
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-score-label.red {
-  color: #D82F5A;
-}
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-score-label.orange {
-  color: #F89655;
-}
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-analyzer-score-label.green {
-  color: #58CB92;
-}
-
-.monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-current-score-tab .monsterinsights-headline-optimize-button-wrapper {
-  margin: 12px 0 0;
-  padding: 0;
-  border-bottom: 0;
-}
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-new-score-panel h4 {
   text-align: center;
   font-size: 16px;
   color: #393F4C;
   margin: 0 0 28px 0;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-new-score-panel .monsterinsights-headline-analyzer-pie-chart-container {
   position: relative;
   width: 160px;
@@ -162,7 +118,6 @@
   margin: 0 auto;
   margin-bottom: 18px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-new-score-panel .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-new-score {
   position: absolute;
   top: 50%;
@@ -174,15 +129,12 @@
   line-height: 0%;
   z-index: 10;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-new-score-panel .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-new-score p {
   margin-bottom: 0;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-new-score-panel .current-score {
   text-align: center;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-new-score-panel .current-score h5 {
   font-weight: bold;
   color: #393F4C;
@@ -191,19 +143,15 @@
   text-align: center;
   font-size: 13px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-new-score-panel .current-score p {
   margin-top: 8px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-new-tab {
   margin-bottom: 6px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-input-field {
   margin-bottom: 6px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-input-field .components-base-control__label {
   display: block;
   max-width: 100%;
@@ -211,14 +159,12 @@
   margin-bottom: 8px;
   color: #626D83;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-input-field input {
   padding: 11px 12px;
   font-size: 13px;
   border: 1px solid #E2E4E7;
   color: #393F4C;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-button {
   padding-right: 11px;
   font-size: 13px;
@@ -226,7 +172,6 @@
   padding-left: 11px;
   height: 29px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-score-difference {
   font-size: 20px;
   font-weight: bold;
@@ -235,7 +180,6 @@
   margin-top: 0;
   margin-bottom: 40px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-previous-scores li {
   font-size: 13px;
   line-height: 24px;
@@ -245,110 +189,80 @@
   position: relative;
   cursor: pointer;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-previous-scores li:last-child {
   margin-bottom: 0;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-previous-scores .monsterinsights-headline-analyzer-score {
   margin-left: -36px;
   position: absolute;
   top: 0;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-has-icon .components-panel__body-toggle .components-panel__icon {
   position: absolute;
   right: 40px;
   top: 50%;
   margin-top: -8px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-has-icon.red .components-panel__body-toggle .components-panel__icon path {
   fill: #EB5757;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-has-icon.orange .components-panel__body-toggle .components-panel__icon path {
   fill: #F2994A;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-has-icon.green .components-panel__body-toggle .components-panel__icon path {
   fill: #1EC185;
 }
-
-.monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-has-icon.monsterinsights-headline-analyzer-panel-word-balance.red .components-panel__body-toggle .components-panel__icon path {
-  fill: #D82F5A;
-}
-
-.monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-has-icon.monsterinsights-headline-analyzer-panel-word-balance.orange .components-panel__body-toggle .components-panel__icon path {
-  fill: #F89655;
-}
-
-.monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-has-icon.monsterinsights-headline-analyzer-panel-word-balance.green .components-panel__body-toggle .components-panel__icon path {
-  fill: #58CB92;
-}
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-has-icon-alternative {
   position: relative;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-has-icon-alternative .monsterinsights-headline-analyzer-panel-icon-alternative {
   position: absolute;
   top: 14px;
   right: 40px;
   font-weight: bold;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-word-balance .components-panel__row, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-sentiment .components-panel__row, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-types .components-panel__row, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-character-count .components-panel__row, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-word-count .components-panel__row, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-beginning-ending-words .components-panel__row, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-search-preview .components-panel__row {
   display: block;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-word-balance .components-panel__row h4, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-sentiment .components-panel__row h4, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-types .components-panel__row h4, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-character-count .components-panel__row h4, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-word-count .components-panel__row h4, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-beginning-ending-words .components-panel__row h4, .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-search-preview .components-panel__row h4 {
   font-size: 16px;
   color: #393F4C;
   font-weight: bold;
   margin: 0 0 8px 0;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block {
   margin-top: 28px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block h5 {
   font-size: 13px;
   color: #393F4C;
   margin-top: 0;
   margin-bottom: 12px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-block-data {
   overflow: hidden;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-block-data span {
   display: block;
   float: left;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-block-data span.monsterinsights-headline-analyzer-words-block-percentage {
   width: 30%;
   font-size: 24px;
   font-weight: bold;
   line-height: 20px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-block-data span.monsterinsights-headline-analyzer-words-block-goal {
   width: 40%;
   font-size: 12px;
   color: #9CA4B5;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-block-data span.monsterinsights-headline-analyzer-words-block-progressbar {
   width: 30%;
   position: relative;
   height: 8px;
   margin-top: 4px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-block-data span.monsterinsights-headline-analyzer-words-block-progressbar .monsterinsights-headline-analyzer-progressbar-bg {
   width: 100%;
   background: #EEF0F2;
@@ -359,7 +273,6 @@
   left: 0;
   border-radius: 30px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-block-data span.monsterinsights-headline-analyzer-words-block-progressbar .monsterinsights-headline-analyzer-progressbar-part {
   position: absolute;
   height: 8px;
@@ -368,7 +281,6 @@
   z-index: 10;
   border-radius: 30px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-tag-list {
   margin: 0;
   padding: 0;
@@ -376,7 +288,6 @@
   display: block;
   margin-top: 12px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-tag-list li {
   display: inline-block;
   font-size: 12px;
@@ -387,16 +298,13 @@
   padding: 2px 9px;
   margin-right: 8px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-words-block .monsterinsights-headline-analyzer-words-guideline {
   margin-top: 8px;
   color: #4F4F4F;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-character-count p {
   text-align: left;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-character-count .monsterinsights-headline-analyzer-pie-chart-container {
   position: relative;
   width: 160px;
@@ -405,7 +313,6 @@
   margin-bottom: 18px;
   margin-left: -40px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-character-count .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-character-length {
   position: absolute;
   top: 50%;
@@ -417,7 +324,6 @@
   line-height: 0%;
   z-index: 10;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-character-count .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-status-on-character-length {
   position: absolute;
   left: 144px;
@@ -428,11 +334,9 @@
   font-weight: bold;
   width: 130px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-word-count p {
   text-align: left;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-word-count .monsterinsights-headline-analyzer-pie-chart-container {
   position: relative;
   width: 160px;
@@ -441,7 +345,6 @@
   margin-bottom: 18px;
   margin-left: -40px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-word-count .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-word-length {
   position: absolute;
   top: 50%;
@@ -453,7 +356,6 @@
   line-height: 0%;
   z-index: 10;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-word-count .monsterinsights-headline-analyzer-pie-chart-container .monsterinsights-headline-analyzer-status-on-word-length {
   position: absolute;
   left: 144px;
@@ -464,12 +366,10 @@
   font-weight: bold;
   width: 130px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-beginning-ending-words .monsterinsights-headline-analyzer-words {
   display: block;
   margin-bottom: 12px;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-beginning-ending-words .monsterinsights-headline-analyzer-words span {
   font-size: 14px;
   color: #fff;
@@ -479,12 +379,10 @@
   padding: 6px 12px;
   display: inline-block;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-beginning-ending-words .monsterinsights-headline-analyzer-words-guideline {
   margin-top: 20px;
   margin-bottom: 0;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-search-preview .components-panel__row h4 {
   color: #4285F4;
   font-size: 16px;
@@ -495,35 +393,29 @@
   font-family: Arial, Helvetica, sans-serif;
   font-weight: normal;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-search-preview .components-panel__row .monsterinsights-headline-analyzer-post-url {
   margin-bottom: 8px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-search-preview .components-panel__row .monsterinsights-headline-analyzer-post-url a {
   color: #34A853;
   font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-search-preview .components-panel__row .monsterinsights-headline-analyzer-post-url a:hover {
   opacity: 0.8;
 }
-
 .monsterinsights-headline-analyzer-wrapper .components-panel__body.monsterinsights-headline-analyzer-panel-search-preview .components-panel__row p {
   font-family: Arial, Helvetica, sans-serif;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-types .monsterinsights-headline-analyzer-panel-types-title {
   display: block;
   width: 100%;
   font-size: 13px;
   color: #393F4C;
 }
-
 .monsterinsights-headline-analyzer-wrapper .monsterinsights-headline-analyzer-panel-types .monsterinsights-headline-analyzer-panel-types-title span {
   float: right;
   margin-right: 25px;
@@ -536,87 +428,67 @@
   padding: 0 8px !important;
   font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color] svg, .editor-header__settings button.components-button[monsterinsights-button-color] svg {
   margin-right: 8px;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color] span, .editor-header__settings button.components-button[monsterinsights-button-color] span {
   font-size: 14px;
   color: #fff;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red], .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red] {
   background: #FAD1D1;
-  border: 1px solid #D82F5A;
+  border: 1px solid #EB5757;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed {
-  background: #D82F5A !important;
+  background: #EB5757 !important;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed svg path {
   fill: #fff;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red] svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red] svg path {
-  fill: #D82F5A;
+  fill: #EB5757;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red] span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red] span {
-  color: #D82F5A;
+  color: #E73232;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange], .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange] {
   background: #F8C9A0;
-  border: 1px solid #F89655;
+  border: 1px solid #F2994A;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed {
-  background: #F89655 !important;
+  background: #F2994A !important;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed svg path {
   fill: #fff;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange] svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange] svg path {
-  fill: #F89655;
+  fill: #F08629;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange] span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange] span {
-  color: #F89655;
+  color: #D66D0F;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green], .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green] {
   background: #D3F8EA;
-  border: 1px solid #58CB92;
+  border: 1px solid #1EC185;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed {
-  background: #58CB92 !important;
+  background: #1EC185 !important;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed svg path {
   fill: #fff;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green] svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green] svg path {
-  fill: #58CB92;
+  fill: #1EC185;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green] span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green] span {
-  color: #58CB92;
+  color: #1BB17A;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed {
   box-shadow: none !important;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus svg path, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus svg path, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed svg path {
   fill: #fff !important;
 }
-
 .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus span, .edit-post-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:hover span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:active span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red]:focus span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=red].is-pressed span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:hover span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:active span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green]:focus span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=green].is-pressed span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:hover span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:active span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange]:focus span, .editor-header__settings button.components-button[monsterinsights-button-color][monsterinsights-button-color=orange].is-pressed span {
   color: #fff;
 }
@@ -645,13 +517,11 @@
   padding: 15px 20px 0 15px;
   border-top: 1px solid #e2e4e7;
 }
-
 .monsterinsights-headline-analyzer-bottom-notice p {
   text-align: left;
 }
 
 /** Pure CSS Donut chart - inspired from https://github.com/dumptyd/vue-css-donut-chart/ */
-
 .monsterinsights-donut-container {
   display: flex;
   align-items: center;
@@ -659,7 +529,6 @@
 }
 
 /* Donut chart */
-
 .monsterinsights-donut {
   height: auto;
   border-radius: 50%;
@@ -669,7 +538,6 @@
 }
 
 /* Middle of the donut */
-
 .monsterinsights-donut-overlay {
   opacity: 1;
   position: absolute;
@@ -681,7 +549,6 @@
 }
 
 /* Container for all the sections of the donut */
-
 .monsterinsights-donut-sections {
   position: absolute;
   height: auto;
@@ -691,7 +558,6 @@
 }
 
 /* Section */
-
 .monsterinsights-donut-section {
   position: absolute;
   height: 100%;
@@ -703,7 +569,6 @@
 }
 
 /* Part of the section to which the specified color is applied */
-
 .monsterinsights-donut-filler {
   position: absolute;
   height: 100%;
@@ -712,7 +577,6 @@
 }
 
 /* For sections that draw from 0 to 180 degrees */
-
 .monsterinsights-donut-section.monsterinsights-donut-section-right {
   left: 50%;
 }
@@ -722,7 +586,6 @@
 }
 
 /* and 180 to 360 degrees */
-
 .monsterinsights-donut-section.monsterinsights-donut-section-left {
   left: 0%;
   transform-origin: 100% 50%;
@@ -732,299 +595,9 @@
   transform-origin: 100% 50%;
 }
 
-.monsterinsights-headline-optimize-button-wrapper {
-  padding: 12px 16px;
-  border-bottom: 1px solid #e2e4e7;
-}
-
-.monsterinsights-headline-optimize-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  max-width: 224px;
-  margin: 0 auto;
-  height: 48px;
-  padding: 12px 16px;
-  background: #338EEF;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  white-space: nowrap;
-  transition: background 0.15s ease;
-}
-
-.monsterinsights-headline-optimize-button__icon {
-  flex: 0 0 auto;
-  color: #fff;
-}
-
-.monsterinsights-headline-optimize-button:hover:not(:disabled) {
-  background: #1F7AE0;
-}
-
-.monsterinsights-headline-optimize-button:disabled {
-  background: #B3D4F4;
-  cursor: not-allowed;
-  opacity: 0.85;
-}
-
-.monsterinsights-ai-loading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-}
-
-.monsterinsights-ai-loading p {
-  margin: 0;
-  font-size: 13px;
-  color: #393F4C;
-}
-
-.monsterinsights-ai-error {
-  padding: 10px 16px;
-  background: #fff3f3;
-  border-left: 3px solid #EB5757;
-}
-
-.monsterinsights-ai-error p {
-  margin: 0;
-  font-size: 12px;
-  color: #EB5757;
-}
-
-.monsterinsights-ai-error a {
-  color: #1EC185;
-}
-
-.monsterinsights-ai-suggestions {
-  padding: 12px 16px;
-}
-
-.monsterinsights-ai-suggestions .monsterinsights-ai-suggestions__heading {
-  font-size: 14px;
-  line-height: 22px;
-  font-weight: 700;
-  color: #141B38;
-  text-transform: none;
-  margin: 0 0 4px;
-}
-
-.monsterinsights-ai-suggestions .monsterinsights-ai-suggestions__sub {
-  font-size: 14px;
-  line-height: 22px;
-  color: #393F4C;
-  margin: 0 0 12px;
-}
-
-.monsterinsights-ai-suggestion-item {
-  display: grid;
-  grid-template-columns: 1fr 24px;
-  -moz-column-gap: 8px;
-       column-gap: 8px;
-  align-items: center;
-  padding: 12px;
-  margin-bottom: 8px;
-  min-height: 64px;
-  border: 1px solid #EAEEF2;
-  border-radius: 8px;
-  background: #fff;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-  position: relative;
-}
-
-.monsterinsights-ai-suggestion-item:hover {
-  border-color: #c7d0db;
-  background: #fafbfc;
-}
-
-.monsterinsights-ai-suggestion-item.red {
-  color: #D82F5A;
-}
-
-.monsterinsights-ai-suggestion-item.green {
-  color: #58CB92;
-}
-
-.monsterinsights-ai-suggestion-item.orange {
-  color: #F89655;
-}
-
-.monsterinsights-ai-suggestion-item.is-selected {
-  border-color: #58CB92;
-  background: #F1FFF8;
-}
-
-.monsterinsights-ai-suggestion-item__primary {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  -moz-column-gap: 8px;
-       column-gap: 8px;
-  align-items: center;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-  color: inherit;
-  font: inherit;
-  width: 100%;
-}
-
-.monsterinsights-ai-suggestion-item__primary:focus-visible {
-  outline: 2px solid #58CB92;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-.monsterinsights-ai-suggestion-item__score {
-  position: relative;
-  display: block;
-  width: 40px;
-  height: 40px;
-}
-
-.monsterinsights-ai-suggestion-item__score-value {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  font-family: "Roboto", sans-serif;
-}
-
-.monsterinsights-ai-suggestion-item__headline {
-  display: block;
-  margin: 0;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 700;
-  color: #393F4C;
-}
-
-.monsterinsights-ai-suggestion-item__info {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  width: 24px;
-  height: 24px;
-  align-self: start;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #626d83;
-  cursor: pointer;
-  border-radius: 50%;
-}
-
-.monsterinsights-ai-suggestion-item__info:hover {
-  color: #58CB92;
-  background: #f3f5f7;
-}
-
-.monsterinsights-ai-suggestion-item__reasoning {
-  width: 200px;
-  padding: 20px;
-  font-size: 13px;
-  letter-spacing: -0.26px;
-  color: #393F4C;
-}
-
-.monsterinsights-ai-suggestion-item__reasoning strong {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: normal;
-  color: #393F4C;
-}
-
-.monsterinsights-ai-suggestion-item__reasoning p {
-  margin: 8px 0 0;
-  font-weight: 400;
-  line-height: normal;
-  color: #393F4C;
-}
-
-.monsterinsights-ai-suggestion-item__lock {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #393F4C;
-  pointer-events: none;
-}
-
-.monsterinsights-ai-suggestion-item.is-locked {
-  cursor: default;
-}
-
-.monsterinsights-ai-suggestion-item.is-locked:hover {
-  border-color: #EAEEF2;
-  background: #fff;
-}
-
-.monsterinsights-ai-suggestion-item.is-locked .monsterinsights-ai-suggestion-item__primary {
-  position: relative;
-  cursor: default;
-}
-
-.monsterinsights-ai-suggestion-item.is-locked .monsterinsights-ai-suggestion-item__headline {
-  filter: blur(4px);
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-  pointer-events: none;
-}
-
-.monsterinsights-ai-suggestion-item.is-locked .monsterinsights-ai-suggestion-item__info {
-  cursor: default;
-  color: #626d83;
-  filter: blur(4px);
-  pointer-events: none;
-}
-
-.monsterinsights-ai-suggestion-item.is-locked .monsterinsights-ai-suggestion-item__info:hover {
-  color: #626d83;
-  background: transparent;
-}
-
-.monsterinsights-ai-suggestion-item__reasoning-popover {
-  pointer-events: none;
-}
-
-.monsterinsights-ai-suggestion-item__reasoning-popover .components-popover__content {
-  width: 200px;
-  max-width: 200px;
-  min-width: 200px;
-}
-
-.monsterinsights-headline-toolbar-popover .components-popover__content {
-  min-width: 340px;
-  max-width: 400px;
-  max-height: 480px;
-  overflow-y: auto;
-  padding: 16px;
-}
-
 .monsterinsights-theme-picker-carousel {
   overflow: hidden;
 }
-
 .monsterinsights-theme-picker-carousel .carousel__slide-focus-ring {
   display: none;
 }
@@ -1034,25 +607,20 @@
   display: block;
   outline: none;
 }
-
 .monsterinsights-theme-picker-slide .carousel__inner-slide {
   display: flex;
   justify-content: space-between;
   flex-flow: wrap;
 }
-
 .monsterinsights-theme-picker-slide .monsterinsights-slider-theme-input {
   display: none;
 }
-
 .monsterinsights-theme-picker-slide .monsterinsights-slider-theme-option {
   width: calc(50% - 8px);
 }
-
 .monsterinsights-theme-picker-slide .monsterinsights-slider-theme-option:nth-child(1), .monsterinsights-theme-picker-slide .monsterinsights-slider-theme-option:nth-child(2) {
   margin-bottom: 28px;
 }
-
 .monsterinsights-theme-picker-slide label {
   border: 1px solid #B7C9D9;
   box-sizing: border-box;
@@ -1065,11 +633,9 @@
   position: relative;
   max-width: 100%;
 }
-
 .monsterinsights-theme-picker-slide label .monsterinsights-theme-picker-label-icon {
   display: block;
 }
-
 .monsterinsights-theme-picker-slide label .monsterinsights-theme-picker-label-text {
   position: absolute;
   left: 0;
@@ -1085,20 +651,16 @@
   line-height: 1;
   color: #393F4C;
 }
-
 .monsterinsights-theme-picker-slide label.monsterinsights-theme-picker-label-selected {
-  border: 3px solid #6528f5;
+  border: 3px solid #338EEF;
 }
-
 .monsterinsights-theme-picker-slide label.monsterinsights-theme-picker-label-disabled {
   opacity: 0.6;
   pointer-events: none;
 }
-
 .monsterinsights-theme-picker-slide label.monsterinsights-theme-picker-label-echo .monsterinsights-theme-picker-label-icon {
   margin-bottom: 10px;
 }
-
 .monsterinsights-theme-picker-slide .monsterinsights-theme-picker-check {
   position: absolute;
   right: 10px;
@@ -1110,7 +672,6 @@
   text-align: center;
   padding-top: 12px;
 }
-
 .monsterinsights-carousel-navigation button {
   background: none;
   padding: 0;
@@ -1119,20 +680,16 @@
   cursor: pointer;
   height: 12px;
 }
-
 .monsterinsights-carousel-navigation button:hover svg path, .monsterinsights-carousel-navigation button:focus svg path {
   fill: #727272;
 }
-
 .monsterinsights-carousel-navigation .carousel__back-button {
   margin-right: 8px;
 }
-
 .monsterinsights-carousel-navigation .carousel__dot-group {
   display: inline-block;
   vertical-align: middle;
 }
-
 .monsterinsights-carousel-navigation .monsterinsights-carousel-navigation-dots .carousel__dot {
   border: 3px solid #c4c4c4;
   box-sizing: border-box;
@@ -1142,21 +699,17 @@
   border-radius: 50%;
   vertical-align: middle;
 }
-
 .monsterinsights-carousel-navigation .monsterinsights-carousel-navigation-dots .carousel__dot:hover, .monsterinsights-carousel-navigation .monsterinsights-carousel-navigation-dots .carousel__dot:focus {
   border-color: #727272;
 }
-
 .monsterinsights-carousel-navigation .monsterinsights-carousel-navigation-dots .carousel__dot.carousel__dot--selected {
   background: #c4c4c4;
 }
-
 .monsterinsights-carousel-navigation .monsterinsights-carousel-navigation-dots .carousel__dot.carousel__dot--selected:hover, .monsterinsights-carousel-navigation .monsterinsights-carousel-navigation-dots .carousel__dot.carousel__dot--selected:focus {
   background: #727272;
 }
 
 /** Inline theme styles **/
-
 .monsterinsights-inline-popular-posts-image {
   width: 128px;
   flex-grow: 0;
@@ -1167,7 +720,6 @@
 .monsterinsights-inline-popular-posts-widget {
   margin-bottom: 24px;
 }
-
 .monsterinsights-inline-popular-posts-widget .monsterinsights-inline-popular-posts-title {
   box-shadow: none;
 }
@@ -1175,7 +727,6 @@
 .monsterinsights-inline-popular-posts-alpha {
   padding: 24px 27px;
 }
-
 .monsterinsights-inline-popular-posts-alpha .monsterinsights-inline-popular-posts-label {
   font-style: normal;
   font-weight: bold;
@@ -1184,7 +735,6 @@
   display: block;
   margin-bottom: 6px;
 }
-
 .monsterinsights-inline-popular-posts-alpha .monsterinsights-inline-popular-posts-title {
   font-weight: bold;
   font-size: 18px;
@@ -1198,18 +748,15 @@
   align-items: center;
   border: 1px solid #D6E2ED;
 }
-
 .monsterinsights-inline-popular-posts-beta .monsterinsights-inline-popular-posts-text {
   margin-left: 19px;
 }
-
 .monsterinsights-inline-popular-posts-beta .monsterinsights-inline-popular-posts-label {
   display: block;
   font-weight: bold;
   font-size: 18px;
   line-height: 18px;
 }
-
 .monsterinsights-inline-popular-posts-beta .monsterinsights-inline-popular-posts-title {
   font-weight: bold;
   font-size: 18px;
@@ -1222,18 +769,15 @@
   border-bottom: 1px solid;
   margin: 16px 0;
 }
-
 .monsterinsights-inline-popular-posts-charlie .monsterinsights-inline-popular-posts-label {
   font-style: normal;
   font-weight: bold;
   font-size: 16px;
   line-height: 1.1;
 }
-
 .monsterinsights-inline-popular-posts-charlie .monsterinsights-inline-popular-posts-list {
   list-style: disc inside none;
 }
-
 .monsterinsights-inline-popular-posts-charlie .monsterinsights-inline-popular-posts-list li {
   font-style: normal;
   font-weight: normal;
@@ -1246,11 +790,9 @@
   padding: 16px 18px;
   border-radius: 5px;
 }
-
 .monsterinsights-inline-popular-posts-delta .monsterinsights-inline-popular-posts-icon {
   margin-right: 8px;
 }
-
 .monsterinsights-inline-popular-posts-delta .monsterinsights-inline-popular-posts-label {
   font-style: normal;
   font-weight: bold;
@@ -1258,7 +800,6 @@
   line-height: 1.1;
   vertical-align: top;
 }
-
 .monsterinsights-inline-popular-posts-delta .monsterinsights-inline-popular-posts-title {
   display: block;
   font-weight: bold;
@@ -1271,11 +812,9 @@
 .monsterinsights-inline-popular-posts-echo {
   padding: 13px 16px;
 }
-
 .monsterinsights-inline-popular-posts-echo .monsterinsights-inline-popular-posts-icon {
   margin-right: 8px;
 }
-
 .monsterinsights-inline-popular-posts-echo .monsterinsights-inline-popular-posts-label {
   font-style: normal;
   font-weight: bold;
@@ -1283,7 +822,6 @@
   line-height: 1.1;
   margin-right: 8px;
 }
-
 .monsterinsights-inline-popular-posts-echo .monsterinsights-inline-popular-posts-title {
   font-weight: bold;
   font-size: 16px;
@@ -1295,7 +833,6 @@
   display: flex;
   align-items: center;
 }
-
 .monsterinsights-inline-popular-posts-foxtrot .monsterinsights-inline-popular-posts-label {
   font-style: normal;
   font-weight: bold;
@@ -1303,7 +840,6 @@
   line-height: 1.1;
   display: block;
 }
-
 .monsterinsights-inline-popular-posts-foxtrot .monsterinsights-inline-popular-posts-title {
   font-weight: bold;
   font-size: 18px;
@@ -1315,7 +851,6 @@
   display: flex;
   align-items: center;
 }
-
 .monsterinsights-inline-popular-posts-golf .monsterinsights-inline-popular-posts-label {
   font-style: normal;
   font-weight: bold;
@@ -1325,7 +860,6 @@
   background: #fff;
   padding-right: 20px;
 }
-
 .monsterinsights-inline-popular-posts-golf .monsterinsights-inline-popular-posts-title {
   font-weight: bold;
   font-size: 16px;
@@ -1335,24 +869,20 @@
   clear: both;
   margin-top: 14px;
 }
-
 .monsterinsights-inline-popular-posts-golf .monsterinsights-inline-popular-posts-title:before {
   width: 100%;
 }
-
 .monsterinsights-inline-popular-posts-golf .monsterinsights-inline-popular-posts-border {
   display: block;
   border-width: 2px 0 0 0;
   border-style: solid;
   margin-top: 10px;
 }
-
 .monsterinsights-inline-popular-posts-golf .monsterinsights-inline-popular-posts-border-2 {
   border-top: 1px solid #E2E4E9;
   margin-top: 20px;
   display: block;
 }
-
 .monsterinsights-inline-popular-posts-golf .monsterinsights-inline-popular-posts-text {
   width: 100%;
 }
@@ -1361,7 +891,6 @@
   margin-right: 10px;
   vertical-align: middle;
 }
-
 .monsterinsights-inline-popular-posts-hotel .monsterinsights-inline-popular-posts-title {
   font-style: normal;
   font-weight: bold;
@@ -1374,7 +903,6 @@
   padding: 13px 12px 13px 16px;
   position: relative;
 }
-
 .monsterinsights-inline-popular-posts-india .monsterinsights-inline-popular-posts-border {
   border-width: 0 0 0 4px;
   border-style: solid;
@@ -1383,13 +911,11 @@
   top: 0;
   bottom: 0;
 }
-
 .monsterinsights-inline-popular-posts-india .monsterinsights-inline-popular-posts-title {
   font-size: 14px;
   text-decoration: none;
   font-weight: bold;
 }
-
 .monsterinsights-inline-popular-posts-india .monsterinsights-inline-popular-posts-label {
   font-size: 14px;
   text-decoration: none;
@@ -1403,7 +929,6 @@
   align-items: center;
   width: 100%;
 }
-
 .monsterinsights-inline-popular-posts-juliett .monsterinsights-inline-popular-posts-border {
   border-width: 1px 0 0 0;
   border-style: solid;
@@ -1412,7 +937,6 @@
   top: 0;
   right: 0;
 }
-
 .monsterinsights-inline-popular-posts-juliett .monsterinsights-inline-popular-posts-title {
   font-size: 18px;
   text-decoration: none;
@@ -1422,7 +946,6 @@
   display: block;
   line-height: 125%;
 }
-
 .monsterinsights-inline-popular-posts-juliett .monsterinsights-inline-popular-posts-label {
   font-size: 14px;
   line-height: 18px;
@@ -1438,14 +961,12 @@
   position: relative;
   padding: 30px 0;
 }
-
 .monsterinsights-inline-popular-posts-kilo .monsterinsights-inline-popular-posts-label {
   font-style: normal;
   font-weight: bold;
   font-size: 18px;
   line-height: 1;
 }
-
 .monsterinsights-inline-popular-posts-kilo .monsterinsights-inline-popular-posts-title {
   font-weight: bold;
   font-size: 18px;
@@ -1455,11 +976,9 @@
   clear: both;
   margin-top: 6px;
 }
-
 .monsterinsights-inline-popular-posts-kilo .monsterinsights-inline-popular-posts-title:before {
   width: 100%;
 }
-
 .monsterinsights-inline-popular-posts-kilo .monsterinsights-inline-popular-posts-border-2,
 .monsterinsights-inline-popular-posts-kilo .monsterinsights-inline-popular-posts-border {
   display: block;
@@ -1469,7 +988,6 @@
   top: 0;
   border-bottom: 4px dashed #E2E4E9;
 }
-
 .monsterinsights-inline-popular-posts-kilo .monsterinsights-inline-popular-posts-border-2 {
   bottom: 0;
   top: auto;
@@ -1481,19 +999,16 @@
   align-items: center;
   justify-content: space-between;
 }
-
 .monsterinsights-inline-popular-posts-lima .monsterinsights-inline-popular-posts-text {
   margin-left: 13px;
   order: 1;
 }
-
 .monsterinsights-inline-popular-posts-lima .monsterinsights-inline-popular-posts-label {
   display: block;
   font-weight: bold;
   font-size: 18px;
   line-height: 18px;
 }
-
 .monsterinsights-inline-popular-posts-lima .monsterinsights-inline-popular-posts-title {
   font-weight: bold;
   font-size: 18px;
@@ -1503,7 +1018,6 @@
   max-width: 420px;
   margin-top: 7px;
 }
-
 .monsterinsights-inline-popular-posts-lima .monsterinsights-inline-popular-posts-image {
   width: 144px;
   order: 2;
@@ -1516,7 +1030,6 @@
   position: relative;
   align-items: center;
 }
-
 .monsterinsights-inline-popular-posts-mike .monsterinsights-inline-popular-posts-title {
   font-weight: bold;
   font-size: 18px;
@@ -1525,7 +1038,6 @@
   display: block;
   max-width: 380px;
 }
-
 .monsterinsights-inline-popular-posts-mike .monsterinsights-inline-popular-posts-label {
   position: absolute;
   z-index: 10;
@@ -1536,7 +1048,6 @@
   padding: 5px 8px;
   line-height: 1.2;
 }
-
 .monsterinsights-inline-popular-posts-mike .monsterinsights-inline-popular-posts-image {
   margin-right: 20px;
 }
@@ -1550,11 +1061,9 @@
   border-style: solid;
   padding: 16px;
 }
-
 .monsterinsights-inline-popular-posts-november .monsterinsights-inline-popular-posts-text {
   width: 100%;
 }
-
 .monsterinsights-inline-popular-posts-november .monsterinsights-inline-popular-posts-title {
   font-weight: bold;
   font-size: 16px;
@@ -1563,17 +1072,14 @@
   display: block;
   margin-top: 4px;
 }
-
 .monsterinsights-inline-popular-posts-november .monsterinsights-inline-popular-posts-label {
   display: block;
   font-size: 16px;
   font-weight: bold;
 }
-
 .monsterinsights-inline-popular-posts-november .monsterinsights-inline-popular-posts-image {
   margin-right: 20px;
 }
-
 .monsterinsights-inline-popular-posts-november .monsterinsights-inline-popular-posts-icon {
   width: 32px;
   height: 32px;
@@ -1587,47 +1093,40 @@
 }
 
 /** Popular Posts Widget Styles **/
-
 .monsterinsights-widget-popular-posts-widget {
   margin-bottom: 24px;
 }
-
 .monsterinsights-widget-popular-posts-widget .monsterinsights-widget-popular-posts-list {
   padding: 0;
 }
-
 .monsterinsights-widget-popular-posts-widget .monsterinsights-widget-popular-posts-title {
   box-shadow: none;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-alpha .monsterinsights-widget-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-alpha .monsterinsights-widget-popular-posts-list li {
   display: inline-block;
   padding: 24px;
   background: #F0F2F4;
   border-radius: 3px;
   margin: 0 6px 12px 6px;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   line-height: 1.2;
   color: #393F4C;
   font-weight: 700;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-beta .monsterinsights-widget-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-beta .monsterinsights-widget-popular-posts-list li {
   display: inline-block;
   background: #fff;
   border-radius: 3px;
   margin: 0 6px 30px 6px;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   line-height: 1.2;
@@ -1636,18 +1135,16 @@
   border-left: 4px solid #1EC185;
   padding-left: 16px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-charlie .monsterinsights-widget-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-charlie .monsterinsights-widget-popular-posts-list li {
   display: inline-block;
   padding: 24px;
   background: #F0F2F4;
   border-radius: 3px;
   margin: 0 6px 12px 6px;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   line-height: 1.2;
@@ -1655,7 +1152,6 @@
   font-weight: 700;
   border-top: 4px solid #338EEF;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-delta .monsterinsights-widget-popular-posts-image {
   width: 121px;
   height: 121px;
@@ -1664,16 +1160,14 @@
   margin-right: 16px;
   margin-bottom: 12px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-delta .monsterinsights-widget-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-delta .monsterinsights-widget-popular-posts-list li {
   display: inline-block;
   padding: 16px 0 0;
   margin: 0 6px 0 6px;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   line-height: 1.2;
@@ -1681,128 +1175,121 @@
   font-weight: 700;
   border-top: 2px solid #D3D7DE;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-delta .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta {
   font-size: 12px;
   margin-top: 8px;
   font-weight: 400;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-delta .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta span {
   display: inline-block;
   margin-right: 5px;
 }
-
+.monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-delta.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list {
+  margin: 0;
+}
+.monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-delta.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list li {
+  width: calc(33.333333% - 12px);
+}
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-echo .monsterinsights-widget-popular-posts-image {
   margin-bottom: 14px;
   width: 100%;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-echo .monsterinsights-widget-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-echo .monsterinsights-widget-popular-posts-list li {
   display: inline-block;
   margin: 0 6px 24px 6px;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   line-height: 1.2;
   color: #393F4C;
   font-weight: 700;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-echo .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-comments {
   font-size: 16px;
   font-weight: 700;
   margin-top: 14px;
   display: block;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-echo .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta {
   font-size: 12px;
   margin-top: 8px;
   font-weight: 400;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-echo .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta span {
   display: inline-block;
   margin-right: 5px;
 }
-
+.monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-echo.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list {
+  margin: 0;
+}
+.monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-echo.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list li {
+  width: calc(33.333333% - 12px);
+}
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-foxtrot .monsterinsights-widget-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-foxtrot .monsterinsights-widget-popular-posts-list li {
   display: inline-block;
   padding: 16px;
   background: #F0F2F4;
   border-radius: 5px;
   margin: 0 6px 12px 6px;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   line-height: 1.2;
   color: #393F4C;
   font-weight: 700;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-foxtrot .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-comments {
   font-size: 16px;
   font-weight: 700;
   margin-top: 14px;
   display: block;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-foxtrot .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta {
   font-size: 12px;
   margin-top: 8px;
   font-weight: 400;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-foxtrot .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta span {
   display: inline-block;
   margin-right: 5px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-golf .monsterinsights-widget-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-golf .monsterinsights-widget-popular-posts-list li {
   display: inline-block;
   padding: 16px;
   background: #F0F2F4;
   border-radius: 5px;
   margin: 0 6px 12px 6px;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   line-height: 1.2;
   color: #393F4C;
   font-weight: 700;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-golf .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-comments {
   font-size: 16px;
   font-weight: 700;
   margin-top: 14px;
   display: block;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-golf .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta {
   font-size: 12px;
   margin-top: 8px;
   font-weight: 400;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-golf .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta span {
   display: inline-block;
   margin-right: 5px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-golf .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-label {
   font-weight: 400;
   font-size: 12px;
@@ -1812,26 +1299,22 @@
   line-height: 1;
   margin-bottom: 14px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-golf .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-title {
   display: block;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-widget-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-widget-popular-posts-list li {
   display: inline-block;
   margin: 0 6px 24px 6px;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   line-height: 1.2;
   font-weight: 700;
   position: relative;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-text {
   position: absolute;
   bottom: 0;
@@ -1839,29 +1322,30 @@
   left: 0;
   z-index: 15;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta {
   font-size: 12px;
   margin-top: 8px;
   font-weight: 400;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-widget-popular-posts-list .monsterinsights-widget-popular-posts-meta span {
   display: inline-block;
   margin-right: 5px;
 }
-
+.monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list {
+  margin: 0;
+}
+.monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list li {
+  width: calc(33.333333% - 12px);
+}
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-bg-img {
   margin-bottom: 0;
   padding-top: 50%;
   width: 100%;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-bg-img:after {
   z-index: 5;
   border-radius: 5px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-bg-img:before {
   background: linear-gradient(0deg, #000000 -25.16%, rgba(0, 0, 0, 0.1) 100%);
   content: "";
@@ -1873,15 +1357,12 @@
   z-index: 10;
   border-radius: 5px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-widget-popular-posts-image {
   position: relative;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-widget-popular-posts-image img {
   width: 100%;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-hotel .monsterinsights-widget-popular-posts-image:before {
   background: linear-gradient(0deg, #000 -25.16%, rgba(0, 0, 0, 0.1));
   content: "";
@@ -1893,37 +1374,30 @@
   z-index: 10;
   border-radius: 5px;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-columns-1 .monsterinsights-widget-popular-posts-list {
   margin: 0;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-columns-1 .monsterinsights-widget-popular-posts-list li {
   width: 100%;
   margin-left: 0;
   margin-right: 0;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list {
   margin: 0;
 }
-
 .monsterinsights-widget-popular-posts-widget.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list li {
-  width: calc(33.333333% - 12px);
+  width: calc(33.333333% - 64px);
 }
 
 .monsterinsights-wide-column-options input[type=radio] {
   display: none;
 }
-
 .monsterinsights-wide-column-options .components-radio-control__option {
   display: inline-block;
 }
-
 .monsterinsights-wide-column-options .components-base-control__label {
   display: block;
 }
-
 .monsterinsights-wide-column-options .monsterinsights-wide-column {
   display: flex;
   border: 1px solid #B7C9D9;
@@ -1934,7 +1408,6 @@
   flex-flow: wrap;
   justify-content: space-between;
 }
-
 .monsterinsights-wide-column-options .monsterinsights-wide-column > span {
   background: #99A1B2;
   display: inline-block;
@@ -1943,25 +1416,20 @@
   border-radius: 1px;
   margin-bottom: 2px;
 }
-
 .monsterinsights-wide-column-options .monsterinsights-wide-column.monsterinsights-wide-column-two > span {
   width: 12px;
 }
-
 .monsterinsights-wide-column-options .monsterinsights-wide-column.monsterinsights-wide-column-one > span {
   width: 100%;
 }
-
 .monsterinsights-wide-column-options input[type=radio]:checked + label .monsterinsights-wide-column {
-  border: 2px solid #6528f5;
+  border: 2px solid #338EEF;
   background: #ECF4FE;
   padding: 9px 4px;
 }
-
 .monsterinsights-wide-column-options input[type=radio]:checked + label .monsterinsights-wide-column > span {
-  background: #6528f5;
+  background: #338EEF;
 }
-
 .monsterinsights-wide-column-options.monsterinsights-popular-posts-widget-columns-control .components-h-stack {
   flex-direction: row;
   justify-content: normal;
@@ -1970,7 +1438,6 @@
 .block-editor-block-inspector .monsterinsights-hierarchical-terms .components-base-control {
   margin-bottom: 0;
 }
-
 .block-editor-block-inspector .monsterinsights-hierarchical-terms-disabled {
   opacity: 0.6;
   pointer-events: none;
@@ -1987,7 +1454,6 @@
   float: left;
   margin-right: 18px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-widget-popular-posts-echo .monsterinsights-products-popular-posts-image {
   margin-bottom: 14px;
   width: 100%;
@@ -1996,7 +1462,6 @@
 .monsterinsights-input-text-small {
   margin-top: 24px;
 }
-
 .monsterinsights-input-text-small .settings-input-text-input {
   max-width: 350px;
 }
@@ -2005,7 +1470,6 @@
   display: inline-block;
   margin-right: 5px;
 }
-
 .monsterinsights-input-text-extra-small .settings-input-text-input {
   max-width: 80px;
 }
@@ -2013,27 +1477,21 @@
 .monsterinsights-products-popular-posts-widget {
   margin-bottom: 24px;
 }
-
 .monsterinsights-products-popular-posts-widget .monsterinsights-products-popular-posts-title {
   box-shadow: none;
 }
-
 .monsterinsights-products-popular-posts-widget .monsterinsights-products-popular-posts-list {
   padding: 0;
 }
-
 .monsterinsights-products-popular-posts-widget .monsterinsights-products-popular-posts-rating {
   display: block;
 }
-
 .monsterinsights-products-popular-posts-widget .monsterinsights-products-popular-posts-rating svg {
   margin-right: 2px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-alpha .monsterinsights-products-popular-posts-list {
   margin: 0 -12px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-alpha .monsterinsights-products-popular-posts-list li {
   display: inline-block;
   margin: 0 12px;
@@ -2046,20 +1504,17 @@
   font-weight: bold;
   line-height: 1.1;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-alpha .monsterinsights-products-popular-posts-price {
   display: block;
   margin: 10px 0 7px;
   font-weight: 400;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-beta .monsterinsights-products-popular-posts-list, .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-beta .monsterinsights-products-popular-posts-list li, .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-list li {
   display: inline-block;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   padding: 10px 12px;
@@ -2069,7 +1524,12 @@
   border-radius: 3px;
   position: relative;
 }
-
+.monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-beta.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list, .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list {
+  margin: 0;
+}
+.monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-beta.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list li, .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta.monsterinsights-widget-popular-posts-columns-3 .monsterinsights-widget-popular-posts-list li {
+  width: calc(33.333333% - 12px);
+}
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-beta .monsterinsights-products-popular-posts-price, .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-price {
   display: block;
   font-weight: 400;
@@ -2077,23 +1537,19 @@
   right: 12px;
   bottom: 10px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-beta .monsterinsights-products-popular-posts-title, .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-title {
   margin-top: 12px;
   display: block;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-beta .monsterinsights-products-popular-posts-rating, .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-rating {
   margin-top: 13px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-charlie .monsterinsights-products-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-charlie .monsterinsights-products-popular-posts-list li {
   display: inline-block;
-  width: calc(50% - 12px);
+  width: calc(50% - 61px);
   vertical-align: top;
   font-size: 16px;
   padding: 0;
@@ -2103,19 +1559,16 @@
   border-radius: 5px;
   position: relative;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-charlie .monsterinsights-products-popular-posts-price {
   display: block;
   font-weight: 400;
   order: 3;
   margin-top: 4px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-charlie .monsterinsights-products-popular-posts-title {
   order: 2;
   margin-top: 4px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-charlie .monsterinsights-products-popular-posts-text {
   position: absolute;
   bottom: 0;
@@ -2126,16 +1579,13 @@
   display: flex;
   flex-flow: column;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-charlie .monsterinsights-products-popular-posts-rating {
   margin-top: 13px;
   order: 1;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-charlie .monsterinsights-products-popular-posts-image {
   position: relative;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-charlie .monsterinsights-products-popular-posts-image:before {
   background: linear-gradient(0deg, #000000 -25.16%, rgba(0, 0, 0, 0.1) 100%);
   content: "";
@@ -2147,35 +1597,28 @@
   z-index: 10;
   border-radius: 5px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-price {
   position: relative;
   margin-top: 8px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-list {
   margin: 0 -6px;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-list li {
   padding: 0;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-price {
   right: auto;
   bottom: auto;
   order: 3;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-rating {
   margin-top: 8px;
   order: 1;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-title {
   order: 2;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-delta .monsterinsights-products-popular-posts-text {
   display: flex;
   flex-flow: column;
@@ -2184,13 +1627,11 @@
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-columns-1 .monsterinsights-products-popular-posts-list {
   margin: 0;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-columns-1 .monsterinsights-products-popular-posts-list li {
   width: 100%;
   margin-left: 0;
   margin-right: 0;
 }
-
 .monsterinsights-products-popular-posts-widget.monsterinsights-products-popular-posts-columns-3 .monsterinsights-products-popular-posts-list li {
   width: calc(33.333333% - 24px);
 }
@@ -2214,12 +1655,10 @@
   padding: 44px 34px;
   text-align: center;
 }
-
 .monsterinsights-popular-posts-no-woocoomerce h3 {
   font-size: 22px;
   line-height: 1.4;
 }
-
 .monsterinsights-popular-posts-no-woocoomerce p,
 .monsterinsights-popular-posts-no-woocoomerce a {
   font-size: 16px;
@@ -2228,7 +1667,6 @@
   line-height: 22px;
   color: #626D83;
 }
-
 .monsterinsights-popular-posts-no-woocoomerce a {
   color: #1170D5;
   margin-top: 24px;
@@ -2243,13 +1681,11 @@
   border: 1px solid #D7DBE9;
   padding: 20px;
 }
-
 .monsterinsights-donut-chart .apexcharts-legend.apx-legend-position-right {
   height: 100%;
   justify-content: center;
   top: 0 !important;
 }
-
 @media (min-width: 767px) {
   .monsterinsights-donut-chart .apexcharts-legend-series {
     padding: 20px;
@@ -2262,7 +1698,6 @@
     gap: 20px;
   }
 }
-
 @media (min-width: 767px) {
   .monsterinsights-donut-chart .apexcharts-legend-series span.apexcharts-legend-text {
     display: flex;
@@ -2279,59 +1714,50 @@
   justify-content: center;
   border: 1px solid #D7DBE9;
 }
-
 @media (max-width: 767px) {
   .monsterinsights-duo-scorecard {
     flex-direction: column;
   }
 }
-
 .monsterinsights-duo-scorecard-half {
   padding: 45px 60px;
   display: flex;
   width: 50%;
   justify-content: space-between;
 }
-
 @media (max-width: 767px) {
   .monsterinsights-duo-scorecard-half {
     width: 80%;
     padding: 10%;
   }
 }
-
 .monsterinsights-duo-scorecard-left {
   border-right: 1px solid #D7DBE9;
 }
-
 @media (max-width: 767px) {
   .monsterinsights-duo-scorecard-left {
     border-right: none;
     border-bottom: 1px solid #D7DBE9;
   }
 }
-
 .monsterinsights-duo-scorecard-title {
   font-size: 17px;
   font-weight: 700;
   line-height: 21px;
   text-align: left;
 }
-
 .monsterinsights-duo-scorecard-value {
   font-size: 39px;
   font-weight: 300;
   line-height: 47px;
   text-align: left;
 }
-
 .monsterinsights-duo-scorecard-compare {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-end;
 }
-
 .monsterinsights-duo-scorecard-compare-label {
   font-size: 15px;
   font-weight: 400;
@@ -2339,12 +1765,10 @@
   text-align: right;
   color: #A4A4A4;
 }
-
 .monsterinsights-duo-scorecard-compare-percentage {
   display: flex;
   color: #EB5757;
 }
-
 .monsterinsights-duo-scorecard-compare-percentage:before {
   content: "";
   background-image: url("data:image/svg+xml,%3Csvg width=%278%27 height=%279%27 viewBox=%270 0 8 9%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cpath d=%27M3.78517 1.53678V8.17139M3.78517 8.17139L6.60522 5.26874M3.78517 8.17139L0.965116 5.26874%27 stroke=%27%23EB5757%27 strokeWidth=%271.44231%27 strokeLinecap=%27round%27 strokeLinejoin=%27round%27/%3E%3C/svg%3E");
@@ -2356,16 +1780,13 @@
   padding: 0 2px;
   display: block;
 }
-
 .monsterinsights-duo-scorecard-compare-percentage.is-positive-percentage {
   color: #5CC0A5;
 }
-
 .monsterinsights-duo-scorecard-compare-percentage.is-positive-percentage:before {
   content: "";
   background-image: url("data:image/svg+xml,%3Csvg width=%279%27 height=%2710%27 viewBox=%270 0 9 10%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cpath d=%27M4.37171 8.51399L4.37171 0.887207M4.37171 0.887207L1.2843 4.22392M4.37171 0.887207L7.45912 4.22392%27 stroke=%27%235CC0A5%27 strokeWidth=%271.42114%27 strokeLinecap=%27round%27 strokeLinejoin=%27round%27/%3E%3C/svg%3E");
 }
-
 .monsterinsights-duo-scorecard-compare-icon svg {
   width: 12px;
   height: 12px;
@@ -2384,7 +1805,6 @@
   width: 300px;
   height: 200px;
 }
-
 @media (max-width: 767px) {
   .monsterinsights-scorecard-simple-card {
     width: 80%;
@@ -2392,13 +1812,11 @@
     padding: 10%;
   }
 }
-
 .monsterinsights-scorecard-simple-card-value {
   font-size: 90px;
   font-weight: 500;
   line-height: 105px;
 }
-
 .monsterinsights-scorecard-simple-card-label {
   font-size: 30px;
   font-weight: 400;
@@ -2410,31 +1828,25 @@
   flex-direction: column;
   border: 1px solid #D7DBE9;
 }
-
 .monsterinsights-scorecard-table-header {
   background-color: #FFFFFF;
 }
-
 .monsterinsights-scorecard-table-header, .monsterinsights-scorecard-table-row {
   display: grid;
   grid-auto-flow: row;
 }
-
 .with-2-columns .monsterinsights-scorecard-table-header, .with-2-columns .monsterinsights-scorecard-table-row {
   grid-template-columns: repeat(2, 1fr);
 }
-
 .with-3-columns .monsterinsights-scorecard-table-header, .with-3-columns .monsterinsights-scorecard-table-row {
   grid-template-columns: repeat(3, 1fr);
 }
-
 .monsterinsights-scorecard-table-head {
   font-size: 19px;
   font-weight: 700;
   line-height: 24px;
   text-align: left;
 }
-
 .monsterinsights-scorecard-table-row {
   font-size: 16px;
   font-weight: 400;
@@ -2442,29 +1854,23 @@
   text-align: left;
   background-color: #FFFFFF;
 }
-
 .monsterinsights-scorecard-table-head, .monsterinsights-scorecard-table-row {
   padding: 15px 60px;
 }
-
 @media (max-width: 767px) {
   .monsterinsights-scorecard-table-head, .monsterinsights-scorecard-table-row {
     padding: 15px;
   }
 }
-
 .monsterinsights-scorecard-table-head, .monsterinsights-scorecard-table-column {
   text-align: center;
 }
-
 .monsterinsights-scorecard-table-head:first-child, .monsterinsights-scorecard-table-column:first-child {
   text-align: left;
 }
-
 .monsterinsights-scorecard-table-head:last-child, .monsterinsights-scorecard-table-column:last-child {
   text-align: right;
 }
-
 .monsterinsights-scorecard-table-row:nth-child(odd) {
   background-color: #F9FBFF;
 }
@@ -2477,11 +1883,9 @@
 .monsterinsights-site-insights-metric-picker .monsterinsights-theme-picker-label-icon svg {
   max-width: 90px;
 }
-
 .monsterinsights-site-insights-metric-picker .monsterinsights-theme-picker-slide label {
   height: 142px;
 }
-
 .monsterinsights-site-insights-metric-picker .monsterinsights-slider-theme-option:nth-child(3), .monsterinsights-site-insights-metric-picker .monsterinsights-slider-theme-option:nth-child(4) {
   margin-bottom: 28px;
 }

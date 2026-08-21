@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * MonsterInsights Onboarding Class
  *
@@ -113,9 +109,8 @@ class MonsterInsights_Onboarding {
 	public function validate_onboarding_request( $request ) {
 		// Validate the onboarding key for all requests.
 		$provided_key = $request->get_param( 'onboarding_key' );
-		$stored       = monsterinsights_get_onboarding_key_data();
-		$stored_key   = $stored['key'];
-		if ( empty( $provided_key ) || '' === $stored_key || ! hash_equals( $stored_key, $provided_key ) ) {
+		$stored_key = get_transient( 'monsterinsights_onboarding_key' );
+		if ( empty( $provided_key ) || false === $stored_key || ! hash_equals( $stored_key, $provided_key ) ) {
 			return new WP_Error(
 				'monsterinsights_invalid_key',
 				esc_html__( 'Invalid onboarding key', 'google-analytics-for-wordpress' ),
@@ -123,22 +118,12 @@ class MonsterInsights_Onboarding {
 			);
 		}
 
-		// Keys minted since the user id was stored alongside the key always resolve
-		// to a launching user. A key that does not resolve was minted earlier and
-		// its companion transient is already gone, so it cannot be attributed to
-		// anyone. Treat it as stale: relaunching the wizard mints a fresh key that
-		// carries its launching user.
-		$onboarding_user_id = (int) $stored['user_id'];
-		if ( empty( $onboarding_user_id ) ) {
-			return new WP_Error(
-				'monsterinsights_invalid_key',
-				esc_html__( 'Invalid onboarding key', 'google-analytics-for-wordpress' ),
-				array( 'status' => 403 )
-			);
-		}
-
-		// Require a launching user that still holds plugin installation capability.
-		if ( ! monsterinsights_can_install_plugins( $onboarding_user_id ) ) {
+		// Ensure the user who generated the key has plugin installation capability.
+		// Only enforce when the user ID transient is present; if it has been evicted
+		// from the object cache independently of the key transient, skip this check
+		// rather than blocking a legitimate upgrade flow.
+		$onboarding_user_id = monsterinsights_get_onboarding_user_id();
+		if ( $onboarding_user_id && ! monsterinsights_can_install_plugins( $onboarding_user_id ) ) {
 			return new WP_Error(
 				'monsterinsights_insufficient_permissions',
 				esc_html__( 'Insufficient permissions', 'google-analytics-for-wordpress' ),
@@ -250,10 +235,6 @@ class MonsterInsights_Onboarding {
 	 * @return WP_REST_Response Response indicating success.
 	 */
 	public function store_settings( $request ) {
-		if ( ! function_exists( 'monsterinsights_get_addons_data' ) ) {
-			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/pages/addons.php';
-		}
-
 		$is_network = boolval( $request->get_param( 'is_network' ) );
 		// Process settings
 		$settings = $request->get_param( 'settings' );
@@ -476,10 +457,6 @@ class MonsterInsights_Onboarding {
 	private function install_addon( $download_url ) {
 		// Install the addon.
 		if ( isset( $download_url ) ) {
-			// Only proceed when the package URL is present in the plugin's addon catalog.
-			if ( ! $this->is_allowed_addon_download_url( $download_url ) ) {
-				return false;
-			}
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			$method = '';
 			$url    = add_query_arg(
@@ -513,118 +490,6 @@ class MonsterInsights_Onboarding {
 			return false;
 		}
 	}
-
-	/**
-	 * Determine whether an addon package may be downloaded from the given URL.
-	 *
-	 * The URL must match one served by the plugin's own addon catalog. Because
-	 * the wizard's install URLs originate from that same catalog, every
-	 * legitimate package matches while request-supplied URLs that are not in
-	 * the catalog are rejected.
-	 *
-	 * @since 9.5.0
-	 *
-	 * @param string $download_url The package download URL.
-	 * @return bool True when the URL is present in the addon catalog, false otherwise.
-	 */
-	private function is_allowed_addon_download_url( $download_url ) {
-		if ( ! is_string( $download_url ) || '' === $download_url ) {
-			return false;
-		}
-
-		// Structural pre-check before the catalog lookup: an absolute http(s) URL
-		// with no embedded credentials. It stays offline on purpose. Core's
-		// wp_http_validate_url() resolves the host through gethostbyname(), which
-		// would turn a resolver outage or a proxied site into a refused install
-		// even though the package itself is legitimate.
-		$parts = wp_parse_url( $download_url );
-		if ( ! is_array( $parts ) || empty( $parts['scheme'] ) || empty( $parts['host'] ) ) {
-			return false;
-		}
-		if ( ! in_array( strtolower( $parts['scheme'] ), array( 'http', 'https' ), true ) ) {
-			return false;
-		}
-		if ( isset( $parts['user'] ) || isset( $parts['pass'] ) ) {
-			return false;
-		}
-
-		// The addon package URLs carry a signed query that is regenerated on each
-		// catalog fetch, so compare only the origin and path. Matching the full
-		// string would reject a legitimate install whenever the catalog was
-		// refreshed between issuing the URL and performing the install.
-		$requested = $this->addon_download_url_base( $download_url );
-		if ( '' === $requested ) {
-			return false;
-		}
-
-		foreach ( $this->get_addon_download_urls() as $catalog_url ) {
-			if ( $requested === $this->addon_download_url_base( $catalog_url ) ) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Reduce a package URL to its stable origin and path for comparison,
-	 * dropping the signed query string that is regenerated on each catalog fetch.
-	 *
-	 * @since 9.5.0
-	 *
-	 * @param string $url Package URL.
-	 * @return string Normalized scheme://host[:port]/path, or empty string if unparseable.
-	 */
-	private function addon_download_url_base( $url ) {
-		$parts = wp_parse_url( (string) $url );
-		if ( empty( $parts['host'] ) ) {
-			return '';
-		}
-		$scheme = isset( $parts['scheme'] ) ? $parts['scheme'] : 'https';
-		$path   = isset( $parts['path'] ) ? $parts['path'] : '';
-		// The port is part of the origin the catalog served, so it is compared too.
-		$port = isset( $parts['port'] ) ? ':' . (int) $parts['port'] : '';
-		return strtolower( $scheme . '://' . $parts['host'] ) . $port . $path;
-	}
-
-	/**
-	 * Collect the package URLs from the plugin's own addon catalog.
-	 *
-	 * The catalog is sourced from monsterinsights_get_addons(), which returns
-	 * the cached licensing API response (transient `_monsterinsights_addons`)
-	 * and refreshes it from the API when the cache is absent. When the catalog
-	 * cannot be obtained this returns an empty list, so the membership test
-	 * fails closed and no unverified package is installed.
-	 *
-	 * @since 9.5.0
-	 *
-	 * @return array List of package URLs known to the catalog.
-	 */
-	private function get_addon_download_urls() {
-		if ( ! function_exists( 'monsterinsights_get_addons' ) ) {
-			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/pages/addons.php';
-		}
-
-		$catalog = monsterinsights_get_addons();
-		if ( empty( $catalog ) || ! is_array( $catalog ) ) {
-			return array();
-		}
-
-		$urls = array();
-		foreach ( $catalog as $group ) {
-			if ( ! is_array( $group ) ) {
-				continue;
-			}
-			foreach ( $group as $addon ) {
-				if ( is_object( $addon ) && ! empty( $addon->url ) && is_string( $addon->url ) ) {
-					$urls[] = $addon->url;
-				}
-			}
-		}
-
-		return $urls;
-	}
-
 	/**
 	 * Set the license key if valid, if not return an error.
 	 * 

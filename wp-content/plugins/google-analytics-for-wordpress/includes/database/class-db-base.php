@@ -47,17 +47,6 @@ abstract class MonsterInsights_DB_Base {
 	protected $primary_key = 'id';
 
 	/**
-	 * Per-request cache of table names already verified to exist.
-	 *
-	 * Keyed by full (prefixed) table name so multiple table subclasses can
-	 * share the same static without colliding.
-	 *
-	 * @since 9.11.1
-	 * @var array
-	 */
-	protected static $verified_tables = array();
-
-	/**
 	 * Get the table name (with prefix).
 	 *
 	 * @since 9.11.0
@@ -139,55 +128,6 @@ abstract class MonsterInsights_DB_Base {
 		);
 
 		return ! empty( $result );
-	}
-
-	/**
-	 * Ensure the table exists, creating it if a prior install/upgrade migration
-	 * never ran (or failed) on this site.
-	 *
-	 * The schema migration that creates each table only runs during the plugin
-	 * install/upgrade routine. If that never executed on a given site (e.g. the
-	 * table was dropped, or the migration silently failed), every read/write
-	 * against the table fails. This provides a lazy, self-healing fallback so
-	 * the table is created on first use regardless of migration history.
-	 *
-	 * A three-layer guard keeps this cheap after the first check:
-	 *   1. Static per-request cache (no query).
-	 *   2. Stored table-version option (autoloaded, no table query).
-	 *   3. SHOW TABLES check; records the version so future requests hit layer 2.
-	 *      Only when the table is genuinely absent is create_table() invoked.
-	 *
-	 * @since 9.11.1
-	 * @return bool True if the table exists (or was created), false on failure.
-	 */
-	public function maybe_create_table() {
-		$table_name = $this->get_table_name();
-
-		// Layer 1: already verified during this request.
-		if ( isset( self::$verified_tables[ $table_name ] ) ) {
-			return self::$verified_tables[ $table_name ];
-		}
-
-		// Layer 2: version option matches — a prior run confirmed the table.
-		if ( $this->get_table_version() === $this->version ) {
-			self::$verified_tables[ $table_name ] = true;
-			return true;
-		}
-
-		// Layer 3: confirm actual existence before attempting creation. Sites
-		// whose table was created by the migration (but never recorded the
-		// version option) land here once, then hit layer 2 on later requests.
-		if ( $this->table_exists() ) {
-			$this->update_table_version( $this->version );
-			self::$verified_tables[ $table_name ] = true;
-			return true;
-		}
-
-		// Table is genuinely missing — create it now.
-		$created = $this->create_table();
-		self::$verified_tables[ $table_name ] = $created;
-
-		return $created;
 	}
 
 	/**

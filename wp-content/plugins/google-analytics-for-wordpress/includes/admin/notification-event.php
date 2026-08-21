@@ -152,11 +152,11 @@ class MonsterInsights_Notification_Event {
 	 */
 	public function build_external_link( $url ) {
 		$build_url   = wp_specialchars_decode( monsterinsights_get_url( 'monsterinsights-notifications-sidebar', 'notifications', $url ) );
-		$host        = wp_parse_url( $build_url, PHP_URL_HOST );
+		$host        = parse_url( $build_url, PHP_URL_HOST );
 		$domain_name = preg_replace( '/^www\./', '', $host );
 
 		if ( 'monsterinsights.com' != $domain_name ) {
-			parse_str( wp_parse_url( $build_url, PHP_URL_QUERY ), $queries );
+			parse_str( parse_url( $build_url, PHP_URL_QUERY ), $queries );
 
 			if ( isset( $queries['utm_source'] ) ) {
 				$queries['utm_source'] = 'monsterinsights';

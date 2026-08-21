@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Notifications.
  *
@@ -65,12 +61,6 @@ class MonsterInsights_Notifications {
 
 		add_action( 'monsterinsights_admin_notifications_update', array( $this, 'update' ) );
 
-		add_action( 'wp_ajax_monsterinsights_notification_mark_read', array( $this, 'mark_read' ) );
-
-		add_action( 'wp_ajax_monsterinsights_notification_save', array( $this, 'save_notification' ) );
-
-		add_action( 'wp_ajax_monsterinsights_notification_remind_me', array( $this, 'remind_me' ) );
-
 	}
 
 	/**
@@ -131,13 +121,13 @@ class MonsterInsights_Notifications {
 		$res = wp_remote_get( self::SOURCE_URL );
 
 		if ( is_wp_error( $res ) ) {
-			return false;
+			return array();
 		}
 
 		$body = wp_remote_retrieve_body( $res );
 
 		if ( empty( $body ) ) {
-			return false;
+			return array();
 		}
 
 		return $this->verify( json_decode( $body, true ) );
@@ -253,28 +243,22 @@ class MonsterInsights_Notifications {
 
 		$option = $this->get_option();
 
-		// Only fetch the remote feed when the cache is stale (older than one day).
+		$this->update();
+
+		// Update notifications using async task.
 		if ( empty( $option['update'] ) || time() > $option['update'] + DAY_IN_SECONDS ) {
-			// Use a transient lock to prevent concurrent requests from fetching simultaneously.
-			if ( false === get_transient( 'monsterinsights_notifications_updating' ) ) {
-				set_transient( 'monsterinsights_notifications_updating', true, MINUTE_IN_SECONDS );
-				$this->update();
-				delete_transient( 'monsterinsights_notifications_updating' );
-				$option = $this->get_option();
+			if ( false === wp_next_scheduled( 'monsterinsights_admin_notifications_update' ) ) {
+				wp_schedule_single_event( time(), 'monsterinsights_admin_notifications_update' );
 			}
 		}
 
-		// If feed has never been fetched yet, display no notifications.
+		// If cron has not finish running then display no notifications.
 		if ( empty( $option['feed_fetched'] ) ) {
 			return array();
 		}
 
 		$events = ! empty( $option['events'] ) ? $this->verify_active( $option['events'] ) : array();
 		$feed   = ! empty( $option['feed'] ) ? $this->verify_active( $option['feed'] ) : array();
-
-		// Ensure read/saved properties exist on all notifications.
-		$events = $this->ensure_read_saved_properties( $events );
-		$feed   = $this->ensure_read_saved_properties( $feed );
 
 		$notifications              = array();
 		$notifications['events']    = $events;
@@ -284,7 +268,6 @@ class MonsterInsights_Notifications {
 		$notifications['feed']      = $this->get_notifications_with_human_readeable_start_time( $notifications['feed'] );
 		$notifications['feed']      = $this->get_notifications_with_formatted_content( $notifications['feed'] );
 		$notifications['dismissed'] = ! empty( $option['dismissed'] ) ? $option['dismissed'] : array();
-		$notifications['dismissed'] = $this->ensure_read_saved_properties( $notifications['dismissed'] );
 		$notifications['dismissed'] = $this->get_notifications_with_human_readeable_start_time( $notifications['dismissed'] );
 		$notifications['dismissed'] = $this->get_notifications_with_formatted_content( $notifications['dismissed'] );
 
@@ -347,7 +330,6 @@ class MonsterInsights_Notifications {
 	 */
 	public function get_active_notifications() {
 		$notifications = $this->get();
-		$snoozed_ids   = $this->get_snoozed_ids();
 
 		// Show only 5 active notifications plus any that has a priority of 1
 		$all_active = isset( $notifications['events'] ) ? $notifications['events'] : array();
@@ -356,18 +338,12 @@ class MonsterInsights_Notifications {
 
 		// Set 3 feeds.
 		foreach ( $all_feeds as $notification ) {
-			if ( in_array( (string) $notification['id'], $snoozed_ids, true ) ) {
-				continue;
-			}
 			if ( count( $displayed ) < 3 ) {
 				$displayed[] = $notification;
 			}
 		}
 
 		foreach ( $all_active as $notification ) {
-			if ( in_array( (string) $notification['id'], $snoozed_ids, true ) ) {
-				continue;
-			}
 			if ( ( isset( $notification['priority'] ) && $notification['priority'] === 1 ) || count( $displayed ) < 5 ) {
 				$displayed[] = $notification;
 			}
@@ -398,16 +374,7 @@ class MonsterInsights_Notifications {
 	 */
 	public function get_count() {
 
-		// Count only unread notifications to match the sidebar inbox number.
-		$active = $this->get_active_notifications();
-		$unread = 0;
-		foreach ( $active as $notification ) {
-			if ( empty( $notification['read'] ) ) {
-				$unread++;
-			}
-		}
-
-		return $unread;
+		return count( $this->get_active_notifications() );
 	}
 
 	/**
@@ -459,12 +426,6 @@ class MonsterInsights_Notifications {
 
 		$notification = $this->verify( array( $notification ) );
 
-		// Set read/saved defaults for new notifications.
-		foreach ( $notification as $key => $item ) {
-			$notification[ $key ]['read']  = false;
-			$notification[ $key ]['saved'] = false;
-		}
-
 		$notifications = array_merge( $notification, $current_notifications );
 
 		//  Sort notifications by priority
@@ -504,36 +465,8 @@ class MonsterInsights_Notifications {
 	 */
 	public function update() {
 
-		$feed = $this->fetch_feed();
-
-		// If the remote fetch failed, bail without updating the timestamp so it retries on the next page load.
-		if ( false === $feed ) {
-			return;
-		}
-
+		$feed   = $this->fetch_feed();
 		$option = $this->get_option();
-
-		// Preserve read/saved state from existing feed items.
-		$existing_feed_map = array();
-		if ( ! empty( $option['feed'] ) && is_array( $option['feed'] ) ) {
-			foreach ( $option['feed'] as $item ) {
-				if ( ! empty( $item['id'] ) ) {
-					$existing_feed_map[ $item['id'] ] = $item;
-				}
-			}
-		}
-
-		foreach ( $feed as $key => $item ) {
-			if ( ! empty( $item['id'] ) && isset( $existing_feed_map[ $item['id'] ] ) ) {
-				// Carry over read/saved from existing item.
-				$feed[ $key ]['read']  = isset( $existing_feed_map[ $item['id'] ]['read'] ) ? $existing_feed_map[ $item['id'] ]['read'] : true;
-				$feed[ $key ]['saved'] = ! empty( $existing_feed_map[ $item['id'] ]['saved'] );
-			} else {
-				// New feed item.
-				$feed[ $key ]['read']  = false;
-				$feed[ $key ]['saved'] = false;
-			}
-		}
 
 		update_option(
 			$this->option_name,
@@ -546,9 +479,6 @@ class MonsterInsights_Notifications {
 			),
 			false
 		);
-
-		// Clear the in-memory cache so subsequent calls see fresh data.
-		$this->option = false;
 	}
 
 	/**
@@ -605,169 +535,14 @@ class MonsterInsights_Notifications {
 	}
 
 	/**
-	 * Ensure each notification has read and saved properties.
-	 *
-	 * Existing notifications without these properties default to read => true, saved => false.
-	 *
-	 * @param array $notifications Array of notification items.
-	 *
-	 * @return array
-	 */
-	public function ensure_read_saved_properties( $notifications ) {
-		if ( ! is_array( $notifications ) || empty( $notifications ) ) {
-			return $notifications;
-		}
-
-		foreach ( $notifications as $key => $notification ) {
-			if ( ! isset( $notification['read'] ) ) {
-				$notifications[ $key ]['read'] = true;
-			}
-			if ( ! isset( $notification['saved'] ) ) {
-				$notifications[ $key ]['saved'] = false;
-			}
-		}
-
-		return $notifications;
-	}
-
-	/**
-	 * Mark notification(s) as read via AJAX.
-	 *
-	 * @since {VERSION}
-	 */
-	public function mark_read() {
-		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
-
-		if ( ! $this->has_access() || empty( $_POST['id'] ) ) {
-			wp_send_json_error();
-		}
-
-		$id     = sanitize_text_field( wp_unslash( $_POST['id'] ) );
-		$option = $this->get_option();
-
-		if ( 'all' === $id ) {
-			// Mark all feed and events as read.
-			if ( is_array( $option['feed'] ) ) {
-				foreach ( $option['feed'] as $key => $notification ) {
-					$option['feed'][ $key ]['read'] = true;
-				}
-			}
-			if ( is_array( $option['events'] ) ) {
-				foreach ( $option['events'] as $key => $notification ) {
-					$option['events'][ $key ]['read'] = true;
-				}
-			}
-		} else {
-			// Mark single notification as read — search all arrays for safety.
-			foreach ( array( 'feed', 'events', 'dismissed' ) as $type ) {
-				if ( ! is_array( $option[ $type ] ) ) {
-					continue;
-				}
-				foreach ( $option[ $type ] as $key => $notification ) {
-					if ( $notification['id'] == $id ) { // phpcs:ignore WordPress.PHP.StrictComparisons
-						$option[ $type ][ $key ]['read'] = true;
-						break 2;
-					}
-				}
-			}
-		}
-
-		update_option( $this->option_name, $option, false );
-
-		wp_send_json_success();
-	}
-
-	/**
-	 * Toggle saved state for a notification via AJAX.
-	 *
-	 * @since {VERSION}
-	 */
-	public function save_notification() {
-		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
-
-		if ( ! $this->has_access() || empty( $_POST['id'] ) ) {
-			wp_send_json_error();
-		}
-
-		$id     = sanitize_text_field( wp_unslash( $_POST['id'] ) );
-		$option = $this->get_option();
-		$saved  = null;
-
-		// Search in feed, events, and dismissed.
-		foreach ( array( 'feed', 'events', 'dismissed' ) as $type ) {
-			if ( ! is_array( $option[ $type ] ) ) {
-				continue;
-			}
-			foreach ( $option[ $type ] as $key => $notification ) {
-				if ( $notification['id'] == $id ) { // phpcs:ignore WordPress.PHP.StrictComparisons
-					$current_saved                     = ! empty( $notification['saved'] );
-					$option[ $type ][ $key ]['saved']   = ! $current_saved;
-					$saved                             = ! $current_saved;
-					break 2;
-				}
-			}
-		}
-
-		if ( null === $saved ) {
-			wp_send_json_error();
-		}
-
-		update_option( $this->option_name, $option, false );
-
-		wp_send_json_success( array( 'saved' => $saved ) );
-	}
-
-	/**
-	 * Handle the "Remind Me" AJAX action.
-	 * Snoozes a notification for the current session (until re-login).
-	 */
-	public function remind_me() {
-		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
-
-		if ( ! $this->has_access() || empty( $_POST['id'] ) ) {
-			wp_send_json_error();
-		}
-
-		$id      = sanitize_text_field( wp_unslash( $_POST['id'] ) );
-		$user_id = get_current_user_id();
-
-		$snoozed = get_user_meta( $user_id, 'monsterinsights_notifications_snoozed', true );
-		if ( ! is_array( $snoozed ) ) {
-			$snoozed = array();
-		}
-
-		if ( ! in_array( $id, $snoozed, true ) ) {
-			$snoozed[] = $id;
-		}
-
-		update_user_meta( $user_id, 'monsterinsights_notifications_snoozed', $snoozed );
-
-		wp_send_json_success();
-	}
-
-	/**
-	 * Get the list of snoozed notification IDs for the current user.
-	 *
-	 * @return array
-	 */
-	public function get_snoozed_ids() {
-		$user_id = get_current_user_id();
-		$snoozed = get_user_meta( $user_id, 'monsterinsights_notifications_snoozed', true );
-
-		return is_array( $snoozed ) ? $snoozed : array();
-	}
-
-	/**
 	 * This generates the markup for the notifications indicator if needed.
 	 *
 	 * @return string
 	 */
 	public function get_menu_count() {
 
-		$count = $this->get_count();
-
-		if ( $count > 0 ) {
-			return '<span class="monsterinsights-menu-notification-indicator update-plugins">' . $count . '</span>';
+		if ( $this->get_count() > 0 ) {
+			return '<span class="monsterinsights-menu-notification-indicator update-plugins">' . $this->get_count() . '</span>';
 		}
 
 		return '';

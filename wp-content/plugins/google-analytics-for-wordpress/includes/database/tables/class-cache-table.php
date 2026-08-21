@@ -104,7 +104,7 @@ class MonsterInsights_Cache_Table extends MonsterInsights_DB_Base {
 		$result = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT cache_value, expires_at FROM {$table_name}
-				WHERE cache_key = %s AND cache_group = %s AND expires_at > UTC_TIMESTAMP()",
+				WHERE cache_key = %s AND cache_group = %s AND expires_at > NOW()",
 				$key,
 				$group
 			)
@@ -146,9 +146,7 @@ class MonsterInsights_Cache_Table extends MonsterInsights_DB_Base {
 				'cache_group' => $group,
 				'cache_value' => $serialized,
 				'expires_at'  => $expires_at,
-				// Store created_at in UTC so it shares the same time base as
-				// expires_at (gmdate) and the UTC_TIMESTAMP() expiry checks.
-				'created_at'  => gmdate( 'Y-m-d H:i:s' ),
+				'created_at'  => current_time( 'mysql' ),
 			),
 			array( '%s', '%s', '%s', '%s', '%s' )
 		);
@@ -222,7 +220,7 @@ class MonsterInsights_Cache_Table extends MonsterInsights_DB_Base {
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safely constructed.
 		$deleted = $wpdb->query(
-			"DELETE FROM {$table_name} WHERE expires_at < UTC_TIMESTAMP()"
+			"DELETE FROM {$table_name} WHERE expires_at < NOW()"
 		);
 
 		// Optimize table if significant deletions
@@ -257,8 +255,8 @@ class MonsterInsights_Cache_Table extends MonsterInsights_DB_Base {
 		$stats = $wpdb->get_row(
 			"SELECT
 				COUNT(*) as total_entries,
-				SUM(CASE WHEN expires_at > UTC_TIMESTAMP() THEN 1 ELSE 0 END) as valid_entries,
-				SUM(CASE WHEN expires_at <= UTC_TIMESTAMP() THEN 1 ELSE 0 END) as expired_entries,
+				SUM(CASE WHEN expires_at > NOW() THEN 1 ELSE 0 END) as valid_entries,
+				SUM(CASE WHEN expires_at <= NOW() THEN 1 ELSE 0 END) as expired_entries,
 				SUM(LENGTH(cache_value)) as total_size
 			FROM {$table_name}",
 			ARRAY_A
@@ -297,7 +295,7 @@ class MonsterInsights_Cache_Table extends MonsterInsights_DB_Base {
 		$result = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$table_name}
-				WHERE cache_key = %s AND cache_group = %s AND expires_at > UTC_TIMESTAMP()",
+				WHERE cache_key = %s AND cache_group = %s AND expires_at > NOW()",
 				$key,
 				$group
 			)
@@ -322,8 +320,8 @@ class MonsterInsights_Cache_Table extends MonsterInsights_DB_Base {
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safely constructed.
 		$result = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(), expires_at) FROM {$table_name}
-				WHERE cache_key = %s AND cache_group = %s AND expires_at > UTC_TIMESTAMP()",
+				"SELECT TIMESTAMPDIFF(SECOND, NOW(), expires_at) FROM {$table_name}
+				WHERE cache_key = %s AND cache_group = %s AND expires_at > NOW()",
 				$key,
 				$group
 			)

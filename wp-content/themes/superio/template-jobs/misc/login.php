@@ -65,13 +65,13 @@ $rand = rand(0000, 9999);
 				<div class="register-info">
 					<?php esc_html_e('Još uvek nemate nalog?', 'superio'); ?>
 					<span>
-						<a class="btn-readmore" href="https://raspitajse.com/registracija-kandidata/">Registruj se kao kandidat</a>					
+						<a class="btn-readmore" href="https://stage.raspitajse.com/registracija-kandidata/">Registruj se kao kandidat</a>					
 					</span>
 					<span  style="margin-left:5px;margin-right:5px;">
 						|
 					</span>
 					<span>
-						<a class="btn-readmore" href="https://raspitajse.com/registracija-poslodavca/">Registruj se kao poslodavac</a>	
+						<a class="btn-readmore" href="https://stage.raspitajse.com/registracija-poslodavca/">Registruj se kao poslodavac</a>	
 					</span>
 	            </div>
 	        <?php } ?>

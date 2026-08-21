@@ -1,8 +1,5 @@
 *** Changelog ***
 
-= 9.8.2 - 2026-08-05 =
-* Update - Security update
-
 = 9.8.1 - 2025-08-15 =
 * Fix - Remove connection type requirement from PMC sync migration attempt
 * Fix - Relax customer validation that was preventing payments from the pay for order page

@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Functionality of EEA Compliance feature.
  *

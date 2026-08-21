@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Initialize Admin - User Journey.
  *

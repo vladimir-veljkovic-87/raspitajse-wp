@@ -56,20 +56,7 @@ class MonsterInsights_Ads_Tracking_Ecommerce_Woo extends MonsterInsights_Ads_Tra
 			return false;
 		}
 
-		// The order-received endpoint carries the order key; validate it against the order, matching WooCommerce core.
-		$order_key = isset( $_GET['key'] ) ? wc_clean( wp_unslash( $_GET['key'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		if ( empty( $order_key ) ) {
-			return false;
-		}
-
-		$order = wc_get_order( $order_id );
-
-		if ( ! $order instanceof WC_Order || ! hash_equals( $order->get_order_key(), $order_key ) ) {
-			return false;
-		}
-
-		$this->order = $order;
+		$this->order = wc_get_order( $order_id );
 		return true;
 	}
 

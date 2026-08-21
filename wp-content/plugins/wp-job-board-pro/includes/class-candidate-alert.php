@@ -127,8 +127,8 @@ class WP_Job_Board_Pro_Candidate_Alert {
 							$candidate_alert_title = get_the_title($post_id);
 
 							// SENDER (for candidates)
-							$headers  = "From: Raspitajse.com - Vaš pouzdan AI model <noreply-employers@raspitajse.com>\r\n";
-							$headers .= "Reply-To: no-reply@raspitajse.com\r\n";
+							$headers  = "From: Raspitajse.com - Vaš pouzdan AI model <noreply-employers@stage.raspitajse.com>\r\n";
+							$headers .= "Reply-To: no-reply@stage.raspitajse.com\r\n";
 							$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
 							

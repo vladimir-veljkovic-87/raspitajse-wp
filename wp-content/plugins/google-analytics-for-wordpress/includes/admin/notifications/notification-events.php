@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 $base = MonsterInsights();
 require_once plugin_dir_path( $base->file ) . '/includes/admin/notifications/notification-install-user-feedback.php';
 require_once plugin_dir_path( $base->file ) . '/includes/admin/notifications/notification-visitors.php';

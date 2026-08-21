@@ -66,10 +66,6 @@ abstract class MonsterInsights_Ads_Tracking_Ecommerce_Tracking {
 	/**
 	 * Send server event to all ad providers
 	 *
-	 * For purchase events with a known order ID, dedupe per-provider so the same
-	 * order can't be sent twice when the platform fires multiple status transitions
-	 * (e.g. WooCommerce Processing -> Completed).
-	 *
 	 * @param string $event_name
 	 * @param array $data
 	 * @param MonsterInsights_Ads_Tracking_Ecommerce_Tracking $ecommerce_provider
@@ -78,21 +74,8 @@ abstract class MonsterInsights_Ads_Tracking_Ecommerce_Tracking {
 	 */
 	protected function send_event_to_ad_providers($event_name, $data, $ecommerce_provider)
 	{
-		$is_purchase = ( 'purchase' === $event_name ) && ! empty( $data['order_id'] );
-		$order_id    = $is_purchase ? $data['order_id'] : null;
-
 		foreach ($this->get_ad_providers() as $provider) {
-			$provider_id = $provider->get_provider_id();
-
-			if ( $is_purchase && apply_filters( "monsterinsights_ppc_tracking_track_already_tracked_{$provider_id}", $this->already_tracked_server( $order_id, $provider_id ) ) ) {
-				continue;
-			}
-
-			$dispatched = $provider->send_server_event( $event_name, $data, $ecommerce_provider );
-
-			if ( $is_purchase && $dispatched ) {
-				$this->mark_order_tracked_server( $order_id, $provider_id );
-			}
+			$provider->send_server_event( $event_name, $data, $ecommerce_provider );
 		}
 	}
 

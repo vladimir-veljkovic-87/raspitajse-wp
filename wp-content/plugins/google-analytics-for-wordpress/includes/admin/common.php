@@ -41,6 +41,10 @@ function monsterinsights_is_settings_page() {
 		$settings_page = true;
 	}
 
+	if ( strpos( $current_screen->id, 'monsterinsights_google_ads' ) !== false ) {
+		$settings_page = true;
+	}
+
 	if ( ! empty( $current_screen->base ) && strpos( $current_screen->base, 'monsterinsights_network' ) !== false ) {
 		$settings_page = true;
 	}
@@ -91,7 +95,19 @@ function monsterinsights_is_own_admin_page() {
 		return true;
 	}
 
+	if ( 'dashboard_page_monsterinsights-getting-started' === get_current_screen()->id ) {
+		return true;
+	}
+
 	return false;
+}
+
+/**
+ * Determine if the current page is Google Ads
+ * @return bool
+ */
+function monsterinsights_is_ads_page() {
+	return str_contains( get_current_screen()->id, 'monsterinsights_google_ads' );
 }
 
 /**
@@ -202,6 +218,7 @@ function monsterinsights_remove_conflicting_asset_files() {
 		'wc_smartship_moment_js', // WooCommerce Posti SmartShip by markup.fi
 		'ecwid-admin-js', // Fixes Conflict for Ecwid Shopping Cart
 		'td-wp-admin-js', // Newspaper by tagDiv
+		'moment', // Screets Live Chat
 		'wpmf-base', //  WP Media Folder Fix
 		'wpmf-media-filters', //  WP Media Folder Fix
 		'wpmf-folder-tree', //  WP Media Folder Fix
@@ -610,12 +627,68 @@ function monsterinsights_get_php_wp_version_warning_data() {
 
 /**
  * Check WP and PHP version and add contextual notifications for upgrades.
- *
- * Note: The PHP < 5.6 and WP < 4.9 checks were removed as they are no longer
- * reachable given the plugin's minimum requirements.
  */
 function monsterinsights_maybe_add_wp_php_version_notification() {
-	// No-op: minimum PHP and WP versions are well above the old thresholds.
+	global $wp_version;
+
+	$icon              = '<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="16" fill="#FAD1D1"/><path d="M17.3634 19.0714C17.792 19.4821 18.0063 19.9821 18.0063 20.5714C18.0063 21.1607 17.792 21.6607 17.3634 22.0714C16.9527 22.5 16.4527 22.7143 15.8634 22.7143C15.2742 22.7143 14.7652 22.5 14.3367 22.0714C13.9259 21.6607 13.7206 21.1607 13.7206 20.5714C13.7206 19.9821 13.9259 19.4821 14.3367 19.0714C14.7652 18.6429 15.2742 18.4286 15.8634 18.4286C16.4527 18.4286 16.9527 18.6429 17.3634 19.0714ZM13.9617 9.66964C13.9617 9.49107 14.0242 9.33929 14.1492 9.21429C14.2742 9.07143 14.4259 9 14.6045 9H17.1224C17.3009 9 17.4527 9.07143 17.5777 9.21429C17.7027 9.33929 17.7652 9.49107 17.7652 9.66964L17.3902 16.9554C17.3902 17.1339 17.3277 17.2857 17.2027 17.4107C17.0777 17.5179 16.9259 17.5714 16.7474 17.5714H14.9795C14.8009 17.5714 14.6492 17.5179 14.5242 17.4107C14.3992 17.2857 14.3367 17.1339 14.3367 16.9554L13.9617 9.66964Z" fill="#EB5757"/></svg>';
+	$needs_php_warning = version_compare( phpversion(), '5.6', '<' );
+	$needs_wp_warning  = version_compare( $wp_version, '4.9', '<' );
+
+	if ( $needs_php_warning ) {
+		$notification['id']    = 'upgrade_php_56_notification';
+		$notification['title'] = __( 'ACTION REQUIRED: Your PHP version is putting your site at risk!', 'google-analytics-for-wordpress' );
+		if ( $needs_wp_warning ) {
+			$notification['title'] = __( 'ACTION REQUIRED: Speed your website up 400% with a single email!', 'google-analytics-for-wordpress' );
+		}
+
+		$php_url = monsterinsights_get_url( 'notifications', 'upgrade-php', 'https://www.monsterinsights.com/docs/update-php' );
+
+		$notification['type'] = array( 'basic', 'lite', 'master', 'plus', 'pro' );
+		// Translators: Placeholder is for the current PHP version.
+		$notification['content'] = sprintf( esc_html__( 'In the next major release of MonsterInsights we are planning to remove support for the version of PHP you are using (%s). This insecure version is no longer supported by WordPress itself, so you are already missing out on the latest features of WordPress along with critical updates for security and performance (modern PHP versions make websites much faster).', 'google-analytics-for-wordpress' ), phpversion() ) . "\n\n";
+
+		// Translators: Placeholders add a link to an article.
+		$notification['content'] .= sprintf( esc_html__( 'To ensure MonsterInsights and other plugins on your site continue to function properly, and avoid putting your site at risk, please take a few minutes to ask your website hosting provider to upgrade the version of PHP to a modern PHP version (7.2 or newer). We provide helpful templates for how to ask them %1$shere%2$s.', 'google-analytics-for-wordpress' ), '<a target="_blank" href="' . $php_url . '">', '</a>' ) . "\n\n";
+		$notification['content'] .= esc_html__( 'Upgrading your PHP version will make sure you are able to continue using WordPress without issues in the future, keep your site secure, and will also make your website up to 400% faster!', 'google-analytics-for-wordpress' );
+
+		$notification['icon'] = $icon;
+		$notification['btns'] = array(
+			'learn_more' => array(
+				'url'  => $php_url,
+				'text' => esc_html__( 'Learn More', 'google-analytics-for-wordpress' ),
+			),
+		);
+
+		// Add the notification.
+		MonsterInsights()->notifications->add( $notification );
+	}
+
+	if ( $needs_wp_warning ) {
+		$isitwp_url     = 'https://www.isitwp.com/upgrading-wordpress-is-easier-than-you-think/?utm_source=monsterinsights&utm_medium=notifications&utm_campaign=upgradewp';
+		$wpbeginner_url = monsterinsights_get_url( 'notifications', 'pgradewp', 'https://www.wpbeginner.com/beginners-guide/why-you-should-always-use-the-latest-version-of-wordpress/' );
+
+		$notification['id']    = 'upgrade_wp_49_notification';
+		$notification['title'] = __( 'ACTION REQUIRED: Your WordPress version is putting your site at risk!', 'google-analytics-for-wordpress' );
+		$notification['type']  = array( 'basic', 'lite', 'master', 'plus', 'pro' );
+		// Translators: Placeholder is for the current WordPress version.
+		$notification['content'] = sprintf( esc_html__( 'In the next major release of MonsterInsights we are planning to remove support for the version of WordPress you are using (version %s). This version is several years out of date, and most plugins do not support this version anymore, so you could be missing out on critical updates for performance and security already!', 'google-analytics-for-wordpress' ), $wp_version ) . "\n\n";
+
+		$notification['content'] .= esc_html__( 'The good news: updating WordPress has never been easier and only takes a few moments.', 'google-analytics-for-wordpress' );
+		// Translators: Placeholders add links to articles.
+		$notification['content'] .= sprintf( esc_html__( 'To update, we recommend following this %1$sstep by step guide for updating WordPress%2$s from IsItWP and afterwards check out %3$sWhy You Should Always Use the Latest Version of WordPress%4$s on WPBeginner.', 'google-analytics-for-wordpress' ), '<a target="_blank" href="' . $isitwp_url . '">', '</a>', '<a target="_blank" href="' . $wpbeginner_url . '">', '</a>' ) . "\n\n";
+
+		$notification['icon'] = $icon;
+		$notification['btns'] = array(
+			'learn_more' => array(
+				'url'  => $isitwp_url,
+				'text' => esc_html__( 'Learn More', 'google-analytics-for-wordpress' ),
+			),
+		);
+
+		// Add the notification.
+		MonsterInsights()->notifications->add( $notification );
+	}
 }
 
 add_action( 'admin_init', 'monsterinsights_maybe_add_wp_php_version_notification' );
@@ -703,15 +776,24 @@ function monsterinsights_yearinreview_dates() {
 	);
 }
 
+function monsterinsights_get_sitei() {
+	$auth_key        = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+	$secure_auth_key = defined( 'SECURE_AUTH_KEY' ) ? SECURE_AUTH_KEY : '';
+	$logged_in_key   = defined( 'LOGGED_IN_KEY' ) ? LOGGED_IN_KEY : '';
+
+	$sitei = $auth_key . $secure_auth_key . $logged_in_key;
+	$sitei = preg_replace( '/[^a-zA-Z0-9]/', '', $sitei );
+	$sitei = sanitize_text_field( $sitei );
+	$sitei = trim( $sitei );
+	$sitei = ( strlen( $sitei ) > 30 ) ? substr( $sitei, 0, 30 ) : $sitei;
+
+	return $sitei;
+}
+
 /**
  * Inlcude admin assets files.
  */
 require_once __DIR__ . '/admin-assets.php';
-
-/**
- * Include AI Charlie assets loader.
- */
-require_once __DIR__ . '/ai-charlie-assets.php';
 
 /**
  * Inlcude admin Charitable notice files.

@@ -226,7 +226,7 @@ final class MonsterInsights_API_Request {
 		$blocked = $this->is_blocked( $this->url );
 		if ( $blocked || is_wp_error( $blocked ) ) {
 			if ( is_wp_error( $blocked ) ) {
-				/* translators: %s: Error message */
+				// Translators: Placeholder gets replaced with the error message.
 				return new WP_Error( 'api-error', sprintf( __( 'The firewall of your server is blocking outbound calls. Please contact your hosting provider to fix this issue. %s', 'google-analytics-for-wordpress' ), $blocked->get_error_message() ) );
 			} else {
 				return new WP_Error( 'api-error', __( 'The firewall of your server is blocking outbound calls. Please contact your hosting provider to fix this issue.', 'google-analytics-for-wordpress' ) );
@@ -348,8 +348,8 @@ final class MonsterInsights_API_Request {
 			$type = ! empty( $response_body['type'] ) ? $response_body['type'] : 'api-error';
 
 			if ( empty( $response_code ) ) {
+				// Translators: Support link tag starts with url and Support link tag ends.
 				$message = sprintf(
-					/* translators: %1$s: Support link tag start, %2$s: Support link tag end */
 					esc_html__( 'Oops! We encountered an error. Please wait a few minutes and try again. If the issue persists, please %1$scontact our support%2$s team.', 'google-analytics-for-wordpress' ),
 					'<a target="_blank" href="' . monsterinsights_get_url( 'notice', 'unknown-api-error', 'https://www.monsterinsights.com/my-account/support/' ) . '">',
 					'</a>'
@@ -359,8 +359,8 @@ final class MonsterInsights_API_Request {
 			}
 
 			if ( empty( $response_body ) || ( empty( $response_body['message'] ) && empty( $response_body['error'] ) ) ) {
+				// Translators: Support link tag starts with url, Support link tag ends and placeholder adds the response code.
 				$message = sprintf(
-					/* translators: %1$s: Support link tag start, %2$s: Support link tag end, %3$s: Strong tag start, %4$s: Response code, %5$s: Strong tag end */
 					esc_html__( 'Oops! We ran into a problem. Please try again in a few minutes. If the issue persists please %1$scontact our support%2$s team. Error: API returned a %3$s%4$s%5$s response.', 'google-analytics-for-wordpress' ),
 					'<a target="_blank" href="' . monsterinsights_get_url( 'notice', 'unknown-api-error', 'https://www.monsterinsights.com/my-account/support/' ) . '">',
 					'</a>',
@@ -373,8 +373,8 @@ final class MonsterInsights_API_Request {
 			}
 
 			if ( ! empty( $response_body['message'] ) ) {
+				// Translators: Support link tag starts with url, Support link tag ends, placeholder adds the response code and response message.
 				$message = sprintf(
-					/* translators: %1$s: Support link tag start, %2$s: Support link tag end, %3$s: Strong tag start, %4$d: Response code, %5$s: Response message, %6$s: Strong tag end */
 					esc_html__( 'Oops! We ran into a problem. Please try again in a few minutes. If the issue persists please %1$scontact our support%2$s team. Error: API returned a %3$s%4$d: %5$s%6$s', 'google-analytics-for-wordpress' ),
 					'<a target="_blank" href="' . monsterinsights_get_url( 'notice', 'unknown-api-error', 'https://www.monsterinsights.com/my-account/support/' ) . '">',
 					'</a>',
@@ -388,8 +388,8 @@ final class MonsterInsights_API_Request {
 			}
 
 			if ( ! empty( $response_body['error'] ) ) {
+				// Translators: Support link tag starts with url, Support link tag ends, placeholder adds the response code and response message.
 				$message = sprintf(
-					/* translators: %1$s: Support link tag start, %2$s: Support link tag end, %3$s: Strong tag start, %4$d: Response code, %5$s: Response message, %6$s: Strong tag end */
 					esc_html__( 'Oops! We ran into a problem. Please try again in a few minutes. If the issue persists please %1$scontact our support%2$s team. Error: API returned a %3$s%4$d: %5$s%6$s', 'google-analytics-for-wordpress' ),
 					'<a target="_blank" href="' . monsterinsights_get_url( 'notice', 'unknown-api-error', 'https://www.monsterinsights.com/my-account/support/' ) . '">',
 					'</a>',
@@ -407,8 +407,8 @@ final class MonsterInsights_API_Request {
 		if ( ! empty( $this->tt ) ) {
 			if ( empty( $response_body['tt'] ) || ! hash_equals( $this->tt, $response_body['tt'] ) ) {
 				// TT isn't set on return or doesn't match
+				// Translators: Support link tag starts with url and Support link tag ends.
 				$message = sprintf(
-					/* translators: %1$s: Support link tag start, %2$s: Support link tag end */
 					esc_html__( 'Oops! We ran into a problem. Please try again in a few minutes. If the issue persists please %1$scontact our support%2$s team. Error: Improper API Request.', 'google-analytics-for-wordpress' ),
 					'<a target="_blank" href="' . monsterinsights_get_url( 'notice', 'cannot-verify-license', 'https://www.monsterinsights.com/my-account/support/' ) . '">',
 					'</a>'

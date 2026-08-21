@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * This is the base class for the Popular Posts output functionality.
  * Each actual Popular Posts option extends this class (inline, widget, products).
@@ -558,11 +553,7 @@ class MonsterInsights_Popular_Posts {
 						if ( 'border' === $element || 'border' === $style_key ) {
 							$style_key = 'border-color';
 						}
-						$safe_value = wp_strip_all_tags( (string) $atts[ $atts_key ] );
-						// Keep only characters valid in a CSS declaration value (hex colors, rgb()/rgba(), px sizes, percentages, named colors).
-						$safe_value = preg_replace( '/[^A-Za-z0-9#(),.%\s-]/', '', (string) $safe_value );
-						$safe_value = trim( preg_replace( '/\s+/', ' ', (string) $safe_value ) );
-						$style_css .= $style_key . ':' . $safe_value . ';';
+						$style_css .= $style_key . ':' . $atts[ $atts_key ] . ';';
 					}
 				}
 			}
@@ -646,13 +637,7 @@ class MonsterInsights_Popular_Posts {
 		}
 
 		if ( isset( $atts['className'] ) ) {
-			$raw_classes = preg_split( '/\s+/', (string) $atts['className'] );
-			foreach ( (array) $raw_classes as $raw_class ) {
-				$safe_class = sanitize_html_class( $raw_class );
-				if ( '' !== $safe_class ) {
-					$classes[] = $safe_class;
-				}
-			}
+			$classes[] = $atts['className'];
 		}
 
 		$classname = implode( ' ', $classes );

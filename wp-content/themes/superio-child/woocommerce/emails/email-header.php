@@ -61,7 +61,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 																	<!-- Logo (right) -->
 																	<td valign="middle" align="right" width="140">
-																		<img src="https://raspitajse.com/wp-content/uploads/2021/03/raspitajse-logo-blue-small-v4.png"
+																		<img src="https://stage.raspitajse.com/wp-content/uploads/2021/03/raspitajse-logo-blue-small-v4.png"
 																			alt="Raspitajse"
 																			width="120"
 																			style="display:block; border:0; outline:none; text-decoration:none; height:auto; max-width:120px;">

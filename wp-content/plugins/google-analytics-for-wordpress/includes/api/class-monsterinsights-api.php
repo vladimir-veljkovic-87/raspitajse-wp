@@ -205,7 +205,7 @@ abstract class MonsterInsights_API_Client {
 		if ( $method === 'GET' ) {
 			$url = add_query_arg($params, $url);
 		} else {
-			$args['body'] = wp_json_encode($params);
+			$args['body'] = json_encode($params);
 		}
 
 		$response = wp_remote_request( $url, $args );

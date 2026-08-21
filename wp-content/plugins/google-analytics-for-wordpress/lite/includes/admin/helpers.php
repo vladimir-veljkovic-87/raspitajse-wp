@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Store the time when the float bar was hidden so it won't show again for 14 days.
  */

@@ -27,7 +27,7 @@ final class MonsterInsights_Report_Ecommerce_Product_Feed extends MonsterInsight
 	 * Primary class constructor.
 	 */
 	public function __construct() {
-		$this->title = __( 'Product Feed', 'google-analytics-for-wordpress' );
+		$this->title = __( 'Product Feed', 'google-analytics-premium' );
 
 		parent::__construct();
 	}

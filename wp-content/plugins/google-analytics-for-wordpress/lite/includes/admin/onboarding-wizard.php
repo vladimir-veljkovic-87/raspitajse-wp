@@ -55,10 +55,7 @@ class MonsterInsights_Onboarding_Wizard {
 	}
 
 	/**
-	 * Redirects legacy `?page=monsterinsights-onboarding` requests to the
-	 * externally-hosted setup wizard. The bundled Vue 2 wizard UI was retired
-	 * during the Vue 3 migration; the external URL returned by
-	 * `monsterinsights_get_onboarding_url()` is now the only setup flow.
+	 * Checks if the Wizard should be loaded in current context.
 	 */
 	public function maybe_load_onboarding_wizard() {
 
@@ -72,28 +69,145 @@ class MonsterInsights_Onboarding_Wizard {
 				return;
 		}
 
-		// Don't redirect during AJAX requests.
+		// Don't load the interface if doing an ajax call.
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return;
 		}
 
-		// Use `wp_redirect()` (not `wp_safe_redirect()`) because the onboarding
-		// URL points to a different host (e.g. connect.monsterinsights.com).
-		wp_redirect( esc_url_raw( monsterinsights_get_onboarding_url() ) );
-		exit;
+		set_current_screen();
+
+		// Remove an action in the Gutenberg plugin ( not core Gutenberg ) which throws an error.
+		remove_action( 'admin_print_styles', 'gutenberg_block_editor_admin_print_styles' );
+
+		$this->load_onboarding_wizard();
 
 	}
 
 	/**
 	 * Register page through WordPress's hooks.
-	 *
-	 * The slug is kept registered so existing links (in dashboard widgets,
-	 * notices, etc.) still resolve and trigger the redirect above. The page
-	 * itself never renders — `maybe_load_onboarding_wizard()` short-circuits it
-	 * before WordPress draws the admin shell.
 	 */
 	public function add_dashboard_page() {
 		add_dashboard_page( '', '', 'monsterinsights_save_settings', 'monsterinsights-onboarding', '' );
+	}
+
+	/**
+	 * Load the Onboarding Wizard template.
+	 */
+	private function load_onboarding_wizard() {
+
+		$this->enqueue_scripts();
+
+		$this->onboarding_wizard_header();
+		$this->onboarding_wizard_content();
+		$this->onboarding_wizard_footer();
+
+		exit;
+
+	}
+
+	/**
+	 * Load the scripts needed for the Onboarding Wizard.
+	 */
+	public function enqueue_scripts() {
+		$version_path = 'lite';
+
+		if ( ! defined( 'MONSTERINSIGHTS_LOCAL_JS_URL' ) ) {
+			MonsterInsights_Admin_Assets::enqueue_script_specific_css( 'src/modules/wizard-onboarding/wizard.js' );
+		}
+
+		$app_js_url = MonsterInsights_Admin_Assets::get_js_url( 'src/modules/wizard-onboarding/wizard.js' );
+		wp_register_script( 'monsterinsights-vue-script', $app_js_url, array( 'wp-i18n' ), monsterinsights_get_asset_version(), true );
+		wp_enqueue_script( 'monsterinsights-vue-script' );
+
+		$settings_page        = is_network_admin() ? add_query_arg( 'page', 'monsterinsights_network', network_admin_url( 'admin.php' ) ) : add_query_arg( 'page', 'monsterinsights_settings', admin_url( 'admin.php' ) );
+		$is_file_edit_allowed = 1;
+		// Determine whether file modifications are allowed.
+		if ( function_exists( 'wp_is_file_mod_allowed' ) && ! wp_is_file_mod_allowed( 'monsterinsights_can_install' ) ) {
+			$is_file_edit_allowed = 0;
+		}
+		wp_localize_script(
+			'monsterinsights-vue-script',
+			'monsterinsights',
+			array(
+				'ajax'                 => add_query_arg( 'page', 'monsterinsights-onboarding', admin_url( 'admin-ajax.php' ) ),
+				'nonce'                => wp_create_nonce( 'mi-admin-nonce' ),
+				'network'              => is_network_admin(),
+				'assets'               => plugins_url( $version_path . '/assets/vue', MONSTERINSIGHTS_PLUGIN_FILE ),
+				'roles'                => monsterinsights_get_roles(),
+				'roles_manage_options' => monsterinsights_get_manage_options_roles(),
+				'wizard_url'           => is_network_admin() ? network_admin_url( 'index.php?page=monsterinsights-onboarding' ) : admin_url( 'index.php?page=monsterinsights-onboarding' ),
+				'is_eu'                => $this->should_include_eu_addon(),
+				'activate_nonce'       => wp_create_nonce( 'monsterinsights-activate' ),
+				'install_nonce'        => wp_create_nonce( 'monsterinsights-install' ),
+				'exit_url'             => add_query_arg( 'page', 'monsterinsights_overview_report', admin_url( 'admin.php' ) ),
+				'shareasale_id'        => monsterinsights_get_shareasale_id(),
+				'shareasale_url'       => monsterinsights_get_shareasale_url( monsterinsights_get_shareasale_id(), '' ),
+				// Used to add notices for future deprecations.
+				'versions'             => monsterinsights_get_php_wp_version_warning_data(),
+				'plugin_version'       => MONSTERINSIGHTS_VERSION,
+				'migrated'             => monsterinsights_get_option( 'gadwp_migrated', false ),
+				'allow_file_edit'      => $is_file_edit_allowed,
+				'reports_url'          => admin_url( 'admin.php?page=monsterinsights_overview_report' ),
+			)
+		);
+
+		$text_domain = monsterinsights_is_pro_version() ? 'google-analytics-premium' : 'google-analytics-for-wordpress';
+
+		wp_scripts()->add_inline_script(
+			'monsterinsights-vue-script',
+			monsterinsights_get_printable_translations( $text_domain ),
+			'translation'
+		);
+	}
+
+	/**
+	 * Outputs the simplified header used for the Onboarding Wizard.
+	 */
+	public function onboarding_wizard_header() {
+		/**
+		 * Since WordPress 6.4 print_emoji_styles() and wp_admin_bar_header() have been deprecated.
+		 */
+		if ( has_action( 'admin_head', 'wp_admin_bar_header') && function_exists( 'wp_enqueue_admin_bar_header_styles' ) ) {
+			remove_action( 'admin_head', 'wp_admin_bar_header' );
+			add_action( 'admin_head', 'wp_enqueue_admin_bar_header_styles' );
+		}
+		if ( has_action( 'admin_print_styles', 'print_emoji_styles') ) {
+			remove_action( 'admin_print_styles', 'print_emoji_styles' );
+		}
+		?>
+		<!DOCTYPE html>
+		<html <?php language_attributes(); ?>>
+		<head>
+			<meta name="viewport" content="width=device-width"/>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+			<title><?php esc_html_e( 'MonsterInsights &rsaquo; Onboarding Wizard', 'google-analytics-for-wordpress' ); ?></title>
+			<?php do_action( 'admin_print_styles' ); ?>
+			<?php do_action( 'admin_print_scripts' ); ?>
+			<?php do_action( 'admin_head' ); ?>
+		</head>
+		<body class="monsterinsights-onboarding monsterinsights_page">
+		<?php
+	}
+
+	/**
+	 * Outputs the content of the current step.
+	 */
+	public function onboarding_wizard_content() {
+		$admin_url = is_network_admin() ? network_admin_url() : admin_url();
+
+		monsterinsights_settings_error_page( 'monsterinsights-vue-onboarding-wizard', '<a href="' . $admin_url . '">' . esc_html__( 'Return to Dashboard', 'google-analytics-for-wordpress' ) . '</a>' );
+		monsterinsights_settings_inline_js();
+	}
+
+	/**
+	 * Outputs the simplified footer used for the Onboarding Wizard.
+	 */
+	public function onboarding_wizard_footer() {
+		?>
+		<?php wp_print_scripts( 'monsterinsights-vue-script' ); ?>
+		</body>
+		</html>
+		<?php
 	}
 
 	/**
@@ -338,12 +452,6 @@ class MonsterInsights_Onboarding_Wizard {
 	 * Ajax handler for grabbing the installed code status.
 	 */
 	public function get_install_errors() {
-
-		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
-
-		if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
-			wp_send_json_error();
-		}
 
 		wp_send_json( monsterinsights_is_code_installed_frontend() );
 

@@ -39,10 +39,6 @@ class MonsterInsights_Ads_Tracking_Ecommerce_RCP extends MonsterInsights_Ads_Tra
 		global $post;
 		global $rcp_options;
 
-		if ( ! $post instanceof WP_Post ) {
-			return false;
-		}
-
 		$current_page_id      = $post->ID;
 		$rcp_welcome_page_id = $rcp_options['redirect'];
 

@@ -354,8 +354,8 @@ add_action( 'phpmailer_init', function( $phpmailer ) {
      * If your headers already set From, PHPMailer will USE IT.
      */
     
-    if ( empty( $phpmailer->From ) || strpos( $phpmailer->From, '@raspitajse.com' ) === false ) {
-        $phpmailer->From     = 'noreply@raspitajse.com';
+    if ( empty( $phpmailer->From ) || strpos( $phpmailer->From, '@stage.raspitajse.com' ) === false ) {
+        $phpmailer->From     = 'noreply@stage.raspitajse.com';
         $phpmailer->FromName = 'Raspitajse.com - Vaš pouzdan AI model';
     }
 });
@@ -382,7 +382,7 @@ add_filter( 'wp_mail_from', function( $email ) {
         return $email;
     }
 
-    return 'noreply-system@raspitajse.com';
+    return 'noreply-system@stage.raspitajse.com';
 });
 
 
@@ -407,7 +407,7 @@ add_filter( 'wp_mail_from_name', function( $name ) {
 function rs_smtp_test_email() {
 
     // Primaoca možeš da staviš svoj realni mail
-    $to       = defined('SMTP_FROM') ? SMTP_FROM : 'dr@raspitajse.com';
+    $to       = defined('SMTP_FROM') ? SMTP_FROM : 'dr@stage.raspitajse.com';
     $subject  = 'Amazon SES SMTP Test - RaspitajSe.com';
     $message  = 'Ovo je test email poslat preko Amazon SES SMTP konfiguracije.';
     $headers  = ['Content-Type: text/html; charset=UTF-8'];

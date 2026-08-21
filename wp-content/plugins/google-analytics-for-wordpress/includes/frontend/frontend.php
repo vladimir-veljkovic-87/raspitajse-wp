@@ -13,21 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Clear snoozed notifications on login.
-// Registered here (frontend) because the notifications class file is only
-// loaded inside is_admin(), but wp_login fires on the frontend login form.
-add_action( 'wp_login', 'monsterinsights_clear_snoozed_on_login', 10, 2 );
-
-/**
- * Clear snoozed notifications when a user logs in.
- *
- * @param string   $user_login Username.
- * @param \WP_User $user       WP_User object.
- */
-function monsterinsights_clear_snoozed_on_login( $user_login, $user ) {
-	delete_user_meta( $user->ID, 'monsterinsights_notifications_snoozed' );
-}
-
 /**
  * Check if we are in an AMP context
  *
@@ -287,7 +272,7 @@ function monsterinsights_frontend_admin_bar_scripts() {
 	);
 
 	// Set script translations for the admin bar app
-	$textdomain = monsterinsights_get_plugin_textdomain();
+	$textdomain = monsterinsights_is_pro_version() ? 'google-analytics-premium' : 'google-analytics-for-wordpress';
 	wp_set_script_translations(
 		'monsterinsights-admin-bar',
 		$textdomain,
@@ -302,8 +287,6 @@ function monsterinsights_frontend_admin_bar_scripts() {
 		'monsterinsights-vue-widget',
 		'monsterinsights-vue3-custom-dashboard',
 		'monsterinsights-vue3-reports',
-		'monsterinsights-vue3-settings',
-		'monsterinsights-vue3-widget',
 	);
 
 	foreach ( $competing_handles as $handle ) {
@@ -334,9 +317,9 @@ function monsterinsights_frontend_admin_bar_scripts() {
 			'is_admin'             => is_admin(),
 			'reports_url'          => $reports_url,
 			'authed'               => $site_auth || $ms_auth,
-			'auth_connect_url'     => monsterinsights_can_install_plugins() ? monsterinsights_get_onboarding_url() : '',
+			'auth_connect_url'     => is_network_admin() ? network_admin_url( 'index.php?page=monsterinsights-onboarding' ) : admin_url( 'index.php?page=monsterinsights-onboarding' ),
 			'getting_started_url'  => is_multisite() ? network_admin_url( 'admin.php?page=monsterinsights_network#/about/getting-started' ) : admin_url( 'admin.php?page=monsterinsights_settings#/about/getting-started' ),
-			'wizard_url'           => monsterinsights_can_install_plugins() ? monsterinsights_get_onboarding_url() : '',
+			'wizard_url'           => is_network_admin() ? network_admin_url( 'index.php?page=monsterinsights-onboarding' ) : admin_url( 'index.php?page=monsterinsights-onboarding' ),
 			'roles_manage_options' => monsterinsights_get_manage_options_roles(),
 			'user_roles'           => $current_user->roles,
 			'roles_view_reports'   => monsterinsights_get_option('view_reports'),
@@ -528,10 +511,6 @@ add_action( 'wp_footer', 'monsterinsights_administrator_tracking_notice', 300 );
 function monsterinsights_dismiss_tracking_notice() {
 
 	check_ajax_referer( 'monsterinsights-tracking-notice', 'nonce' );
-
-	if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
-		wp_die();
-	}
 
 	update_option( 'monsterinsights_frontend_tracking_notice_viewed', 1 );
 

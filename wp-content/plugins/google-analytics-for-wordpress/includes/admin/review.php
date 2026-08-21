@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Ask for some love.
  *
@@ -128,7 +124,6 @@ class MonsterInsights_Review {
 					<?php
 					echo wp_kses(
 						sprintf(
-							/* translators: %1$s: plugin name (MonsterInsights). */
 							__( 'Hey - we noticed you\'ve been using %1$s for a while - that\'s great! Could you do us a BIG favor and give it a 5-star review on WordPress to help us spread the word and boost our motivation?', 'google-analytics-for-wordpress' ),
 							'<strong>MonsterInsights</strong>'
 						),
@@ -138,7 +133,7 @@ class MonsterInsights_Review {
 				</p>
 				<p>
 					<a
-						href="https://wordpress.org/support/plugin/google-analytics-for-wordpress/reviews/#new-post"
+						href="https://wordpress.org/support/plugin/google-analytics-for-wordpress/reviews/?filter=5#new-post"
 						   class="monsterinsights-dismiss-review-notice monsterinsights-review-out"
 						target="_blank"
 						   rel="noopener noreferrer"
@@ -172,7 +167,6 @@ class MonsterInsights_Review {
 					}
 					$.post(ajaxurl, {
 						action: 'monsterinsights_review_dismiss',
-						nonce: '<?php echo esc_js( wp_create_nonce( 'monsterinsights-review-dismiss' ) ); ?>',
 						review_later: $(this).hasClass('monsterinsights-review-later')
 					});
 					$('.monsterinsights-review-notice').remove();
@@ -188,13 +182,6 @@ class MonsterInsights_Review {
 	 * @since 7.0.7
 	 */
 	public function review_dismiss() {
-
-		check_ajax_referer( 'monsterinsights-review-dismiss', 'nonce' );
-
-		if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
-			wp_die();
-		}
-
 		$review              = get_option( 'monsterinsights_review', array() );
 		$review['time']      = time();
 		$review['dismissed'] = true;

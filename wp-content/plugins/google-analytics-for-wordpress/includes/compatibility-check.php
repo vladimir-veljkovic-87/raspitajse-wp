@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 if ( ! class_exists( 'MonsterInsights_Compatibility_Check' ) ) {
 	/**
 	 * Check PHP and WP compatibility
@@ -262,8 +258,8 @@ if ( ! class_exists( 'MonsterInsights_Compatibility_Check' ) ) {
 
 			if ( ! empty( $compatible_php_version['required'] ) && ! $this->is_php_compatible() ) {
 				deactivate_plugins( $plugin );
+				// Translators: HTML strong tag starts, PHP version number, HTML string tag end, plugins page Link tag starts with url and plugins page link tag ends.
 				wp_die(
-					/* translators: %1$s: Opening strong tag, %2$s: PHP version number, %3$s: Closing strong tag, %4$s: Opening link tag, %5$s: Closing link tag. */
 					sprintf( esc_html__( 'Sorry, but your current version of PHP does not meet the minimum required version %1$s%2$s%3$s or newer to run MonsterInsights properly. For information on how to upgrade your PHP version, contact your web host. %4$sClick here to return to the Dashboard%5$s.', 'google-analytics-for-wordpress' ),
 						'<strong>',
 						$compatible_php_version['required'], // phpcs:ignore
@@ -276,9 +272,9 @@ if ( ! class_exists( 'MonsterInsights_Compatibility_Check' ) ) {
 
 			if ( ! empty( $compatible_wp_version['required'] ) && ! $this->is_wp_compatible() ) {
 				deactivate_plugins( plugin_basename( __FILE__ ) );
+				// Translators: HTML strong tag starts, WP version number, HTML string tag end, plugins page Link tag starts with url and plugins page link tag ends.
 				wp_die(
 					sprintf(
-						/* translators: %1$s: Opening strong tag, %2$s: WP version number, %3$s: Closing strong tag, %4$s: Opening link tag, %5$s: Closing link tag. */
 						esc_html__( 'Sorry, but your WordPress version is not %1$s%2$s%3$s or newer. Please update your WordPress version and then activate MonsterInsights. For help on how to update your WordPress %4$sclick here%5$s.', 'google-analytics-for-wordpress' ),
 						'<strong>',
 						$compatible_wp_version['required'], // phpcs:ignore
@@ -313,7 +309,7 @@ if ( ! class_exists( 'MonsterInsights_Compatibility_Check' ) ) {
 			<div class="error">
 				<p>
 					<?php
-					/* translators: hTML strong tag starts, PHP version number, HTML string tag end, plugins page Link tag starts with url and plugins page link tag ends. */
+					// Translators: HTML strong tag starts, PHP version number, HTML string tag end, plugins page Link tag starts with url and plugins page link tag ends.
 					echo sprintf(
 						esc_html__( 'Sorry, but your current version of PHP does not meet the minimum required version %1$s%2$s%3$s or newer to run MonsterInsights properly. For information on how to upgrade your PHP version, contact your web host. %4$sClick here to return to the Dashboard%5$s.', 'google-analytics-for-wordpress' ),
 						'<strong>',
@@ -346,7 +342,7 @@ if ( ! class_exists( 'MonsterInsights_Compatibility_Check' ) ) {
 			<div class="error">
 				<p>
 					<?php
-					/* translators: make version number bold and add a link to return to the plugins page. */
+					// Translators: Make version number bold and add a link to return to the plugins page.
 					echo sprintf(
 						esc_html__( 'Sorry, but your WordPress version is not %1$s%2$s%3$s or newer. Please update your WordPress version and then activate MonsterInsights. For help on how to update your WordPress %4$sclick here%5$s.', 'google-analytics-for-wordpress' ),
 						'<strong>',

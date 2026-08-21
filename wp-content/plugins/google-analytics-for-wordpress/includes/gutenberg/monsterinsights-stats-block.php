@@ -14,16 +14,16 @@ class MonsterInsights_Site_Insights_Block {
 	public function register_frontend_scripts() {
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-		wp_register_script( 'monsterinsights-apexcharts', plugins_url( 'assets/js/frontend/apexcharts.min.js', MONSTERINSIGHTS_PLUGIN_FILE ), array(), monsterinsights_get_asset_version(), true );
+		wp_register_script( 'apexcharts', plugins_url( 'assets/js/frontend/apexcharts.min.js', MONSTERINSIGHTS_PLUGIN_FILE ), array(), monsterinsights_get_asset_version(), true );
 
-		wp_register_style( 'monsterinsights-apexcharts', plugins_url( 'assets/js/frontend/apexcharts.css', MONSTERINSIGHTS_PLUGIN_FILE ), array(), monsterinsights_get_asset_version(), 'all' );
+		wp_register_style( 'apexcharts', plugins_url( 'assets/js/frontend/apexcharts.css', MONSTERINSIGHTS_PLUGIN_FILE ), array(), monsterinsights_get_asset_version(), true );
 
 		$scripts_url = apply_filters(
 			'monsterinsights_frontend_scripts_url',
 			plugins_url( 'assets/js/frontend/block-scripts' . $suffix . '.js', MONSTERINSIGHTS_PLUGIN_FILE )
 		);
 
-		wp_register_script( 'monsterinsights-block-scripts', $scripts_url, array( 'monsterinsights-apexcharts', 'jquery' ), monsterinsights_get_asset_version(), true );
+		wp_register_script( 'monsterinsights-block-scripts', $scripts_url, array( 'apexcharts', 'jquery' ), monsterinsights_get_asset_version(), true );
 
 		$style_url = apply_filters(
 			'monsterinsights_frontend_style_url',
@@ -39,7 +39,7 @@ class MonsterInsights_Site_Insights_Block {
 		$use_async = apply_filters( 'monsterinsights_frontend_gtag_script_async', true );
 
 		if ( $use_async ) {
-			wp_script_add_data( 'monsterinsights-apexcharts', 'strategy', 'async' );
+			wp_script_add_data( 'apexcharts', 'strategy', 'async' );
 			wp_script_add_data( 'monsterinsights-block-scripts', 'strategy', 'defer' );
 		}
 	}

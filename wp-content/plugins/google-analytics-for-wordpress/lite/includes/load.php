@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 add_action('init', function () {
 	
 	// Load API classes
@@ -74,7 +70,11 @@ add_action('init', function () {
 		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/api/class-monsterinsights-api.php';
 		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/api/class-monsterinsights-api-reports.php';
 		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/api/class-monsterinsights-api-tracking.php';
+		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/api/class-monsterinsights-api-ads.php';
 		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/api/class-monsterinsights-api-token.php';
+
+		// Load Google Ads admin classes
+		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/ppc/google/class-monsterinsights-google-ads.php';
 	}
 
 	if ( is_admin() ) {

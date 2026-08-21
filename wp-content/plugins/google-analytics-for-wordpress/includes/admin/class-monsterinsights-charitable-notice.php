@@ -1,10 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-
 /**
  * MonsterInsights Charitable Notice Class
  *
@@ -142,7 +137,7 @@ class MonsterInsights_Charitable_Notice {
 			}
 
 			$raw_path = $row['page_path'][0];
-			$path_only = wp_parse_url( $raw_path, PHP_URL_PATH );
+			$path_only = parse_url( $raw_path, PHP_URL_PATH );
 			$path = is_string( $path_only ) ? $path_only : $raw_path;
 
 			if ( preg_match( $pattern, $path ) ) {

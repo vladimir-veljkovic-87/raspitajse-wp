@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 class MonsterInsights_VerifiedBadge_Controller
 {
 

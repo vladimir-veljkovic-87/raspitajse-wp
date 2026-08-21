@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Add upgradenotification when Product Feed report has data.
@@ -55,22 +52,22 @@ final class MonsterInsights_Notification_Product_Feed_Upgrade extends MonsterIns
 						? 'https://www.exactmetrics.com/pricing/'
 						: 'https://www.monsterinsights.com/pricing/';
 
-					$notification['title'] = __( 'Upgrade to Pro for Product Feed Analytics', 'google-analytics-for-wordpress' );
-					$notification['content'] = sprintf(
-						/* translators: %1$s: Opening link tag, %2$s: Closing link tag. */
-						__( 'Great news! We detected that you have WooCommerce Product Feed Pro installed and there\'s product feed data available. Upgrade to MonsterInsights Pro to unlock detailed analytics for your product feed campaigns, track conversions, and optimize your shopping ads performance. %1$sUpgrade now%2$s to see your product feed insights!', 'google-analytics-for-wordpress' ),
+					$notification['title'] = __( 'Upgrade to Pro for Product Feed Analytics', 'google-analytics-premium' );
+					// Translators: Product Feed Pro upgrade notification content
+					$notification['content'] = sprintf( 
+						__( 'Great news! We detected that you have WooCommerce Product Feed Pro installed and there\'s product feed data available. Upgrade to MonsterInsights Pro to unlock detailed analytics for your product feed campaigns, track conversions, and optimize your shopping ads performance. %1$sUpgrade now%2$s to see your product feed insights!', 'google-analytics-premium' ), 
 						'<a href="' . $this->build_external_link( $upgrade_url ) . '" target="_blank">', 
 						'</a>' 
 					);
 					$notification['btns'] = array(
 						'upgrade_now' => array(
 							'url'         => $this->build_external_link( $upgrade_url ),
-							'text'        => __( 'Upgrade to Pro', 'google-analytics-for-wordpress' ),
+							'text'        => __( 'Upgrade to Pro', 'google-analytics-premium' ),
 							'is_external' => true,
 						),
 						'learn_more'  => array(
 							'url'         => $this->build_external_link( 'https://www.monsterinsights.com/product-feed-analytics/' ),
-							'text'        => __( 'Learn More', 'google-analytics-for-wordpress' ),
+							'text'        => __( 'Learn More', 'google-analytics-premium' ),
 							'is_external' => true,
 						),
 					);
@@ -94,22 +91,22 @@ final class MonsterInsights_Notification_Product_Feed_Upgrade extends MonsterIns
 						? 'https://www.exactmetrics.com/how-to-set-up-google-shopping-campaigns/'
 						: 'https://www.monsterinsights.com/how-to-set-up-google-shopping-campaigns/';
 
-					$notification['title'] = __( 'Product Feed Report Has No Data', 'google-analytics-for-wordpress' );
-					$notification['content'] = sprintf(
-						/* translators: %1$s: Opening link tag, %2$s: Closing link tag. */
-						__( 'Your Product Feed report is currently empty, which means you may not be tracking product feed performance properly. This could indicate that your product feeds are not set up correctly or there are no product feed campaigns running. <br><br>Learn how to set up product feeds with %1$sthis guide%2$s to start tracking your product feed performance.', 'google-analytics-for-wordpress' ),
+					$notification['title'] = __( 'Product Feed Report Has No Data', 'google-analytics-premium' );
+					// Translators: Product Feed empty notification content
+					$notification['content'] = sprintf( 
+						__( 'Your Product Feed report is currently empty, which means you may not be tracking product feed performance properly. This could indicate that your product feeds are not set up correctly or there are no product feed campaigns running. <br><br>Learn how to set up product feeds with %1$sthis guide%2$s to start tracking your product feed performance.', 'google-analytics-premium' ), 
 						'<a href="' . $this->build_external_link( $learn_more_url ) . '" target="_blank">', 
 						'</a>' 
 					);
 					$notification['btns'] = array(
 						'learn_more'  => array(
 							'url'         => $this->build_external_link( $learn_more_url ),
-							'text'        => __( 'Learn More', 'google-analytics-for-wordpress' ),
+							'text'        => __( 'Learn More', 'google-analytics-premium' ),
 							'is_external' => true,
 						),
 						'view_report' => array(
 							'url'  => $this->get_view_url( 'monsterinsights-report-ecommerce-product-feed', 'monsterinsights_reports', 'ecommerce-product-feed' ),
-							'text' => __( 'View Product Feed Report', 'google-analytics-for-wordpress' ),
+							'text' => __( 'View Product Feed Report', 'google-analytics-premium' ),
 						),
 					);
 

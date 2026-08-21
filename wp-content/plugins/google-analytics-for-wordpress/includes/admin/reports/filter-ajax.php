@@ -167,7 +167,7 @@ class MonsterInsights_Report_Filter_Ajax {
 	public function save_filter() {
 		$this->verify_request( 'monsterinsights_save_settings' );
 
-		$filter_json = isset( $_POST['filter'] ) ? wp_unslash( $_POST['filter'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified in verify_request() above.
+		$filter_json = isset( $_POST['filter'] ) ? wp_unslash( $_POST['filter'] ) : '';
 
 		if ( empty( $filter_json ) ) {
 			wp_send_json_error( array(
@@ -207,8 +207,8 @@ class MonsterInsights_Report_Filter_Ajax {
 	public function update_filter() {
 		$this->verify_request( 'monsterinsights_save_settings' );
 
-		$filter_id   = isset( $_POST['filter_id'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_id'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified in verify_request() above.
-		$filter_json = isset( $_POST['filter'] ) ? wp_unslash( $_POST['filter'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified in verify_request() above.
+		$filter_id   = isset( $_POST['filter_id'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_id'] ) ) : '';
+		$filter_json = isset( $_POST['filter'] ) ? wp_unslash( $_POST['filter'] ) : '';
 
 		if ( empty( $filter_id ) || empty( $filter_json ) ) {
 			wp_send_json_error( array(
@@ -253,7 +253,7 @@ class MonsterInsights_Report_Filter_Ajax {
 	public function delete_filter() {
 		$this->verify_request( 'monsterinsights_save_settings' );
 
-		$filter_id = isset( $_POST['filter_id'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_id'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified in verify_request() above.
+		$filter_id = isset( $_POST['filter_id'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_id'] ) ) : '';
 
 		if ( empty( $filter_id ) ) {
 			wp_send_json_error( array(
@@ -374,7 +374,7 @@ class MonsterInsights_Report_Filter_Ajax {
 	public function save_funnel() {
 		$this->verify_request( 'monsterinsights_save_settings' );
 
-		$funnel_json = isset( $_POST['funnel'] ) ? wp_unslash( $_POST['funnel'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified in verify_request() above.
+		$funnel_json = isset( $_POST['funnel'] ) ? wp_unslash( $_POST['funnel'] ) : '';
 
 		if ( empty( $funnel_json ) ) {
 			wp_send_json_error( array(
@@ -414,8 +414,8 @@ class MonsterInsights_Report_Filter_Ajax {
 	public function update_funnel() {
 		$this->verify_request( 'monsterinsights_save_settings' );
 
-		$funnel_id   = isset( $_POST['funnel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['funnel_id'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified in verify_request() above.
-		$funnel_json = isset( $_POST['funnel'] ) ? wp_unslash( $_POST['funnel'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified in verify_request() above.
+		$funnel_id   = isset( $_POST['funnel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['funnel_id'] ) ) : '';
+		$funnel_json = isset( $_POST['funnel'] ) ? wp_unslash( $_POST['funnel'] ) : '';
 
 		if ( empty( $funnel_id ) || empty( $funnel_json ) ) {
 			wp_send_json_error( array(
@@ -460,7 +460,7 @@ class MonsterInsights_Report_Filter_Ajax {
 	public function delete_funnel() {
 		$this->verify_request( 'monsterinsights_save_settings' );
 
-		$funnel_id = isset( $_POST['funnel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['funnel_id'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified in verify_request() above.
+		$funnel_id = isset( $_POST['funnel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['funnel_id'] ) ) : '';
 
 		if ( empty( $funnel_id ) ) {
 			wp_send_json_error( array(

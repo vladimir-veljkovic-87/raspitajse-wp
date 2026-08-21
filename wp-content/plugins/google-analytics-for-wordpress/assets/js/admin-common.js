@@ -68,20 +68,6 @@ jQuery(document).ready(function ($) {
       'json'
     );
   });
-
-  // Persist dismissal of AI Insights addon notice for 30 days
-  $('#monsterinsights-ai-insights-addon-notice').on('click', 'button.notice-dismiss', function (e) {
-    e.preventDefault();
-    $.post(
-      monsterinsights_admin_common.ajax,
-      {
-        action: 'monsterinsights_dismiss_ai_insights_addon_notice',
-        nonce: monsterinsights_admin_common.dismiss_notice_nonce
-      },
-      function () {},
-      'json'
-    );
-  });
 });
 
 var submenu_item = document.querySelector('.monsterinsights-upgrade-submenu');

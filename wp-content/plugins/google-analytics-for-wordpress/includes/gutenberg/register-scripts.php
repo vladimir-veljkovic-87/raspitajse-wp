@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Gutenberg-specific scripts.
  */
@@ -107,13 +102,9 @@ function monsterinsights_gutenberg_editor_assets() {
 			'current_post_type'            => $posttype,
 			'is_headline_analyzer_enabled' => apply_filters( 'monsterinsights_headline_analyzer_enabled', true ) && 'true' !== monsterinsights_get_option( 'disable_headline_analyzer' ),
 			'reports_url'                  => add_query_arg( 'page', 'monsterinsights_overview_report', admin_url( 'admin.php' ) ),
-			'vue_assets_path'              => plugins_url( 'assets/gutenberg/', MONSTERINSIGHTS_PLUGIN_FILE ),
+			'vue_assets_path'              => plugins_url( $version_path . '/assets/vue/', MONSTERINSIGHTS_PLUGIN_FILE ),
 			'is_woocommerce_installed'     => class_exists( 'WooCommerce' ),
 			'license_type'                 => MonsterInsights()->license->get_license_type(),
-			// AI optimizer needs a bearer token, gated on monsterinsights_view_dashboard.
-			// Expose the same cap so the editor can hide the button for roles that would
-			// otherwise pass the license check but fail token retrieval (e.g. Authors).
-			'can_optimize_headline'        => current_user_can( 'monsterinsights_view_dashboard' ),
 			'upgrade_url'                  => monsterinsights_get_upgrade_link( 'pageinsights-meta', 'products' ),
 			'install_woocommerce_url'      => $install_woocommerce_url,
 			'supports_custom_fields'       => post_type_supports( $posttype, 'custom-fields' ),
@@ -123,23 +114,14 @@ function monsterinsights_gutenberg_editor_assets() {
 			'isnetwork'                    => is_network_admin(),
 			'is_v4'                        => true,
 			'conversion_tracking_upgrade_url' => monsterinsights_get_upgrade_link( 'conversion-tracking', 'products' ),
-			'block_preview_urls'           => array(
-				'inline'        => plugins_url( 'assets/images/gutenberg/block-preview-inline.svg', MONSTERINSIGHTS_PLUGIN_FILE ),
-				'widget'        => plugins_url( 'assets/images/gutenberg/block-preview-widget.svg', MONSTERINSIGHTS_PLUGIN_FILE ),
-				'products'      => plugins_url( 'assets/images/gutenberg/block-preview-products.svg', MONSTERINSIGHTS_PLUGIN_FILE ),
-				'site-insights' => plugins_url( 'assets/images/gutenberg/block-preview-site-insights.svg', MONSTERINSIGHTS_PLUGIN_FILE ),
-			),
 		) )
 	);
 
-	$textdomain = monsterinsights_get_plugin_textdomain();
+	$textdomain  = monsterinsights_is_pro_version() ? 'google-analytics-premium' : 'google-analytics-for-wordpress';
 
-	wp_set_script_translations( 'monsterinsights-gutenberg-editor-js', $textdomain );
-
-	wp_add_inline_script(
+	wp_scripts()->add_inline_script(
 		'monsterinsights-gutenberg-editor-js',
-		monsterinsights_get_printable_translations( $textdomain ),
-		'before'
+		monsterinsights_get_printable_translations( $textdomain )
 	);
 
 }

@@ -80,17 +80,14 @@ class MonsterInsights_API_Token {
 			);
 		}
 
-		// Build payload - minimal data needed for validation.
+		// Build payload - minimal data needed for Laravel validation.
 		$timestamp  = time();
 		$expires_at = $timestamp + self::TOKEN_EXPIRATION;
 
-		// Include the license key so the AI Chat API can determine the plan
-		// without a DB lookup. The Lite compat accessor returns an empty string.
 		$payload = array(
 			'site_url'   => $network ? network_admin_url() : home_url(),
 			'issued_at'  => $timestamp,
 			'expires_at' => $expires_at,
-			'license'    => MonsterInsights()->license->get_license_key_by_context( $network ),
 		);
 
 		// Encrypt the payload.
@@ -312,13 +309,4 @@ class MonsterInsights_API_Token {
 add_action(
 	'wp_ajax_monsterinsights_get_bearer_token',
 	array( 'MonsterInsights_API_Token', 'ajax_get_token' )
-);
-
-// Drop the cached token whenever the license changes so the next AI request
-// uses the new license key rather than the stale one.
-add_action(
-	'monsterinsights_license_changed',
-	static function ( $network ) {
-		MonsterInsights_API_Token::invalidate( (bool) $network );
-	}
 );

@@ -97,12 +97,6 @@ class MonsterInsights_Cache_Wrapper {
 			wp_cache_set( $key, $value, $group, $expiration );
 		}
 
-		// Ensure the cache table exists before writing. The schema migration
-		// that creates it only runs during install/upgrade, so on sites where
-		// that never happened the write would silently fail and reports would
-		// re-fetch forever. maybe_create_table() self-heals that case.
-		$this->cache_table->maybe_create_table();
-
 		// Always store in cache table as well
 		// This provides persistence and fallback
 		$table_success = $this->cache_table->set_cache( $key, $value, $group, $expiration );

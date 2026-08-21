@@ -38,7 +38,7 @@ class MonsterInsights_Overview_Ajax {
 			$end_date = strtotime( $date_range['end'] );
 			$today    = strtotime( 'today' );
 			if ( $end_date > $today ) {
-				$date_range['end'] = gmdate( 'Y-m-d', $today );
+				$date_range['end'] = date( 'Y-m-d', $today );
 			}
 		}
 
@@ -79,8 +79,8 @@ class MonsterInsights_Overview_Ajax {
 		$start_ts   = strtotime( '-' . ( $days - 1 ) . ' days', $end_ts );
 
 		return array(
-			'start' => gmdate( 'Y-m-d', $start_ts ),
-			'end'   => gmdate( 'Y-m-d', $end_ts ),
+			'start' => date( 'Y-m-d', $start_ts ),
+			'end'   => date( 'Y-m-d', $end_ts ),
 		);
 	}
 }

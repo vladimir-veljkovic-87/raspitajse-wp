@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Add MonsterInsights tests to the WP Site Health area.
  */
@@ -31,12 +26,6 @@ class MonsterInsights_WP_Site_Health_Lite {
 	 * @var bool|string
 	 */
 	private $ecommerce;
-	/**
-	 * Is the website being tracked?
-	 *
-	 * @var bool
-	 */
-	private $is_tracking;
 
 	/**
 	 * MonsterInsights_WP_Site_Health_Lite constructor.
@@ -163,7 +152,7 @@ class MonsterInsights_WP_Site_Health_Lite {
 	private function is_coming_soon_active() {
 		if ( defined( 'SEED_CSP4_SHORTNAME' ) ) {
 			// SeedProd
-			// https://www.seedprod.com
+			// http://www.seedprod.com
 
 			$settings = get_option( 'seed_csp4_settings_content' );
 
@@ -192,19 +181,19 @@ class MonsterInsights_WP_Site_Health_Lite {
 			return '1' === get_option( 'wp_maintenance_active' );
 		} elseif ( defined( 'ACX_CSMA_CURRENT_VERSION' ) ) {
 			// Under Construction / Maintenance Mode From Acurax
-			// https://www.acurax.com/products/under-construction-maintenance-mode-wordpress-plugin
+			// http://www.acurax.com/products/under-construction-maintenance-mode-wordpress-plugin
 
 			return '1' === get_option( 'acx_csma_activation_status' );
 		} elseif ( defined( 'SAHU_SO_PLUGIN_URL' ) ) {
 			// Site Offline
-			// https://www.freehtmldesigns.com
+			// http://www.freehtmldesigns.com
 
 			$settings = maybe_unserialize( get_option( 'sahu_so_dashboard' ) );
 
 			return isset( $settings['sahu_so_status'] ) && '1' === $settings['sahu_so_status'];
 		} elseif ( defined( 'CSCS_GENEROPTION_PREFIX' ) ) {
 			// IgniteUp
-			// https://getigniteup.com
+			// http://getigniteup.com
 
 			return '1' === get_option( CSCS_GENEROPTION_PREFIX . 'enable', '' );
 		} elseif ( method_exists( 'UCP', 'is_construction_mode_enabled' ) ) {
@@ -214,7 +203,7 @@ class MonsterInsights_WP_Site_Health_Lite {
 			return UCP::is_construction_mode_enabled( true );
 		} elseif ( function_exists( 'mtnc_get_plugin_options' ) ) {
 			// Maintenance by WP Maintenance
-			// https://wordpress.org/plugins/maintenance/
+			// http://wordpress.org/plugins/maintenance/
 
 			$settings = mtnc_get_plugin_options( true );
 
@@ -332,54 +321,18 @@ class MonsterInsights_WP_Site_Health_Lite {
 			$result['description'] = __( 'MonsterInsights minor updates are enabled and you are getting the latest bugfixes and security updates, but not major features.', 'google-analytics-for-wordpress' );
 		}
 		if ( 'none' === $updates_option ) {
-			if ( $this->is_wp_auto_update_enabled() ) {
-				$result['label']       = __( 'Your website is receiving automatic updates', 'google-analytics-for-wordpress' );
-				$result['description'] = __( 'MonsterInsights automatic updates are enabled via WordPress auto-update settings.', 'google-analytics-for-wordpress' );
-			} else {
-				$result['status']      = 'recommended';
-				$result['label']       = __( 'Automatic updates are disabled', 'google-analytics-for-wordpress' );
-				$result['description'] = __( 'MonsterInsights automatic updates are disabled. We recommend enabling automatic updates so you can get access to the latest features, bugfixes, and security updates as they are released.', 'google-analytics-for-wordpress' );
-				$result['actions']     = sprintf(
-					'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></p>',
-					add_query_arg( 'page', 'monsterinsights_settings#/advanced', admin_url( 'admin.php' ) ),
-					__( 'Update Settings', 'google-analytics-for-wordpress' )
-				);
-			}
+			$result['status']      = 'recommended';
+			$result['label']       = __( 'Automatic updates are disabled', 'google-analytics-for-wordpress' );
+			$result['description'] = __( 'MonsterInsights automatic updates are disabled. We recommend enabling automatic updates so you can get access to the latest features, bugfixes, and security updates as they are released.', 'google-analytics-for-wordpress' );
+			$result['actions']     = sprintf(
+				'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></p>',
+				add_query_arg( 'page', 'monsterinsights_settings#/advanced', admin_url( 'admin.php' ) ),
+				__( 'Update Settings', 'google-analytics-for-wordpress' )
+			);
 		}
 
 		return $result;
 
-	}
-
-	/**
-	 * Check if WordPress auto-updates are enabled for the MonsterInsights plugin
-	 * via the built-in auto-update plugins list or the auto_update_plugin filter.
-	 *
-	 * @return bool
-	 */
-	private function is_wp_auto_update_enabled() {
-		$plugin_file = plugin_basename( MONSTERINSIGHTS_PLUGIN_FILE );
-
-		// Determine the default state from the WordPress auto-update plugins list.
-		$auto_updates = (array) get_site_option( 'auto_update_plugins', array() );
-		$default      = in_array( $plugin_file, $auto_updates, true );
-
-		// Check if any other filter on auto_update_plugin would enable or disable auto-updates.
-		// Temporarily remove our filter to isolate external filters.
-		remove_filter( 'auto_update_plugin', 'monsterinsights_automatic_updates', 10 );
-
-		$item = (object) array(
-			'slug'   => 'google-analytics-for-wordpress',
-			'plugin' => $plugin_file,
-		);
-
-		/** This filter is documented in wp-admin/includes/class-wp-automatic-updater.php */
-		$enabled = apply_filters( 'auto_update_plugin', $default, $item );
-
-		// Re-add our filter.
-		add_filter( 'auto_update_plugin', 'monsterinsights_automatic_updates', 10, 2 );
-
-		return (bool) $enabled;
 	}
 
 	/**

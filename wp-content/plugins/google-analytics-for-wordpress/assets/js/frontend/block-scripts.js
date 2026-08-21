@@ -4,7 +4,7 @@
   \**********************************************/
 (function (window, $) {
   // Look for all the graph blocks in the page.
-  const blocks = document.querySelectorAll('.monsterinsights-graph-item');
+  const blocks = document.querySelectorAll(".monsterinsights-graph-item");
   if (blocks.length < 0) {
     // Something is really wrong here. We loaded the script, but we didn't find any selectors.
     return;
@@ -14,8 +14,8 @@
    * This function goes through all the ApexChart options and converts all the `formatter` properties to that function
    * https://apexcharts.com/docs/options/legend/#formatter
    *
-   * @param  obj
-   * @return {*}
+   * @param obj
+   * @returns {*}
    */
   const applyFormatterFunctions = obj => {
     if (typeof obj !== 'object') {
@@ -26,7 +26,7 @@
         return obj[k];
       }
       if (k === 'formatter' && obj[k].hasOwnProperty('args') && obj[k].hasOwnProperty('body')) {
-        const f = new Function(obj[k].args, obj[k].body);
+        const f = new Function(obj[k]['args'], obj[k]['body']);
         obj[k] = f;
         return f;
       }

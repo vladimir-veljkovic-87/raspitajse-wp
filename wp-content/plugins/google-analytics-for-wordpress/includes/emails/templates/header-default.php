@@ -281,7 +281,7 @@ $text_dir   = is_rtl() ? 'rtl' : 'ltr';
 </head>
 <body
 	style="height: 100%;margin: 0;padding: 0;width: 100%;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: <?php echo esc_attr($background_color); ?>;">
-<!-- Don't forget to run final template through https://templates.mailchimp.com/resources/inline-css/ -->
+<!-- Don't forget to run final template through http://templates.mailchimp.com/resources/inline-css/ -->
 <center>
 	<table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable"
 		   style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;height: 100%;margin: 0;padding: 0;width: 100%;background-color: <?php echo esc_attr($background_color); ?>;">

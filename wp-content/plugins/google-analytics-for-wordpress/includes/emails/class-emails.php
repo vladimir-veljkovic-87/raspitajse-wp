@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Emails.
  *
@@ -430,13 +426,6 @@ class MonsterInsights_WP_Emails {
 			$data['headers'],
 			$data['attachments']
 		);
-
-		// Flag for usage tracking if this site fails to send an email. Once
-		// set, the flag remains so we know the site has had email delivery
-		// issues. update_option() is a no-op when the value is unchanged.
-		if ( false === $sent ) {
-			update_option( 'monsterinsights_email_send_failed', true, false );
-		}
 
 		// Hooks after the email is sent.
 		do_action( 'monsterinsights_email_send_after', $this );

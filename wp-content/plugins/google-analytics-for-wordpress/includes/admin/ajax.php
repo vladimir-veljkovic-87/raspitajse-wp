@@ -14,8 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/cache/allowed-groups.php';
-
 /**
  * Stores a user setting for the logged-in WordPress User
  *
@@ -81,7 +79,7 @@ function monsterinsights_ajax_install_addon() {
 		ob_start();
 		if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, null ) ) ) {
 			$form = ob_get_clean();
-			echo wp_json_encode( array( 'form' => $form ) );
+			echo json_encode( array( 'form' => $form ) );
 			wp_die();
 		}
 
@@ -90,7 +88,7 @@ function monsterinsights_ajax_install_addon() {
 			ob_start();
 			request_filesystem_credentials( $url, $method, true, false, null );
 			$form = ob_get_clean();
-			echo wp_json_encode( array( 'form' => $form ) );
+			echo json_encode( array( 'form' => $form ) );
 			wp_die();
 		}
 
@@ -105,13 +103,13 @@ function monsterinsights_ajax_install_addon() {
 		wp_cache_flush();
 		if ( $installer->plugin_info() ) {
 			$plugin_basename = $installer->plugin_info();
-			echo wp_json_encode( array( 'plugin' => $plugin_basename ) );
+			echo json_encode( array( 'plugin' => $plugin_basename ) );
 			wp_die();
 		}
 	}
 
 	// Send back a response.
-	echo wp_json_encode( true );
+	echo json_encode( true );
 	wp_die();
 
 }
@@ -138,18 +136,10 @@ function monsterinsights_ajax_activate_addon() {
 	if ( isset( $_POST['plugin'] ) ) {
 		$plugin = esc_attr( $_POST['plugin'] );
 
-		// $_POST['isnetwork'] arrives as a string, so a literal "false" (sent by the
-		// frontend when not in network admin) is still truthy in PHP. Left unchecked
-		// that forces network-wide activation, which on a single site writes the plugin
-		// to active_sitewide_plugins and never loads it — activate_plugin() returns no
-		// error, so the caller sees success while the plugin stays inactive. Coerce to
-		// a real boolean so single-site activation takes the normal path.
-		$is_network = isset( $_POST['isnetwork'] ) && filter_var( wp_unslash( $_POST['isnetwork'] ), FILTER_VALIDATE_BOOLEAN );
-
-		if ( $is_network ) {
+		if ( isset( $_POST['isnetwork'] ) && $_POST['isnetwork'] ) {
 			$activate = activate_plugin( $plugin, null, true );
 		} else {
-			$activate = activate_plugin( $plugin );
+			$activate = activate_plugin( $plugin  );
 		}
 
 		/* Restrict thirt-party redirections on activation */
@@ -158,7 +148,7 @@ function monsterinsights_ajax_activate_addon() {
 		}
 
 		if ( is_wp_error( $activate ) ) {
-			echo wp_json_encode( array( 'error' => $activate->get_error_message() ) );
+			echo json_encode( array( 'error' => $activate->get_error_message() ) );
 			wp_die();
 		}
 
@@ -175,7 +165,7 @@ function monsterinsights_ajax_activate_addon() {
 		}
 	}
 
-	echo wp_json_encode( true );
+	echo json_encode( true );
 	wp_die();
 }
 
@@ -208,7 +198,7 @@ function monsterinsights_ajax_deactivate_addon() {
 
 	do_action( 'monsterinsights_after_ajax_deactivate_addon', sanitize_text_field( $_POST['plugin'] ) );
 
-	echo wp_json_encode( true );
+	echo json_encode( true );
 	wp_die();
 }
 
@@ -226,23 +216,18 @@ function monsterinsights_ajax_dismiss_notice() {
 	// Run a security check first.
 	check_ajax_referer( 'monsterinsights-dismiss-notice', 'nonce' );
 
-	if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
-		echo wp_json_encode( false );
-		wp_die();
-	}
-
 	// Deactivate the notice
 	if ( isset( $_POST['notice'] ) ) {
 		// Init the notice class and mark notice as deactivated
-		MonsterInsights()->notices->dismiss( sanitize_key( wp_unslash( $_POST['notice'] ) ) );
+		MonsterInsights()->notices->dismiss( $_POST['notice'] );
 
 		// Return true
-		echo wp_json_encode( true );
+		echo json_encode( true );
 		wp_die();
 	}
 
 	// If here, an error occurred
-	echo wp_json_encode( false );
+	echo json_encode( false );
 	wp_die();
 
 }
@@ -318,10 +303,6 @@ add_action( 'wp_ajax_monsterinsights_vue_dismiss_aiseo_cta', 'monsterinsights_vu
 function monsterinsights_get_seo_boost_cta_status() {
 	check_ajax_referer( 'mi-admin-nonce', 'nonce' );
 
-	if ( ! current_user_can( 'monsterinsights_view_dashboard' ) ) {
-		wp_send_json_error();
-	}
-
 	$dismissed_cta = get_option( 'monsterinsights_dismiss_seoboost_cta', 'no' );
 
 	wp_send_json( array(
@@ -339,10 +320,6 @@ add_action( 'wp_ajax_monsterinsights_get_seo_boost_cta_status', 'monsterinsights
  */
 function monsterinsights_get_aiseo_cta_status() {
 	check_ajax_referer( 'mi-admin-nonce', 'nonce' );
-
-	if ( ! current_user_can( 'monsterinsights_view_dashboard' ) ) {
-		wp_send_json_error();
-	}
 
 	$dismissed_cta = get_option( 'monsterinsights_dismiss_aiseo_cta', 'no' );
 
@@ -443,11 +420,11 @@ function monsterinsights_check_plugin_funnelkit_funnelkit_stripe_woo_gateway_con
 	$fkwcs_con_status = get_option('fkwcs_con_status');
 
 	if ( 'success' === $fkwcs_con_status ) {
-		echo wp_json_encode( true );
+		echo json_encode( true );
 		wp_die();
 	}
 
-	echo wp_json_encode( false );
+	echo json_encode( false );
 	wp_die();
 
 }
@@ -493,7 +470,7 @@ function monsterinsights_ajax_backfill_cache() {
 		wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'google-analytics-for-wordpress' ) ) );
 	}
 
-	$allowed_groups = monsterinsights_backfill_cache_allowed_groups();
+	$allowed_groups = array( 'overview', 'custom_dashboard', 'custom_dimensions' );
 
 	$cache_group = ! empty( $_POST['cache_group'] ) ? sanitize_text_field( wp_unslash( $_POST['cache_group'] ) ) : '';
 	$cache_key   = ! empty( $_POST['cache_key'] ) ? sanitize_text_field( wp_unslash( $_POST['cache_key'] ) ) : '';
@@ -522,15 +499,7 @@ function monsterinsights_ajax_backfill_cache() {
 		wp_send_json_error( array( 'message' => __( 'Missing required cache parameters.', 'google-analytics-for-wordpress' ) ) );
 	}
 
-	$stored = monsterinsights_cache_set( $cache_key, $data, $cache_group, $ttl );
-
-	// Report an actual storage failure instead of masking it as success. A
-	// silent failure here makes the client register the cache key even though
-	// nothing was stored, so every later read misses and reports re-fetch
-	// forever with no visible error.
-	if ( ! $stored ) {
-		wp_send_json_error( array( 'message' => __( 'Unable to store cache data.', 'google-analytics-for-wordpress' ) ) );
-	}
+	monsterinsights_cache_set( $cache_key, $data, $cache_group, $ttl );
 
 	wp_send_json_success();
 }
@@ -554,7 +523,7 @@ function monsterinsights_ajax_get_backfill_cache() {
 		wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'google-analytics-for-wordpress' ) ) );
 	}
 
-	$allowed_groups = monsterinsights_backfill_cache_allowed_groups();
+	$allowed_groups = array( 'overview', 'custom_dashboard', 'custom_dimensions' );
 
 	$cache_group = ! empty( $_POST['cache_group'] ) ? sanitize_text_field( wp_unslash( $_POST['cache_group'] ) ) : '';
 	$cache_key   = ! empty( $_POST['cache_key'] ) ? sanitize_text_field( wp_unslash( $_POST['cache_key'] ) ) : '';

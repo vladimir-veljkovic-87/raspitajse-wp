@@ -339,7 +339,7 @@ function monsterinsights_is_valid_v4_id( $v4_code = '' ) {
 	$v4_code = monsterinsights_sanitize_tracking_id( $v4_code );
 
 	if (
-		preg_match( '/^G-[A-Za-z\d]+$/', $v4_code ) ||
+		preg_match( '/G-[A-Za-z\d]+/', $v4_code ) ||
 		monsterinsights_is_valid_gt( $v4_code )
 	) {
 		return strtoupper( $v4_code );

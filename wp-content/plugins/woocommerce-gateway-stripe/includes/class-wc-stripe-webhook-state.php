@@ -80,7 +80,7 @@ class WC_Stripe_Webhook_State {
 	 */
 	public static function get_monitoring_began_at() {
 		$option              = WC_Stripe_Mode::is_test() ? self::OPTION_TEST_MONITORING_BEGAN_AT : self::OPTION_LIVE_MONITORING_BEGAN_AT;
-		$monitoring_began_at = self::get_int_option( $option );
+		$monitoring_began_at = get_option( $option, 0 );
 		if ( 0 == $monitoring_began_at ) {
 			$monitoring_began_at = time();
 			update_option( $option, $monitoring_began_at );
@@ -103,7 +103,7 @@ class WC_Stripe_Webhook_State {
 	 */
 	public static function set_last_webhook_success_at( $timestamp ) {
 		$option = WC_Stripe_Mode::is_test() ? self::OPTION_TEST_LAST_SUCCESS_AT : self::OPTION_LIVE_LAST_SUCCESS_AT;
-		self::update_int_option( $option, $timestamp );
+		update_option( $option, $timestamp );
 	}
 
 	/**
@@ -115,7 +115,7 @@ class WC_Stripe_Webhook_State {
 	 */
 	public static function get_last_webhook_success_at() {
 		$option = WC_Stripe_Mode::is_test() ? self::OPTION_TEST_LAST_SUCCESS_AT : self::OPTION_LIVE_LAST_SUCCESS_AT;
-		return self::get_int_option( $option );
+		return get_option( $option, 0 );
 	}
 
 	/**
@@ -126,7 +126,7 @@ class WC_Stripe_Webhook_State {
 	 */
 	public static function set_last_webhook_failure_at( $timestamp ) {
 		$option = WC_Stripe_Mode::is_test() ? self::OPTION_TEST_LAST_FAILURE_AT : self::OPTION_LIVE_LAST_FAILURE_AT;
-		self::update_int_option( $option, $timestamp );
+		update_option( $option, $timestamp );
 	}
 
 	/**
@@ -138,7 +138,7 @@ class WC_Stripe_Webhook_State {
 	 */
 	public static function get_last_webhook_failure_at() {
 		$option = WC_Stripe_Mode::is_test() ? self::OPTION_TEST_LAST_FAILURE_AT : self::OPTION_LIVE_LAST_FAILURE_AT;
-		return self::get_int_option( $option );
+		return get_option( $option, 0 );
 	}
 
 	/**
@@ -240,7 +240,7 @@ class WC_Stripe_Webhook_State {
 	 */
 	public static function set_pending_webhooks_count( $pending_webhooks ) {
 		$option = WC_Stripe_Mode::is_test() ? self::OPTION_TEST_PENDING_WEBHOOKS : self::OPTION_LIVE_PENDING_WEBHOOKS;
-		self::update_int_option( $option, $pending_webhooks );
+		update_option( $option, $pending_webhooks );
 	}
 
 	/**
@@ -252,7 +252,7 @@ class WC_Stripe_Webhook_State {
 	 */
 	public static function get_pending_webhooks_count() {
 		$option = WC_Stripe_Mode::is_test() ? self::OPTION_TEST_PENDING_WEBHOOKS : self::OPTION_LIVE_PENDING_WEBHOOKS;
-		return self::get_int_option( $option );
+		return get_option( $option, 0 );
 	}
 
 	/**
@@ -363,55 +363,5 @@ class WC_Stripe_Webhook_State {
 			'live' => empty( $live_webhook['url'] ) ? null : rawurlencode( $live_webhook['url'] ),
 			'test' => empty( $test_webhook['url'] ) ? null : rawurlencode( $test_webhook['url'] ),
 		];
-	}
-	/**
-	 * Gets an option value that must be an integer. Stringified integers will be cast to int,
-	 * but other non-integer values will be returned as 0.
-	 *
-	 * @param string $option_name The name of the option to get.
-	 * @return int The integer value of the option, or 0 if the option is not an integer.
-	 */
-	protected static function get_int_option( $option_name ) {
-		$option_value = get_option( $option_name, 0 );
-
-		$validated_value = self::validate_int_value( $option_value );
-		if ( null === $validated_value ) {
-			return 0;
-		}
-
-		return $validated_value;
-	}
-
-	/**
-	 * Update an option with an integer value.
-	 *
-	 * @param string $option_name The name of the option to update.
-	 * @param mixed  $value       The value to update the option with. Should be a scalar integer.
-	 * @return void
-	 */
-	protected static function update_int_option( $option_name, $value ) {
-		$int_value = self::validate_int_value( $value );
-		if ( null === $int_value ) {
-			return;
-		}
-		update_option( $option_name, $int_value );
-	}
-
-	/**
-	 * Validate that a value is an integer.
-	 *
-	 * @param mixed $value The value to validate.
-	 * @return int|null The integer value of the value, or null if the value is not an integer.
-	 */
-	protected static function validate_int_value( $value ) {
-		if ( ! is_scalar( $value ) ) {
-			return null;
-		}
-
-		if ( ! ctype_digit( (string) $value ) ) {
-			return null;
-		}
-
-		return (int) $value;
 	}
 };

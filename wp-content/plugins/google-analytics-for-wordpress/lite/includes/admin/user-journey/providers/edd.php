@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * This file contains the code to display metabox for EDD Admin Orders Page.
  *
@@ -93,7 +89,7 @@ class MonsterInsights_Lite_User_Journey_EDD_Metabox extends MonsterInsights_User
 	protected function metabox_title() {
 		?>
 		<div class="monsterinsights-uj-metabox-title">
-			<h2><?php esc_html_e( 'User Journey by MonsterInsights', 'google-analytics-for-wordpress' ); ?></h2>
+			<h2><?php esc_html_e( 'User Journey by MonsterInsights', 'monsterinsights' ); ?></h2>
 		</div>
 		<?php
 	}

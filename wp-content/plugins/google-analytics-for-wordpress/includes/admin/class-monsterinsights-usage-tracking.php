@@ -147,6 +147,17 @@ class MonsterInsights_Usage_Tracking {
 		$data['inactive_plugins'] = wp_json_encode( $plugins );
 		$data['locale']           = get_locale();
 
+		// Add Google Ads page form data, if available
+		$google_ads_settings = monsterinsights_get_option('monsterinsights_google_ads_settings');
+
+		if ( isset($google_ads_settings['physical_products']) ) {
+			$data['google_ads_physical_products'] = $google_ads_settings['physical_products'] ? 'yes' : 'no';
+		}
+
+		if ( isset($google_ads_settings['user_onboarded']) ) {
+			$data['google_ads_user_onboarded'] = $google_ads_settings['user_onboarded'] ? 'yes' : 'no';
+		}
+
 		return $data;
 	}
 
@@ -188,10 +199,10 @@ class MonsterInsights_Usage_Tracking {
 	public function schedule_send() {
 		if ( ! wp_next_scheduled( 'monsterinsights_usage_tracking_cron' ) ) {
 			$tracking             = array();
-			$tracking['day']      = wp_rand( 0, 6 );
-			$tracking['hour']     = wp_rand( 0, 23 );
-			$tracking['minute']   = wp_rand( 0, 59 );
-			$tracking['second']   = wp_rand( 0, 59 );
+			$tracking['day']      = rand( 0, 6 );
+			$tracking['hour']     = rand( 0, 23 );
+			$tracking['minute']   = rand( 0, 59 );
+			$tracking['second']   = rand( 0, 59 );
 			$tracking['offset']   = ( $tracking['day'] * DAY_IN_SECONDS ) +
 									( $tracking['hour'] * HOUR_IN_SECONDS ) +
 									( $tracking['minute'] * MINUTE_IN_SECONDS ) +

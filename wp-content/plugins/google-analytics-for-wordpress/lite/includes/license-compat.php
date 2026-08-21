@@ -34,10 +34,6 @@ class MonsterInsights_License_Compat {
 	/**
 	 * @return string
 	 */
-	public function get_license_key_by_context( bool $network = false ) {
-		return '';
-	}
-
 	public function get_site_license_key() {
 		return '';
 	}

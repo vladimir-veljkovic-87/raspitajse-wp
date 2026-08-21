@@ -109,21 +109,13 @@ class MonsterInsights_Tracking_Gtag extends MonsterInsights_Tracking_Abstract {
 		if ( is_array( $cross_domains ) && ! empty( $cross_domains ) ) {
 			$linker_domains = [];
 			foreach ( $cross_domains as $cross_domain ) {
-				if ( empty( $cross_domain['domain'] ) ) {
-					continue;
+				if ( ! empty( $cross_domain['domain'] ) ) {
+					$linker_domains[] = $cross_domain['domain'];
 				}
-				$domain = str_replace( '!@#', '', (string) $cross_domain['domain'] );
-				$domain = preg_replace( '/[^A-Za-z0-9._-]/', '', $domain );
-				if ( '' === $domain ) {
-					continue;
-				}
-				$linker_domains[] = $domain;
 			}
-			if ( ! empty( $linker_domains ) ) {
-				$options['linker'] = [
-					'domains' => $linker_domains,
-				];
-			}
+			$options['linker'] = [
+				'domains' => $linker_domains,
+			];
 		}
 
 		if ( monsterinsights_is_debug_mode() ) {
@@ -219,7 +211,7 @@ class MonsterInsights_Tracking_Gtag extends MonsterInsights_Tracking_Abstract {
 				$reason = __( 'Note: MonsterInsights is not currently configured on this site. The site owner needs to authenticate with Google Analytics in the MonsterInsights settings panel.', 'google-analytics-for-wordpress' );
 				$output .= '<!-- ' . esc_html( $reason ) . ' -->' . PHP_EOL;
 			} elseif ( current_user_can( 'monsterinsights_save_settings' ) ) {
-				$reason = __( 'Note: MonsterInsights does not track you as a logged-in site administrator to prevent site owners from accidentally skewing their own Google Analytics data. If you are testing Google Analytics code, please do so either logged out or in the private browsing/incognito mode of your web browser.', 'google-analytics-for-wordpress' );
+				$reason = __( 'Note: MonsterInsights does not track you as a logged-in site administrator to prevent site owners from accidentally skewing their own Google Analytics data.' . PHP_EOL . 'If you are testing Google Analytics code, please do so either logged out or in the private browsing/incognito mode of your web browser.', 'google-analytics-for-wordpress' );
 				$output .= '<!-- ' . esc_html( $reason ) . ' -->' . PHP_EOL;
 			} else {
 				$reason = __( 'Note: The site owner has disabled Google Analytics tracking for your user role.', 'google-analytics-for-wordpress' );
@@ -230,7 +222,7 @@ class MonsterInsights_Tracking_Gtag extends MonsterInsights_Tracking_Abstract {
 		<?php if ( ! empty( $v4_id ) ) {
 			do_action( 'monsterinsights_tracking_gtag_frontend_before_script_tag' );
 			?>
-			<script src="<?php echo esc_url( $src ); ?>" <?php echo $attr_string; // phpcs:ignore ?> <?php echo esc_attr( $gtag_async ); ?>></script>
+			<script src="<?php echo $src; // phpcs:ignore ?>" <?php echo $attr_string; // phpcs:ignore ?> <?php echo esc_attr( $gtag_async ); ?>></script>
 			<script<?php echo $attr_string; // phpcs:ignore ?>>
 				var mi_version = '<?php echo MONSTERINSIGHTS_VERSION; // phpcs:ignore ?>';
 				var mi_track_user = <?php echo $track_user ? 'true' : 'false'; ?>;

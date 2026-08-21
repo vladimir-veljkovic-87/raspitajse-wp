@@ -1,7 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 class MonsterInsights_SiteNotes_Controller {
 
@@ -119,7 +116,7 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$params = !empty($_POST['params']) ? json_decode(html_entity_decode(wp_unslash($_POST['params'])), true) : [];
+		$params = !empty($_POST['params']) ? json_decode(html_entity_decode(stripslashes($_POST['params'])), true) : [];
 
 		$output = $this->prepare_notes($params);
 
@@ -193,7 +190,7 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$params = !empty($_POST['params']) ? json_decode(html_entity_decode(wp_unslash($_POST['params'])), true) : [];
+		$params = !empty($_POST['params']) ? json_decode(html_entity_decode(stripslashes($_POST['params'])), true) : [];
 
 		$args = wp_parse_args($params, array(
 			'per_page' => -1,
@@ -238,7 +235,7 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$note = !empty($_POST['note']) ? json_decode(html_entity_decode(wp_unslash($_POST['note']))) : [];
+		$note = !empty($_POST['note']) ? json_decode(html_entity_decode(stripslashes($_POST['note']))) : [];
 
 		$note_details = array(
 			'note' => sanitize_text_field($note->note_title),
@@ -288,7 +285,7 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$category = !empty($_POST['category']) ? json_decode(html_entity_decode(wp_unslash($_POST['category']))) : [];
+		$category = !empty($_POST['category']) ? json_decode(html_entity_decode(stripslashes($_POST['category']))) : [];
 
 		if (empty($category->name)) {
 			wp_send_json(
@@ -355,7 +352,7 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$ids = !empty($_POST['ids']) ? json_decode(html_entity_decode(wp_unslash($_POST['ids']))) : [];
+		$ids = !empty($_POST['ids']) ? json_decode(html_entity_decode(stripslashes($_POST['ids']))) : [];
 
 		if (empty($ids)) {
 			wp_send_json(
@@ -366,20 +363,8 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$blocked = false;
 		foreach ($ids as $id) {
-			if ( is_wp_error( $this->db->trash_note($id) ) ) {
-				$blocked = true;
-			}
-		}
-
-		if ( $blocked ) {
-			wp_send_json(
-				array(
-					'success' => false,
-					'message' => __( "You don't have permission to trash one or more of these notes.", 'google-analytics-for-wordpress' ),
-				)
-			);
+			$this->db->trash_note($id);
 		}
 
 		wp_send_json(
@@ -405,7 +390,7 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$ids = !empty($_POST['ids']) ? json_decode(html_entity_decode(wp_unslash($_POST['ids']))) : [];
+		$ids = !empty($_POST['ids']) ? json_decode(html_entity_decode(stripslashes($_POST['ids']))) : [];
 
 		if (empty($ids)) {
 			wp_send_json(
@@ -416,20 +401,8 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$blocked = false;
 		foreach ($ids as $id) {
-			if ( is_wp_error( $this->db->restore_note($id) ) ) {
-				$blocked = true;
-			}
-		}
-
-		if ( $blocked ) {
-			wp_send_json(
-				array(
-					'success' => false,
-					'message' => __( "You don't have permission to restore one or more of these notes.", 'google-analytics-for-wordpress' ),
-				)
-			);
+			$this->db->restore_note($id);
 		}
 
 		wp_send_json(
@@ -455,7 +428,7 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$ids = !empty($_POST['ids']) ? json_decode(html_entity_decode(wp_unslash($_POST['ids']))) : [];
+		$ids = !empty($_POST['ids']) ? json_decode(html_entity_decode(stripslashes($_POST['ids']))) : [];
 
 		if (empty($ids)) {
 			wp_send_json(
@@ -466,20 +439,8 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$blocked = false;
 		foreach ($ids as $id) {
-			if ( is_wp_error( $this->db->delete_note($id) ) ) {
-				$blocked = true;
-			}
-		}
-
-		if ( $blocked ) {
-			wp_send_json(
-				array(
-					'success' => false,
-					'message' => __( "You don't have permission to delete one or more of these notes.", 'google-analytics-for-wordpress' ),
-				)
-			);
+			$this->db->delete_note($id);
 		}
 
 		wp_send_json(
@@ -505,7 +466,7 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$ids = !empty($_POST['ids']) ? json_decode(html_entity_decode(wp_unslash($_POST['ids']))) : [];
+		$ids = !empty($_POST['ids']) ? json_decode(html_entity_decode(stripslashes($_POST['ids']))) : [];
 
 		if (empty($ids)) {
 			wp_send_json(
@@ -580,7 +541,7 @@ class MonsterInsights_SiteNotes_Controller {
 			$row = array(
 				$item['note_date'],
 				$item['note_title'],
-				!empty($item['category']['name']) ? $item['category']['name'] : 'N/A',
+				!empty($item['category']) ? $item['category']['name'] : 'N/A',
 				intval($item['important']),
 				$item_media
 			);
@@ -589,7 +550,7 @@ class MonsterInsights_SiteNotes_Controller {
 			fputcsv($outstream, $row);
 		}
 
-		fclose($outstream); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+		fclose($outstream);
 		exit;
 	}
 	/**
@@ -614,7 +575,7 @@ class MonsterInsights_SiteNotes_Controller {
 
 		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
 
-		$annotations = isset( $_POST['annotations'] ) ? json_decode( wp_unslash( $_POST['annotations'] ), true ) : array();
+		$annotations = isset( $_POST['annotations'] ) ? json_decode( stripslashes( $_POST['annotations'] ), true ) : array();
 		if ( empty( $annotations ) ) {
 			wp_send_json_error(
 				array(
@@ -810,16 +771,13 @@ class MonsterInsights_SiteNotes_Controller {
 				)
 			);
 		}
-		// Check if response contains annotations data. "Nothing to import" is a
-		// completed sync, not an error — persist the flag so the front-end stops
-		// re-running the import on every page load.
+		// Check if response contains annotations data.
 		if (
 			empty( $response ) ||
 			! isset( $response['data']['annotations'] ) ||
 			empty( $response['data']['annotations'] )
 		) {
-			monsterinsights_update_option( 'site_notes_import_synced', 1 );
-			wp_send_json_success(
+			wp_send_json_error(
 				array(
 					'message' => __(
 						'No annotations found to import.',
@@ -855,7 +813,6 @@ class MonsterInsights_SiteNotes_Controller {
 			// Skip if note is empty.
 			if ( empty( $note_details['note'] ) ) {
 				$errors[] = sprintf(
-					/* translators: %s: annotation ID */
 					__(
 						'Skipped annotation with empty title (ID: %s)',
 						'google-analytics-for-wordpress'
@@ -865,27 +822,13 @@ class MonsterInsights_SiteNotes_Controller {
 				continue;
 			}
 
-			// Skip if a note with the same title + date already exists locally
-			// (created manually, or by a prior sync that didn't link the GA4 id).
-			// This stops the import from re-creating duplicates of notes it can't
-			// match by `_ga4_annotation_id` alone.
-			$existing_note_id = $this->find_note_by_title_date( $note_details['note'], $note_details['date'] );
-			if ( $existing_note_id ) {
-				if ( ! empty( $ga4_annotation_id ) && '' === (string) get_post_meta( $existing_note_id, '_ga4_annotation_id', true ) ) {
-					update_post_meta( $existing_note_id, '_ga4_annotation_id', $ga4_annotation_id );
-				}
-				$skipped_count++;
-				continue;
-			}
-
 			// Create the note using the existing create_note method.
 			$note_id = $this->create_note( $note_details );
 
 			if ( is_wp_error( $note_id ) ) {
 				$errors[] = sprintf(
-					/* translators: %1$s: annotation title, %2$s: error message */
 					__(
-						'Failed to import annotation "%1$s": %2$s',
+						'Failed to import annotation "%s": %s',
 						'google-analytics-for-wordpress'
 					),
 					$note_details['note'],
@@ -902,7 +845,6 @@ class MonsterInsights_SiteNotes_Controller {
 
 		// Prepare response message.
 		$message = sprintf(
-			/* translators: %d: number of annotations successfully imported */
 			__(
 				'Successfully imported %d annotations.',
 				'google-analytics-for-wordpress'
@@ -912,7 +854,6 @@ class MonsterInsights_SiteNotes_Controller {
 
 		if ( $skipped_count > 0 ) {
 			$message .= ' ' . sprintf(
-				/* translators: %d: number of annotations skipped */
 				__( '%d annotations were skipped (already exist).', 'google-analytics-for-wordpress' ),
 				$skipped_count
 			);
@@ -920,7 +861,6 @@ class MonsterInsights_SiteNotes_Controller {
 
 		if ( ! empty( $errors ) ) {
 			$message .= ' ' . sprintf(
-				/* translators: %d: number of annotations that failed to import */
 				__(
 					'%d annotations could not be imported.',
 					'google-analytics-for-wordpress'
@@ -986,44 +926,6 @@ class MonsterInsights_SiteNotes_Controller {
 		return ! empty( $notes );
 	}
 
-	/**
-	 * Find an existing site note by title and date (Y-m-d).
-	 *
-	 * Used to dedupe imports: a note may already exist locally without a linked
-	 * GA4 annotation id (created manually, or by a prior sync), so matching on
-	 * `_ga4_annotation_id` alone is not enough to avoid duplicates.
-	 *
-	 * @param string $title The note title.
-	 * @param string $date  The note date in Y-m-d format.
-	 * @return int The matching note ID, or 0 if none.
-	 */
-	private function find_note_by_title_date( $title, $date ) {
-		$parts = explode( '-', (string) $date );
-		if ( count( $parts ) !== 3 ) {
-			return 0;
-		}
-
-		$query = new WP_Query(
-			array(
-				'post_type'      => 'monsterinsights_note',
-				'title'          => $title,
-				'post_status'    => array( 'publish', 'trash' ),
-				'posts_per_page' => 1,
-				'fields'         => 'ids',
-				'no_found_rows'  => true,
-				'date_query'     => array(
-					array(
-						'year'  => intval( $parts[0] ),
-						'month' => intval( $parts[1] ),
-						'day'   => intval( $parts[2] ),
-					),
-				),
-			)
-		);
-
-		return ! empty( $query->posts ) ? intval( $query->posts[0] ) : 0;
-	}
-
 	public function add_categories_to_editor($vars) {
 		$args = array(
 			'per_page' => 0,
@@ -1053,17 +955,13 @@ class MonsterInsights_SiteNotes_Controller {
 			return;
 		}
 
-		$auth_callback = function ( $allowed, $meta_key, $object_id ) {
-			return current_user_can( 'edit_post', $object_id );
-		};
-
 		register_post_meta(
 			'',
 			'_monsterinsights_sitenote_active',
 			[
-				'auth_callback' => $auth_callback,
+				'auth_callback' => '__return_true',
 				'default'       => false,
-				'show_in_rest'  => false,
+				'show_in_rest'  => true,
 				'single'        => true,
 				'type'          => 'boolean',
 			]
@@ -1073,9 +971,9 @@ class MonsterInsights_SiteNotes_Controller {
 			'',
 			'_monsterinsights_sitenote_note',
 			[
-				'auth_callback' => $auth_callback,
+				'auth_callback' => '__return_true',
 				'default'       => '',
-				'show_in_rest'  => false,
+				'show_in_rest'  => true,
 				'single'        => true,
 				'type'          => 'string',
 			]
@@ -1085,9 +983,9 @@ class MonsterInsights_SiteNotes_Controller {
 			'',
 			'_monsterinsights_sitenote_category',
 			[
-				'auth_callback' => $auth_callback,
+				'auth_callback' => '__return_true',
 				'default'       => 0,
-				'show_in_rest'  => false,
+				'show_in_rest'  => true,
 				'single'        => true,
 				'type'          => 'integer',
 			]
@@ -1095,11 +993,7 @@ class MonsterInsights_SiteNotes_Controller {
 	}
 
 	public function save_custom_fields($current_post_id) {
-		if (!isset($_POST['monsterinsights_metabox_nonce']) || !wp_verify_nonce(wp_unslash($_POST['monsterinsights_metabox_nonce']), 'monsterinsights_metabox')) {
-			return;
-		}
-
-		if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
+		if (!isset($_POST['monsterinsights_metabox_nonce']) || !wp_verify_nonce($_POST['monsterinsights_metabox_nonce'], 'monsterinsights_metabox')) {
 			return;
 		}
 
@@ -1117,7 +1011,7 @@ class MonsterInsights_SiteNotes_Controller {
 			return;
 		}
 
-		$note = isset($_POST['_monsterinsights_sitenote_note']) ? esc_html(wp_unslash($_POST['_monsterinsights_sitenote_note'])) : '';
+		$note = isset($_POST['_monsterinsights_sitenote_note']) ? esc_html($_POST['_monsterinsights_sitenote_note']) : '';
 		update_post_meta($current_post_id, '_monsterinsights_sitenote_note', $note);
 
 		$category = isset($_POST['_monsterinsights_sitenote_category']) ? intval($_POST['_monsterinsights_sitenote_category']) : 0;
@@ -1127,10 +1021,6 @@ class MonsterInsights_SiteNotes_Controller {
 	}
 
 	public function create_note_with_post($post_ID) {
-		if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
-			return;
-		}
-
 		if ('monsterinsights_note' === get_post_type($post_ID) || 'publish' !== get_post_status($post_ID)) {
 			return;
 		}
@@ -1238,7 +1128,7 @@ class MonsterInsights_SiteNotes_Controller {
 			<div class="monsterinsights-metabox-input monsterinsights-metabox-input-checkbox">
 				<label class="">
 					<input type="checkbox" name="_monsterinsights_sitenote_active" value="1" <?php checked($sitenote_active); ?>>
-					<span class="monsterinsights-metabox-input-checkbox-label"><?php esc_html_e('Add a Site Note', 'google-analytics-for-wordpress'); ?></span>
+					<span class="monsterinsights-metabox-input-checkbox-label"><?php _e('Add a Site Note', 'google-analytics-for-wordpress'); ?></span>
 				</label>
 			</div>
 
@@ -1249,7 +1139,7 @@ class MonsterInsights_SiteNotes_Controller {
 
 				<div class="monsterinsights-metabox-input monsterinsights-metabox-select">
 					<label>
-						<?php esc_html_e('Category', 'google-analytics-for-wordpress'); ?>
+						<?php _e('Category', 'google-analytics-for-wordpress'); ?>
 						<select name="_monsterinsights_sitenote_category">
 							<?php if (!empty($categories)) {
 								foreach ($categories as $category) {
@@ -1276,7 +1166,7 @@ class MonsterInsights_SiteNotes_Controller {
 		wp_register_style('monsterinsights-admin-metabox-sitenotes-style', plugins_url('assets/css/admin-metabox-sitenotes.css', MONSTERINSIGHTS_PLUGIN_FILE), array(), monsterinsights_get_asset_version());
 		wp_enqueue_style('monsterinsights-admin-metabox-sitenotes-style');
 
-		wp_register_script('monsterinsights-admin-metabox-sitenotes-script', plugins_url('assets/js/admin-metabox-sitenotes.js', MONSTERINSIGHTS_PLUGIN_FILE), array('jquery'), monsterinsights_get_asset_version(), true);
+		wp_register_script('monsterinsights-admin-metabox-sitenotes-script', plugins_url('assets/js/admin-metabox-sitenotes.js', MONSTERINSIGHTS_PLUGIN_FILE), array('jquery'), monsterinsights_get_asset_version());
 		wp_enqueue_script('monsterinsights-admin-metabox-sitenotes-script');
 	}
 

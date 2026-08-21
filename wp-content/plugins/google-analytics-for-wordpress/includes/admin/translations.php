@@ -97,7 +97,7 @@ class MonsterInsights_Translation {
 			$value->translations = [];
 		}
 
-		$slug = monsterinsights_get_plugin_textdomain();
+		$slug = monsterinsights_is_pro_version() ? 'google-analytics-premium' : 'google-analytics-for-wordpress';
 
 		$translations = $this->get_translations( $slug );
 
@@ -243,7 +243,7 @@ class MonsterInsights_Translation {
 	 * Trigger on plugin activate.
 	 */
 	public function plugin_activated() {
-		$slug = monsterinsights_get_plugin_textdomain();
+		$slug = monsterinsights_is_pro_version() ? 'google-analytics-premium' : 'google-analytics-for-wordpress';
 
 		$translations = $this->get_translations( $slug );
 

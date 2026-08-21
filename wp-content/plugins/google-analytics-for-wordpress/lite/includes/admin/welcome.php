@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Class MonsterInsights_Welcome
  */
@@ -35,17 +31,50 @@ class MonsterInsights_Welcome {
 		}
 
 		add_action( 'admin_init', array( $this, 'maybe_redirect' ), 9999 );
+
+		add_action( 'admin_menu', array( $this, 'register' ) );
+		// Add the welcome screen to the network dashboard.
+		add_action( 'network_admin_menu', array( $this, 'register' ) );
+
+		add_action( 'admin_head', array( $this, 'hide_menu' ) );
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'welcome_scripts' ) );
 	}
 
 	/**
-	 * Auto-redirect first-time activations to the externally-hosted setup
-	 * wizard.
+	 * Register the pages to be used for the Welcome screen.
 	 *
-	 * The bundled Vue 2 welcome screen and `monsterinsights-getting-started`
-	 * dashboard page were retired during the Vue 3 migration. Net-new sites
-	 * still benefit from being walked through setup, so we keep the
-	 * activation transient and just send users straight to
-	 * `monsterinsights_get_onboarding_url()`.
+	 * These pages will be removed from the Dashboard menu, so they will
+	 * not actually show. Sneaky, sneaky.
+	 *
+	 * @since 1.0.0
+	 */
+	public function register() {
+
+		// Getting started - shows after installation.
+		add_dashboard_page(
+			esc_html__( 'Welcome to MonsterInsights', 'google-analytics-for-wordpress' ),
+			esc_html__( 'Welcome to MonsterInsights', 'google-analytics-for-wordpress' ),
+			apply_filters( 'monsterinsights_welcome_cap', 'manage_options' ),
+			'monsterinsights-getting-started',
+			array( $this, 'welcome_screen' )
+		);
+	}
+
+	/**
+	 * Removed the dashboard pages from the admin menu.
+	 *
+	 * This means the pages are still available to us, but hidden.
+	 *
+	 * @since 1.0.0
+	 */
+	public function hide_menu() {
+		remove_submenu_page( 'index.php', 'monsterinsights-getting-started' );
+	}
+
+
+	/**
+	 * Check if we should do any redirect.
 	 */
 	public function maybe_redirect() {
 
@@ -64,16 +93,99 @@ class MonsterInsights_Welcome {
 
 		$upgrade            = get_option( 'monsterinsights_version_upgraded_from', false );
 		$skip_wizard        = get_option( 'monsterinsights_skip_wizard', false );
-		// If this is an upgrade (a version_from is present) or skip_wizard is set, skip the redirect.
-		$run_wizard         = ! ( $skip_wizard || false !== $upgrade );
-		$do_redirect        = apply_filters( 'monsterinsights_enable_onboarding_wizard', $run_wizard );
+		// if it is an upgrade (a version_from is present) or the option for skip wizard is set, skip wizard
+		$run_wizard         = ! ( $skip_wizard || false !== $upgrade ) ;
+		$do_redirect        = apply_filters( 'monsterinsights_enable_onboarding_wizard', $run_wizard ); // default true
 		if ( $do_redirect ) {
-			// Use `wp_redirect()` (not `wp_safe_redirect()`) because the
-			// onboarding URL points to a different host
-			// (e.g. connect.monsterinsights.com).
-			wp_redirect( esc_url_raw( monsterinsights_get_onboarding_url() ) );
+			$path     = 'index.php?page=monsterinsights-getting-started&monsterinsights-redirect=1';
+			$redirect = is_network_admin() ? network_admin_url( $path ) : admin_url( $path );
+			wp_safe_redirect( $redirect );
 			exit;
 		}
+	}
+
+	/**
+	 * Scripts for loading the welcome screen Vue instance.
+	 */
+	public function welcome_scripts() {
+
+		$current_screen = get_current_screen();
+		$screens        = array(
+			'dashboard_page_monsterinsights-getting-started',
+			'index_page_monsterinsights-getting-started-network',
+		);
+
+		if ( empty( $current_screen->id ) || ! in_array( $current_screen->id, $screens, true ) ) {
+			return;
+		}
+
+		$version_path = monsterinsights_is_pro_version() ? 'pro' : 'lite';
+		if ( ! defined( 'MONSTERINSIGHTS_LOCAL_JS_URL' ) ) {
+			MonsterInsights_Admin_Assets::enqueue_script_specific_css( 'src/modules/wizard-onboarding/wizard.js' );
+		}
+
+		$app_js_url = MonsterInsights_Admin_Assets::get_js_url( 'src/modules/wizard-onboarding/wizard.js' );
+		wp_register_script( 'monsterinsights-vue-script', $app_js_url, array( 'wp-i18n' ), monsterinsights_get_asset_version(), true );
+		wp_enqueue_script( 'monsterinsights-vue-script' );
+
+		$user_data = wp_get_current_user();
+
+		wp_localize_script(
+			'monsterinsights-vue-script',
+			'monsterinsights',
+			array(
+				'ajax'                 => add_query_arg( 'page', 'monsterinsights-onboarding', admin_url( 'admin-ajax.php' ) ),
+				'nonce'                => wp_create_nonce( 'mi-admin-nonce' ),
+				'network'              => is_network_admin(),
+				'assets'               => plugins_url( $version_path . '/assets/vue', MONSTERINSIGHTS_PLUGIN_FILE ),
+				'roles'                => monsterinsights_get_roles(),
+				'roles_manage_options' => monsterinsights_get_manage_options_roles(),
+				'shareasale_id'        => monsterinsights_get_shareasale_id(),
+				'shareasale_url'       => monsterinsights_get_shareasale_url( monsterinsights_get_shareasale_id(), '' ),
+				// Used to add notices for future deprecations.
+				'versions'             => monsterinsights_get_php_wp_version_warning_data(),
+				'plugin_version'       => MONSTERINSIGHTS_VERSION,
+				'first_name'           => ! empty( $user_data->first_name ) ? $user_data->first_name : '',
+				'exit_url'             => add_query_arg( 'page', 'monsterinsights_settings', admin_url( 'admin.php' ) ),
+				'had_ecommerce'        => monsterinsights_get_option( 'gadwp_ecommerce', false ),
+			)
+		);
+
+		$text_domain = monsterinsights_is_pro_version() ? 'google-analytics-premium' : 'google-analytics-for-wordpress';
+
+		wp_scripts()->add_inline_script(
+			'monsterinsights-vue-script',
+			monsterinsights_get_printable_translations( $text_domain ),
+			'translation'
+		);
+	}
+
+	/**
+	 * Load the welcome screen content.
+	 */
+	public function welcome_screen() {
+		do_action( 'monsterinsights_head' );
+
+		monsterinsights_settings_error_page( $this->get_screen_id() );
+		monsterinsights_settings_inline_js();
+	}
+
+	/**
+	 * Get the screen id to control which Vue component is loaded.
+	 *
+	 * @return string
+	 */
+	public function get_screen_id() {
+		$screen_id = 'monsterinsights-welcome';
+
+		if ( defined( 'EXACTMETRICS_VERSION' ) && function_exists( 'ExactMetrics' ) ) {
+			$migrated = monsterinsights_get_option( 'gadwp_migrated', 0 );
+			if ( time() - $migrated < HOUR_IN_SECONDS || isset( $_GET['monsterinsights-migration'] ) ) {
+				$screen_id = 'monsterinsights-migration-wizard';
+			}
+		}
+
+		return $screen_id;
 	}
 }
 

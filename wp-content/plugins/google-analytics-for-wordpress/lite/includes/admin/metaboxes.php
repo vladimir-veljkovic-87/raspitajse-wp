@@ -36,18 +36,18 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 			?>
 			<div class="monsterinsights-metabox lite" id="monsterinsights-metabox-page-insights">
 				<a class="button" href="#" id="monsterinsights_show_page_insights">
-					<?php esc_html_e( 'Show Page Insights', 'google-analytics-for-wordpress' ); ?>
+					<?php _e( 'Show Page Insights', 'google-analytics-for-wordpress' ); ?>
 				</a>
 
 				<div id="monsterinsights-page-insights-content">
 					<div class="monsterinsights-page-insights__tabs">
 						<a href="#" class="monsterinsights-page-insights__tabs-tab active"
 						   data-tab="monsterinsights-last-30-days-content">
-							<?php esc_html_e( 'Last 30 days', 'google-analytics-for-wordpress' ); ?>
+							<?php _e( 'Last 30 days', 'google-analytics-for-wordpress' ); ?>
 						</a>
 						<a href="#" class="monsterinsights-page-insights__tabs-tab"
 						   data-tab="monsterinsights-yesterday-content">
-							<?php esc_html_e( 'Yesterday', 'google-analytics-for-wordpress' ); ?>
+							<?php _e( 'Yesterday', 'google-analytics-for-wordpress' ); ?>
 						</a>
 					</div>
 					<div class="monsterinsights-page-insights-tabs-content">
@@ -60,7 +60,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 										<span>1m 43s</span>
 									</div>
 									<div class="monsterinsights-page-insights-tabs-content__tab-item__title">
-										<?php esc_html_e( 'Time on Page', 'google-analytics-for-wordpress' ); ?>
+										<?php _e( 'Time on Page', 'google-analytics-for-wordpress' ); ?>
 									</div>
 								</div>
 
@@ -69,7 +69,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 										<span>19056</span>
 									</div>
 									<div class="monsterinsights-page-insights-tabs-content__tab-item__title">
-										<?php esc_html_e( 'Entrances', 'google-analytics-for-wordpress' ); ?>
+										<?php _e( 'Entrances', 'google-analytics-for-wordpress' ); ?>
 									</div>
 								</div>
 								<div class="monsterinsights-page-insights-tabs-content__tab-item">
@@ -77,7 +77,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 										<span>26558</span>
 									</div>
 									<div class="monsterinsights-page-insights-tabs-content__tab-item__title">
-										<?php esc_html_e( 'Page Views', 'google-analytics-for-wordpress' ); ?>
+										<?php _e( 'Page Views', 'google-analytics-for-wordpress' ); ?>
 									</div>
 								</div>
 								<div class="monsterinsights-page-insights-tabs-content__tab-item">
@@ -85,7 +85,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 										<span>13428</span>
 									</div>
 									<div class="monsterinsights-page-insights-tabs-content__tab-item__title">
-										<?php esc_html_e( 'Exits', 'google-analytics-for-wordpress' ); ?>
+										<?php _e( 'Exits', 'google-analytics-for-wordpress' ); ?>
 									</div>
 								</div>
 
@@ -100,7 +100,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 										<span>1m 43s</span>
 									</div>
 									<div class="monsterinsights-page-insights-tabs-content__tab-item__title">
-										<?php esc_html_e( 'Time on Page', 'google-analytics-for-wordpress' ); ?>
+										<?php _e( 'Time on Page', 'google-analytics-for-wordpress' ); ?>
 									</div>
 								</div>
 
@@ -109,7 +109,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 										<span>19056</span>
 									</div>
 									<div class="monsterinsights-page-insights-tabs-content__tab-item__title">
-										<?php esc_html_e( 'Entrances', 'google-analytics-for-wordpress' ); ?>
+										<?php _e( 'Entrances', 'google-analytics-for-wordpress' ); ?>
 									</div>
 								</div>
 								<div class="monsterinsights-page-insights-tabs-content__tab-item">
@@ -117,7 +117,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 										<span>26558</span>
 									</div>
 									<div class="monsterinsights-page-insights-tabs-content__tab-item__title">
-										<?php esc_html_e( 'Page Views', 'google-analytics-for-wordpress' ); ?>
+										<?php _e( 'Page Views', 'google-analytics-for-wordpress' ); ?>
 									</div>
 								</div>
 								<div class="monsterinsights-page-insights-tabs-content__tab-item">
@@ -125,7 +125,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 										<span>13428</span>
 									</div>
 									<div class="monsterinsights-page-insights-tabs-content__tab-item__title">
-										<?php esc_html_e( 'Exits', 'google-analytics-for-wordpress' ); ?>
+										<?php _e( 'Exits', 'google-analytics-for-wordpress' ); ?>
 									</div>
 								</div>
 
@@ -134,7 +134,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBoxes' ) ) {
 					</div>
 
 					<a class="button" href="#" id="monsterinsights_hide_page_insights">
-						<?php esc_html_e( 'Hide Page Insights', 'google-analytics-for-wordpress' ); ?>
+						<?php _e( 'Hide Page Insights', 'google-analytics-for-wordpress' ); ?>
 					</a>
 				</div>
 

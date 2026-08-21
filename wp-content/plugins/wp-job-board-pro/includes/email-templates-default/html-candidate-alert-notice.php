@@ -17,30 +17,30 @@
             cellpadding="0" align="center">
             <tbody>
               <tr>
-                <td style="padding-bottom: 10px;" align="left" width="80%"><a href="https://raspitajse.com/"
+                <td style="padding-bottom: 10px;" align="left" width="80%"><a href="https://stage.raspitajse.com/"
                     target="_blank" rel="noopener noreferrer">
-                    <img src="https://raspitajse.com/wp-content/uploads/2024/11/raspitajse-logo-blue-small-v2.png"
+                    <img src="https://stage.raspitajse.com/wp-content/uploads/2024/11/raspitajse-logo-blue-small-v2.png"
                       alt="Raspitajse - poslovi - trazenje radnika" width="197" height="50" />
                   </a></td>
                 <td
                   style="padding: 10px 5px 10px 0; font-style: normal; font-size: 10px; font-weight: 500; color: #838589;"
                   align="right"><a href="mailto:someone@yoursite.com?subject=Javljam se u vezi posla" target="_blank"
                     rel="noopener">
-                    <img src="https://raspitajse.com/wp-content/uploads/2024/11/email-icon-1.png"
+                    <img src="https://stage.raspitajse.com/wp-content/uploads/2024/11/email-icon-1.png"
                       alt="Raspitajse - poslovi - trazenje radnika" width="22px" />
                   </a></td>
                 <td
                   style="padding: 10px 5px 10px 0; font-style: normal; font-size: 10px; font-weight: 500; color: #838589;"
                   align="right"><a href="https://plus.google.com/110578866718998707942/posts" target="_blank"
                     rel="noopener">
-                    <img src="https://raspitajse.com/wp-content/uploads/2024/11/facebook-icon.png"
+                    <img src="https://stage.raspitajse.com/wp-content/uploads/2024/11/facebook-icon.png"
                       alt="Raspitajse - poslovi - trazenje radnika" width="22px" />
                   </a></td>
                 <td
                   style="padding: 10px 5px 10px 0; font-style: normal; font-size: 10px; font-weight: 500; color: #838589;"
                   align="right"><a href="https://plus.google.com/110578866718998707942/posts" target="_blank"
                     rel="noopener">
-                    <img src="https://raspitajse.com/wp-content/uploads/2024/11/instagram-icon.png"
+                    <img src="https://stage.raspitajse.com/wp-content/uploads/2024/11/instagram-icon.png"
                       alt="Raspitajse - poslovi - trazenje radnika" width="22px" />
                   </a></td>
               </tr>
@@ -113,7 +113,7 @@
                                 <td style="width: 90%; padding: 8px; border-radius: 5px;" align="center"
                                   bgcolor="#3068d0"><a
                                     style="font-family: Calibri; font-size: 12px; font-style: normal; font-weight: 500; color: #ffffff; text-decoration: none;"
-                                    href="https://raspitajse.com/candidates/" target="_blank" rel="noopener">POGLEDAJTE ODGOVOR</a></td>
+                                    href="https://stage.raspitajse.com/candidates/" target="_blank" rel="noopener">POGLEDAJTE ODGOVOR</a></td>
                                 <td
                                   style="line-height: 0; width: 45%; font-family: Calibri; font-size: 10px; font-weight: 100; color: #6c6e73;"
                                   align="left" valign="bottom"></td>
@@ -131,8 +131,8 @@
                                   style="width: 90%; font-style: normal; font-family: Calibri; font-size: 16px; font-weight: 100; line-height: 50%; color: #3068d0;"
                                   align="left">Ukoliko želite više informacija posetite
                                   <a style="line-height: 0; font-weight: 600; color: #3068d0; text-decoration: none;"
-                                    href="https://raspitajse.com/" target="_blank" rel="noopener">
-                                    raspitajse.com
+                                    href="https://stage.raspitajse.com/" target="_blank" rel="noopener">
+                                    stage.raspitajse.com
                                   </a>
                                 </td>
                               </tr>
@@ -147,7 +147,7 @@
                                 <td
                                   style="width: 100%; font-family: Calibri; font-size: 10px; font-weight: 100; color: #6c6e73;"
                                   align="right" valign="bottom"><img
-                                    src="https://raspitajse.com/wp-content/uploads/2024/11/sta-bi-ste-vi-uradili-2.jpg"
+                                    src="https://stage.raspitajse.com/wp-content/uploads/2024/11/sta-bi-ste-vi-uradili-2.jpg"
                                     alt="Raspitajse - poslovi - trazenje radnika" width="100%" /></td>
                               </tr>
                             </tbody>
@@ -188,7 +188,7 @@
                       <tr>
                         <td style="padding: 10px; border-radius: 5px;" align="center" bgcolor="#3068d0"><a
                             style="font-family: Calibri; font-size: 18px; font-style: normal; font-weight: 500; color: #ffffff; text-decoration: none;"
-                            href="https://raspitajse.com/candidates/" target="_blank" rel="noopener">POGLEDAJTE KANDIDATE</a></td>
+                            href="https://stage.raspitajse.com/candidates/" target="_blank" rel="noopener">POGLEDAJTE KANDIDATE</a></td>
                       </tr>
                       <tr>
                         <td style="padding: 40px 0 0 0;" align="center"></td>
@@ -375,10 +375,10 @@
                               <tr>
                                 <td
                                   style="padding: 15px 0 15px 15px; width: 100%; font-family: Calibri; font-size: 10px; font-weight: 100; color: #6c6e73;"
-                                  align="left" valign="bottom"><a href="https://raspitajse.com/" target="_blank"
+                                  align="left" valign="bottom"><a href="https://stage.raspitajse.com/" target="_blank"
                                     rel="noopener noreferrer">
                                     <img
-                                      src="https://raspitajse.com/wp-content/uploads/2024/11/raspitajse-logo-blue-small-v2.png"
+                                      src="https://stage.raspitajse.com/wp-content/uploads/2024/11/raspitajse-logo-blue-small-v2.png"
                                       alt="Raspitajse - poslovi - trazenje radnika" width="197" height="50" />
                                   </a></td>
                               </tr>
@@ -405,29 +405,29 @@
                                   style="padding: 10px 5px 10px 0; font-family: Calibri; font-style: normal; font-size: 10px; font-weight: 500; color: #838589;"
                                   align="right"><a href="https://www.facebook.com/HyperopticGigabitBroadband"
                                     target="_blank" rel="noopener noreferrer">
-                                    <img src="https://raspitajse.com/wp-content/uploads/2024/11/phone-icon-2.png"
+                                    <img src="https://stage.raspitajse.com/wp-content/uploads/2024/11/phone-icon-2.png"
                                       alt="Raspitajse - poslovi - trazenje radnika" width="25" />
                                   </a></td>
                                 <td
                                   style="padding: 10px 5px 10px 0; font-family: Calibri; font-style: normal; font-size: 10px; font-weight: 500; color: #838589;"
                                   align="right"><a
-                                    href="mailto:office@yraspitajse.com?subject=Javljam%20se%20u%20vezi%20posla"
+                                    href="mailto:office@ystage.raspitajse.com?subject=Javljam%20se%20u%20vezi%20posla"
                                     target="_blank" rel="noopener noreferrer">
-                                    <img src="https://raspitajse.com/wp-content/uploads/2024/11/email-icon-1.png"
+                                    <img src="https://stage.raspitajse.com/wp-content/uploads/2024/11/email-icon-1.png"
                                       alt="Raspitajse - poslovi - trazenje radnika" width="25" />
                                   </a></td>
                                 <td
                                   style="padding: 10px 5px 10px 0; font-family: Calibri; font-style: normal; font-size: 10px; font-weight: 500; color: #838589;"
                                   align="right"><a href="https://plus.google.com/110578866718998707942/posts"
                                     target="_blank" rel="noopener noreferrer">
-                                    <img src="https://raspitajse.com/wp-content/uploads/2024/11/facebook-icon.png"
+                                    <img src="https://stage.raspitajse.com/wp-content/uploads/2024/11/facebook-icon.png"
                                       alt="Raspitajse - poslovi - trazenje radnika" width="25" />
                                   </a></td>
                                 <td
                                   style="padding: 10px 15px 10px 0; font-family: Calibri; font-style: normal; font-size: 10px; font-weight: 500; color: #838589;"
                                   align="right"><a href="https://plus.google.com/110578866718998707942/posts"
                                     target="_blank" rel="noopener noreferrer">
-                                    <img src="https://raspitajse.com/wp-content/uploads/2024/11/instagram-icon.png"
+                                    <img src="https://stage.raspitajse.com/wp-content/uploads/2024/11/instagram-icon.png"
                                       alt="Raspitajse - poslovi - trazenje radnika" width="25" />
                                   </a></td>
                               </tr>
@@ -440,7 +440,7 @@
                                 <td
                                   style="padding: 0 15px 10px 0; font-family: Calibri; font-style: normal; font-size: 9px; font-weight: 400; color: #838589;"
                                   align="right">Copyright 2024 © Raspitajse.com Sva prava zadržana. | <a
-                                    href="https://raspitajse.com/terms/" target="_blank" rel="noopener noreferrer">Prava i Obaveze</a></td>
+                                    href="https://stage.raspitajse.com/terms/" target="_blank" rel="noopener noreferrer">Prava i Obaveze</a></td>
                               </tr>
                             </tbody>
                           </table>

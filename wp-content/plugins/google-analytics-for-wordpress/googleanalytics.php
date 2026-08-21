@@ -7,7 +7,7 @@
  * Author:              MonsterInsights
  * Author URI:          https://www.monsterinsights.com/lite/?utm_source=liteplugin&utm_medium=pluginheader&utm_campaign=authoruri&utm_content=7%2E0%2E0
  *
- * Version:             11.1.2
+ * Version:             10.1.3
  * Requires at least:   5.6.0
  * Requires PHP:        7.2
  *
@@ -30,7 +30,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @category            Plugin
  * @copyright           Copyright © 2018 Chris Christoff
@@ -79,7 +79,7 @@ final class MonsterInsights_Lite {
 	 * @access public
 	 * @var string $version Plugin version.
 	 */
-	public $version = '11.1.2';
+	public $version = '10.1.3';
 	/**
 	 * Plugin file.
 	 *

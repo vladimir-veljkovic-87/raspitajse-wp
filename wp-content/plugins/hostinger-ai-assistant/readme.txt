@@ -2,7 +2,7 @@
 Tags: AI, AI assistant
 Requires PHP: 8.0
 Tested up to: 6.9
-Stable tag: 3.0.39
+Stable tag: 3.0.38
 Requires at least: 5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -494,7 +494,3 @@ This section describes how to install the plugin and get it working.
 
 - Fix: Remove AI assistant top bar
 - Tweak: Update dependencies
-
-3.0.39 (2026-05-22)
-
-- Fix: Chatbot-widget

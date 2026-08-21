@@ -1,11 +1,6 @@
 <?php
 // phpcs:ignoreFile
-
 namespace MonsterInsightsHeadlineToolPlugin;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 // setup defines
 define( 'MONSTERINSIGHTS_HEADLINE_TOOL_DIR_PATH', plugin_dir_path( __FILE__ ) );
@@ -40,7 +35,6 @@ class MonsterInsightsHeadlineToolPlugin {
 	 */
 	function init() {
 		add_action( 'wp_ajax_monsterinsights_gutenberg_headline_analyzer_get_results', array( $this, 'get_result' ) );
-		add_action( 'wp_ajax_monsterinsights_gutenberg_headline_analyzer_optimize', array( $this, 'ajax_optimize' ) );
 	}
 
 	/**
@@ -87,264 +81,6 @@ class MonsterInsightsHeadlineToolPlugin {
 	}
 
 	/**
-	 * Ajax endpoint that proxies the AI Headline Optimizer suggestions request and
-	 * returns each suggestion with a server-computed score.
-	 *
-	 * Browser stays out of the AI auth path: bearer is fetched on the server via
-	 * MonsterInsights_API_Token, the AI service call is made with wp_remote_post,
-	 * and each returned suggestion is scored with the same rule engine the existing
-	 * "Get Score" flow uses, so the user sees a single consistent number.
-	 *
-	 * @since 11.1
-	 * @access public
-	 *
-	 * @return void Response is emitted via wp_send_json_*() which terminates execution.
-	 */
-	function ajax_optimize() {
-		// Reuse the Gutenberg headline nonce — already exposed as monsterinsights_gutenberg_tool_vars.nonce.
-		check_ajax_referer( 'monsterinsights_gutenberg_headline_nonce', '_ajax_nonce' );
-
-		// Match the token gate: get_token() requires monsterinsights_view_dashboard,
-		// so gating on edit_posts let lower roles (Authors/Contributors) through to a
-		// misleading non-retryable auth error. Keep both gates on the same capability.
-		if ( ! current_user_can( 'monsterinsights_view_dashboard' ) ) {
-			wp_send_json_error( $this->ai_error( 'auth', '', false ), 403 );
-		}
-
-		// Defense in depth: admin-ajax bypasses JS-only gating, so re-assert the Pro/license requirement here.
-		if ( ! monsterinsights_is_pro_version() || ! MonsterInsights()->license->license_can( 'plus' ) ) {
-			wp_send_json_error( $this->ai_error( 'upgrade_required', '', false ), 403 );
-		}
-
-		$headline = isset( $_POST['headline'] ) ? sanitize_text_field( wp_unslash( $_POST['headline'] ) ) : '';
-		$context  = isset( $_POST['context'] ) ? sanitize_textarea_field( wp_unslash( $_POST['context'] ) ) : '';
-		$type_raw = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'title';
-		$type     = in_array( $type_raw, array( 'title', 'heading' ), true ) ? $type_raw : 'title';
-
-		// Clamp inputs so an authenticated user can't amplify outbound cost (token spend, 30s timeout).
-		$headline = mb_substr( $headline, 0, 500 );
-		$context  = mb_substr( $context, 0, 5000 );
-
-		if ( '' === $headline ) {
-			wp_send_json_error( $this->ai_error( 'validation', __( 'Headline is required.', 'google-analytics-for-wordpress' ), false ), 400 );
-		}
-
-		$payload = array(
-			'headline' => $headline,
-			'context'  => $context,
-			'type'     => $type,
-		);
-
-		$ai_response = $this->call_ai_suggestions( $payload, false );
-		if ( is_wp_error( $ai_response ) ) {
-			wp_send_json_error( $this->wp_error_to_ai_error( $ai_response ) );
-		}
-
-		// One transparent retry with a fresh token if the AI service rejects auth.
-		if ( 401 === $ai_response['status'] ) {
-			$ai_response = $this->call_ai_suggestions( $payload, true );
-			if ( is_wp_error( $ai_response ) ) {
-				wp_send_json_error( $this->wp_error_to_ai_error( $ai_response ) );
-			}
-		}
-
-		if ( $ai_response['status'] >= 400 ) {
-			wp_send_json_error( $this->ai_response_error( $ai_response['status'], $ai_response['body'], $ai_response['response'] ) );
-		}
-
-		$body        = $ai_response['body'];
-		$suggestions = ( isset( $body['suggestions'] ) && is_array( $body['suggestions'] ) ) ? $body['suggestions'] : array();
-
-		foreach ( $suggestions as $i => $suggestion ) {
-			// Upstream contract violation — drop anything that isn't a suggestion object.
-			if ( ! is_array( $suggestion ) ) {
-				unset( $suggestions[ $i ] );
-				continue;
-			}
-			$text     = isset( $suggestion['headline'] ) ? (string) $suggestion['headline'] : '';
-			$headline = wp_strip_all_tags( $text );
-			// Build the outbound shape explicitly — never forward unknown AI-service
-			// fields into authenticated editor DOM, even if the upstream contract changes.
-			$suggestions[ $i ] = array(
-				'headline'  => $headline,
-				'reasoning' => isset( $suggestion['reasoning'] )
-					? wp_strip_all_tags( (string) $suggestion['reasoning'] )
-					: '',
-				'score'     => $this->score_value_for( $headline ),
-			);
-		}
-
-		// Highest score first so the editor surfaces the strongest headline at the top.
-		usort(
-			$suggestions,
-			static function ( $a, $b ) {
-				return $b['score'] <=> $a['score'];
-			}
-		);
-
-		wp_send_json_success(
-			array(
-				// Re-index so dropped entries can't turn the JSON array into an object.
-				'suggestions' => array_values( $suggestions ),
-			)
-		);
-	}
-
-	/**
-	 * Score a single headline string and return just the integer score (0-93).
-	 *
-	 * Errors collapse to 0; the AJAX handler falls back to the suggestion as-is.
-	 *
-	 * @since 11.1
-	 * @access private
-	 *
-	 * @param string $headline Headline text to score.
-	 * @return int Score in the 0-93 range; 0 on scorer error.
-	 */
-	private function score_value_for( $headline ) {
-		$score_result = $this->score_headline( $headline );
-		if ( ! empty( $score_result->err ) ) {
-			return 0;
-		}
-		return isset( $score_result->score ) ? (int) $score_result->score : 0;
-	}
-
-	/**
-	 * POST the suggestion request to the AI service with a Bearer token from
-	 * MonsterInsights_API_Token. Returns either a WP_Error (transport-level
-	 * failure) or an array with status/body/response so the caller can pick a
-	 * structured error type from the body.
-	 *
-	 * @since 11.1
-	 * @access private
-	 *
-	 * @param array $payload     Request payload (headline / context / type).
-	 * @param bool  $force_fresh Invalidate the cached token before fetching.
-	 * @return array|WP_Error    Array with int 'status', array 'body', and the raw 'response',
-	 *                           or WP_Error on transport / token failure.
-	 */
-	private function call_ai_suggestions( array $payload, $force_fresh ) {
-		if ( $force_fresh ) {
-			\MonsterInsights_API_Token::invalidate( is_network_admin() );
-		}
-
-		$token_data = \MonsterInsights_API_Token::get_token( is_network_admin() );
-		if ( is_wp_error( $token_data ) || empty( $token_data['token'] ) ) {
-			return new \WP_Error( 'mi_ai_auth', '', array( 'type' => 'auth' ) );
-		}
-
-		$base = apply_filters( 'monsterinsights_ai_chat_api_url', 'https://ai-api.monsterinsights.com/' );
-		$url  = trailingslashit( $base ) . 'api/v1/headline/suggestions';
-
-		$response = wp_remote_post(
-			$url,
-			array(
-				// AI calls take 5-15s; staying under PHP-FPM/admin-ajax limits.
-				'timeout'     => 60,
-				'redirection' => 0,
-				'headers'     => array(
-					'Authorization' => 'Bearer ' . $token_data['token'],
-					'Content-Type'  => 'application/json',
-					'Accept'        => 'application/json',
-				),
-				'body'        => wp_json_encode( $payload ),
-			)
-		);
-
-		if ( is_wp_error( $response ) ) {
-			return new \WP_Error( 'mi_ai_network', $response->get_error_message(), array( 'type' => 'network' ) );
-		}
-
-		$decoded = json_decode( wp_remote_retrieve_body( $response ), true );
-
-		return array(
-			'status'   => (int) wp_remote_retrieve_response_code( $response ),
-			'body'     => is_array( $decoded ) ? $decoded : array(),
-			// Keep the full response so ai_response_error can read headers via wp_remote_retrieve_header().
-			'response' => $response,
-		);
-	}
-
-	/**
-	 * Build the structured error envelope JS expects:
-	 * { type, message, retryable, meta }. Meta is cast to object so empty meta
-	 * serializes as {} not [] (so JS can read err.meta?.retryAfter without surprises).
-	 *
-	 * @since 11.1
-	 * @access private
-	 *
-	 * @param string $type      Error category (auth, validation, rate_limited, …).
-	 * @param string $message   Optional user-facing message.
-	 * @param bool   $retryable Whether the UI should let the user retry.
-	 * @param array  $meta      Extra structured info (retryAfter, …).
-	 * @return array
-	 */
-	private function ai_error( $type, $message = '', $retryable = false, $meta = array() ) {
-		return array(
-			'type'      => $type,
-			'message'   => (string) $message,
-			'retryable' => (bool) $retryable,
-			'meta'      => (object) $meta,
-		);
-	}
-
-	/**
-	 * Map a transport-level WP_Error into the JS error envelope shape.
-	 *
-	 * The original WP_HTTP error message is intentionally dropped — it can leak
-	 * internal hostnames or proxy details on misconfigured servers. The JS layer
-	 * already maps the error type to localized user-facing copy.
-	 *
-	 * @since 11.1
-	 * @access private
-	 *
-	 * @param WP_Error $err Transport error from call_ai_suggestions().
-	 * @return array
-	 */
-	private function wp_error_to_ai_error( \WP_Error $err ) {
-		$type = 'network';
-		$data = $err->get_error_data();
-		if ( is_array( $data ) && ! empty( $data['type'] ) ) {
-			$type = $data['type'];
-		}
-		return $this->ai_error( $type, '', $type !== 'auth' );
-	}
-
-	/**
-	 * Map an AI service HTTP error response into the JS error envelope shape.
-	 *
-	 * @since 11.1
-	 * @access private
-	 *
-	 * @param int   $status   HTTP status from the AI service.
-	 * @param array $body     Decoded JSON body (may be empty).
-	 * @param mixed $response Raw wp_remote_post response, used for headers.
-	 * @return array
-	 */
-	private function ai_response_error( $status, $body, $response ) {
-		if ( 429 === $status ) {
-			$retry_after = (int) wp_remote_retrieve_header( $response, 'retry-after' );
-			if ( $retry_after <= 0 ) {
-				$retry_after = 60;
-			}
-			return $this->ai_error( 'rate_limited', '', true, array( 'retryAfter' => $retry_after ) );
-		}
-		if ( 401 === $status ) {
-			return $this->ai_error( 'auth', '', false );
-		}
-		if ( 422 === $status ) {
-			return $this->ai_error( 'validation', '', false );
-		}
-		if ( 402 === $status ) {
-			return $this->ai_error( 'exhausted', '', false );
-		}
-		if ( $status >= 400 && $status < 500 ) {
-			return $this->ai_error( 'validation', '', false );
-		}
-		return $this->ai_error( 'server', '', true );
-	}
-
-	/**
 	 * function to match words from sentence
 	 * @return Object
 	 */
@@ -382,38 +118,11 @@ class MonsterInsightsHeadlineToolPlugin {
 	}
 
 	/**
-	 * Read $_REQUEST['q'] and return the score breakdown for the existing AJAX route.
-	 *
-	 * Thin wrapper kept so the original AJAX flow at get_result() still works without
-	 * having to reach into $_REQUEST inside the pure scorer.
-	 *
-	 * @since 11.1
-	 * @access public
-	 *
-	 * @return Object stdClass with int 'score', bool 'err', and breakdown fields.
+	 * main function to calculate headline scores
+	 * @return Object
 	 */
 	function get_headline_scores() {
-		$q = isset( $_REQUEST['q'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['q'] ) ) : '';
-		return $this->score_headline( $q );
-	}
-
-	/**
-	 * Pure scorer: takes a headline string and returns the same stdClass result
-	 * the AJAX route used to produce. Reused by ajax_optimize() to score each AI
-	 * suggestion server-side, so PHP is the single source of truth for scores.
-	 *
-	 * Callers pass the headline directly; the function sanitizes internally with
-	 * sanitize_text_field() before scoring, so it is safe to call from contexts
-	 * that have already validated the input.
-	 *
-	 * @since 11.1
-	 * @access public
-	 *
-	 * @param string $headline The headline text to score.
-	 * @return Object stdClass with int 'score', bool 'err', and breakdown fields.
-	 */
-	function score_headline( $headline ) {
-		$input = sanitize_text_field( (string) $headline );
+		$input = (isset($_REQUEST['q'])) ? sanitize_text_field($_REQUEST['q']) : '';
 
 		// init the result array
 		$result                   = new \stdClass();
@@ -603,9 +312,7 @@ class MonsterInsightsHeadlineToolPlugin {
 			__( 'will', 'google-analytics-for-wordpress' ),
 		);
 		if ( in_array( $input_array[0], $qn_quantifiers ) ) {
-			// Single-word quantifier headlines (e.g. "How") have no index 1; the
-			// isset guard avoids an undefined-offset notice corrupting the AJAX JSON.
-			if ( isset( $input_array[1] ) && in_array( $input_array[1], $qn_quantifiers_sub ) ) {
+			if ( in_array( $input_array[1], $qn_quantifiers_sub ) ) {
 				$headline_types[] = __( 'Question', 'google-analytics-for-wordpress' );
 				$scoret           = $scoret + 7;
 			}

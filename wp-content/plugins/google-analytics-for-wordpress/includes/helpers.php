@@ -16,15 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Get the plugin text domain for the active MonsterInsights build.
- *
- * @return string
- */
-function monsterinsights_get_plugin_textdomain() {
-	return monsterinsights_is_pro_version() ? 'google-analytics-premium' : 'google-analytics-for-wordpress';
-}
-
 function monsterinsights_get_url($medium = '', $campaign = '', $url = '', $escape = true)
 {
 	// Setup Campaign variables
@@ -60,7 +51,7 @@ function monsterinsights_is_page_reload() {
 	}
 
 	// IF the referrer is identical to the current page request, then it's a refresh
-	return ( wp_unslash( $_SERVER['HTTP_REFERER'] ) === home_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ); // phpcs:ignore
+	return ( $_SERVER['HTTP_REFERER'] === home_url( $_SERVER['REQUEST_URI'] ) ); // phpcs:ignore
 }
 
 
@@ -147,7 +138,7 @@ function monsterinsights_get_uuid() {
 	 * if the first page visited is AMP, the cookie may be in the format amp-XXXXXXXXXXXXX-XXXXXXXX
 	 */
 
-	$ga_cookie    = sanitize_text_field( wp_unslash( $_COOKIE['_ga'] ) ); // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE
+	$ga_cookie    = sanitize_text_field($_COOKIE['_ga']); // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE
 	$cookie_parts = explode( '.', $ga_cookie );
 	if ( is_array( $cookie_parts ) && ! empty( $cookie_parts[2] ) ) {
 		$cookie_parts = array_slice( $cookie_parts, 2 );
@@ -183,7 +174,7 @@ function monsterinsights_get_browser_session_id( $measurement_id ) {
 		return null;
 	}
 
-	$cookie = sanitize_text_field( wp_unslash( $_COOKIE[ $cookie_name ] ) ); // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE
+	$cookie = sanitize_text_field( $_COOKIE[ $cookie_name ] ); // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE
 
 	// Check if it's GS2 format
 	// New format: 'GS2.1.s1747078634$o1$g1$t1747081074$j0$l0$h0'
@@ -209,7 +200,7 @@ function monsterinsights_get_browser_session_id( $measurement_id ) {
 /**
  * Generate UUID v4 function - needed to generate a CID when one isn't available
  *
- * @link https://www.stumiller.me/implementing-google-analytics-measurement-protocol-in-php-and-wordpress/
+ * @link http://www.stumiller.me/implementing-google-analytics-measurement-protocol-in-php-and-wordpress/
  *
  * @since 6.1.8
  * @return string
@@ -219,21 +210,21 @@ function monsterinsights_generate_uuid() {
 	return sprintf(
 		'%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 		// 32 bits for "time_low"
-		wp_rand( 0, 0xffff ),
-		wp_rand( 0, 0xffff ),
+		random_int( 0, 0xffff ),
+		random_int( 0, 0xffff ),
 		// 16 bits for "time_mid"
-		wp_rand( 0, 0xffff ),
+		random_int( 0, 0xffff ),
 		// 16 bits for "time_hi_and_version",
 		// four most significant bits holds version number 4
-		wp_rand( 0, 0x0fff ) | 0x4000,
+		random_int( 0, 0x0fff ) | 0x4000,
 		// 16 bits, 8 bits for "clk_seq_hi_res",
 		// 8 bits for "clk_seq_low",
 		// two most significant bits holds zero and one for variant DCE1.1
-		wp_rand( 0, 0x3fff ) | 0x8000,
+		random_int( 0, 0x3fff ) | 0x8000,
 		// 48 bits for "node"
-		wp_rand( 0, 0xffff ),
-		wp_rand( 0, 0xffff ),
-		wp_rand( 0, 0xffff )
+		random_int( 0, 0xffff ),
+		random_int( 0, 0xffff ),
+		random_int( 0, 0xffff )
 	);
 }
 
@@ -248,7 +239,7 @@ function monsterinsights_get_cookie( $debug = false ) {
 		return ( $debug ) ? 'FCE' : false;
 	}
 
-	$ga_cookie    = sanitize_text_field( wp_unslash( $_COOKIE['_ga'] ) ); // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE
+	$ga_cookie    = sanitize_text_field( $_COOKIE['_ga'] ); // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE
 	$cookie_parts = explode( '.', $ga_cookie );
 	if ( is_array( $cookie_parts ) && ! empty( $cookie_parts[2] ) ) {
 		$cookie_parts = array_slice( $cookie_parts, 2 );
@@ -402,7 +393,7 @@ function monsterinsights_is_dev_url( $url = '' ) {
 	if ( false === strpos( $url, 'http://' ) && false === strpos( $url, 'https://' ) ) {
 		$url = 'http://' . $url;
 	}
-	$url_parts = wp_parse_url( $url );
+	$url_parts = parse_url( $url );
 	$host      = ! empty( $url_parts['host'] ) ? $url_parts['host'] : false;
 	if ( ! empty( $url ) && ! empty( $host ) ) {
 		if ( false !== ip2long( $host ) ) {
@@ -1003,29 +994,6 @@ function monsterinsights_get_country_list( $translated = false ) {
 function monsterinsights_get_api_url() {
 	return apply_filters( 'monsterinsights_get_api_url', 'api.monsterinsights.com/v2/' );
 }
-
-/**
- * Builds the site identifier used for authentication requests.
- *
- * Lives here (an always-loaded file) rather than the admin-only common.php so
- * that MonsterInsights_API_Auth::get_sitei() works when the onboarding URL is
- * built from the frontend admin bar.
- *
- * @return string
- */
-function monsterinsights_get_sitei() {
-	$auth_key        = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
-	$secure_auth_key = defined( 'SECURE_AUTH_KEY' ) ? SECURE_AUTH_KEY : '';
-	$logged_in_key   = defined( 'LOGGED_IN_KEY' ) ? LOGGED_IN_KEY : '';
-
-	$sitei = $auth_key . $secure_auth_key . $logged_in_key;
-	$sitei = preg_replace( '/[^a-zA-Z0-9]/', '', $sitei );
-	$sitei = sanitize_text_field( $sitei );
-	$sitei = trim( $sitei );
-	$sitei = ( strlen( $sitei ) > 30 ) ? substr( $sitei, 0, 30 ) : $sitei;
-
-	return $sitei;
-}
 /**
  * Defines the new dynamic onboarding URL.
  *
@@ -1036,16 +1004,6 @@ function monsterinsights_get_onboarding_url() {
 	$base_url = apply_filters( 'monsterinsights_get_onboarding_url', 'https://connect.monsterinsights.com' );
 
 	$auth       = MonsterInsights()->api_auth;
-
-	// The API Auth object is only instantiated in admin/cron contexts, but this
-	// helper is also called from the frontend admin bar. Unlike `auth`/`license`
-	// it isn't lazy-loaded via __get (it's a declared property), so load it on
-	// demand to avoid a fatal when accessed on the frontend.
-	if ( empty( $auth ) ) {
-		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/api-auth.php';
-		$auth = MonsterInsights()->api_auth = new MonsterInsights_API_Auth();
-	}
-
 	$is_network = is_network_admin();
 	$params = array(
 		'tt'                => $auth->get_tt(),
@@ -1071,104 +1029,17 @@ function monsterinsights_get_onboarding_url() {
  * @return string The onboarding key
  */
 function monsterinsights_get_onboarding_key() {
-	$ttl    = 30 * MINUTE_IN_SECONDS;
-	$stored = monsterinsights_get_onboarding_key_data();
-	$key    = $stored['key'];
-
+	$key = get_transient( 'monsterinsights_onboarding_key' );
 	if ( empty( $key ) ) {
-		// Expired or never set: generate a fresh key bound to the current user.
-		$key     = wp_generate_password( 32, false );
-		$user_id = get_current_user_id();
-	} else {
-		// Still valid: slide the window so an active admin session keeps a launch-ready
-		// key (the pre-generated wizard URL stays valid without an admin-ajax round-trip).
-		// Preserve the launching user id recorded when the key was minted.
-		$user_id = $stored['user_id'];
-		if ( empty( $user_id ) ) {
-			$user_id = get_current_user_id();
-		}
+		$key = wp_generate_password( 32, false );
+		set_transient( 'monsterinsights_onboarding_key', $key, 30 * MINUTE_IN_SECONDS );
+		set_transient( 'monsterinsights_onboarding_user_id', get_current_user_id(), 30 * MINUTE_IN_SECONDS );
 	}
-
-	monsterinsights_store_onboarding_key( $key, $user_id, $ttl );
-
 	return $key;
 }
 
-/**
- * Stores the onboarding key together with the launching user id.
- *
- * The key and the launching user id share a single transient so they always
- * expire together and cannot be evicted independently under a persistent
- * object cache.
- *
- * @since 9.5.0
- *
- * @param string $key     The 32-char onboarding key.
- * @param int    $user_id The user id that launched the wizard.
- * @param int    $ttl     Transient lifetime in seconds.
- * @return void
- */
-function monsterinsights_store_onboarding_key( $key, $user_id, $ttl ) {
-	set_transient(
-		'monsterinsights_onboarding_key',
-		array(
-			'key'     => (string) $key,
-			'user_id' => (int) $user_id,
-		),
-		$ttl
-	);
-}
-
-/**
- * Reads the onboarding key transient and normalizes it to key + user id.
- *
- * Handles both the combined array format and the legacy string format, where
- * the launching user id lived in a companion transient.
- *
- * @since 9.5.0
- *
- * @return array {
- *     @type string $key     The stored onboarding key, or empty string.
- *     @type int    $user_id The launching user id, or 0.
- * }
- */
-function monsterinsights_get_onboarding_key_data() {
-	$stored = get_transient( 'monsterinsights_onboarding_key' );
-
-	if ( is_array( $stored ) ) {
-		return array(
-			'key'     => isset( $stored['key'] ) ? (string) $stored['key'] : '',
-			'user_id' => isset( $stored['user_id'] ) ? (int) $stored['user_id'] : 0,
-		);
-	}
-
-	// Back-compat: a key minted before the combined format recorded the
-	// launching user id in a companion transient. Read it so an in-flight
-	// wizard keeps working across an upgrade.
-	if ( is_string( $stored ) && '' !== $stored ) {
-		return array(
-			'key'     => $stored,
-			'user_id' => (int) get_transient( 'monsterinsights_onboarding_user_id' ),
-		);
-	}
-
-	return array(
-		'key'     => '',
-		'user_id' => 0,
-	);
-}
-
-/**
- * Gets the user id that launched the onboarding wizard.
- *
- * @since 9.5.0
- *
- * @return int The launching user id, or 0 if none is stored.
- */
 function monsterinsights_get_onboarding_user_id() {
-	$data = monsterinsights_get_onboarding_key_data();
-
-	return (int) $data['user_id'];
+	return (int) get_transient( 'monsterinsights_onboarding_user_id' );
 }
 /**
  * Clears the onboarding key
@@ -1177,7 +1048,6 @@ function monsterinsights_get_onboarding_user_id() {
  */
 function monsterinsights_clear_onboarding_key() {
 	delete_transient( 'monsterinsights_onboarding_key' );
-	delete_transient( 'monsterinsights_onboarding_user_id' );
 }
 
 /**
@@ -1506,7 +1376,7 @@ function monsterinsights_get_printable_translations( $domain ) {
 
 	// Encode with proper handling for Spanish characters
 	$json_translations = wp_json_encode( $locale_data, JSON_UNESCAPED_UNICODE );
-
+	
 	// Fallback if wp_json_encode fails
 	if ( false === $json_translations ) {
 		return '';
@@ -1544,7 +1414,7 @@ function monsterinsights_get_printable_translations( $domain ) {
 		$json_translations
 	);
 
-	return "\n" . $script . "\n";
+	return "\n<script type=\"text/javascript\">\n" . $script . "\n</script>\n";
 }
 function monsterinsights_get_inline_menu_icon() {
 	$scheme          = get_user_option( 'admin_color', get_current_user_id() );
@@ -1558,9 +1428,6 @@ function monsterinsights_get_inline_menu_icon() {
 	}
 }
 
-/**
- * @deprecated Kept for backward compatibility with the legacy AI Insights addon.
- */
 function monsterinsights_get_ai_menu_icon() {
 	return '
         <span class="monsterinsights-sidebar-icon">
@@ -1568,6 +1435,7 @@ function monsterinsights_get_ai_menu_icon() {
         </span>
     ';
 }
+
 
 function monsterinsights_get_shareasale_id() {
 	// Check if there's a constant.
@@ -1625,49 +1493,49 @@ function monsterinsights_get_shareasale_url( $shareasale_id, $shareasale_redirec
  */
 function monsterinsights_get_page_title() {
 
-	$title = __( 'Archives', 'google-analytics-for-wordpress' );
+	$title = __( 'Archives' );
 
 	if ( is_category() ) {
 		/* translators: Category archive title. %s: Category name */
-		$title = sprintf( __( 'Category: %s', 'google-analytics-for-wordpress' ), single_cat_title( '', false ) );
+		$title = sprintf( __( 'Category: %s' ), single_cat_title( '', false ) );
 	} elseif ( is_tag() ) {
 		/* translators: Tag archive title. %s: Tag name */
-		$title = sprintf( __( 'Tag: %s', 'google-analytics-for-wordpress' ), single_tag_title( '', false ) );
+		$title = sprintf( __( 'Tag: %s' ), single_tag_title( '', false ) );
 	} elseif ( is_author() ) {
 		/* translators: Author archive title. %s: Author name */
-		$title = sprintf( __( 'Author: %s', 'google-analytics-for-wordpress' ), '<span class="vcard">' . get_the_author() . '</span>' );
+		$title = sprintf( __( 'Author: %s' ), '<span class="vcard">' . get_the_author() . '</span>' );
 	} elseif ( is_year() ) {
 		/* translators: Yearly archive title. %s: Year */
-		$title = sprintf( __( 'Year: %s', 'google-analytics-for-wordpress' ), get_the_date( _x( 'Y', 'yearly archives date format', 'google-analytics-for-wordpress' ) ) );
+		$title = sprintf( __( 'Year: %s' ), get_the_date( _x( 'Y', 'yearly archives date format' ) ) );
 	} elseif ( is_month() ) {
 		/* translators: Monthly archive title. %s: Month name and year */
-		$title = sprintf( __( 'Month: %s', 'google-analytics-for-wordpress' ), get_the_date( _x( 'F Y', 'monthly archives date format', 'google-analytics-for-wordpress' ) ) );
+		$title = sprintf( __( 'Month: %s' ), get_the_date( _x( 'F Y', 'monthly archives date format' ) ) );
 	} elseif ( is_day() ) {
 		/* translators: Daily archive title. %s: Date */
-		$title = sprintf( __( 'Day: %s', 'google-analytics-for-wordpress' ), get_the_date( _x( 'F j, Y', 'daily archives date format', 'google-analytics-for-wordpress' ) ) );
+		$title = sprintf( __( 'Day: %s' ), get_the_date( _x( 'F j, Y', 'daily archives date format' ) ) );
 	} elseif ( is_tax( 'post_format' ) ) {
 		if ( is_tax( 'post_format', 'post-format-aside' ) ) {
-			$title = _x( 'Asides', 'post format archive title', 'google-analytics-for-wordpress' );
+			$title = _x( 'Asides', 'post format archive title' );
 		} elseif ( is_tax( 'post_format', 'post-format-gallery' ) ) {
-			$title = _x( 'Galleries', 'post format archive title', 'google-analytics-for-wordpress' );
+			$title = _x( 'Galleries', 'post format archive title' );
 		} elseif ( is_tax( 'post_format', 'post-format-image' ) ) {
-			$title = _x( 'Images', 'post format archive title', 'google-analytics-for-wordpress' );
+			$title = _x( 'Images', 'post format archive title' );
 		} elseif ( is_tax( 'post_format', 'post-format-video' ) ) {
-			$title = _x( 'Videos', 'post format archive title', 'google-analytics-for-wordpress' );
+			$title = _x( 'Videos', 'post format archive title' );
 		} elseif ( is_tax( 'post_format', 'post-format-quote' ) ) {
-			$title = _x( 'Quotes', 'post format archive title', 'google-analytics-for-wordpress' );
+			$title = _x( 'Quotes', 'post format archive title' );
 		} elseif ( is_tax( 'post_format', 'post-format-link' ) ) {
-			$title = _x( 'Links', 'post format archive title', 'google-analytics-for-wordpress' );
+			$title = _x( 'Links', 'post format archive title' );
 		} elseif ( is_tax( 'post_format', 'post-format-status' ) ) {
-			$title = _x( 'Statuses', 'post format archive title', 'google-analytics-for-wordpress' );
+			$title = _x( 'Statuses', 'post format archive title' );
 		} elseif ( is_tax( 'post_format', 'post-format-audio' ) ) {
-			$title = _x( 'Audio', 'post format archive title', 'google-analytics-for-wordpress' );
+			$title = _x( 'Audio', 'post format archive title' );
 		} elseif ( is_tax( 'post_format', 'post-format-chat' ) ) {
-			$title = _x( 'Chats', 'post format archive title', 'google-analytics-for-wordpress' );
+			$title = _x( 'Chats', 'post format archive title' );
 		}
 	} elseif ( is_post_type_archive() ) {
 		/* translators: Post type archive title. %s: Post type name */
-		$title = sprintf( __( 'Archives: %s', 'google-analytics-for-wordpress' ), post_type_archive_title( '', false ) );
+		$title = sprintf( __( 'Archives: %s' ), post_type_archive_title( '', false ) );
 	} elseif ( is_tax() ) {
 		$queried_object = get_queried_object();
 		if ( $queried_object && isset( $queried_object->taxonomy ) ) {
@@ -1727,8 +1595,8 @@ function monsterinsights_detect_tracking_code_error( $body ) {
 	$current_code = monsterinsights_get_v4_id_to_output();
 
 	$url = monsterinsights_get_url( 'notice', 'using-cache', 'https://www.wpbeginner.com/beginners-guide/how-to-clear-your-cache-in-wordpress/' );
+	// Translators: The placeholders are for making the "We noticed you're using a caching plugin" text bold.
 	$cache_error = sprintf(
-		/* translators: %1$s: Opening bold tag, %2$s: Closing bold tag, %3$s: Opening link tag, %4$s: Closing link tag. */
 		esc_html__( '%1$sWe noticed you\'re using a caching plugin or caching from your hosting provider.%2$s Be sure to clear the cache to ensure the tracking appears on all pages and posts. %3$s(See this guide on how to clear cache)%4$s.', 'google-analytics-for-wordpress' ),
 		'<b>',
 		'</b>',
@@ -1791,7 +1659,7 @@ function monsterinsights_detect_tracking_code_error( $body ) {
 	}
 
 	if ( $total_count > $limit ) {
-		/* translators: the placeholders are for making the "We have detected multiple tracking codes" text bold & adding a link to support. */
+		// Translators: The placeholders are for making the "We have detected multiple tracking codes" text bold & adding a link to support.
 		$message           = esc_html__( '%1$sWe have detected multiple tracking codes%2$s! You should remove non-MonsterInsights ones. If you need help finding them please %3$sread this article%4$s.', 'google-analytics-for-wordpress' );
 		$url               = monsterinsights_get_url( 'site-health', 'comingsoon', 'https://www.monsterinsights.com/docs/how-to-find-duplicate-google-analytics-tracking-codes-in-wordpress/' );
 		$multiple_ua_error = sprintf(
@@ -1868,7 +1736,7 @@ function monsterinsights_custom_track_pretty_links_redirect( $url ) {
 	monsterinsights_track_pretty_links_file_download_redirect( $url );
 
 	// Try to determine if click originated on the same site.
-	$referer = ! empty( $_SERVER['HTTP_REFERER'] ) ? esc_url( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+	$referer = ! empty( $_SERVER['HTTP_REFERER'] ) ? esc_url( $_SERVER['HTTP_REFERER'] ) : '';
 	if ( ! empty( $referer ) ) {
 		$current_site_url    = get_bloginfo( 'url' );
 		$current_site_parsed = wp_parse_url( $current_site_url );
@@ -1913,7 +1781,7 @@ function monsterinsights_custom_track_pretty_links_redirect( $url ) {
 			$link_url = $url;
 		}
 
-		$url_components = wp_parse_url( $url );
+		$url_components = parse_url( $url );
 		$params_args    = array(
 			'link_text'   => 'external-redirect',
 			'link_url'    => $link_url,
@@ -1974,7 +1842,7 @@ function monsterinsights_track_pretty_links_file_download_redirect( $url ) {
 		return;
 	}
 
-	$url_components = wp_parse_url( $url );
+	$url_components = parse_url( $url );
 
 	global $prli_link;
 	$pretty_link = $prli_link->get_one_by( 'url', $url );
@@ -2095,8 +1963,8 @@ function monsterinsights_trim_text( $text, $count ) {
 function monsterinsights_tools_copy_url_to_prettylinks() {
 	global $pagenow;
 
-	$post_type                 = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
-	$monsterinsights_reference = isset( $_GET['monsterinsights_reference'] ) ? sanitize_text_field( wp_unslash( $_GET['monsterinsights_reference'] ) ) : '';
+	$post_type                 = isset( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+	$monsterinsights_reference = isset( $_GET['monsterinsights_reference'] ) ? sanitize_text_field( $_GET['monsterinsights_reference'] ) : '';
 
 	if ( 'post-new.php' === $pagenow && 'pretty-link' === $post_type && 'url_builder' === $monsterinsights_reference ) { ?>
 <script>
@@ -2157,8 +2025,8 @@ add_action( 'admin_footer', 'monsterinsights_tools_copy_url_to_prettylinks' );
 function monsterinsights_skip_prettylinks_welcome_screen() {
 	global $pagenow;
 
-	$post_type                 = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
-	$monsterinsights_reference = isset( $_GET['monsterinsights_reference'] ) ? sanitize_text_field( wp_unslash( $_GET['monsterinsights_reference'] ) ) : '';
+	$post_type                 = isset( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
+	$monsterinsights_reference = isset( $_GET['monsterinsights_reference'] ) ? sanitize_text_field( $_GET['monsterinsights_reference'] ) : '';
 
 	if ( 'post-new.php' === $pagenow && 'pretty-link' === $post_type && 'url_builder' === $monsterinsights_reference ) {
 		$onboard = get_option( 'prli_onboard' );
@@ -2179,7 +2047,7 @@ add_action( 'wp_loaded', 'monsterinsights_skip_prettylinks_welcome_screen', 9 );
 function monsterinsights_restore_prettylinks_onboard_value() {
 	global $pagenow;
 
-	$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
+	$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '';
 
 	if ( 'edit.php' === $pagenow && 'pretty-link' === $post_type ) {
 		$onboard = get_option( 'monsterinsights_backup_prli_onboard_value' );
@@ -2200,16 +2068,26 @@ add_action( 'wp_loaded', 'monsterinsights_restore_prettylinks_onboard_value', 15
  */
 function monsterinsights_require_upgrader( $custom_upgrader = true ) {
 
+	global $wp_version;
+
 	$base = MonsterInsights();
 
 	if ( ! $custom_upgrader ) {
 		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 	}
 
-	if ( $custom_upgrader ) {
-		require_once plugin_dir_path( $base->file ) . 'includes/admin/licensing/plugin-upgrader.php';
+	// WP 5.3 changes the upgrader skin.
+	if ( version_compare( $wp_version, '5.3', '<' ) ) {
+		if ( $custom_upgrader ) {
+			require_once plugin_dir_path( $base->file ) . 'includes/admin/licensing/plugin-upgrader.php';
+		}
+		require_once plugin_dir_path( $base->file ) . '/includes/admin/licensing/skin-legacy.php';
+	} else {
+		if ( $custom_upgrader ) {
+			require_once plugin_dir_path( $base->file ) . 'includes/admin/licensing/plugin-upgrader.php';
+		}
+		require_once plugin_dir_path( $base->file ) . '/includes/admin/licensing/skin.php';
 	}
-	require_once plugin_dir_path( $base->file ) . '/includes/admin/licensing/skin.php';
 }
 
 /**
@@ -2219,6 +2097,12 @@ function monsterinsights_require_upgrader( $custom_upgrader = true ) {
  * @since 7.12.3
  */
 function monsterinsights_load_gutenberg_app() {
+	global $wp_version;
+
+	if ( version_compare( $wp_version, '5.4', '<' ) ) {
+		return false;
+	}
+
 	return true;
 }
 
@@ -2374,28 +2258,6 @@ function monsterinsights_can_install_plugins( $user_id = null ) {
 		return false;
 	}
 	return true;
-}
-
-/**
- * Returns the list of contextual promo notices the current user has dismissed.
- *
- * Dismissal is stored per-user so each admin dismisses independently. Used by
- * the Universally product-education prompts (GH-3374) and reusable for any
- * future contextual promo. Always returns an array.
- *
- * @since 11.1.0
- *
- * @param int|null $user_id User ID to check. Defaults to the current user.
- * @return array Array of dismissed promo IDs.
- */
-function monsterinsights_get_dismissed_promos( $user_id = null ) {
-	if ( empty( $user_id ) ) {
-		$user_id = get_current_user_id();
-	}
-
-	$dismissed = get_user_meta( $user_id, 'monsterinsights_dismissed_promos', true );
-
-	return is_array( $dismissed ) ? $dismissed : array();
 }
 
 /**

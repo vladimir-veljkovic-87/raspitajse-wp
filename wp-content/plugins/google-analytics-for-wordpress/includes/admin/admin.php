@@ -88,15 +88,15 @@ function monsterinsights_admin_menu()
 		echo '</div>';
 	}
 
-	// Add Dashboard page (Vue 3 app) — kept hidden until ready for release.
-	// add_submenu_page(
-	// 	$parent_slug,
-	// 	__( 'Dashboard:', 'google-analytics-for-wordpress' ),
-	// 	__( 'Dashboard', 'google-analytics-for-wordpress' ) . $new_indicator,
-	// 	'monsterinsights_view_dashboard',
-	// 	'monsterinsights_custom_dashboard',
-	// 	'monsterinsights_custom_dashboard_page'
-	// );
+// 	// Add Dashboard page (Vue 3 app)
+// 	add_submenu_page(
+// 		$parent_slug,
+// 		__( 'Dashboard:', 'google-analytics-for-wordpress' ),
+// 		__( 'Dashboard', 'google-analytics-for-wordpress' ) . $new_indicator,
+// 		'monsterinsights_view_dashboard',
+// 		'monsterinsights_custom_dashboard',
+// 		'monsterinsights_custom_dashboard_page'
+// 	);
 
 	// then settings page
 	add_submenu_page( $parent_slug, __( 'MonsterInsights', 'google-analytics-for-wordpress' ), __( 'Settings', 'google-analytics-for-wordpress' ), 'monsterinsights_save_settings', 'monsterinsights_settings', 'monsterinsights_settings_page' );
@@ -127,8 +127,40 @@ function monsterinsights_admin_menu()
 	//  Site Notes
 	add_submenu_page( $parent_slug, __( 'Site Notes:', 'google-analytics-for-wordpress' ), __( 'Site Notes', 'google-analytics-for-wordpress' ), 'monsterinsights_save_settings', $submenu_base . '#/site-notes' );
 
+	// If report disabled then remove this menu.
+	if ( $hook === 'monsterinsights_reports' || $is_lite ) {
+		//  AI Insights
+		// translators: Icon
+		add_submenu_page( $parent_slug, __( 'AI Insights:', 'google-analytics-for-wordpress' ), sprintf( __( '%s AI Insights', 'google-analytics-for-wordpress' ), monsterinsights_get_ai_menu_icon() ), 'monsterinsights_save_settings', 'admin.php?page=monsterinsights_reports#/ai-insights' );
+	}
+
+	$license_type = MonsterInsights()->license->get_license_type();
+
+	//  AI Chat
+	if ( $is_lite || 'plus' === $license_type ) {
+		// translators: Placeholder adds a svg icon
+		add_submenu_page( $parent_slug, __( 'Conversations AI:', 'google-analytics-for-wordpress' ), sprintf( __( '%s Conversations AI', 'google-analytics-for-wordpress' ), monsterinsights_get_ai_menu_icon() ), 'monsterinsights_save_settings', 'admin.php?page=monsterinsights_reports#/ai-insights/chat' );
+	}
+
 	// Add Popular Posts menu item.
 	add_submenu_page( $parent_slug, __( 'Popular Posts:', 'google-analytics-for-wordpress' ), __( 'Popular Posts', 'google-analytics-for-wordpress' ), 'monsterinsights_save_settings', $submenu_base . '#/popular-posts' );
+
+	// If report disabled then remove this menu.
+	if ( $hook === 'monsterinsights_reports' || $is_lite ) {
+		// Add submenu under `Insights` main menu for user journey report.
+		add_submenu_page( $parent_slug, __( 'User Journey:', 'google-analytics-for-wordpress' ), __( 'User Journey', 'google-analytics-for-wordpress' ), 'monsterinsights_view_dashboard', 'admin.php?page=monsterinsights_reports#/user-journey-report' );
+	}
+
+	if ( function_exists( 'aioseo' ) ) {
+		$seo_url = monsterinsights_aioseo_dashboard_url();
+	} else {
+		$seo_url = $submenu_base . '#/seo';
+	}
+	// then SEO
+	add_submenu_page($parent_slug, __('SEO', 'google-analytics-for-wordpress'), __('SEO', 'google-analytics-for-wordpress'), 'manage_options', $seo_url);
+
+	// Google PAX
+	add_submenu_page($parent_slug, __('Google Ads', 'google-analytics-for-wordpress'), __('Google Ads', 'google-analytics-for-wordpress') . $new_indicator, 'monsterinsights_view_dashboard', $submenu_base . '#/google-ads');
 
 	// then tools
 	add_submenu_page($parent_slug, __('Tools:', 'google-analytics-for-wordpress'), __('Tools', 'google-analytics-for-wordpress'), 'manage_options', $submenu_base . '#/tools');
@@ -139,14 +171,20 @@ function monsterinsights_admin_menu()
 		add_submenu_page($parent_slug, __('Addons:', 'google-analytics-for-wordpress'), '<span style="color:' . monsterinsights_menu_highlight_color() . '"> ' . __('Addons', 'google-analytics-for-wordpress') . '</span>', 'monsterinsights_save_settings', $submenu_base . '#/addons');
 	}
 
-	// Rotating promotional submenu (cycles every 14 days).
-	$promo = monsterinsights_get_rotating_promo_submenu( $submenu_base, $new_indicator );
 	add_submenu_page(
 		$parent_slug,
-		$promo['page_title'],
-		$promo['menu_title'],
+		__('UserFeedback:', 'google-analytics-for-wordpress'),
+		__('UserFeedback', 'google-analytics-for-wordpress') . $new_indicator,
 		'manage_options',
-		$promo['menu_slug']
+		$submenu_base . '#/userfeedback'
+	);
+
+	add_submenu_page(
+		$parent_slug,
+		__('Privacy Compliance:', 'google-analytics-for-wordpress'),
+		__('Privacy Compliance', 'google-analytics-for-wordpress'),
+		'manage_options',
+		$submenu_base . '#/wpconsent'
 	);
 
 	// then About Us page.
@@ -165,66 +203,6 @@ function monsterinsights_admin_menu()
 
 add_action('admin_menu', 'monsterinsights_admin_menu');
 
-/**
- * Returns the current rotating promotional submenu item (cycles every 14 days).
- *
- * Sequence: 0=UserFeedback, 1=Privacy Compliance, 2=AIOSEO, 3=RewardsWP
- *
- * @param string $submenu_base Base settings URL.
- * @param string $new_indicator HTML string for the "NEW" badge.
- * @return array Keys: menu_title, page_title, menu_slug.
- */
-function monsterinsights_get_rotating_promo_submenu( $submenu_base, $new_indicator ) {
-	$start = get_option( 'monsterinsights_promo_rotation_start' );
-	if ( ! $start || $start > time() ) {
-		$start = time();
-		update_option( 'monsterinsights_promo_rotation_start', $start, false );
-	}
-
-	$index = (int) floor( ( time() - $start ) / ( 14 * DAY_IN_SECONDS ) ) % 4;
-
-
-	$seo_url = $submenu_base . '#/seo';
-
-	if ( function_exists( 'aioseo' ) ) {
-		$seo_url = monsterinsights_aioseo_dashboard_url();
-	}
-
-	$items = [
-		[
-			'label'     => __( 'UserFeedback', 'google-analytics-for-wordpress' ) . $new_indicator,
-			'menu_slug' => $submenu_base . '#/userfeedback',
-		],
-		[
-			'label'     => __( 'Privacy Compliance', 'google-analytics-for-wordpress' ),
-			'menu_slug' => $submenu_base . '#/wpconsent',
-		],
-		[
-			'label'     => __( 'SEO', 'google-analytics-for-wordpress' ),
-			'menu_slug' => $seo_url,
-		],
-		[
-			'label'     => __( 'RewardsWP', 'google-analytics-for-wordpress' ),
-			'menu_slug' => $submenu_base . '#/rewardswp',
-		],
-	];
-
-	$item = $items[ $index ];
-
-	return [
-		'menu_title' => $item['label'],
-		'page_title' => wp_strip_all_tags( $item['label'] ) . ':',
-		'menu_slug'  => $item['menu_slug'],
-	];
-}
-
-/**
- * Reset the promo rotation timer on plugin deactivation.
- */
-function monsterinsights_promo_rotation_reset() {
-	delete_option( 'monsterinsights_promo_rotation_start' );
-}
-add_action( 'monsterinsights_plugin_deactivated', 'monsterinsights_promo_rotation_reset' );
 
 function monsterinsights_automated_menu($hook){
 	$display = false;
@@ -527,7 +505,7 @@ function monsterinsights_admin_footer($text)
 		&& ! monsterinsights_is_pro_version()
 	) {
 		$url = 'https://wordpress.org/support/view/plugin-reviews/google-analytics-for-wordpress?filter=5';
-		/* translators: placeholders add a link to the wordpress.org repository. */
+		// Translators: Placeholders add a link to the wordpress.org repository.
 		$text = sprintf(esc_html__('Please rate %1$sMonsterInsights%2$s %3$s on %4$sWordPress.org%5$s to help us spread the word.', 'google-analytics-for-wordpress'), '<strong>', '</strong>', '<a class="monsterinsights-no-text-decoration" href="' . $url . '" target="_blank" rel="noopener noreferrer"><i class="monstericon-star"></i><i class="monstericon-star"></i><i class="monstericon-star"></i><i class="monstericon-star"></i><i class="monstericon-star"></i></a>', '<a href="' . $url . '" target="_blank" rel="noopener noreferrer">', '</a>');
 	}
 
@@ -562,7 +540,7 @@ function monsterinsights_admin_setup_notices()
 		$title = __('Urgent: Your Website is Not Tracking Any Google Analytics Data!', 'google-analytics-for-wordpress');
 		$message = __('Google Analytics 3 (UA) and support was sunset on July 1, 2023. Your website is currently NOT tracking any analytics. </br>Create or connect a new Google Analytics 4 property immediately to start tracking.', 'google-analytics-for-wordpress');
 
-		$wizard_url     = monsterinsights_get_onboarding_url();
+		$wizard_url     = admin_url('admin.php?page=monsterinsights-onboarding');
 
 		echo '<div class="notice notice-error is-dismissible monsterinsights-notice" data-notice="monsterinsights_ua_sunset">';
 		echo '<p><strong>' . esc_html($title) . '</strong></p>';
@@ -589,6 +567,7 @@ function monsterinsights_admin_setup_notices()
 		$submenu_base = is_network_admin() ? add_query_arg( 'page', 'monsterinsights_network', network_admin_url( 'admin.php' ) ) : add_query_arg( 'page', 'monsterinsights_settings', admin_url( 'admin.php' ) );
 		$title        = esc_html__( 'Please Setup Website Analytics to See Audience Insights', 'google-analytics-for-wordpress' );
 		$primary      = esc_html__( 'Please Connect Your Website to MonsterInsights', 'google-analytics-for-wordpress' );
+		$urlone       = is_network_admin() ? network_admin_url( 'admin.php?page=monsterinsights-onboarding' ) : admin_url( 'admin.php?page=monsterinsights-onboarding' );
 		$secondary    = esc_html__( 'Learn More', 'google-analytics-for-wordpress' );
 		$urltwo       = $submenu_base . '#/about/getting-started';
 		$disclaimer   = __( 'Note: You will be transfered to MonsterInsights.com to complete the setup wizard.', 'google-analytics-for-wordpress' );
@@ -602,7 +581,7 @@ function monsterinsights_admin_setup_notices()
 	$key = monsterinsights_is_pro_version() ? MonsterInsights()->license->get_license_key() : '';
 	if (monsterinsights_is_pro_version() && empty($key)) {
 		$page = is_network_admin() ? network_admin_url('admin.php?page=monsterinsights_network') : admin_url('admin.php?page=monsterinsights_settings');
-		/* translators: adds a link to retrieve the license. */
+		// Translators: Adds a link to retrieve the license.
 		$message = sprintf(esc_html__('Warning: No valid license key has been entered for MonsterInsights. You are currently not getting updates, and are not able to view reports. %1$sPlease click here to enter your license key and begin receiving updates and reports.%2$s', 'google-analytics-for-wordpress'), '<a href="' . esc_url($page) . '">', '</a>');
 		echo '<div class="error"><p>' . $message . '</p></div>'; // phpcs:ignore
 
@@ -614,7 +593,7 @@ function monsterinsights_admin_setup_notices()
 		$message = '';
 		if (MonsterInsights()->license->get_site_license_key()) {
 			if (MonsterInsights()->license->site_license_expired()) {
-				/* translators: %1$s: Opening link tag, %2$s: Closing link tag. */
+				// Translators: Adds a link to the license renewal.
 				$message = sprintf(esc_html__('Your license key for MonsterInsights has expired. %1$sPlease click here to renew your license key.%2$s', 'google-analytics-for-wordpress'), '<a href="' . monsterinsights_get_url('admin-notices', 'expired-license', "https://www.monsterinsights.com/login/") . '" target="_blank" rel="noopener noreferrer" referrer="no-referrer">', '</a>');
 			} else if (MonsterInsights()->license->site_license_disabled()) {
 				$message = esc_html__('Your license key for MonsterInsights has been disabled. Please use a different key.', 'google-analytics-for-wordpress');
@@ -623,7 +602,7 @@ function monsterinsights_admin_setup_notices()
 			}
 		} else if (MonsterInsights()->license->get_network_license_key()) {
 			if (MonsterInsights()->license->network_license_expired()) {
-				/* translators: adds a link to renew license. */
+				// Translators: Adds a link to renew license.
 				$message = sprintf(esc_html__('Your network license key for MonsterInsights has expired. %1$sPlease click here to renew your license key.%2$s', 'google-analytics-for-wordpress'), '<a href="' . monsterinsights_get_url('admin-notices', 'expired-license', "https://www.monsterinsights.com/login/") . '" target="_blank" rel="noopener noreferrer" referrer="no-referrer">', '</a>');
 			} else if (MonsterInsights()->license->network_license_disabled()) {
 				$message = esc_html__('Your network license key for MonsterInsights has been disabled. Please use a different key.', 'google-analytics-for-wordpress');
@@ -649,13 +628,13 @@ function monsterinsights_admin_setup_notices()
 
 		$message = false;
 		if (version_compare(phpversion(), $compatible_php_version['required'], '<')) {
-			/* translators: placeholders add the PHP version, a link to the MonsterInsights blog and a line break. */
+			// Translators: Placeholders add the PHP version, a link to the MonsterInsights blog and a line break.
 			$message = sprintf(esc_html__('Your site is running an outdated, insecure version of PHP (%1$s), which could be putting your site at risk for being hacked.%4$sWordPress stopped supporting your PHP version in April, 2019.%4$sUpdating PHP only takes a few minutes and will make your website significantly faster and more secure.%4$s%2$sLearn more about updating PHP%3$s', 'google-analytics-for-wordpress'), phpversion(), '<a href="' . $url . '" target="_blank">', '</a>', '<br>');
 		} else if (version_compare(phpversion(), $compatible_php_version['warning'], '<')) {
-			/* translators: placeholders add the PHP version, a link to the MonsterInsights blog and a line break. */
+			// Translators: Placeholders add the PHP version, a link to the MonsterInsights blog and a line break.
 			$message = sprintf(esc_html__('Your site is running an outdated, insecure version of PHP (%1$s), which could be putting your site at risk for being hacked.%4$sWordPress stopped supporting your PHP version in November, 2019.%4$sUpdating PHP only takes a few minutes and will make your website significantly faster and more secure.%4$s%2$sLearn more about updating PHP%3$s', 'google-analytics-for-wordpress'), phpversion(), '<a href="' . $url . '" target="_blank">', '</a>', '<br>');
 		} else if (version_compare(phpversion(), $compatible_php_version['recommended'], '<')) {
-			/* translators: placeholders add the PHP version, a link to the MonsterInsights blog and a line break. */
+			// Translators: Placeholders add the PHP version, a link to the MonsterInsights blog and a line break.
 			$message = sprintf(esc_html__('Your site is running an outdated, insecure version of PHP (%1$s), which could be putting your site at risk for being hacked.%4$sWordPress is working towards discontinuing support for your PHP version.%4$sUpdating PHP only takes a few minutes and will make your website significantly faster and more secure.%4$s%2$sLearn more about updating PHP%3$s', 'google-analytics-for-wordpress'), phpversion(), '<a href="' . $url . '" target="_blank">', '</a>', '<br>');
 		}
 
@@ -677,7 +656,7 @@ function monsterinsights_admin_setup_notices()
 		// WordPress 4.9
 		/* else if ( version_compare( $wp_version, '5.0', '<' ) ) {
 			$url = monsterinsights_get_url( 'global-notice', 'settings-page', 'https://www.monsterinsights.com/docs/update-wordpress/' );
-			// translators: placeholders add a link to the wordpress.org repository.
+			// Translators: Placeholders add the current WordPress version and links to the MonsterInsights blog
 			$message = sprintf( esc_html__( 'Your site is running an outdated version of WordPress (%1$s).%4$sMonsterInsights will stop supporting WordPress versions lower than 5.0 in 2021.%4$sUpdating WordPress takes just a few minutes and will also solve many bugs that exist in your WordPress install.%4$s%2$sLearn more about updating WordPress%3$s', 'google-analytics-for-wordpress' ), $wp_version, '<a href="' . $url . '" target="_blank">', '</a>', '<br>' );
 			echo '<div class="error"><p>'. $message.'</p></div>';
 			return;
@@ -733,12 +712,12 @@ function monsterinsights_admin_setup_notices()
 	$authed  = MonsterInsights()->auth->is_authed() || MonsterInsights()->auth->is_network_authed();
 	$url     = is_network_admin() ? network_admin_url('admin.php?page=monsterinsights_network') : admin_url('admin.php?page=monsterinsights_settings');
 	$tracking_code = monsterinsights_get_v4_id_to_output();
-	/* translators: placeholders add links to the settings panel. */
+	// Translators: Placeholders add links to the settings panel.
 	$manual_text = sprintf(esc_html__('Important: You are currently using manual GA4 Measurement ID output. We highly recommend %1$sauthenticating with MonsterInsights%2$s so that you can access our new reporting area and take advantage of new MonsterInsights features.', 'google-analytics-for-wordpress'), '<a href="' . $url . '">', '</a>');
 	$migrated    = monsterinsights_get_option('gadwp_migrated', 0);
 	if ($migrated > 0) {
-		$url = monsterinsights_get_onboarding_url();
-		/* translators: placeholders add links to the settings panel. */
+		$url = admin_url('admin.php?page=monsterinsights-getting-started&monsterinsights-migration=1');
+		// Translators: Placeholders add links to the settings panel.
 		$text        = esc_html__('Click %1$shere%2$s to reauthenticate to be able to access reports. For more information why this is required, see our %3$sblog post%4$s.', 'google-analytics-for-wordpress');
 		$manual_text = sprintf($text, '<a href="' . esc_url($url) . '">', '</a>', '<a href="' . monsterinsights_get_url('notice', 'manual-ua', 'https://www.exactmetrics.com/why-did-we-implement-the-new-google-analytics-authentication-flow-challenges-explained/') . '" target="_blank">', '</a>');
 	}
@@ -785,7 +764,7 @@ function monsterinsights_admin_setup_notices()
 			</div>';
 
 			$woo_notice_button = sprintf(
-				/* translators: %1$s: Opening link tag, %2$s: Closing link tag. */
+				// Translators: Placeholders add a link to the MonsterInsights website.
 				esc_html__('%1$sGet MonsterInsights Pro%2$s', 'google-analytics-for-wordpress'),
 				'<a class="button button-primary button-hero" target="_blank" href="' . esc_url(monsterinsights_get_upgrade_link('admin-notices', 'woocommerce-upgrade')) . '">',
 				' &raquo;</a>'
@@ -838,7 +817,6 @@ function monsterinsights_admin_setup_notices()
 			echo '<p>';
 			echo esc_html('Start making data-driven decisions to grow your business.', 'google-analytics-for-wordpress');
 			echo '</p>';
-			/* translators: %1$s: Opening link tag, %2$s: Closing link tag. */
 			echo sprintf(esc_html__('%1$sGet MonsterInsights Pro%2$s', 'google-analytics-for-wordpress'), '<a class="button button-primary button-hero" target="_blank" href="' . esc_url(monsterinsights_get_upgrade_link('admin-notices', 'edd-upgrade')) . '">', ' &raquo;</a>');
 			echo '</p>';
 			echo '</div><div class="monsterinsights-wooedd-upsell-right">';
@@ -852,10 +830,10 @@ function monsterinsights_admin_setup_notices()
 
 
 	if (isset($notices['monsterinsights_cross_domains_extracted']) && false === $notices['monsterinsights_cross_domains_extracted']) {
-		$settings_url = is_network_admin() ? network_admin_url('admin.php?page=monsterinsights_network') : admin_url('admin.php?page=monsterinsights_settings');
-		$settings_url = $settings_url . '#/advanced';
-		/* translators: adds a link to the settings panel. */
-		$message = sprintf(esc_html__('Warning: MonsterInsights found cross-domain settings in the custom code field and converted them to the new settings structure.  %1$sPlease click here to review and remove the code no longer needed.%2$s', 'google-analytics-for-wordpress'), '<a href="' . esc_url($settings_url) . '">', '</a>');
+		$page = is_network_admin() ? network_admin_url('admin.php?page=monsterinsights_network') : admin_url('admin.php?page=monsterinsights_settings');
+		$page = $page . '#/advanced';
+		// Translators: Adds a link to the settings panel.
+		$message = sprintf(esc_html__('Warning: MonsterInsights found cross-domain settings in the custom code field and converted them to the new settings structure.  %1$sPlease click here to review and remove the code no longer needed.%2$s', 'google-analytics-for-wordpress'), '<a href="' . esc_url($page) . '">', '</a>');
 		echo '<div class="notice notice-success is-dismissible monsterinsights-notice" data-notice="monsterinsights_cross_domains_extracted"><p>' . $message . '</p></div>'; // phpcs:ignore
 
 		return;
@@ -946,32 +924,6 @@ add_action( 'admin_notices', 'monsterinsights_empty_measurement_protocol_token' 
 add_action( 'network_admin_notices', 'monsterinsights_admin_setup_notices' );
 
 /**
- * Whether an addon admin notice was dismissed within the last 30 days.
- *
- * The dismissal timestamp is stored in an option rather than a transient: on
- * hosts with a persistent object cache, transients can be evicted at any time,
- * which made dismissed notices reappear within minutes. The legacy transient is
- * still checked as a fallback so dismissals saved by the previous implementation
- * stay honored until they expire.
- *
- * @since 10.2.3
- *
- * @param string $key Base key shared by the option and the legacy transient.
- * @return bool True if dismissed less than 30 days ago, false otherwise.
- */
-function monsterinsights_is_addon_notice_dismissed( $key ) {
-	$key          = sanitize_key( $key );
-	$dismissed_at = (int) get_option( $key, 0 );
-
-	if ( $dismissed_at && ( time() - $dismissed_at ) < 30 * DAY_IN_SECONDS ) {
-		return true;
-	}
-
-	// Legacy transient fallback for dismissals saved by the previous implementation.
-	return (bool) get_transient( $key );
-}
-
-/**
  * Display notice in admin when MonsterInsights Ads addon is installed.
  */
 function monsterinsights_ads_addon_installed_notice() {
@@ -979,14 +931,8 @@ function monsterinsights_ads_addon_installed_notice() {
 		return;
 	}
 
-	// Only admins can act on the addon recommendation, and the dismiss
-	// handler requires the same capability.
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
-
 	// Hide notice if dismissed in the last 30 days.
-	if ( monsterinsights_is_addon_notice_dismissed( 'monsterinsights_ads_addon_installed_notice_dismissed' ) ) {
+	if ( get_transient( 'monsterinsights_ads_addon_installed_notice_dismissed' ) ) {
 		return;
 	}
 
@@ -1008,12 +954,12 @@ function monsterinsights_ads_addon_installed_notice() {
 		),
 		'<strong>',
 		'</strong>',
-		'<a href="' . esc_url( $addons_url ) . '" target="' . esc_attr( $button_target ) . '">',
+		'<a href="' . $addons_url . '" target="' . $button_target . '">',
 		'</a>'
 	);
 
-	// Output notice with an ID so the common admin JS can catch the dismiss and persist it.
-	echo '<div id="monsterinsights-ads-addon-notice" class="notice notice-info is-dismissible"><p>' . $message . '</p><p><a href="' . esc_url( $addons_url ) . '" class="button button-primary" target="' . esc_attr( $button_target ) . '">' . $button_text . '</a></p></div>'; // phpcs:ignore
+	// Output notice with an ID so the common admin JS can catch the dismiss and persist it for 30 days.
+	echo '<div id="monsterinsights-ads-addon-notice" class="notice notice-info is-dismissible"><p>' . $message . '</p><p><a href="' . $addons_url . '" class="button button-primary" target="' . $button_target . '">' . $button_text . '</a></p></div>'; // phpcs:ignore
 }
 
 add_action( 'admin_notices', 'monsterinsights_ads_addon_installed_notice' );
@@ -1023,72 +969,17 @@ add_action( 'admin_notices', 'monsterinsights_ads_addon_installed_notice' );
  */
 function monsterinsights_dismiss_ads_addon_notice_ajax() {
 	check_ajax_referer( 'monsterinsights-dismiss-notice', 'nonce' );
-	if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
-		wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions', 'google-analytics-for-wordpress' ) ) );
-		return;
-	}
-
-	// Store the dismissal timestamp in an option (not a transient): transients
-	// live in the object cache on sites with persistent caching and can be
-	// evicted early, which made the notice reappear after a successful dismissal.
-	// Not autoloaded: only read in admin.
-	update_option( 'monsterinsights_ads_addon_installed_notice_dismissed', time(), false );
+	set_transient( 'monsterinsights_ads_addon_installed_notice_dismissed', 1, 30 * DAY_IN_SECONDS );
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_monsterinsights_dismiss_ads_addon_notice', 'monsterinsights_dismiss_ads_addon_notice_ajax' );
-
-/**
- * Display notice in admin when the legacy MonsterInsights AI Insights addon is still active.
- * AI Charlie replaces AI Insights, so users should deactivate the old addon.
- */
-function monsterinsights_ai_insights_addon_installed_notice() {
-	if ( ! class_exists( 'MonsterInsights_AI_Insights_Addon' ) ) {
-		return;
-	}
-
-	// Hide notice if dismissed in the last 30 days.
-	if ( get_transient( 'monsterinsights_ai_insights_addon_notice_dismissed' ) ) {
-		return;
-	}
-
-	$plugins_url = admin_url( 'plugins.php' );
-
-	$message = sprintf(
-		/* translators: %1$s and %2$s are bold tags, %3$s and %4$s are bold tags. */
-		esc_html__(
-			'The %1$sMonsterInsights AI Insights%2$s addon has been replaced by %3$sAI Charlie%4$s. Please deactivate the AI Insights addon as it is no longer needed.',
-			'google-analytics-for-wordpress'
-		),
-		'<strong>',
-		'</strong>',
-		'<strong>',
-		'</strong>'
-	);
-
-	echo '<div id="monsterinsights-ai-insights-addon-notice" class="notice notice-warning is-dismissible"><p>' . $message . '</p><p><a href="' . esc_url( $plugins_url ) . '" class="button button-primary">' . esc_html__( 'Go to Plugins', 'google-analytics-for-wordpress' ) . '</a></p></div>'; // phpcs:ignore
-}
-
-add_action( 'admin_notices', 'monsterinsights_ai_insights_addon_installed_notice' );
-
-/**
- * AJAX handler to persist dismissal of the AI Insights addon notice for 30 days.
- */
-function monsterinsights_dismiss_ai_insights_addon_notice_ajax() {
-	check_ajax_referer( 'monsterinsights-dismiss-notice', 'nonce' );
-	if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
-		wp_send_json_error();
-	}
-	set_transient( 'monsterinsights_ai_insights_addon_notice_dismissed', 1, 30 * DAY_IN_SECONDS );
-	wp_send_json_success();
-}
-add_action( 'wp_ajax_monsterinsights_dismiss_ai_insights_addon_notice', 'monsterinsights_dismiss_ai_insights_addon_notice_ajax' );
 
 /**
  * Check if the plugin is MI Lite.
  *
  * @return bool
  */
-function monsterinsights_check_is_it_monsterinsights_lite() {
+function check_is_it_monsterinsights_lite() {
 	return 'googleanalytics.php' == basename( MONSTERINSIGHTS_PLUGIN_FILE );
 }
 
@@ -1123,7 +1014,6 @@ function monsterinsights_in_admin_footer() {
 	];
 
 	echo '<div class="monsterinsights-footer-love">';
-	/* translators: %1$s: Heart icon HTML */
 	echo sprintf(esc_html__('Made with %1$s by the MonsterInsights Team', 'google-analytics-for-wordpress'), '<span class="monsterinsights-footer-love-icon">♥</span>');
 	$links_output = [];
 	foreach($links as $link){
