@@ -119,7 +119,7 @@ full_deploy() {
     mkdir -p "${TARGET_SITE_ROOT}/${path}"
 
     echo "Syncing ${path}"
-    rsync -a --delete-delay --itemize-changes -- \
+    rsync -a --checksum --delete-delay --itemize-changes -- \
       "${REPO_DIR}/${path}/" \
       "${TARGET_SITE_ROOT}/${path}/"
   done
