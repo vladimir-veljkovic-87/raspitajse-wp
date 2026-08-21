@@ -119,7 +119,7 @@ full_deploy() {
     mkdir -p "${TARGET_SITE_ROOT}/${path}"
 
     echo "Syncing ${path}"
-    rsync -a --checksum --delete-delay --itemize-changes -- \
+    rsync -a --checksum --no-times --omit-dir-times --delete-delay --itemize-changes -- \
       "${REPO_DIR}/${path}/" \
       "${TARGET_SITE_ROOT}/${path}/"
   done
@@ -161,7 +161,7 @@ changed_deploy() {
       || fail "Changed source path is missing: ${path}"
 
     echo "Syncing changed file: ${path}"
-    rsync -aR --itemize-changes -- "${path}" "${TARGET_SITE_ROOT}/"
+    rsync -aR --checksum --no-times --omit-dir-times --itemize-changes -- "${path}" "${TARGET_SITE_ROOT}/"
   done < "${TMP_CHANGED}"
 
   while IFS= read -r -d '' path; do
