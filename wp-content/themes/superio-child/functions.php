@@ -330,6 +330,11 @@ add_action('init', function () {
 });
 
 
+$raspitajse_use_legacy_mail_transport =
+    ! class_exists( 'Raspitajse_Communications_Transport' )
+    || ! Raspitajse_Communications_Transport::is_enabled();
+
+if ( $raspitajse_use_legacy_mail_transport ) {
 /**
  * ==============================================
  * PHPMailer SMTP Setup for Amazon SES (STATIC)
@@ -442,6 +447,7 @@ add_action('admin_menu', function() {
         }
     );
 });
+}
 
 /* Adding JS scripts to child theme  */
 function superio_child_enqueue_scripts() {
