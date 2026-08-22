@@ -158,17 +158,53 @@ Initial verified state:
 
 A LiteSpeed object-cache-backed `doing_cron` transient was later proven to be a **stale constant lock**. The same token persisted for more than 10,000 seconds, far beyond the 60-second lock timeout.
 
-Recovery completed so far:
+### Recovery completed through Zadatak 1.13
 
-- temporary staging-only MU recovery guard deployed;
-- that guard provides `DISABLE_WP_CRON=true` on staging so normal traffic cannot accidentally spawn the entire backlog;
-- stale `doing_cron` was cleared in isolation and remained clear;
-- first three approved low-risk housekeeping hooks were executed individually and passed:
-  - `delete_expired_transients`
-  - `jetpack_clean_nonces`
-  - `monsterinsights_cache_daily_cleanup`
-- high-risk schedules remained unchanged;
-- all 15 Action Scheduler pending actions remained unchanged during those steps.
+The temporary staging-only MU recovery guard is deployed and provides `DISABLE_WP_CRON=true` on staging so normal traffic cannot accidentally spawn the backlog. The stale `doing_cron` transient was cleared in isolation and remained clear.
+
+Seventeen low-risk WP-Cron hooks have been executed individually under the guard, each with before/after integrity checks and without movement of the protected high-risk schedules or Action Scheduler backlog beyond explicitly approved targets:
+
+1. `delete_expired_transients`
+2. `jetpack_clean_nonces`
+3. `monsterinsights_cache_daily_cleanup`
+4. `wp_version_check`
+5. `wp_update_plugins`
+6. `wp_update_themes`
+7. `recovery_mode_clean_expired_keys`
+8. `woocommerce_cleanup_rate_limits`
+9. `wp_site_health_scheduled_check`
+10. `puc_cron_check_updates-hostinger-ai-assistant`
+11. `puc_cron_check_updates-hostinger-easy-onboarding`
+12. `puc_cron_check_updates-wp-job-board-pro`
+13. `puc_cron_check_updates-wp-job-board-pro-wc-paid-listings`
+14. `wp_update_user_counts`
+15. `woocommerce_marketplace_cron_fetch_promotions`
+16. `wc_admin_unsnooze_admin_notes`
+17. `monsterinsights_feature_feedback_clear_expired`
+
+After these bounded runs, the remaining overdue WP-Cron callbacks were deep-classified. No additional callback met the autonomous-safe execution contract: the remainder includes telemetry/mail, content/order/session/personal-data mutation, affiliate configuration, remote optimization, deletion, or broad queue processing. This is now a **mixed-risk approval boundary**, not a signal to keep running cron callbacks automatically.
+
+### Action Scheduler status through Zadatak 1.13
+
+All 15 pending Action Scheduler actions were individually classified read-only using sanitized IDs/hooks/groups/schedules/callback sources without exposing arguments or private payloads.
+
+Only two actions were classified `AUTONOMOUS_SAFE` and then executed individually in Zadatak 1.12:
+
+- ID 32571 — `wpo_ips_semaphore_lock_cleanup`: released plugin semaphore cleanup; pre/post matching data count was zero.
+- ID 32680 — `aioseo_cache_prune`: expired AIOSEO-owned cache cleanup; pre/post matching data count was zero.
+
+Both completed with one attempt and created expected recurring successors:
+
+- ID 32715 — weekly semaphore cleanup successor.
+- ID 32716 — daily AIOSEO cache-prune successor.
+
+The other 13 original pending actions remained unchanged. The total pending count therefore remained 15: 13 untouched original actions plus the two expected successors.
+
+Zadatak 1.12 also observed removal of 75 historical Action Scheduler log rows. Zadatak 1.13 proved this was deterministic AIOSEO plugin behavior, not broad queue execution: AIOSEO hooks cleanup onto `action_scheduler_after_execute` at priority 1000 and, when its daily cleanup marker is absent, deletes terminal AIOSEO-group/action rows and their associated logs before the currently executing action is marked complete. Action 32680 triggered that cleanup. No non-target pending action executed.
+
+Future AIOSEO Action Scheduler execution contracts must explicitly include this terminal-action/log cleanup side effect when the AIOSEO daily cleanup marker is absent.
+
+### Current scheduler boundary
 
 **Do not remove the staging cron recovery guard yet.**
 
@@ -176,11 +212,10 @@ Recovery completed so far:
 
 - `wp cron event run --due-now`;
 - broad Action Scheduler queue processing;
-- `action_scheduler_run_queue` until every pending action intended for execution has been classified/approved.
+- `action_scheduler_run_queue` without an explicit, current execution contract;
+- mixed-risk cron or scheduler callbacks merely because they are overdue.
 
-Likely next cron work is **workstream 1.4**, continuing only with another small pre-classified low-risk batch, with before/after fingerprints and stop conditions.
-
-Before trusting these counts as current, read the latest numbered report from `codex-reports`.
+The next scheduler work requires deliberate selection/approval of a mixed-risk recovery batch or fixture-backed validation. Before any such work, independently re-check current staging state and the latest numbered report from `codex-reports`.
 
 ## 7. High-risk scheduled/business hooks
 
@@ -236,12 +271,14 @@ This is the strategic order, not permission to execute everything automatically.
 
 ### Priority A — finish safe staging scheduler recovery
 
-- continue small low-risk WP-Cron batches;
-- classify remaining cron hooks by side effect;
-- classify Action Scheduler backlog by hook/group/arguments shape;
-- recover mail/report tasks only with mail safety + fixtures;
-- recover business-state tasks only with explicit fixtures/rollback approval;
-- establish a reliable ongoing staging cron trigger only after backlog is controlled;
+- preserve the recovery guard while the remaining mixed-risk backlog is unresolved;
+- use the completed deep classifications from workstream 1 as the starting point, but re-check current runtime before execution;
+- select remaining cron hooks only through explicit mixed-risk approval and narrow execution contracts;
+- keep broad `--due-now` and broad Action Scheduler queue processing forbidden;
+- handle mail/report tasks only with mail safety plus disposable fixtures and state checks;
+- handle business-state, personal-data, order/session/content deletion or mutation only with explicit approval, fixtures and rollback understanding;
+- account for the proven AIOSEO terminal-action/log cleanup side effect in future AIOSEO scheduler contracts;
+- establish a reliable ongoing staging cron trigger only after the backlog is controlled;
 - finally remove the temporary cron recovery guard in a dedicated tested task.
 
 ### Priority B — complete communications ownership
