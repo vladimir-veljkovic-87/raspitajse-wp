@@ -12,6 +12,17 @@ This repository is connected to a live Hostinger account. Treat server operation
 - For any code change, create or use a `feature/*` branch based on current `origin/staging` unless the task explicitly says otherwise.
 - Do not commit code changes directly on `staging`; use `feature/*`, test, then fast-forward/merge only after validation.
 
+## Required project context
+
+Before planning a substantial task, read:
+
+- `CODEX_PROJECT_CONTEXT.md` — current architectural map, verified audit findings, risk areas and roadmap;
+- `CODEX_WORKFLOW.md` — autonomous task planning/execution/reporting loop and approval boundaries.
+
+These documents are subordinate to this file and to current repository/runtime evidence. If an older context statement conflicts with current evidence, current evidence wins and the context should be updated when appropriate.
+
+When the user starts an autonomous Codex session, follow `CODEX_WORKFLOW.md`: determine the next safe numbered task, execute only clearly bounded staging-safe work, publish a numbered report after each task, and continue within the same session until an approval/safety boundary is reached.
+
 ## Server boundaries
 
 The only WordPress runtime that Codex may modify or deploy to is staging:
@@ -120,6 +131,19 @@ Target custom plugins include `raspitajse-communications` and `raspitajse-job-im
 - Keep commits focused and descriptive.
 - Before merging/fast-forwarding to `staging`, compare the feature branch to `staging` and verify the diff contains only intended files.
 
+## Codex task numbering
+
+Use numbered task titles for autonomous work:
+
+`Zadatak N.M — Short descriptive title`
+
+- `N.0` starts a new workstream;
+- `N.1`, `N.2`, ... continue that workstream;
+- continuing an older workstream keeps its original major number;
+- never reuse a published Task ID for a different action.
+
+The detailed selection rules are in `CODEX_WORKFLOW.md`.
+
 ## Codex execution reporting
 
 After every Codex Remote task, publish a structured execution report to the dedicated `codex-reports` branch using:
@@ -135,10 +159,10 @@ The reporting branch is an audit channel only:
 - the helper uses a temporary Git worktree and must leave the source branch/worktree unchanged;
 - a task-level instruction such as "do not commit" or "do not push" applies to the code/source branch; publishing the report-only commit to `codex-reports` is permitted unless the task explicitly says not to publish a report.
 
-A normal report invocation is:
+A normal numbered report invocation is:
 
 ```bash
-cat <<'REPORT' | bash tools/codex-report.sh "Short task title" PASS
+cat <<'REPORT' | bash tools/codex-report.sh "Zadatak 3.0 — Short task title" PASS
 ## Summary
 - What was done
 
@@ -176,6 +200,12 @@ Never place secret values, credentials, private keys, tokens, SMTP credentials, 
 
 If report publication fails, do not alter production or weaken safety controls to make it succeed. Leave the source task state intact and report the publication failure in the Codex UI.
 
+## Autonomous approval boundaries
+
+Autonomy never means unlimited permission. Stop for approval when the next action could affect real/business state, including candidate/employer/application/message state, order/payment/refund/subscription state, password changes, real recipients, destructive/ambiguous DB changes, broad cron/Action Scheduler processing, personal-data deletion, safety-guard removal, or unknown side effects.
+
+Production work, main/baseline rewrites, secret exposure, force-pushes, forbidden broad cron execution and safety bypasses remain forbidden, not merely approval-required.
+
 ## Resource limits on Hostinger
 
 This Hostinger account has restrictive process/thread limits. Keep Codex/Tokio worker usage low. Do not start unnecessary background processes, watchers, dev servers, or parallel jobs. Avoid commands that fan out into many processes.
@@ -191,6 +221,7 @@ Stop and ask for review instead of improvising if:
 - a database operation is ambiguous about staging vs production;
 - the repository is unexpectedly dirty;
 - a safety guard blocks an action;
-- the requested change conflicts with these rules.
+- the requested change conflicts with these rules;
+- the next autonomous action is `APPROVAL_REQUIRED`, `UNKNOWN`, or `FORBIDDEN` under `CODEX_WORKFLOW.md`.
 
 Safety takes precedence over speed.
