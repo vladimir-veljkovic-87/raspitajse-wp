@@ -69,7 +69,7 @@ fi
 
 STAGING_ENVIRONMENT="unavailable"
 if command -v wp >/dev/null 2>&1 && [[ -d "${STAGING_ROOT}" ]]; then
-    STAGING_ENVIRONMENT="$(wp --path="${STAGING_ROOT}" eval 'echo wp_get_environment_type();' 2>/dev/null || true)"
+    STAGING_ENVIRONMENT="$(wp --path="${STAGING_ROOT}" --exec='if (!defined("DISABLE_WP_CRON")) { define("DISABLE_WP_CRON", true); }' eval 'echo wp_get_environment_type();' 2>/dev/null || true)"
     [[ -n "${STAGING_ENVIRONMENT}" ]] || STAGING_ENVIRONMENT="unavailable"
 fi
 
