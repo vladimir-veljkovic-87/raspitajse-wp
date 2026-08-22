@@ -5,7 +5,8 @@ This repository is connected to a live Hostinger account. Treat server operation
 ## Scope
 
 - Work only in this repository: `/home/u601262303/repo/raspitajse-wp`.
-- Allowed Git branches for active work: `feature/*` and `staging`.
+- Allowed Git branches for active code work: `feature/*` and `staging`.
+- `codex-reports` is a reporting-only exception. Never use it for application code work and never merge it into any code branch.
 - Never modify, force-update, reset, merge into, deploy from, or push to `main`.
 - Never modify the immutable baseline branches `baseline/production-2026-08` or `baseline/staging-2026-08`.
 - For any code change, create or use a `feature/*` branch based on current `origin/staging` unless the task explicitly says otherwise.
@@ -118,6 +119,62 @@ Target custom plugins include `raspitajse-communications` and `raspitajse-job-im
 - Do not delete branches unless explicitly requested.
 - Keep commits focused and descriptive.
 - Before merging/fast-forwarding to `staging`, compare the feature branch to `staging` and verify the diff contains only intended files.
+
+## Codex execution reporting
+
+After every Codex Remote task, publish a structured execution report to the dedicated `codex-reports` branch using:
+
+`bash tools/codex-report.sh`
+
+The reporting branch is an audit channel only:
+
+- never merge `codex-reports` into `staging`, `main`, a baseline branch, or a feature branch;
+- never deploy from `codex-reports`;
+- never place application code changes on `codex-reports`;
+- use the helper rather than checking out `codex-reports` in the primary repository worktree;
+- the helper uses a temporary Git worktree and must leave the source branch/worktree unchanged;
+- a task-level instruction such as "do not commit" or "do not push" applies to the code/source branch; publishing the report-only commit to `codex-reports` is permitted unless the task explicitly says not to publish a report.
+
+A normal report invocation is:
+
+```bash
+cat <<'REPORT' | bash tools/codex-report.sh "Short task title" PASS
+## Summary
+- What was done
+
+## Validation
+- PASS/FAIL/SKIPPED checks
+
+## Runtime state
+- Branch and HEAD
+- Deployed SHA if applicable
+- Relevant staging state
+
+## Warnings / errors
+- None, or sanitized details
+
+## Safety
+- Production touched: NO
+REPORT
+```
+
+Allowed report results are `PASS`, `FAIL`, `PARTIAL`, and `SKIPPED`.
+
+Every report should state, when applicable:
+
+- task outcome;
+- source branch and exact HEAD;
+- changed files and commit SHA;
+- deployed SHA or confirmation that no deploy occurred;
+- tests/checks with PASS/FAIL/SKIPPED;
+- relevant staging runtime state after the task;
+- warnings/errors encountered;
+- whether rollback was completed when required;
+- `Production touched: NO`.
+
+Never place secret values, credentials, private keys, tokens, SMTP credentials, database credentials, `wp-config.php` contents, private user data, CV contents, message contents, or unnecessary personal email addresses in reports. Refer to protected values generically, for example `configured staging inbox`.
+
+If report publication fails, do not alter production or weaken safety controls to make it succeed. Leave the source task state intact and report the publication failure in the Codex UI.
 
 ## Resource limits on Hostinger
 
