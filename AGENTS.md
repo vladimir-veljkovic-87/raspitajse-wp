@@ -124,7 +124,7 @@ Target custom plugins include `raspitajse-communications` and `raspitajse-job-im
 
 After every Codex Remote task, publish a structured execution report to the dedicated `codex-reports` branch using:
 
-`tools/codex-report.sh`
+`bash tools/codex-report.sh`
 
 The reporting branch is an audit channel only:
 
@@ -138,7 +138,7 @@ The reporting branch is an audit channel only:
 A normal report invocation is:
 
 ```bash
-cat <<'REPORT' | tools/codex-report.sh "Short task title" PASS
+cat <<'REPORT' | bash tools/codex-report.sh "Short task title" PASS
 ## Summary
 - What was done
 
