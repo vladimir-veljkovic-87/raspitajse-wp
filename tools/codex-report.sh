@@ -14,7 +14,10 @@ WORKTREE_DIR=""
 usage() {
     cat <<'EOF'
 Usage:
-  cat report.md | bash tools/codex-report.sh "Task title" PASS
+  cat report.md | bash tools/codex-report.sh "Zadatak 1.0 — Short task title" PASS
+
+When a title starts with "Zadatak N.M", the report file is named:
+  reports/YYYYMMDDTHHMMSSZ-zadatak-N_M.md
 
 Result must be one of: PASS, FAIL, PARTIAL, SKIPPED
 EOF
@@ -80,17 +83,37 @@ else
 fi
 
 TITLE="${TITLE//$'\n'/ }"
+TASK_ID=""
+TASK_FILE_ID=""
+
+if [[ "${TITLE}" =~ ^[Zz]adatak[[:space:]]+([0-9]+)\.([0-9]+) ]]; then
+    TASK_ID="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+    TASK_FILE_ID="${BASH_REMATCH[1]}_${BASH_REMATCH[2]}"
+fi
+
 UTC_ISO="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 UTC_FILE="$(date -u +%Y%m%dT%H%M%SZ)"
-SLUG="$(printf '%s' "${TITLE}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//' | cut -c1-80)"
-[[ -n "${SLUG}" ]] || SLUG="task"
+
+if [[ -n "${TASK_FILE_ID}" ]]; then
+    SLUG="zadatak-${TASK_FILE_ID}"
+else
+    SLUG="$(printf '%s' "${TITLE}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//' | cut -c1-80)"
+    [[ -n "${SLUG}" ]] || SLUG="task"
+fi
+
 REPORT_NAME="${UTC_FILE}-${SLUG}.md"
+
+TASK_ID_LINE=""
+if [[ -n "${TASK_ID}" ]]; then
+    TASK_ID_LINE="- Task ID: ${TASK_ID}"
+fi
 
 TMP_REPORT="$(mktemp)"
 cat > "${TMP_REPORT}" <<EOF
 # Codex Execution Report
 
 - Task: ${TITLE}
+${TASK_ID_LINE}
 - Result: ${RESULT}
 - Recorded at (UTC): ${UTC_ISO}
 - Source branch: ${SOURCE_BRANCH}
@@ -136,7 +159,9 @@ git -C "${WORKTREE_DIR}" \
 git -C "${WORKTREE_DIR}" push origin "HEAD:${REPORT_BRANCH}" >/dev/null
 
 REPORT_COMMIT="$(git -C "${WORKTREE_DIR}" rev-parse HEAD)"
-echo "Codex report published."
-echo "Branch: ${REPORT_BRANCH}"
-echo "Report: reports/${REPORT_NAME}"
+echo "Report published:"
+echo "Path: reports/${REPORT_NAME}"
+if [[ -n "${TASK_ID}" ]]; then
+    echo "Task ID: ${TASK_ID}"
+fi
 echo "Commit: ${REPORT_COMMIT}"
