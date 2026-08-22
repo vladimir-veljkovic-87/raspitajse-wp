@@ -14,7 +14,7 @@ WORKTREE_DIR=""
 usage() {
     cat <<'EOF'
 Usage:
-  cat report.md | tools/codex-report.sh "Task title" PASS
+  cat report.md | bash tools/codex-report.sh "Task title" PASS
 
 Result must be one of: PASS, FAIL, PARTIAL, SKIPPED
 EOF
@@ -110,7 +110,7 @@ if grep -Eiq -- '-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----|SMTP_PASS[[:space:]]*[:=]
     fail "Report appears to contain secret material. Refusing to publish."
 fi
 
-git fetch origin "${REPORT_BRANCH}" --prune
+git fetch --prune origin "+refs/heads/${REPORT_BRANCH}:refs/remotes/origin/${REPORT_BRANCH}"
 git show-ref --verify --quiet "refs/remotes/origin/${REPORT_BRANCH}" \
     || fail "Remote reporting branch origin/${REPORT_BRANCH} does not exist."
 
