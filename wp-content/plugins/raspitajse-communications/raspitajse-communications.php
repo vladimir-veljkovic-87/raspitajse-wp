@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.2.0
+ * Version: 0.2.1
  * Author: Raspitajse.com
  */
 
@@ -96,13 +96,20 @@ final class Raspitajse_Communications_Transport {
         $original = end( self::$mail_context_stack );
 
         if ( ! is_array( $args ) ) {
-            return $original;
+            $args = $original;
+        } else {
+            foreach ( array( 'to', 'subject', 'message', 'headers', 'attachments' ) as $key ) {
+                if ( ! array_key_exists( $key, $args ) && array_key_exists( $key, $original ) ) {
+                    $args[ $key ] = $original[ $key ];
+                }
+            }
         }
 
-        foreach ( array( 'to', 'subject', 'message', 'headers', 'attachments' ) as $key ) {
-            if ( ! array_key_exists( $key, $args ) && array_key_exists( $key, $original ) ) {
-                $args[ $key ] = $original[ $key ];
-            }
+        // Some legacy callers pass null as the optional attachments argument.
+        // WordPress expects an array or string and emits a PHP deprecation when
+        // null reaches its attachment normalization logic on newer PHP versions.
+        if ( array_key_exists( 'attachments', $args ) && null === $args['attachments'] ) {
+            $args['attachments'] = array();
         }
 
         return $args;
