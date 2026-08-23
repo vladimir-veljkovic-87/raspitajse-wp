@@ -18,11 +18,15 @@ Before planning a substantial task, read:
 
 - `CODEX_PROJECT_CONTEXT.md` — current architectural map, verified audit findings, risk areas and roadmap;
 - `CODEX_WORKFLOW.md` — autonomous task planning/execution/reporting loop and approval boundaries;
-- `CODEX_HOST_RESILIENCE.md` — mandatory Hostinger namespace/ENOSPC circuit-breaker and namespace-free editing fallbacks.
+- `CODEX_HOST_RESILIENCE.md` — mandatory Hostinger namespace/ENOSPC circuit-breaker and namespace-free editing fallbacks;
+- `STAGING_MUTATION_POLICY.md` — authoritative staging state classes, fixture rules and PASS/PARTIAL/FAIL mutation semantics;
+- `STAGING_DEFINITION_OF_DONE.md` — formal exit criteria for the current staging technical-refactor phase.
 
 These documents are subordinate to this file and to current repository/runtime evidence. If an older context statement conflicts with current evidence, current evidence wins and the context should be updated when appropriate.
 
 When the user starts an autonomous Codex session, follow `CODEX_WORKFLOW.md`: determine the next safe numbered task, execute only clearly bounded staging-safe work, publish a numbered report after each task, and continue within the same session until an approval/safety boundary is reached.
+
+For staging mutations, protect business state strictly while allowing only technical housekeeping or disposable-fixture mutations that are explicitly classified, bounded and measurable under `STAGING_MUTATION_POLICY.md`. Production remains forbidden regardless of staging mutation class.
 
 ## Server boundaries
 
@@ -116,13 +120,19 @@ Staging mail-safety check:
 
 Current legacy business logic exists in the Superio child theme and WP Job Board Pro vendor files. During refactoring:
 
-- preserve existing behavior before removing legacy implementations;
-- move custom business logic into Raspitajse-owned plugins incrementally;
-- do not restore clean vendor files until equivalent custom behavior is implemented and tested;
+- classify historical behavior as `KEEP`, `CHANGE`, or `DROP` before spending parity/refactor effort;
+- preserve parity only for behavior classified `KEEP`;
+- implement `CHANGE` behavior against an explicit new acceptance criterion;
+- do not spend tasks reproducing behavior classified `DROP`;
+- move reusable custom business logic into Raspitajse-owned plugins incrementally;
+- do not restore clean vendor files until required `KEEP`/`CHANGE` behavior is implemented and tested;
+- target update-safe vendor code, especially WP Job Board Pro and Paid Listings;
 - do not combine unrelated cleanup with behavior-changing refactors;
 - prefer small, reversible commits.
 
 Target custom plugins include `raspitajse-communications` and `raspitajse-job-importer`.
+
+The exact technical completion gate is in `STAGING_DEFINITION_OF_DONE.md`; exhaustive cosmetic cleanup is not required when it does not affect safety, updateability or release confidence.
 
 ## Git discipline
 
@@ -197,13 +207,19 @@ Every report should state, when applicable:
 - whether rollback was completed when required;
 - `Production touched: NO`.
 
+Result classification must follow `STAGING_MUTATION_POLICY.md`: expected bounded technical housekeeping does not itself make a task `FAIL`; an unapproved business/safety mutation or unbounded integrity failure does.
+
 Never place secret values, credentials, private keys, tokens, SMTP credentials, database credentials, `wp-config.php` contents, private user data, CV contents, message contents, or unnecessary personal email addresses in reports. Refer to protected values generically, for example `configured staging inbox`.
 
 If report publication fails, do not alter production or weaken safety controls to make it succeed. Leave the source task state intact and report the publication failure in the Codex UI.
 
 ## Autonomous approval boundaries
 
-Autonomy never means unlimited permission. Stop for approval when the next action could affect real/business state, including candidate/employer/application/message state, order/payment/refund/subscription state, password changes, real recipients, destructive/ambiguous DB changes, broad cron/Action Scheduler processing, personal-data deletion, safety-guard removal, or unknown side effects.
+Autonomy never means unlimited permission. Stop for approval when the next action could affect protected non-fixture business state, including candidate/employer/application/message state, order/payment/refund/subscription state, password changes, real recipients, destructive/ambiguous DB changes, personal-data deletion, safety-guard removal, or unknown side effects.
+
+Controlled disposable staging fixtures and classified bounded technical staging housekeeping may proceed autonomously only under `STAGING_MUTATION_POLICY.md` and the exact current task contract.
+
+Broad cron/Action Scheduler processing remains approval-required or forbidden while recovery rules say so; technical-housekeeping classification does not authorize an unclassified broad runner.
 
 Production work, main/baseline rewrites, secret exposure, force-pushes, forbidden broad cron execution and safety bypasses remain forbidden, not merely approval-required.
 
@@ -235,6 +251,7 @@ Stop and ask for review instead of improvising if:
 - a database operation is ambiguous about staging vs production;
 - the repository is unexpectedly dirty;
 - a safety guard blocks an action;
+- an actual mutation exceeds the exact state class/allowed scope defined under `STAGING_MUTATION_POLICY.md`;
 - the requested change conflicts with these rules;
 - the next autonomous action is `APPROVAL_REQUIRED`, `UNKNOWN`, or `FORBIDDEN` under `CODEX_WORKFLOW.md`;
 - a confirmed host namespace ENOSPC condition cannot be handled by the bounded namespace-free fallback in `CODEX_HOST_RESILIENCE.md`.
