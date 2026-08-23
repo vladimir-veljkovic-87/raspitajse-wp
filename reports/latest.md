@@ -1,51 +1,66 @@
 # Codex Execution Report
 
-- Task: Zadatak 1.38 — Execute zero-footprint Forms Locator ID 32678
-- Task ID: 1.38
+- Task: Zadatak 4.0 — Formalize staging Definition of Done and mutation policy
+- Task ID: 4.0
 - Result: PASS
-- Recorded at (UTC): 2026-08-23T08:47:49Z
+- Recorded at (UTC): 2026-08-23T08:52:34Z
 - Source branch: staging
-- Source HEAD: a1cbf66131318916689ed1d8216e93a83c0c09c8
-- Source working tree clean: YES
-- Staging deploy marker: a98846a975966c36a6c4aa1646c6a110f780e5e3
-- Staging environment: staging
-
-## Task report
-
-# Zadatak 1.38 — Execute zero-footprint Forms Locator ID 32678
+- Source HEAD: 23a825646bf97a0d8769ba3ab9b642332f090a07
+- Source working tree clean: N/A — GitHub-side repository-only governance integration
+- Deployment: NO DEPLOY
 
 ## Summary
-- Executed exactly staging Action Scheduler ID 32678, `wpforms_process_forms_locator_scan`, using a fresh exact-ID guard.
-- No queue runner was used. No Action Scheduler cleanup or DELETE query was permitted.
-- The scan completed with the proven zero-footprint contract and created exactly one expected daily successor.
+- Formalized the staging technical completion gate and staging mutation policy agreed with the user.
+- Added `STAGING_DEFINITION_OF_DONE.md` and `STAGING_MUTATION_POLICY.md`.
+- Integrated both documents into mandatory Codex startup/operating rules through `AGENTS.md` and `CODEX_WORKFLOW.md`.
+- The policy applies prospectively; older reports are not reclassified retroactively.
 
-## Guard and execution
-- Fresh guard SHA-256: `0625bc89dc5449a2826fbe97375dff69d7e1094ae3501ee5e5f231078316d957`.
-- PHP syntax and self-test: PASS.
-- Callback contract: exactly 1 scan callback and 1 locator completion callback.
-- Migration complete; shutdown async dispatch unhooked; WPForms logging disabled.
-- Runtime: allowed writes 8; blocked writes 0; HTTP attempts 0; mail attempts 0.
-- Pending delta 0; logs delta +3; protected non-locator pending fingerprint unchanged; WP-Cron unchanged; task-meta unchanged.
+## Key policy decisions
+- Protected business state remains strict.
+- Classified, bounded and measurable technical staging housekeeping may be autonomous-safe.
+- Controlled disposable staging fixtures may be created/mutated/removed autonomously when collision-resistant, staging-only, no-real-payment/no-uncontrolled-mail and non-fixture invariants are protected.
+- Historical behavior must be classified `KEEP`, `CHANGE`, or `DROP` before parity work.
+- Do not spend refactor effort reproducing `DROP` behavior.
+- Critical reusable business logic should move into Raspitajse-owned code; exhaustive cosmetic cleanup is not a release blocker.
+- WP Job Board Pro / Paid Listings target is clean/update-safe vendor ownership, with required custom behavior moved to owned hooks/filters/modules/template overrides where practical.
+- Production-critical hardening is required before release consideration; perfectionist CWV/SEO/cosmetic tuning is not automatically a blocker.
+- Release strategy is code-first; database/data changes only when narrowly proven necessary with validation/rollback understanding.
+- Production remains forbidden for autonomous Codex work.
 
-## Post-validation
-- ID 32678: complete / attempts 1.
-- Expected successor ID 32723: pending / attempts 0.
-- Total pending actions: 14.
-- Action Scheduler logs: 71; max log ID 97122.
-- Locator status: completed.
-- Pending/in-progress locator save actions: 0.
-- Location post-meta rows: 0.
-- WPForms task meta: 5 rows / max ID 45.
-- Staging mail safety loaded; cron recovery guard active; doing_cron clear.
-- Repository clean on `staging`, equal to `origin/staging` at `a1cbf66131318916689ed1d8216e93a83c0c09c8`.
-- Temporary guard deleted after validation.
+## Reporting semantics
+- Expected pre-classified technical housekeeping does not itself cause `FAIL`.
+- `PASS` may include bounded expected technical housekeeping.
+- `PARTIAL` is for incomplete intended work with protected safety/business invariants preserved.
+- `FAIL` is reserved for protected/safety invariant violations, unapproved execution, unbounded/unknown integrity loss, failed required rollback, production-boundary crossing or equivalent real failure.
 
-## Runtime state
+## Definition of Done
+- Staging can be declared `TECHNICALLY_READY` only in a dedicated final verification task after scheduler steady state, communications ownership, legacy classification/refactor, vendor update safety, critical regression, production-critical hardening and rollback/reproducibility criteria are satisfied.
+- `TECHNICALLY_READY` does not authorize production deployment.
+
+## Validation
+- Feature branch `feature/staging-definition-of-done` was based on staging HEAD `a1cbf66131318916689ed1d8216e93a83c0c09c8`.
+- Pre-integration comparison: feature ahead 4, behind 0.
+- Diff contained exactly four expected documentation/governance files:
+  - `AGENTS.md`
+  - `CODEX_WORKFLOW.md`
+  - `STAGING_DEFINITION_OF_DONE.md`
+  - `STAGING_MUTATION_POLICY.md`
+- No PHP, shell runtime, WordPress plugin/theme, deployment or server files changed.
+- `staging` was fast-forwarded without force to `23a825646bf97a0d8769ba3ab9b642332f090a07`.
+- Post-integration comparison: staging and feature branch identical, ahead 0 / behind 0.
+- WordPress/runtime mutation: NONE.
 - Deployment: NO DEPLOY.
-- Rollback: not required.
 
-## Warnings / errors
-- None.
+## Scheduler continuity
+- Latest scheduler checkpoint before this governance task remains Zadatak 1.38 PASS.
+- According to Zadatak 1.38, ID 32678 completed once and successor ID 32723 is pending/attempts 0; total pending Action Scheduler actions were 14.
+- This governance task did not execute cron or Action Scheduler and does not renumber workstream 1.x.
+- Scheduler recovery should continue at the next unused 1.x task after syncing to current `origin/staging` and reading the new mandatory policies.
 
 ## Safety
+- No WordPress execution.
+- No cron/Action Scheduler execution.
+- No HTTP/mail activity.
+- No database mutation.
+- No deployment.
 - Production touched: NO
