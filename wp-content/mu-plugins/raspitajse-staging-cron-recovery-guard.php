@@ -237,3 +237,14 @@ function raspitajse_staging_disable_reporting_telemetry_callbacks() {
 }
 add_action( 'plugins_loaded', 'raspitajse_staging_disable_reporting_telemetry_callbacks', PHP_INT_MAX );
 add_action( 'init', 'raspitajse_staging_disable_reporting_telemetry_callbacks', PHP_INT_MAX );
+
+/**
+ * Disable the unsupported WPForms spam-purge task on staging.
+ *
+ * The loaded WPForms edition exposes no entry subsystem, so no supported
+ * spam-entry fixture or purge operation exists in this environment.
+ */
+function raspitajse_staging_disable_wpforms_spam_purge_interval( $interval ) {
+    return raspitajse_staging_reporting_telemetry_is_disabled() ? 0 : $interval;
+}
+add_filter( 'wpforms_tasks_actions_purge_spam_task_interval', 'raspitajse_staging_disable_wpforms_spam_purge_interval', PHP_INT_MIN );
