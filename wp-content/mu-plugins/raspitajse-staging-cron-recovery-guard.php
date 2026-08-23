@@ -124,38 +124,6 @@ function raspitajse_staging_block_aioseo_ai_http( $preempt, $args, $url ) {
 }
 add_filter( 'pre_http_request', 'raspitajse_staging_block_aioseo_ai_http', PHP_INT_MIN, 3 );
 /**
- * Prevent normal request shutdown from broadly dispatching the mixed-risk
- * Action Scheduler backlog while exact-ID recovery is active.
- */
-function raspitajse_staging_disable_action_scheduler_async_dispatch() {
-    if ( ! raspitajse_staging_cron_recovery_guard_is_active() ) {
-        return;
-    }
-
-    global $wp_filter;
-
-    if ( empty( $wp_filter['shutdown'] ) ) {
-        return;
-    }
-
-    foreach ( $wp_filter['shutdown']->callbacks as $priority => $callbacks ) {
-        foreach ( $callbacks as $entry ) {
-            $callback = $entry['function'];
-            if (
-                is_array( $callback )
-                && is_object( $callback[0] )
-                && $callback[0] instanceof ActionScheduler_QueueRunner
-                && 'maybe_dispatch_async_request' === $callback[1]
-            ) {
-                remove_action( 'shutdown', $callback, $priority );
-            }
-        }
-    }
-}
-add_action( 'plugins_loaded', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MAX );
-add_action( 'init', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MIN );
-add_action( 'shutdown', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MIN );
-/**
  * Staging report-email and telemetry behavior classified as DROP.
  *
  * The list is deliberately narrow and does not affect normal SEO, form
