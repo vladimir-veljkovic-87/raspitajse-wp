@@ -17,7 +17,8 @@ This repository is connected to a live Hostinger account. Treat server operation
 Before planning a substantial task, read:
 
 - `CODEX_PROJECT_CONTEXT.md` — current architectural map, verified audit findings, risk areas and roadmap;
-- `CODEX_WORKFLOW.md` — autonomous task planning/execution/reporting loop and approval boundaries.
+- `CODEX_WORKFLOW.md` — autonomous task planning/execution/reporting loop and approval boundaries;
+- `CODEX_HOST_RESILIENCE.md` — mandatory Hostinger namespace/ENOSPC circuit-breaker and namespace-free editing fallbacks.
 
 These documents are subordinate to this file and to current repository/runtime evidence. If an older context statement conflicts with current evidence, current evidence wins and the context should be updated when appropriate.
 
@@ -206,9 +207,22 @@ Autonomy never means unlimited permission. Stop for approval when the next actio
 
 Production work, main/baseline rewrites, secret exposure, force-pushes, forbidden broad cron execution and safety bypasses remain forbidden, not merely approval-required.
 
-## Resource limits on Hostinger
+## Resource limits and namespace resilience on Hostinger
 
-This Hostinger account has restrictive process/thread limits. Keep Codex/Tokio worker usage low. Do not start unnecessary background processes, watchers, dev servers, or parallel jobs. Avoid commands that fan out into many processes.
+This Hostinger account has restrictive process/thread and Linux namespace limits. Keep Codex/Tokio worker usage low. Do not start unnecessary background processes, watchers, dev servers, or parallel jobs. Avoid commands that fan out into many processes.
+
+The recurring `bwrap` / `apply_patch` `ENOSPC` failure is a known host namespace-pressure condition. Handle it according to `CODEX_HOST_RESILIENCE.md`.
+
+Mandatory circuit breaker:
+
+- after the first confirmed namespace-ENOSPC signature, classify it as `HOST_NAMESPACE_PRESSURE`;
+- do not keep retrying the same patch/sandbox helper and do not wait inside the task for host capacity to recover;
+- use `bash tools/codex-git-apply.sh` for a safe repository patch on a clean `feature/*` branch;
+- use `bash tools/codex-tmp-rewrite.sh` or a deterministic inspected edit only for fresh Raspitajse-owned `/tmp` task files;
+- `bash tools/codex-host-diagnose.sh` may be used for low-cost diagnostics; the optional namespace probe must not be looped;
+- if the namespace-free fallback cannot preserve the exact task safety contract, publish `PARTIAL` and stop.
+
+ENOSPC is never permission to weaken an execution guard, broaden a path/endpoint/database allowlist, skip rollback, touch production, or bypass an approval boundary.
 
 ## Stop conditions
 
@@ -222,6 +236,7 @@ Stop and ask for review instead of improvising if:
 - the repository is unexpectedly dirty;
 - a safety guard blocks an action;
 - the requested change conflicts with these rules;
-- the next autonomous action is `APPROVAL_REQUIRED`, `UNKNOWN`, or `FORBIDDEN` under `CODEX_WORKFLOW.md`.
+- the next autonomous action is `APPROVAL_REQUIRED`, `UNKNOWN`, or `FORBIDDEN` under `CODEX_WORKFLOW.md`;
+- a confirmed host namespace ENOSPC condition cannot be handled by the bounded namespace-free fallback in `CODEX_HOST_RESILIENCE.md`.
 
 Safety takes precedence over speed.
