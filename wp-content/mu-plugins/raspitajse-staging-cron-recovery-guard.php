@@ -189,6 +189,9 @@ function raspitajse_staging_disable_reporting_telemetry_callbacks() {
     $targets = [
         'admin_init' => [
             'AIOSEO\\Plugin\\Common\\EmailReports\\Summary\\Summary' => [ 'maybeSchedule' ],
+            'WPForms\\Admin\\Addons\\AddonsCache'                    => [ 'schedule_update_cache' ],
+            'WPForms\\Admin\\Builder\\HelpCache'                     => [ 'schedule_update_cache' ],
+            'WPForms\\Admin\\Builder\\TemplatesCache'                => [ 'schedule_update_cache' ],
         ],
         'aioseo_report_summary' => [
             'AIOSEO\\Plugin\\Common\\EmailReports\\Summary\\Summary' => [ 'cronTrigger' ],
@@ -202,6 +205,18 @@ function raspitajse_staging_disable_reporting_telemetry_callbacks() {
         'wpforms_email_summaries_cron' => [
             'WPForms\\Lite\\Emails\\Summaries' => [ 'cron' ],
             'WPForms\\Emails\\Summaries' => [ 'cron' ],
+        ],
+        'wpforms_admin_addons_cache_update' => [
+            'WPForms\\Admin\\Addons\\AddonsCache' => [ 'update' ],
+        ],
+        'wpforms_admin_builder_templates_cache_update' => [
+            'WPForms\\Admin\\Builder\\TemplatesCache' => [ 'update' ],
+        ],
+        'wpforms_builder_help_cache_update' => [
+            'WPForms\\Admin\\Builder\\HelpCache' => [ 'update' ],
+        ],
+        'wpforms_email_summaries_fetch_info_blocks' => [
+            'WPForms\\Emails\\Tasks\\FetchInfoBlocksTask' => [ 'process' ],
         ],
     ];
 
