@@ -17,6 +17,14 @@ ALLOWLIST=(
   "wp-content/mu-plugins"
 )
 
+# Retired vendor payloads are deletion-only. They are intentionally excluded
+# from ALLOWLIST so a full or changed deploy can never reinstall them.
+REMOVED_PLUGIN_ROOTS=(
+  "wp-content/plugins/hostinger-ai-assistant"
+  "wp-content/plugins/hostinger-easy-onboarding"
+  "wp-content/plugins/google-analytics-for-wordpress"
+)
+
 TMP_CHANGED=""
 TMP_DELETED=""
 TMP_STATE=""
@@ -129,7 +137,7 @@ full_deploy() {
 changed_deploy() {
   [[ -f "${STATE_FILE}" ]] || fail "No previous successful deploy marker found. Run a full deploy first."
 
-  local previous_sha path
+  local previous_sha path previous_count deleted_count
   previous_sha="$(tr -d '[:space:]' < "${STATE_FILE}")"
 
   [[ -n "${previous_sha}" ]] || fail "Deploy state marker is empty. Run a full deploy."
@@ -171,6 +179,29 @@ changed_deploy() {
     echo "Removing deleted file: ${path}"
     rm -f -- "${TARGET_SITE_ROOT}/${path}"
   done < "${TMP_DELETED}"
+
+  for path in "${REMOVED_PLUGIN_ROOTS[@]}"; do
+    # Once a removal has been deployed, later commits have no source tree and
+    # no previous deployed tree to reconcile for this exact root.
+    [[ ! -e "${REPO_DIR}/${path}" && ! -L "${REPO_DIR}/${path}" ]] || continue
+    git cat-file -e "${previous_sha}:${path}" 2>/dev/null || continue
+
+    previous_count="$(git ls-tree -r --name-only "${previous_sha}" -- "${path}" | wc -l)"
+    deleted_count="$(git diff --name-only --no-renames --diff-filter=D \
+      "${previous_sha}" "${HEAD_SHA}" -- "${path}" | wc -l)"
+
+    [[ "${previous_count}" -gt 0 ]] \
+      || fail "Retired plugin root had no tracked files in previous deploy: ${path}"
+    [[ "${deleted_count}" -eq "${previous_count}" ]] \
+      || fail "Refusing partial retired plugin removal: ${path} (${deleted_count}/${previous_count})"
+    [[ ! -L "${TARGET_SITE_ROOT}/${path}" ]] \
+      || fail "Refusing symlinked retired plugin root: ${path}"
+
+    echo "Removing retired staging plugin root: ${path} (${deleted_count} tracked files)"
+    rm -rf -- "${TARGET_SITE_ROOT}/${path}"
+    [[ ! -e "${TARGET_SITE_ROOT}/${path}" && ! -L "${TARGET_SITE_ROOT}/${path}" ]] \
+      || fail "Retired plugin root still exists after removal: ${path}"
+  done
 }
 
 case "${MODE}" in
