@@ -1,38 +1,57 @@
 # Codex Execution Report
 
-- Task: Zadatak 1.30 — Execute zero-footprint Forms Locator scan ID 32678
-- Task ID: 1.30
-- Result: PARTIAL
-- Recorded at (UTC): 2026-08-23T05:40:20Z
+- Task: Zadatak 3.0 — Add Hostinger namespace-resilient Codex tooling
+- Task ID: 3.0
+- Result: PASS
+- Recorded at (UTC): 2026-08-23T05:54:47Z
 - Source branch: staging
-- Source HEAD: 0a95abe8cef3a39bd1e4f752cda84f316951d8f5
-- Source working tree clean: YES
-- Staging deploy marker: a98846a975966c36a6c4aa1646c6a110f780e5e3
-- Staging environment: staging
-
-## Task report
+- Source HEAD: a1cbf66131318916689ed1d8216e93a83c0c09c8
+- Source working tree clean: N/A — GitHub-side repository integration; no Hostinger source worktree mutation
+- Deployment: NO DEPLOY
 
 ## Summary
-- Prepared a fresh zero-footprint execution guard for staging Action Scheduler ID 32678.
-- The initial local PHP syntax test failed before WordPress bootstrap because of one quoting error in the temporary guard.
-- The exact one-line correction was identified, but two bounded apply_patch attempts failed before modifying the file because the host namespace helper returned ENOSPC.
-- Per the bounded failure contract, stopped without executing the action and without using an alternate file-writing mechanism.
+- Created workstream 3.x for Hostinger/Codex namespace resilience.
+- Added a mandatory ENOSPC circuit breaker so confirmed `bwrap` namespace exhaustion no longer triggers repeated patch-helper retries or long waits.
+- Added namespace-free repository and temporary-file edit fallbacks plus low-cost host diagnostics.
+- Integrated the policy into `AGENTS.md` and `CODEX_WORKFLOW.md` so future autonomous sessions must read and apply it.
+
+## Changed files
+- `AGENTS.md`
+- `CODEX_WORKFLOW.md`
+- `CODEX_HOST_RESILIENCE.md`
+- `tools/codex-host-diagnose.sh`
+- `tools/codex-git-apply.sh`
+- `tools/codex-tmp-rewrite.sh`
+
+## New ENOSPC behavior
+- Known `bwrap` / namespace `ENOSPC` is classified as `HOST_NAMESPACE_PRESSURE`.
+- After the first confirmed signature, the same apply_patch/bubblewrap helper is not retried repeatedly.
+- Repository edits on a clean `feature/*` branch can use `tools/codex-git-apply.sh`, which uses `git apply --check` + `git apply` and does not invoke bubblewrap.
+- Fresh Raspitajse-owned `/tmp` task files can use `tools/codex-tmp-rewrite.sh` for an atomic SHA-guarded replacement without bubblewrap.
+- `tools/codex-host-diagnose.sh` reports disk/inode/process/namespace limits and provides one optional non-looping namespace probe.
+- If safe fallback cannot complete, Codex must publish PARTIAL and stop instead of waiting for host capacity to recover.
+- Rough task-preparation circuit breaker is now about 10 minutes for host-tool blockage, not hour-scale waiting.
 
 ## Validation
-- Latest Zadatak 1.29 PASS checkpoint had already been published.
-- ID 32678 remains pending, attempts 0, expected hook.
-- Action Scheduler logs remain count/max 525/97117; zero new logs after Zadatak 1.28.
-- Environment staging; cron recovery guard active; doing_cron clear.
-- Repository staging clean and exactly equal to origin/staging at 0a95abe8cef3a39bd1e4f752cda84f316951d8f5.
-- Scheduler execution: NO.
-- HTTP/mail attempts: NO.
-- Database/file/option mutations: NONE.
-- Deployment: NO DEPLOY.
+- Feature branch `feature/codex-namespace-resilience` was based exactly on prior staging HEAD `0a95abe8cef3a39bd1e4f752cda84f316951d8f5`.
+- Pre-integration diff: exactly 6 expected docs/tooling files; feature ahead 6, behind 0.
+- `bash -n` passed for all three new shell tools.
+- Functional isolated tests passed for namespace-free `git apply`, check-only mode, and atomic `/tmp` rewrite.
+- Safety tests passed for feature-branch restriction, forbidden `public_html` patch target rejection, outside-`/tmp/raspitajse-*` rejection, and symlink rejection.
+- `staging` was fast-forwarded without force to `a1cbf66131318916689ed1d8216e93a83c0c09c8`.
+- Post-integration comparison: staging and feature branch identical, ahead 0 / behind 0.
+- WordPress/runtime/deployment mutation: NONE.
 
-## Stop reason
-- Required apply_patch helper could not create another host namespace and returned ENOSPC twice.
-- The temporary guard never passed syntax validation and was never loaded into WordPress.
-- Retry Zadatak 1.30 from a new temporary directory when host namespace capacity is available.
+## Scheduler continuity
+- The previous scheduler checkpoint remains Zadatak 1.30 PARTIAL.
+- According to that published checkpoint, Action Scheduler ID 32678 remained pending with attempts 0 and no runtime mutation occurred.
+- Do not reuse Task ID 1.30. The next scheduler-recovery continuation should use the next unused 1.x ID (expected Zadatak 1.31) and must independently revalidate staging state first.
+- That continuation should use the new namespace-resilience policy instead of waiting for apply_patch namespace capacity.
 
 ## Safety
+- No WordPress execution.
+- No cron or Action Scheduler execution.
+- No HTTP or mail activity.
+- No database mutation.
+- No deployment.
 - Production touched: NO
