@@ -64,7 +64,8 @@ fi
 if awk '
     /^(diff --git |--- |\+\+\+ |rename from |rename to |copy from |copy to )/ {
         line=$0
-        if (line ~ /(^|[[:space:]])\/+/ ||
+        is_null_header = (line ~ /^(---|\+\+\+) \/dev\/null$/)
+        if ((! is_null_header && line ~ /(^|[[:space:]])\/+/) ||
             line ~ /(^|[[:space:]])(a\/|b\/)?\.\.\// ||
             line ~ /(^|[[:space:]])(a\/|b\/)?\.git(\/|$)/ ||
             line ~ /wp-config\.php([[:space:]]|$)/ ||
