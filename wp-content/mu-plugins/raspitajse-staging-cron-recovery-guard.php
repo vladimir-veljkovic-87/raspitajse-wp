@@ -155,3 +155,85 @@ function raspitajse_staging_disable_action_scheduler_async_dispatch() {
 add_action( 'plugins_loaded', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MAX );
 add_action( 'init', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MIN );
 add_action( 'shutdown', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MIN );
+/**
+ * Staging report-email and telemetry behavior classified as DROP.
+ *
+ * The list is deliberately narrow and does not affect normal SEO, form
+ * processing, analytics collection, commerce, or any other scheduler hook.
+ */
+function raspitajse_staging_reporting_telemetry_is_disabled() {
+    return function_exists( 'wp_get_environment_type' )
+        && 'staging' === wp_get_environment_type();
+}
+
+function raspitajse_staging_disable_aioseo_report_summary( $enabled ) {
+    return raspitajse_staging_reporting_telemetry_is_disabled() ? false : $enabled;
+}
+add_filter( 'aioseo_report_summary_enable', 'raspitajse_staging_disable_aioseo_report_summary', PHP_INT_MIN );
+
+function raspitajse_staging_disable_wpforms_email_summaries( $disabled ) {
+    return raspitajse_staging_reporting_telemetry_is_disabled() ? true : $disabled;
+}
+add_filter( 'wpforms_emails_summaries_is_disabled', 'raspitajse_staging_disable_wpforms_email_summaries', PHP_INT_MIN );
+
+/**
+ * Remove only proven DROP callbacks and their exact WP-Cron schedules.
+ */
+function raspitajse_staging_disable_reporting_telemetry_callbacks() {
+    if ( ! raspitajse_staging_reporting_telemetry_is_disabled() ) {
+        return;
+    }
+
+    global $wp_filter;
+
+    $targets = [
+        'admin_init' => [
+            'AIOSEO\\Plugin\\Common\\EmailReports\\Summary\\Summary' => [ 'maybeSchedule' ],
+        ],
+        'aioseo_report_summary' => [
+            'AIOSEO\\Plugin\\Common\\EmailReports\\Summary\\Summary' => [ 'cronTrigger' ],
+        ],
+        'elementor/tracker/send_event' => [
+            'Elementor\\Tracker' => [ 'send_tracking_data' ],
+        ],
+        'monsterinsights_feature_feedback_checkin' => [
+            'MonsterInsights_Feature_Feedback' => [ 'feature_feedback_checkin' ],
+        ],
+        'wpforms_email_summaries_cron' => [
+            'WPForms\\Lite\\Emails\\Summaries' => [ 'cron' ],
+            'WPForms\\Emails\\Summaries' => [ 'cron' ],
+        ],
+    ];
+
+    foreach ( $targets as $hook => $classes ) {
+        if ( empty( $wp_filter[ $hook ] ) ) {
+            continue;
+        }
+
+        foreach ( $wp_filter[ $hook ]->callbacks as $priority => $callbacks ) {
+            foreach ( $callbacks as $entry ) {
+                $callback = $entry['function'];
+                if ( ! is_array( $callback ) || ! isset( $callback[0], $callback[1] ) ) {
+                    continue;
+                }
+
+                $class = is_object( $callback[0] ) ? get_class( $callback[0] ) : (string) $callback[0];
+                if ( isset( $classes[ $class ] ) && in_array( $callback[1], $classes[ $class ], true ) ) {
+                    remove_action( $hook, $callback, $priority );
+                }
+            }
+        }
+    }
+
+    foreach ( [
+        'elementor/tracker/send_event',
+        'monsterinsights_feature_feedback_checkin',
+        'wpforms_email_summaries_cron',
+    ] as $hook ) {
+        if ( wp_next_scheduled( $hook ) ) {
+            wp_clear_scheduled_hook( $hook );
+        }
+    }
+}
+add_action( 'plugins_loaded', 'raspitajse_staging_disable_reporting_telemetry_callbacks', PHP_INT_MAX );
+add_action( 'init', 'raspitajse_staging_disable_reporting_telemetry_callbacks', PHP_INT_MAX );
