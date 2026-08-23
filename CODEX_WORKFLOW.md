@@ -141,6 +141,7 @@ For every autonomous task, write an internal execution contract with:
 - allowed mutations;
 - explicitly forbidden mutations;
 - external effects allowed/forbidden;
+- for HTTP-capable tasks, whether actual external network transport is forbidden or approved, plus exact endpoint/host, method, redirect and disclosure constraints when approved;
 - preconditions;
 - exact validation checks;
 - stop conditions;
@@ -189,6 +190,18 @@ For risky subsystems use fingerprints/counts/IDs before and after rather than re
 
 Use rollback evidence proportional to state value as defined in `STAGING_MUTATION_POLICY.md`. Do not require expensive raw backups of disposable audit/cache history unless that history is needed for the current task/recovery investigation.
 
+For WordPress HTTP/API-capable tasks, validate transport separately from application-level intent. When technically applicable, capture:
+
+```text
+WP HTTP API attempts
+Guard-intercepted before transport
+Approved transport attempts
+Actual external network requests
+Unexpected external network requests
+```
+
+A WP HTTP API attempt that is deterministically short-circuited before transport is **not** an actual external network request. For offline tests, require `Actual external network requests = 0`, not necessarily `WP HTTP API attempts = 0`. Do not claim zero network requests when transport evidence is ambiguous.
+
 If a namespace-free edit fallback was used, validation must additionally prove the exact intended file set, run `git diff --check` for repository edits, and run the complete syntax/static checks for any temporary executable guard/harness before loading it.
 
 ### STEP F — Publish report
@@ -215,6 +228,7 @@ The report should include when applicable:
 - pre/post state evidence;
 - tests and validation;
 - expected technical-housekeeping/fixture mutations;
+- HTTP evidence split into WP API attempts, guard-intercepted requests, approved transport attempts, actual external network requests and unexpected external network requests when HTTP is in scope;
 - unexpected findings;
 - stop reason;
 - rollback state;
@@ -222,9 +236,9 @@ The report should include when applicable:
 
 Result semantics come from `STAGING_MUTATION_POLICY.md`:
 
-- `PASS` may include expected, pre-classified bounded technical housekeeping;
-- `PARTIAL` is appropriate when the intended task is incomplete but safety/business invariants remain protected;
-- `FAIL` is reserved for violated protected/safety invariants, unapproved execution, unbounded/unknown integrity loss, failed required rollback, or equivalent real failure conditions.
+- `PASS` may include expected, pre-classified bounded technical housekeeping and deterministically intercepted pre-transport WP HTTP API attempts;
+- `PARTIAL` is appropriate when the intended task is incomplete but safety/business invariants remain protected, including cases where external transport cannot be established unambiguously and no protected disclosure is known to have occurred;
+- `FAIL` is reserved for violated protected/safety invariants, unapproved execution, unbounded/unknown integrity loss, failed required rollback, unexpected external network transport, or equivalent real failure conditions.
 
 Do not retroactively rewrite older reports merely because this policy changes prospective classification.
 
@@ -259,6 +273,8 @@ Stop the autonomous loop immediately if any of the following occurs:
 - a disposable fixture selector can no longer be proven isolated;
 - a callback/queue item cannot be confidently classified;
 - a secret would need to be printed;
+- an actual external network request occurs outside the exact approved endpoint/method/redirect/disclosure contract;
+- transport is ambiguous after a task where a protected credential, personal data or production identity may have been disclosed;
 - rollback/recovery proportional to the state value cannot be understood before mutation;
 - test/validation result is ambiguous after a protected/business mutation;
 - `HOST_NAMESPACE_PRESSURE` prevents both the normal helper and the approved namespace-free fallback from completing safely.
@@ -353,6 +369,19 @@ When a task can cause email:
 - use only policy-compliant disposable fixtures when required;
 - never infer safety only from recipient rewriting;
 - stop if real/uncontrolled recipients can be reached.
+
+## 9A. HTTP / external network special mode
+
+When a task can enter the WordPress HTTP API or another outbound HTTP path:
+
+- distinguish WP HTTP API calls from actual network transport using section 6A of `STAGING_MUTATION_POLICY.md`;
+- for no-network/offline tasks, install the guard at a pre-transport short-circuit point and prove every observed WP HTTP API attempt was intercepted before transport;
+- use `Actual external network requests = 0` as the offline safety invariant; do not fail solely because the application attempted the WordPress HTTP API;
+- for approved online tasks, constrain method, exact host/endpoint, redirect behavior, request count and allowed disclosures before execution;
+- do not follow a cross-host redirect unless that exact destination and disclosure were separately approved;
+- never print/log/report token, credential, cookie, private payload or other protected request values;
+- if actual transport differs from the contract, stop as a real failure;
+- if transport cannot be determined and protected data may have escaped, fail closed rather than claiming the guard succeeded.
 
 ## 10. Legacy/refactor decision rule
 
