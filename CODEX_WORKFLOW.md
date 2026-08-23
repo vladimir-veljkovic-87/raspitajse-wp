@@ -11,11 +11,12 @@ At the beginning of an autonomous session:
 1. read `AGENTS.md`;
 2. read `CODEX_PROJECT_CONTEXT.md`;
 3. read this file;
-4. fetch `origin`;
-5. fetch the reporting branch without checking it out in the primary worktree;
-6. inspect `reports/latest.md` from `origin/codex-reports`;
-7. inspect current `origin/staging` and repository cleanliness;
-8. determine the active workstream and the next allowed task.
+4. read `CODEX_HOST_RESILIENCE.md`;
+5. fetch `origin`;
+6. fetch the reporting branch without checking it out in the primary worktree;
+7. inspect `reports/latest.md` from `origin/codex-reports`;
+8. inspect current `origin/staging` and repository cleanliness;
+9. determine the active workstream and the next allowed task.
 
 Suggested read-only report command:
 
@@ -25,6 +26,8 @@ git show origin/codex-reports:reports/latest.md
 ```
 
 Never merge or deploy `codex-reports`.
+
+If the latest report contains `HOST_NAMESPACE_PRESSURE`, `bwrap` + `ENOSPC`, or an equivalent known namespace failure, apply the circuit breaker in `CODEX_HOST_RESILIENCE.md` before preparing the next task. Do not begin by retrying the same patch helper.
 
 ## 2. Task numbering
 
@@ -42,12 +45,13 @@ Rules:
 - choose a new major number only for a genuinely new area of work;
 - never reuse an already-published Task ID for a different action.
 
-Current known workstreams at the time this file was introduced:
+Current known workstreams:
 
 - Workstream `1.x` — staging WP-Cron / Action Scheduler recovery;
-- Workstream `2.x` — autonomous Codex orchestration infrastructure.
+- Workstream `2.x` — autonomous Codex orchestration infrastructure;
+- Workstream `3.x` — Hostinger/Codex namespace resilience and host-resource tooling.
 
-Therefore after `Zadatak 2.0`, returning to cron recovery should normally resume at `Zadatak 1.4`, not `2.1`.
+A new infrastructure workstream does not renumber the scheduler recovery stream. Returning to scheduler recovery continues at the next unused `1.x` ID.
 
 Before selecting an ID, inspect existing numbered reports when needed to avoid collisions.
 
@@ -116,6 +120,8 @@ Includes:
 
 If risk cannot be confidently classified, treat it as `APPROVAL_REQUIRED` and stop.
 
+`HOST_NAMESPACE_PRESSURE` is an infrastructure condition, not a risk class. It must be handled with the namespace-resilience circuit breaker while preserving the original task's risk classification.
+
 ### STEP C — Define the task before executing
 
 For every autonomous task, write an internal execution contract with:
@@ -132,6 +138,8 @@ For every autonomous task, write an internal execution contract with:
 
 Keep the task small enough that a failure has a narrow blast radius.
 
+For tasks likely to build temporary guards/harnesses, also define the namespace-free correction path up front so a later patch-helper ENOSPC does not cause an improvised retry loop.
+
 ### STEP D — Execute
 
 - use the correct branch model;
@@ -143,6 +151,20 @@ Keep the task small enough that a failure has a narrow blast radius.
 
 Unexpected findings become a future task or a stop condition.
 
+#### Namespace-resilient editing rule
+
+If the Codex `apply_patch`/bubblewrap helper reports the known namespace `ENOSPC` signature:
+
+1. classify it as `HOST_NAMESPACE_PRESSURE`;
+2. do not repeat the same helper more than once in that task;
+3. do not wait for capacity to recover inside the task;
+4. for repository edits on a clean `feature/*` branch, use the validated patch through `bash tools/codex-git-apply.sh`;
+5. for fresh task-private `/tmp/raspitajse-*` files, use `bash tools/codex-tmp-rewrite.sh` or a deterministic inspected one-line edit as defined in `CODEX_HOST_RESILIENCE.md`;
+6. rerun the complete syntax/static/diff validation after the fallback;
+7. if the fallback cannot preserve the exact execution contract, publish `PARTIAL` and stop.
+
+Never use namespace pressure as justification to loosen a guard, broaden an allowlist, skip rollback preparation, or change an approval boundary.
+
 ### STEP E — Validate
 
 Validate both:
@@ -151,6 +173,8 @@ Validate both:
 2. unrelated/high-risk state did **not** change.
 
 For risky subsystems use fingerprints/counts/IDs before and after rather than relying on absence of visible errors.
+
+If a namespace-free edit fallback was used, validation must additionally prove the exact intended file set, run `git diff --check` for repository edits, and run the complete syntax/static checks for any temporary executable guard/harness before loading it.
 
 ### STEP F — Publish report
 
@@ -179,6 +203,8 @@ The report should include when applicable:
 - rollback state;
 - `Production touched: NO`.
 
+For `HOST_NAMESPACE_PRESSURE`, also report whether the namespace-free fallback was used and whether any WordPress/runtime mutation had started before the infrastructure failure.
+
 ### STEP G — Decide whether to continue
 
 After publishing, re-read the resulting report if necessary and choose:
@@ -189,6 +215,8 @@ After publishing, re-read the resulting report if necessary and choose:
 - `WORKSTREAM_COMPLETE` — current objective is complete.
 
 If continuing, assign the next appropriate Task ID and repeat the loop.
+
+A host namespace failure that has already hit its circuit breaker should not be retried repeatedly in the same session. Continue only if the next task can proceed without depending on the exhausted helper; otherwise stop cleanly.
 
 ## 4. Hard stop gates
 
@@ -206,7 +234,8 @@ Stop the autonomous loop immediately if any of the following occurs:
 - a callback/queue item cannot be confidently classified;
 - a secret would need to be printed;
 - rollback/recovery cannot be understood before mutation;
-- test/validation result is ambiguous after a mutation.
+- test/validation result is ambiguous after a mutation;
+- `HOST_NAMESPACE_PRESSURE` prevents both the normal helper and the approved namespace-free fallback from completing safely.
 
 Do not “fix forward” through a hard stop. Preserve evidence and report.
 
@@ -298,7 +327,28 @@ When updating it:
 - do not include secrets/private data;
 - reference report Task IDs rather than duplicating large evidence tables.
 
-## 10. Session-end output
+## 10. Host resource resilience
+
+`CODEX_HOST_RESILIENCE.md` is the authoritative operating procedure for the known Hostinger namespace exhaustion condition.
+
+Use these tools instead of repeated sandbox retries:
+
+```bash
+bash tools/codex-host-diagnose.sh
+cat change.patch | bash tools/codex-git-apply.sh
+cat corrected-file | bash tools/codex-tmp-rewrite.sh /tmp/raspitajse-task-.../file <expected-sha256>
+```
+
+Operational rules:
+
+- batch safe repository changes into one patch/helper invocation;
+- prefer one fresh task-private temporary directory per attempt;
+- never run namespace probes in a loop;
+- avoid parallel/background work;
+- if task preparation is stuck on host tooling for roughly 10 minutes rather than the actual task, trip the circuit breaker and report instead of waiting for an hour;
+- a successful namespace-free edit still requires all normal validation before any staging/runtime mutation.
+
+## 11. Session-end output
 
 When the autonomous loop stops, the final user-facing result should be compact and include:
 
@@ -313,8 +363,10 @@ When the autonomous loop stops, the final user-facing result should be compact a
 
 Do not ask the user to paste report contents when the report is available from the repository.
 
-## 11. Autonomous session objective
+## 12. Autonomous session objective
 
 The goal is not to maximize the number of tasks completed in one run.
 
 The goal is to make **small, auditable progress with preserved safety invariants** until the next step genuinely requires a human decision.
+
+Host-resource resilience is part of that objective: fail fast, use the bounded namespace-free fallback, validate, and continue only when safety remains equivalent.
