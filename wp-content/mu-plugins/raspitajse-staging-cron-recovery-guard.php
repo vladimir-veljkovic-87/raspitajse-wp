@@ -154,3 +154,4 @@ function raspitajse_staging_disable_action_scheduler_async_dispatch() {
 }
 add_action( 'plugins_loaded', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MAX );
 add_action( 'init', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MIN );
+add_action( 'shutdown', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MIN );
