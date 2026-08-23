@@ -10,13 +10,15 @@ At the beginning of an autonomous session:
 
 1. read `AGENTS.md`;
 2. read `CODEX_PROJECT_CONTEXT.md`;
-3. read this file;
-4. read `CODEX_HOST_RESILIENCE.md`;
-5. fetch `origin`;
-6. fetch the reporting branch without checking it out in the primary worktree;
-7. inspect `reports/latest.md` from `origin/codex-reports`;
-8. inspect current `origin/staging` and repository cleanliness;
-9. determine the active workstream and the next allowed task.
+3. read `STAGING_MUTATION_POLICY.md`;
+4. read `STAGING_DEFINITION_OF_DONE.md`;
+5. read this file;
+6. read `CODEX_HOST_RESILIENCE.md`;
+7. fetch `origin`;
+8. fetch the reporting branch without checking it out in the primary worktree;
+9. inspect `reports/latest.md` from `origin/codex-reports`;
+10. inspect current `origin/staging` and repository cleanliness;
+11. determine the active workstream and the next allowed task.
 
 Suggested read-only report command:
 
@@ -28,6 +30,8 @@ git show origin/codex-reports:reports/latest.md
 Never merge or deploy `codex-reports`.
 
 If the latest report contains `HOST_NAMESPACE_PRESSURE`, `bwrap` + `ENOSPC`, or an equivalent known namespace failure, apply the circuit breaker in `CODEX_HOST_RESILIENCE.md` before preparing the next task. Do not begin by retrying the same patch helper.
+
+Use `STAGING_DEFINITION_OF_DONE.md` to prioritize work that actually moves the technical staging phase toward completion. Do not create parity/cleanup tasks for non-blocking legacy behavior until it is classified `KEEP`, `CHANGE`, or `DROP`.
 
 ## 2. Task numbering
 
@@ -49,9 +53,10 @@ Current known workstreams:
 
 - Workstream `1.x` — staging WP-Cron / Action Scheduler recovery;
 - Workstream `2.x` — autonomous Codex orchestration infrastructure;
-- Workstream `3.x` — Hostinger/Codex namespace resilience and host-resource tooling.
+- Workstream `3.x` — Hostinger/Codex namespace resilience and host-resource tooling;
+- Workstream `4.x` — staging Definition of Done / mutation-governance policy.
 
-A new infrastructure workstream does not renumber the scheduler recovery stream. Returning to scheduler recovery continues at the next unused `1.x` ID.
+A new infrastructure/governance workstream does not renumber the scheduler recovery stream. Returning to scheduler recovery continues at the next unused `1.x` ID.
 
 Before selecting an ID, inspect existing numbered reports when needed to avoid collisions.
 
@@ -64,11 +69,12 @@ Within one Codex session, repeat this loop:
 - read latest numbered report;
 - inspect current branch/HEAD/runtime required by that workstream;
 - identify what the previous task proved, changed and intentionally left untouched;
-- identify the smallest useful next step.
+- identify the smallest useful next step;
+- prefer work that advances a blocker in `STAGING_DEFINITION_OF_DONE.md` over cosmetic/perfectionist cleanup.
 
-### STEP B — Classify risk
+### STEP B — Classify risk and state
 
-Assign one of these classes:
+Assign one risk class and, for mutations, one staging state class from `STAGING_MUTATION_POLICY.md`.
 
 #### `AUTONOMOUS_SAFE`
 
@@ -80,8 +86,9 @@ Typical examples:
 - documentation;
 - feature-branch code refactor with tests and no runtime mutation;
 - syntax/static checks;
-- targeted regression tests using already-approved disposable fixtures;
-- already-classified low-risk staging housekeeping under active safety guards;
+- targeted regression tests using policy-compliant disposable fixtures;
+- already-classified bounded technical staging housekeeping under active safety guards;
+- exact scheduler lifecycle/audit/housekeeping writes explicitly permitted by a classified task contract;
 - narrowly scoped deployment explicitly allowed by the current workstream and `AGENTS.md`.
 
 #### `APPROVAL_REQUIRED`
@@ -90,13 +97,14 @@ Stop before executing. Publish/report the proposed next step and why approval is
 
 Includes:
 
-- candidate/employer/application/message state mutation;
-- order/payment/refund/subscription state mutation;
+- protected non-fixture candidate/employer/application/message state mutation;
+- protected non-fixture job/content mutation when it has business meaning;
+- order/payment/refund/subscription state mutation outside an approved safe fixture strategy;
 - password reset/change;
 - mail to real or uncontrolled recipients;
-- fixture creation that could collide with real-like data;
+- fixture creation whose selector/identity could collide with non-fixture data;
 - destructive or broad DB changes;
-- personal-data deletion;
+- personal-data deletion outside an exact disposable-fixture contract;
 - enabling a global/background runner after a backlog;
 - removal/weakening of safety guards;
 - actions with material unknown side effects.
@@ -118,7 +126,7 @@ Includes:
 
 #### `UNKNOWN`
 
-If risk cannot be confidently classified, treat it as `APPROVAL_REQUIRED` and stop.
+If risk or mutation state cannot be confidently classified, treat it as `APPROVAL_REQUIRED` and stop.
 
 `HOST_NAMESPACE_PRESSURE` is an infrastructure condition, not a risk class. It must be handled with the namespace-resilience circuit breaker while preserving the original task's risk classification.
 
@@ -128,12 +136,15 @@ For every autonomous task, write an internal execution contract with:
 
 - Task ID and exact title;
 - objective;
+- risk class;
+- mutation state class when applicable: protected business / disposable fixture / technical housekeeping / unknown;
 - allowed mutations;
 - explicitly forbidden mutations;
+- external effects allowed/forbidden;
 - preconditions;
 - exact validation checks;
 - stop conditions;
-- rollback/recovery expectation where applicable;
+- rollback/recovery expectation proportional to the state class;
 - expected report result.
 
 Keep the task small enough that a failure has a narrow blast radius.
@@ -145,8 +156,9 @@ For tasks likely to build temporary guards/harnesses, also define the namespace-
 - use the correct branch model;
 - use exact staging paths;
 - use approved deployment tooling only;
-- run preconditions again immediately before mutation;
+- run preconditions and staging-state classification again immediately before mutation;
 - execute only the action described by the current task;
+- allow only the technical-housekeeping/fixture mutations explicitly listed in the contract;
 - never silently broaden scope because another issue is noticed.
 
 Unexpected findings become a future task or a stop condition.
@@ -170,9 +182,12 @@ Never use namespace pressure as justification to loosen a guard, broaden an allo
 Validate both:
 
 1. the intended effect happened;
-2. unrelated/high-risk state did **not** change.
+2. protected business/safety state did **not** change outside the contract;
+3. any technical housekeeping or disposable-fixture mutation stayed within its classified bounds.
 
 For risky subsystems use fingerprints/counts/IDs before and after rather than relying on absence of visible errors.
+
+Use rollback evidence proportional to state value as defined in `STAGING_MUTATION_POLICY.md`. Do not require expensive raw backups of disposable audit/cache history unless that history is needed for the current task/recovery investigation.
 
 If a namespace-free edit fallback was used, validation must additionally prove the exact intended file set, run `git diff --check` for repository edits, and run the complete syntax/static checks for any temporary executable guard/harness before loading it.
 
@@ -196,12 +211,22 @@ The report should include when applicable:
 - source branch/HEAD;
 - changed files/commit;
 - deployment SHA or `NO DEPLOY`;
+- state/risk classification;
 - pre/post state evidence;
 - tests and validation;
+- expected technical-housekeeping/fixture mutations;
 - unexpected findings;
 - stop reason;
 - rollback state;
 - `Production touched: NO`.
+
+Result semantics come from `STAGING_MUTATION_POLICY.md`:
+
+- `PASS` may include expected, pre-classified bounded technical housekeeping;
+- `PARTIAL` is appropriate when the intended task is incomplete but safety/business invariants remain protected;
+- `FAIL` is reserved for violated protected/safety invariants, unapproved execution, unbounded/unknown integrity loss, failed required rollback, or equivalent real failure conditions.
+
+Do not retroactively rewrite older reports merely because this policy changes prospective classification.
 
 For `HOST_NAMESPACE_PRESSURE`, also report whether the namespace-free fallback was used and whether any WordPress/runtime mutation had started before the infrastructure failure.
 
@@ -211,7 +236,7 @@ After publishing, re-read the resulting report if necessary and choose:
 
 - `CONTINUE` — next step is `AUTONOMOUS_SAFE`;
 - `STOP_FOR_APPROVAL` — next step is `APPROVAL_REQUIRED` or `UNKNOWN`;
-- `STOP_FAILURE` — safety invariant or validation failed;
+- `STOP_FAILURE` — a protected/safety invariant or required validation failed;
 - `WORKSTREAM_COMPLETE` — current objective is complete.
 
 If continuing, assign the next appropriate Task ID and repeat the loop.
@@ -228,13 +253,14 @@ Stop the autonomous loop immediately if any of the following occurs:
 - deployment output references unexpected deletion/path;
 - production path or production database could be affected;
 - a required guard is missing/inactive;
-- cron/mail/Action Scheduler state changes outside approved scope;
+- cron/mail/Action Scheduler state changes outside the exact classified/allowed task scope;
 - a real-user recipient or private data would be exposed/affected;
-- order/payment/application/user state could change without an approved fixture;
+- protected non-fixture order/payment/application/user state changes without approval;
+- a disposable fixture selector can no longer be proven isolated;
 - a callback/queue item cannot be confidently classified;
 - a secret would need to be printed;
-- rollback/recovery cannot be understood before mutation;
-- test/validation result is ambiguous after a mutation;
+- rollback/recovery proportional to the state value cannot be understood before mutation;
+- test/validation result is ambiguous after a protected/business mutation;
 - `HOST_NAMESPACE_PRESSURE` prevents both the normal helper and the approved namespace-free fallback from completing safely.
 
 Do not “fix forward” through a hard stop. Preserve evidence and report.
@@ -257,7 +283,7 @@ A feature may be fast-forwarded/merged into `staging` autonomously only when all
 - required syntax/tests pass;
 - no production deployment occurs;
 - change is low-risk/reversible;
-- no user/business-state mutation is hidden in the merge/deploy.
+- no protected business-state mutation is hidden in the merge/deploy.
 
 If any condition is uncertain, leave the feature branch ready and `STOP_FOR_APPROVAL`.
 
@@ -293,27 +319,54 @@ While the temporary staging cron recovery guard is active:
 - normal traffic-triggered cron must remain disabled;
 - do not request `wp-cron.php` casually;
 - never use `--due-now`;
-- execute only individually approved/pre-classified hooks;
-- fingerprint HIGH-risk cron schedules before/after each mutation;
-- keep Action Scheduler unchanged unless the task explicitly targets one classified action;
-- stop if `doing_cron` unexpectedly reappears or unrelated schedules move.
+- execute only individually approved/pre-classified hooks/actions;
+- fingerprint protected/high-risk schedules before/after each mutation;
+- broad queue runners remain forbidden/unapproved while recovery rules say so;
+- exact scheduler lifecycle/audit/successor writes may be allowed by an individual execution contract;
+- plugin-owned technical history cleanup may be allowed only after its source/delete criteria are understood and classified under `STAGING_MUTATION_POLICY.md`;
+- stop if `doing_cron` unexpectedly reappears or protected/unclassified schedules move.
 
 Action Scheduler actions must be individually/class-wise classified before execution. Mail safety does not make business-state actions safe.
 
 The cron recovery guard can be removed only in a dedicated task after backlog recovery and ongoing trigger strategy are validated.
 
-## 8. Mail special mode
+## 8. Disposable fixture special mode
+
+Controlled staging fixtures may be autonomous-safe when they satisfy `STAGING_MUTATION_POLICY.md`.
+
+For each fixture family:
+
+- use unmistakable collision-resistant test markers;
+- capture exact created IDs/identifiers;
+- prevent real payments and uncontrolled recipients;
+- validate non-fixture business state remained unchanged;
+- clean up only exact fixture records when cleanup is part of the task;
+- do not turn a disposable-fixture permission into permission to modify pre-existing staging business data.
+
+## 9. Mail special mode
 
 When a task can cause email:
 
 - verify staging mail-safety first;
 - verify communications takeover state;
-- classify whether the flow changes business/user state before mail;
-- use only disposable fixtures when required;
+- classify whether the flow changes protected business/user state before mail;
+- use only policy-compliant disposable fixtures when required;
 - never infer safety only from recipient rewriting;
 - stop if real/uncontrolled recipients can be reached.
 
-## 9. Project-context maintenance
+## 10. Legacy/refactor decision rule
+
+Before reproducing historical behavior, classify it as:
+
+- `KEEP` — parity required before old implementation removal;
+- `CHANGE` — implement/test the new intended behavior instead of legacy parity;
+- `DROP` — do not spend refactor effort reproducing it.
+
+The target is update-safe vendor code with critical custom behavior in Raspitajse-owned plugins/hooks/filters/template overrides where practical.
+
+Do not make exhaustive cosmetic cleanup a blocker unless it affects a criterion in `STAGING_DEFINITION_OF_DONE.md`.
+
+## 11. Project-context maintenance
 
 `CODEX_PROJECT_CONTEXT.md` is a living technical audit.
 
@@ -325,9 +378,10 @@ When updating it:
 - distinguish verified current state from historical audit leads;
 - do not copy full reports into it;
 - do not include secrets/private data;
-- reference report Task IDs rather than duplicating large evidence tables.
+- reference report Task IDs rather than duplicating large evidence tables;
+- align roadmap/status language with `STAGING_DEFINITION_OF_DONE.md` and `STAGING_MUTATION_POLICY.md`.
 
-## 10. Host resource resilience
+## 12. Host resource resilience
 
 `CODEX_HOST_RESILIENCE.md` is the authoritative operating procedure for the known Hostinger namespace exhaustion condition.
 
@@ -348,7 +402,15 @@ Operational rules:
 - if task preparation is stuck on host tooling for roughly 10 minutes rather than the actual task, trip the circuit breaker and report instead of waiting for an hour;
 - a successful namespace-free edit still requires all normal validation before any staging/runtime mutation.
 
-## 11. Session-end output
+## 13. Staging completion / release boundary
+
+`STAGING_DEFINITION_OF_DONE.md` is the formal technical exit gate.
+
+When its blockers are satisfied, create a dedicated final staging verification task/report that records the evidence and may declare staging `TECHNICALLY_READY`.
+
+`TECHNICALLY_READY` does **not** authorize production deployment. Production release remains a separate explicitly approved workstream using a code-first strategy and only narrowly proven DB/data changes.
+
+## 14. Session-end output
 
 When the autonomous loop stops, the final user-facing result should be compact and include:
 
@@ -363,10 +425,10 @@ When the autonomous loop stops, the final user-facing result should be compact a
 
 Do not ask the user to paste report contents when the report is available from the repository.
 
-## 12. Autonomous session objective
+## 15. Autonomous session objective
 
 The goal is not to maximize the number of tasks completed in one run.
 
-The goal is to make **small, auditable progress with preserved safety invariants** until the next step genuinely requires a human decision.
+The goal is to make **small, auditable progress with preserved business/safety invariants** toward `STAGING_DEFINITION_OF_DONE.md` until the next step genuinely requires a human decision.
 
 Host-resource resilience is part of that objective: fail fast, use the bounded namespace-free fallback, validate, and continue only when safety remains equivalent.
