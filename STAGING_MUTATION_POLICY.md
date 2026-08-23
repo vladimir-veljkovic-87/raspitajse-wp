@@ -128,6 +128,8 @@ Use `PASS` when:
 
 Expected bounded housekeeping does not downgrade a task from PASS simply because rows/files/options changed.
 
+A WordPress HTTP API call that is deterministically intercepted before transport does not by itself downgrade a task from PASS. Evaluate external effects using the transport semantics in section 6A.
+
 ### PARTIAL
 
 Use `PARTIAL` when:
@@ -146,7 +148,8 @@ Use `FAIL` when:
 - an unapproved scheduler/business action executed;
 - an unknown/unbounded mutation occurred and integrity can no longer be confidently established;
 - a required rollback of valuable/protected state failed;
-- a safety guard was bypassed/weakened or a critical validation invariant was violated.
+- a safety guard was bypassed/weakened or a critical validation invariant was violated;
+- an actual external network request occurred outside the exact approved transport contract.
 
 Do not use `FAIL` solely because harmless technical staging housekeeping occurred if that housekeeping is already classified and bounded by this policy/task contract.
 
@@ -172,6 +175,39 @@ Technical classification does not automatically authorize external effects.
 - auth/password changes are protected business state;
 - production identity/data/endpoints must not be used accidentally from staging.
 
+## 6A. WordPress HTTP API vs actual network transport
+
+Do not use the phrase `HTTP attempt` as a synonym for external network activity. For guarded WordPress HTTP tasks, distinguish these layers:
+
+1. **WP HTTP API attempt** — code entered `wp_remote_get()`, `wp_remote_post()`, `wp_remote_request()` or an equivalent WordPress HTTP API path. This proves application intent only; it does not prove that the server contacted a remote host.
+2. **Guard-intercepted request** — a task guard observed and deterministically short-circuited/blocked the request before WordPress selected or invoked a network transport. This is not an external network request.
+3. **Approved transport attempt** — the task contract explicitly allows network transport to an exact endpoint/host with an exact disclosure contract.
+4. **Actual external network request** — TCP/TLS/HTTP transport was allowed to leave the server toward a remote destination, whether it succeeded or failed at the application layer.
+5. **Unexpected external network request** — actual transport occurred outside the exact endpoint, redirect, method, credential/disclosure or request-count contract.
+
+For tasks involving the WordPress HTTP API, reports and guards should expose these counters when technically applicable:
+
+```text
+WP HTTP API attempts
+Guard-intercepted before transport
+Approved transport attempts
+Actual external network requests
+Unexpected external network requests
+```
+
+Rules:
+
+- `WP HTTP API attempts > 0` is evidence, not a failure condition by itself.
+- A request proven to be guard-intercepted before transport counts as **zero actual external network requests**.
+- For an offline/no-network test, the invariant is `Actual external network requests = 0`; WP HTTP API attempts may be nonzero only when every attempt is deterministically intercepted before transport.
+- Do not write a test contract that merely requires `HTTP attempts = 0` when the real safety objective is no external transport.
+- For an explicitly approved external integration test, approved transport may occur only to the exact classified endpoint/host, with the exact allowed method, redirects and disclosures. Any cross-host or otherwise unapproved transport is a hard failure.
+- Credential/token values may be present in process memory as part of an intercepted request, but must never be printed, logged, copied to reports or written to task artifacts.
+- If a task cannot establish whether transport occurred, do not claim `network requests = 0`. Stop as `PARTIAL`/`UNKNOWN` when safety invariants are otherwise preserved; if a protected credential, personal data or production identity may actually have been disclosed outside the approved contract, treat it as a real safety failure.
+- Local/plugin hook observation is not external disclosure. The safety boundary for this classification is whether network transport left the staging server, while existing secret-handling rules still apply inside the process.
+
+This distinction is prospective. Historical reports keep their original result even if they used the older ambiguous `HTTP attempts` wording.
+
 ## 7. Production rule
 
 This policy applies to staging only.
@@ -194,9 +230,10 @@ Before any mutating staging task, the internal contract should state:
 - exact allowed mutations;
 - exact forbidden mutations;
 - external effects allowed/forbidden;
+- for HTTP-capable tasks, whether actual network transport is forbidden or explicitly approved and the exact endpoint/disclosure contract;
 - preconditions;
 - before/after evidence;
 - stop condition;
 - rollback expectation proportional to the state class.
 
-If the actual runtime mutation exceeds the classified contract, stop and create a new diagnosis/classification task rather than silently broadening scope.
+If the actual runtime mutation or external transport exceeds the classified contract, stop and create a new diagnosis/classification task rather than silently broadening scope.
