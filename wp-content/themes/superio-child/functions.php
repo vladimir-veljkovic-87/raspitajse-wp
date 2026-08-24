@@ -1470,8 +1470,6 @@ add_action( 'wp_footer', function () {
         'grad'   => get_post_meta( $employer_id, 'custom-text-35868429', true ) ?: '',
     ];
 
-    // PHP debug (wp-content/debug.log)
-    error_log( '[CHECKOUT → EMPLOYER DATA] ' . print_r( $data, true ) );
     ?>
     <script>
         jQuery(function ($) {
@@ -1480,8 +1478,6 @@ add_action( 'wp_footer', function () {
                 $data,
                 JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
             ); ?>;
-
-            console.log('✅ Employer data injected into checkout:', employer);
 
             function fillCheckoutFields() {
 
@@ -1908,38 +1904,6 @@ function raspitajse_fix_rsd_currency_with_js() {
     <?php
 }
 
-
-/**
- * =========================================================
- * DEBUG: Log selected payment method in console
- * =========================================================
- */
-
-add_action( 'wp_footer', 'raspitajse_checkout_payment_method_debug' );
-function raspitajse_checkout_payment_method_debug() {
-
-    if ( ! is_checkout() ) {
-        return;
-    }
-    ?>
-    <script>
-        function logSelectedPaymentMethod() {
-            const checked = document.querySelector('input[name="payment_method"]:checked');
-            if (checked) {
-                console.log('Selected payment method:', checked.value);
-            }
-        }
-
-        document.addEventListener('change', function(e) {
-            if (e.target.name === 'payment_method') {
-                logSelectedPaymentMethod();
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', logSelectedPaymentMethod);
-    </script>
-    <?php
-}
 
 add_action('wp_head', function () {
     if (!is_order_received_page()) return;
