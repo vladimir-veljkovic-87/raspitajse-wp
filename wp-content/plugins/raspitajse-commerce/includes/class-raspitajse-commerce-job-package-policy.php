@@ -40,6 +40,13 @@ final class Raspitajse_Commerce_Job_Package_Policy {
     private static $metadata_bridge_active = false;
 
     /**
+     * Limit wp_-prefixed marker restoration to explicit owned reads.
+     *
+     * @var bool
+     */
+    private static $restore_order_markers_active = false;
+
+    /**
      * Register lifecycle, authorization and HPOS compatibility hooks.
      */
     public static function boot() {
@@ -441,7 +448,7 @@ final class Raspitajse_Commerce_Job_Package_Policy {
 
         if (
             ! $order instanceof WC_Order
-            || ! $order->get_meta( self::ORDER_META_PROCESSED, true )
+            || ! self::get_order_marker( $order, self::ORDER_META_PROCESSED )
             || ! class_exists( 'WP_Job_Board_Pro_Wc_Paid_Listings_Order' )
         ) {
             return;
@@ -471,6 +478,7 @@ final class Raspitajse_Commerce_Job_Package_Policy {
     ) {
         if (
             ! is_array( $meta_data )
+            || ! self::$restore_order_markers_active
             || ! $order instanceof WC_Order
             || ! self::hpos_is_authoritative()
         ) {
@@ -540,7 +548,7 @@ final class Raspitajse_Commerce_Job_Package_Policy {
         $order                        = wc_get_order( absint( $object_id ) );
 
         if ( $order instanceof WC_Order ) {
-            $order->read_meta_data( true );
+            self::get_order_marker( $order, $meta_key );
         }
         $stored                       = $order instanceof WC_Order
             ? $order->get_meta( $meta_key, true, 'edit' )
@@ -587,7 +595,7 @@ final class Raspitajse_Commerce_Job_Package_Policy {
         $order                        = wc_get_order( absint( $object_id ) );
 
         if ( $order instanceof WC_Order ) {
-            $order->read_meta_data( true );
+            self::get_order_marker( $order, $meta_key );
         }
 
         if ( $order instanceof WC_Order ) {
