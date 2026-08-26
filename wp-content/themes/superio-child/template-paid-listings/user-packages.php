@@ -95,7 +95,7 @@ $labels         = array(
                 <?php esc_html_e( 'Nastavi da koristiš kvotu', 'superio' ); ?>
             </button>
         <?php else : ?>
-            <a href="#available-packages" class="btn btn-theme btn-sm disabled">
+            <a href="#packages-accordion" class="btn btn-theme btn-sm disabled">
                 <?php esc_html_e( 'Izaberite novi paket', 'superio' ); ?>
             </a>
         <?php endif; ?>
