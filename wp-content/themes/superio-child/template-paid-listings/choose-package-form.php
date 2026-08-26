@@ -9,15 +9,12 @@ $step      = $form->get_step();
 $form_name = $form->get_form_name();
 $user_id   = get_current_user_id();
 
-$user_packages = class_exists( 'Raspitajse_Commerce_Job_Package_Policy' )
-    ? Raspitajse_Commerce_Job_Package_Policy::get_packages_by_user(
+$user_package_models = class_exists( 'Raspitajse_Commerce_Job_Package_Policy' )
+    ? Raspitajse_Commerce_Job_Package_Policy::get_view_models_by_user(
         $user_id,
         true
     )
-    : WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::get_packages_by_user(
-        $user_id,
-        true
-    );
+    : array();
 $packages = WP_Job_Board_Pro_Wc_Paid_Listings_Submit_Form::get_products();
 ?>
 <div class="box-dashboard-wrapper">
@@ -32,7 +29,7 @@ $packages = WP_Job_Board_Pro_Wc_Paid_Listings_Submit_Form::get_products();
                 <h2 class="title_package_heading hidden"><?php esc_html_e( 'Choose a package', 'superio' ); ?></h2>
             </div>
             <div class="job_listing_types">
-                <?php echo WP_Job_Board_Pro_Wc_Paid_Listings_Template_Loader::get_template_part( 'user-packages', array( 'user_packages' => $user_packages ) ); ?>
+                <?php echo WP_Job_Board_Pro_Wc_Paid_Listings_Template_Loader::get_template_part( 'user-packages', array( 'user_package_models' => $user_package_models ) ); ?>
                 <?php echo WP_Job_Board_Pro_Wc_Paid_Listings_Template_Loader::get_template_part( 'packages', array( 'packages' => $packages ) ); ?>
             </div>
         <?php else : ?>
