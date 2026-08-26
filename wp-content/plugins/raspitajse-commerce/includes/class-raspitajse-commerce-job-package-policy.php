@@ -64,7 +64,7 @@ final class Raspitajse_Commerce_Job_Package_Policy {
         );
 
         add_filter(
-            "woocommerce_data_store_wp_order_read_meta",
+            "woocommerce_data_store_wp_post_read_meta",
             array( __CLASS__, "restore_order_markers_to_crud" ),
             10,
             3
