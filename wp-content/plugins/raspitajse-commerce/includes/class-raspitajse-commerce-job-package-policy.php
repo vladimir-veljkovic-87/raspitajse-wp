@@ -475,6 +475,10 @@ final class Raspitajse_Commerce_Job_Package_Policy {
 
         self::$metadata_bridge_active = true;
         $order                        = wc_get_order( absint( $object_id ) );
+
+        if ( $order instanceof WC_Order ) {
+            $order->read_meta_data( true );
+        }
         $stored                       = $order instanceof WC_Order
             ? $order->get_meta( $meta_key, true, 'edit' )
             : null;
@@ -518,6 +522,10 @@ final class Raspitajse_Commerce_Job_Package_Policy {
 
         self::$metadata_bridge_active = true;
         $order                        = wc_get_order( absint( $object_id ) );
+
+        if ( $order instanceof WC_Order ) {
+            $order->read_meta_data( true );
+        }
 
         if ( $order instanceof WC_Order ) {
             $order->update_meta_data( $meta_key, $meta_value );
