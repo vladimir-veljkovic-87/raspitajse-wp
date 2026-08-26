@@ -37,29 +37,6 @@ add_action('wp_enqueue_scripts', 'custom_enqueue_child_styles');
 //     error_log(print_r($atts, true));
 // });
 
-// Get User Subscription Status [NOT IN USE]
-function get_user_subscription_status() {
-    if (!function_exists('wcs_get_users_subscriptions')) {
-        error_log("WooCommerce Subscriptions plugin is not active.");
-        return false;
-    }
-
-    if (is_user_logged_in()) {
-        $user_id = get_current_user_id();
-        $subscriptions = wcs_get_users_subscriptions($user_id);
-
-        foreach ($subscriptions as $subscription) {
-            if ($subscription->has_status('active')) {
-                $status = $subscription->get_status();
-                error_log("User ID $user_id has active subscription with status: $status");
-                return $status;
-            }
-        }
-    }
-    error_log("User ID " . (is_user_logged_in() ? get_current_user_id() : 'not logged in') . " has no active subscription.");
-    return false;
-}
-
 // Get User's Purchased Products and Add as Body Classes [IN USE]
 function get_user_purchased_products() {
     if (is_user_logged_in()) {
@@ -99,22 +76,6 @@ function add_purchased_products_body_class($classes) {
     return $classes;
 }
 add_filter('body_class', 'add_purchased_products_body_class');
-
-// Check what package user have
-function user_has_package($package_name) {
-    // Get the user's purchased products as body classes
-    $purchased_products_classes = get_user_purchased_products();
-
-    // Sanitize the package name to match the class format
-    $sanitized_package_name = 'purchased-' . sanitize_title($package_name);
-
-    // Check if the sanitized package name exists in the purchased products class string
-    if (strpos($purchased_products_classes, $sanitized_package_name) !== false) {
-        return true;
-    }
-
-    return false;
-}
 
 add_action('admin_menu', 'my_custom_page');
 

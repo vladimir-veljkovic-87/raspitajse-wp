@@ -281,49 +281,6 @@ jQuery(document).ready(function($) {
     // after AJAX (safe polling)
     setInterval(applyTranslations, 800);
     
-    document.querySelectorAll('.package-more-toggle').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            const target = document.getElementById(this.dataset.target);
-            if (!target) return;
-
-            const isOpen = target.style.display === 'block';
-            target.style.display = isOpen ? 'none' : 'block';
-
-            this.innerText = isOpen ? 'Saznaj više' : 'Sakrij detalje';
-        });
-    });
-
-    // Auto-preselect first ACTIVE package on submit-job page
-    function preselectActivePackage() {
-        const $radios = $('.user-job-packaged input[type="radio"][name="wjbpwpl_listing_user_package"]');
-        if (!$radios.length) return;
-
-        // Ako korisnik već ima selektovan AKTIVAN paket, ne diraj
-        const $checked = $radios.filter(':checked');
-        if ($checked.length && !$checked.prop('disabled')) return;
-
-        // 1) Ukloni checked sa svih disabled (property + attribute)
-        $radios.each(function () {
-            if (this.disabled) {
-                this.checked = false;
-                this.removeAttribute('checked');     // ✅ uklanja checked="checked" iz DOM-a
-            }
-        });
-
-        // 2) Selektuj prvi aktivan (enabled)
-        const $firstActive = $radios.filter(function () {
-            return !this.disabled;
-        }).first();
-
-        if ($firstActive.length) {
-            $firstActive.prop('checked', true).attr('checked', 'checked').trigger('change');
-        }
-    }
-    preselectActivePackage();
-    setTimeout(preselectActivePackage, 800);
-
-    
-
     // Woo AJAX add to cart + update checkout (packages cards) na strani Paketi
     $(document).on('click', 'button[name="wjbpwpl_job_package"]', function (e) {
         e.preventDefault();
