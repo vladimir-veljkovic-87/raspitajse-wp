@@ -56,6 +56,13 @@ final class Raspitajse_Commerce_Job_Package_Policy {
             5
         );
 
+        add_filter(
+            "woocommerce_data_store_wp_order_read_meta",
+            array( __CLASS__, "restore_order_markers_to_crud" ),
+            10,
+            3
+        );
+
         add_action(
             'woocommerce_order_status_processing',
             array( __CLASS__, 'begin_order_activation' ),
@@ -443,6 +450,62 @@ final class Raspitajse_Commerce_Job_Package_Policy {
         WP_Job_Board_Pro_Wc_Paid_Listings_Order::order_cancelled(
             $order->get_id()
         );
+    }
+
+    /**
+     * Restore the two legacy wp_-prefixed markers to WC_Order meta reads.
+     *
+     * Woo deliberately filters wp_-prefixed keys from normal WC_Data meta
+     * hydration. Use its HPOS metadata store to retain the existing marker
+     * names while keeping WC_Order as the runtime consumer.
+     *
+     * @param array    $meta_data  Filtered order metadata rows.
+     * @param WC_Order $order      Woo order object.
+     * @param object   $data_store Active Woo order data store.
+     * @return array
+     */
+    public static function restore_order_markers_to_crud(
+        $meta_data,
+        $order,
+        $data_store
+    ) {
+        if (
+            ! is_array( $meta_data )
+            || ! $order instanceof WC_Order
+            || ! self::hpos_is_authoritative()
+        ) {
+            return $meta_data;
+        }
+
+        $known_keys = array();
+
+        foreach ( $meta_data as $meta ) {
+            if ( isset( $meta->meta_key ) ) {
+                $known_keys[] = $meta->meta_key;
+            }
+        }
+
+        $meta_store_class = "\\Automattic\\WooCommerce\\Internal\\DataStores\\Orders\\OrdersTableDataStoreMeta";
+
+        if ( ! class_exists( $meta_store_class ) ) {
+            return $meta_data;
+        }
+
+        $meta_store = new $meta_store_class();
+
+        foreach ( array( self::ORDER_META_PROCESSED, self::ORDER_META_CANCELLED ) as $meta_key ) {
+            if ( in_array( $meta_key, $known_keys, true ) ) {
+                continue;
+            }
+
+            $rows = $meta_store->get_metadata_by_key( $order, $meta_key );
+
+            if ( $rows ) {
+                $meta_data = array_merge( $meta_data, $rows );
+            }
+        }
+
+        return $meta_data;
     }
 
     /**
