@@ -760,4 +760,156 @@ final class Raspitajse_Commerce_Job_Package_Policy {
         return class_exists( $class )
             && $class::custom_orders_table_usage_is_enabled();
     }
+
+    /**
+     * Build one owner-safe, read-only entitlement presentation model.
+     *
+     * Status and usability deliberately delegate to the canonical policy. The
+     * derived remaining count is presentation data and never authorizes a job.
+     *
+     * @param int      $user_id        WordPress user or employer identifier.
+     * @param int      $entitlement_id User-package post ID.
+     * @param int|null $now_timestamp  Optional exact current timestamp.
+     * @return array|null
+     */
+    public static function get_view_model(
+        $user_id,
+        $entitlement_id,
+        $now_timestamp = null
+    ) {
+        $user_id        = self::normalize_user_id( $user_id );
+        $entitlement_id = absint( $entitlement_id );
+        $post           = $entitlement_id ? get_post( $entitlement_id ) : null;
+
+        if ( ! $user_id || ! $post || 'job_package' !== $post->post_type ) {
+            return null;
+        }
+
+        $prefix       = self::paid_listings_prefix();
+        $package_type = (string) get_post_meta(
+            $entitlement_id,
+            $prefix . 'package_type',
+            true
+        );
+        $owner_id = absint(
+            get_post_meta( $entitlement_id, $prefix . 'user_id', true )
+        );
+
+        if ( 'job_package' !== $package_type || $owner_id !== $user_id ) {
+            return null;
+        }
+
+        $status = self::get_status(
+            $user_id,
+            $entitlement_id,
+            $now_timestamp
+        );
+        $used = absint(
+            get_post_meta( $entitlement_id, $prefix . 'package_count', true )
+        );
+        $limit = absint(
+            get_post_meta( $entitlement_id, $prefix . 'job_limit', true )
+        );
+        $unlimited = 0 === $limit;
+
+        return array(
+            'id'                => $entitlement_id,
+            'title'             => (string) $post->post_title,
+            'status'            => $status,
+            'usable'            => self::STATUS_AVAILABLE === $status,
+            'used'              => $used,
+            'limit'             => $limit,
+            'unlimited'         => $unlimited,
+            'remaining'         => $unlimited
+                ? null
+                : max( 0, $limit - $used ),
+            'activated_at'      => absint(
+                get_post_meta(
+                    $entitlement_id,
+                    self::META_ACTIVATED_AT,
+                    true
+                )
+            ),
+            'valid_until'       => self::get_valid_until( $entitlement_id ),
+            'job_duration_days' => absint(
+                get_post_meta(
+                    $entitlement_id,
+                    $prefix . 'job_duration',
+                    true
+                )
+            ),
+            'urgent_jobs'       => self::meta_flag_is_enabled(
+                get_post_meta(
+                    $entitlement_id,
+                    $prefix . 'urgent_jobs',
+                    true
+                )
+            ),
+            'featured_jobs'     => self::meta_flag_is_enabled(
+                get_post_meta(
+                    $entitlement_id,
+                    $prefix . 'feature_jobs',
+                    true
+                )
+            ),
+        );
+    }
+
+    /**
+     * Return ordered presentation models for one employer's entitlements.
+     *
+     * @param int      $user_id         WordPress user or employer identifier.
+     * @param bool     $include_revoked Include cancelled entitlements.
+     * @param int|null $now_timestamp   Optional exact current timestamp.
+     * @return array
+     */
+    public static function get_view_models_by_user(
+        $user_id,
+        $include_revoked = true,
+        $now_timestamp = null
+    ) {
+        $user_id = self::normalize_user_id( $user_id );
+
+        if ( ! $user_id ) {
+            return array();
+        }
+
+        $models = array();
+
+        foreach ( self::get_packages_by_user( $user_id, $include_revoked ) as $package ) {
+            $model = self::get_view_model(
+                $user_id,
+                $package->ID,
+                $now_timestamp
+            );
+
+            if ( null !== $model ) {
+                $models[] = $model;
+            }
+        }
+
+        return $models;
+    }
+
+    /**
+     * Normalize Paid Listings checkbox snapshots for presentation.
+     *
+     * @param mixed $value Stored metadata value.
+     * @return bool
+     */
+    private static function meta_flag_is_enabled( $value ) {
+        if ( true === $value || 1 === $value ) {
+            return true;
+        }
+
+        if ( ! is_string( $value ) ) {
+            return false;
+        }
+
+        return in_array(
+            strtolower( trim( $value ) ),
+            array( '1', 'yes', 'on' ),
+            true
+        );
+    }
 }
