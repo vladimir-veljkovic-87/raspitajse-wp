@@ -830,44 +830,6 @@ add_filter( 'date_i18n', function( $date ) {
 
 /**
  * =========================================================
- * WP Job Board Pro – User Package Expiration Fix
- * =========================================================
- */
-
-add_action('added_user_meta', function ($meta_id, $user_id, $meta_key, $meta_value) {
-
-    // WP Job Board Pro dodeljuje paket preko user meta
-    if (strpos($meta_key, 'wjbpwpl_user_package') === false) {
-        return;
-    }
-
-    // $meta_value je package_id
-    $package_id = absint($meta_value);
-    if (!$package_id) return;
-
-    // Ako već postoji expiration – ne diramo
-    $existing = get_user_meta(
-        $user_id,
-        '_wjbp_package_expiration_' . $package_id,
-        true
-    );
-
-    if ($existing) return;
-
-    // Paket važi 30 dana
-    $expires_at = date('Y-m-d H:i:s', strtotime('+30 days'));
-
-    update_user_meta(
-        $user_id,
-        '_wjbp_package_expiration_' . $package_id,
-        $expires_at
-    );
-
-}, 10, 4);
-
-
-/**
- * =========================================================
  * WooCommerce – Serbian country names
  * =========================================================
  */

@@ -318,8 +318,6 @@ jQuery(document).ready(function($) {
         if ($firstActive.length) {
             $firstActive.prop('checked', true).attr('checked', 'checked').trigger('change');
         }
-    // Sakrij istekle pakete (ceo <li>)
-        $('.user-job-packaged li.package-expired').hide();
     }
     preselectActivePackage();
     setTimeout(preselectActivePackage, 800);

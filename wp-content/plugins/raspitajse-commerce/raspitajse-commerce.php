@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Raspitajse Commerce
- * Description: Raspitajse-owned employer checkout and WooCommerce order data integration.
- * Version: 0.1.0
+ * Description: Raspitajse-owned employer checkout, order data and job-package policy integration.
+ * Version: 0.2.0
  * Author: Raspitajse.com
  */
 
@@ -321,4 +321,7 @@ final class Raspitajse_Commerce {
     }
 }
 
+require_once __DIR__ . '/includes/class-raspitajse-commerce-job-package-policy.php';
+
 Raspitajse_Commerce::boot();
+Raspitajse_Commerce_Job_Package_Policy::boot();

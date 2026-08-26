@@ -81,7 +81,9 @@ class Superio_Elementor_Jobs_User_Packages extends \Elementor\Widget_Base {
 
                     <?php
                     $user_id  = get_current_user_id();
-                    $packages = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::get_packages_by_user( $user_id, false, 'all' );
+                    $packages = class_exists('Raspitajse_Commerce_Job_Package_Policy')
+                        ? Raspitajse_Commerce_Job_Package_Policy::get_packages_by_user($user_id, true)
+                        : WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::get_packages_by_user($user_id, false, 'job_package');
 
                     if ( ! empty($packages) ) :
                     ?>
@@ -202,6 +204,9 @@ class Superio_Elementor_Jobs_User_Packages extends \Elementor\Widget_Base {
                                                             $package_count  = get_post_meta($package->ID, $prefix . 'package_count', true);
                                                             $job_limit      = get_post_meta($package->ID, $prefix . 'job_limit', true);
                                                             $job_duration   = get_post_meta($package->ID, $prefix . 'job_duration', true);
+                                                            $valid_until   = class_exists('Raspitajse_Commerce_Job_Package_Policy')
+                                                                ? Raspitajse_Commerce_Job_Package_Policy::get_valid_until($package->ID)
+                                                                : 0;
                                                             ?>
                                                             <ul class="lists-info">
                                                                 <li><span class="title-inner"><?php esc_html_e('Hitno:', 'superio'); ?></span> <span class="value"><?php echo ($urgent_jobs === 'on') ? esc_html__('Da','superio') : esc_html__('Ne','superio'); ?></span></li>
@@ -210,6 +215,9 @@ class Superio_Elementor_Jobs_User_Packages extends \Elementor\Widget_Base {
                                                                 <li><span class="title-inner"><?php esc_html_e('Limit oglasa:', 'superio'); ?></span> <span class="value"><?php echo (int)$job_limit; ?></span></li>
                                                                 <?php if ( $subscription_type !== 'listing' ) : ?>
                                                                     <li><span class="title-inner"><?php esc_html_e('Trajanje oglasa (dani):', 'superio'); ?></span> <span class="value"><?php echo (int)$job_duration; ?></span></li>
+                                                                <?php endif; ?>
+                                                                <?php if ( $valid_until ) : ?>
+                                                                    <li><span class="title-inner"><?php esc_html_e('Paket važi do:', 'superio'); ?></span> <span class="value"><?php echo esc_html(wp_date(get_option('date_format'), $valid_until, wp_timezone())); ?></span></li>
                                                                 <?php endif; ?>
                                                             </ul>
                                                             <?php
@@ -227,47 +235,23 @@ class Superio_Elementor_Jobs_User_Packages extends \Elementor\Widget_Base {
                                                  * ==============================
                                                  */
 
-                                                // A) Expired check by user_meta (your working logic)
-                                                $exp_key  = '_wjbp_package_expiration_' . $package->ID;
-                                                $expires  = get_user_meta($user_id, $exp_key, true);
-                                                $is_expired = false;
+                                                $status = class_exists('Raspitajse_Commerce_Job_Package_Policy')
+                                                    ? Raspitajse_Commerce_Job_Package_Policy::get_status($user_id, $package->ID)
+                                                    : 'unavailable';
 
-                                                if ( ! empty($expires) ) {
-                                                    $ts = strtotime($expires);
-                                                    if ( $ts && $ts < current_time('timestamp') ) {
-                                                        $is_expired = true;
-                                                    }
-                                                }
+                                                $status_map = array(
+                                                    'available'   => array('active', __('Aktivan', 'superio')),
+                                                    'exhausted'   => array('finish', __('Potrošen', 'superio')),
+                                                    'expired'     => array('expired', __('Istekao', 'superio')),
+                                                    'revoked'     => array('finish', __('Opozvan', 'superio')),
+                                                    'unavailable' => array('finish', __('Nedostupan', 'superio')),
+                                                );
 
-                                                // B) Plugin validity (quota/limit etc.)
-                                                $valid = false;
-                                                switch ($package_type) {
-                                                    case 'cv_package':
-                                                        $valid = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::cv_package_is_valid($user_id, $package->ID);
-                                                        break;
-                                                    case 'contact_package':
-                                                        $valid = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::contact_package_is_valid($user_id, $package->ID);
-                                                        break;
-                                                    case 'candidate_package':
-                                                        $valid = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::candidate_package_is_valid($user_id, $package->ID);
-                                                        break;
-                                                    case 'resume_package':
-                                                        $valid = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::resume_package_is_valid($user_id, $package->ID);
-                                                        break;
-                                                    case 'job_package':
-                                                    default:
-                                                        $valid = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::package_is_valid($user_id, $package->ID);
-                                                        break;
-                                                }
+                                                $display = isset($status_map[$status])
+                                                    ? $status_map[$status]
+                                                    : $status_map['unavailable'];
 
-                                                // C) Priority: Istekao -> Potrošen -> Aktivan
-                                                if ( $is_expired ) {
-                                                    echo '<span class="action expired">' . esc_html__('Istekao', 'superio') . '</span>';
-                                                } elseif ( ! $valid ) {
-                                                    echo '<span class="action finish">' . esc_html__('Potrošen', 'superio') . '</span>';
-                                                } else {
-                                                    echo '<span class="action active">' . esc_html__('Aktivan', 'superio') . '</span>';
-                                                }
+                                                echo '<span class="action ' . esc_attr($display[0]) . '">' . esc_html($display[1]) . '</span>';
                                                 ?>
                                             </td>
 
