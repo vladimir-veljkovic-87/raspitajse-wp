@@ -517,6 +517,32 @@ final class Raspitajse_Commerce_Job_Package_Policy {
     }
 
     /**
+     * Read one existing Paid Listings marker through the HPOS WC_Order path.
+     *
+     * @param WC_Order $order    Woo order.
+     * @param string   $meta_key Existing vendor marker key.
+     * @return mixed
+     */
+    public static function get_order_marker( $order, $meta_key ) {
+        if (
+            ! $order instanceof WC_Order
+            || ! self::is_order_marker( $meta_key )
+        ) {
+            return "";
+        }
+
+        self::$restore_order_markers_active = true;
+
+        try {
+            $order->read_meta_data( true );
+        } finally {
+            self::$restore_order_markers_active = false;
+        }
+
+        return $order->get_meta( $meta_key, true, "edit" );
+    }
+
+    /**
      * Route the vendor's marker reads through WC_Order under HPOS.
      *
      * @param mixed  $value     Existing short-circuit value.
