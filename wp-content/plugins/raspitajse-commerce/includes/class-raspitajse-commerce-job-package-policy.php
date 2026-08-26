@@ -123,7 +123,7 @@ final class Raspitajse_Commerce_Job_Package_Policy {
 
         if (
             ! $order instanceof WC_Order
-            || $order->get_meta( self::ORDER_META_PROCESSED, true )
+            || self::get_order_marker( $order, self::ORDER_META_PROCESSED )
         ) {
             return;
         }
