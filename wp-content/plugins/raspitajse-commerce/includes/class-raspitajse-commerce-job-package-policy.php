@@ -509,6 +509,11 @@ final class Raspitajse_Commerce_Job_Package_Policy {
             $rows = $meta_store->get_metadata_by_key( $order, $meta_key );
 
             if ( $rows ) {
+                foreach ( $rows as $row ) {
+                    if ( ! isset( $row->meta_id ) && isset( $row->id ) ) {
+                        $row->meta_id = $row->id;
+                    }
+                }
                 $meta_data = array_merge( $meta_data, $rows );
             }
         }
