@@ -145,17 +145,6 @@ jQuery(document).ready(function($) {
                 el.textContent = `Pronađeno kandidata ${match[1]}`;
             }
         });
-        // 🔹 Translate status labels like "Active"
-        document.querySelectorAll('.action').forEach(el => {
-            const text = el.textContent.trim();
-            if (text === 'Active') {
-                el.textContent = 'Aktivan';
-            }
-
-            if (text === 'Expired') {
-                el.textContent = 'Istekao';
-            }
-        });
         // 🔹 Translate publish status labels
         document.querySelectorAll('.job-table-actions-inner').forEach(el => {
         const text = el.textContent.trim();
