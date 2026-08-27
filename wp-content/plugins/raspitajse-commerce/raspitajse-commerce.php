@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Commerce
  * Description: Raspitajse-owned employer checkout, order data and job-package policy integration.
- * Version: 0.2.0
+ * Version: 0.3.0
  * Author: Raspitajse.com
  */
 
@@ -22,6 +22,7 @@ final class Raspitajse_Commerce {
     public static function boot() {
         add_action( 'before_woocommerce_init', array( __CLASS__, 'declare_hpos_compatibility' ) );
         add_action( 'wp_footer', array( __CLASS__, 'render_checkout_prefill' ) );
+        add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_package_purchase_transport' ) );
         add_filter( 'woocommerce_checkout_get_value', array( __CLASS__, 'filter_checkout_country' ), 10, 2 );
         add_action( 'woocommerce_checkout_create_order', array( __CLASS__, 'persist_company_order_data' ), 20, 2 );
         add_action(
@@ -41,6 +42,67 @@ final class Raspitajse_Commerce {
                 true
             );
         }
+    }
+
+    /**
+     * Enqueue the owned transport for standalone package purchases.
+     *
+     * Job-submission package selection deliberately remains on Paid Listings'
+     * native server flow. The script is further scoped to the standalone form.
+     */
+    public static function enqueue_package_purchase_transport() {
+        if (
+            is_admin()
+            || wp_doing_ajax()
+            || ! function_exists( 'is_page_template' )
+            || ! is_page_template( 'page-dashboard.php' )
+            || ! class_exists( 'WC_AJAX' )
+            || ! function_exists( 'wc_get_checkout_url' )
+        ) {
+            return;
+        }
+
+        $handle     = 'raspitajse-commerce-package-purchase';
+        $asset_path = __DIR__ . '/assets/js/package-purchase.js';
+
+        if ( ! is_readable( $asset_path ) ) {
+            return;
+        }
+
+        wp_enqueue_script(
+            $handle,
+            plugins_url( 'assets/js/package-purchase.js', __FILE__ ),
+            array( 'jquery' ),
+            (string) filemtime( $asset_path ),
+            true
+        );
+
+        $settings = array(
+            'addToCartUrl'  => esc_url_raw( WC_AJAX::get_endpoint( 'add_to_cart' ) ),
+            'checkoutUrl'   => esc_url_raw( wc_get_checkout_url() ),
+            'pendingMessage' => __( 'Preusmeravanje…', 'raspitajse-commerce' ),
+            'failureMessage' => __(
+                'Paket trenutno nije moguće dodati. Pokušajte ponovo.',
+                'raspitajse-commerce'
+            ),
+        );
+        $settings_json = wp_json_encode(
+            $settings,
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+        );
+
+        if ( false === $settings_json ) {
+            return;
+        }
+
+        wp_add_inline_script(
+            $handle,
+            'window.RaspitajseCommerce = window.RaspitajseCommerce || {};'
+                . 'window.RaspitajseCommerce.packagePurchase = Object.freeze('
+                . $settings_json
+                . ');',
+            'before'
+        );
     }
 
     /**

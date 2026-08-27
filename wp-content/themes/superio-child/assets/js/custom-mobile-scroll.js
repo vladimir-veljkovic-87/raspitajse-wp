@@ -269,68 +269,6 @@ jQuery(document).ready(function($) {
     document.addEventListener('DOMContentLoaded', applyTranslations);
     // after AJAX (safe polling)
     setInterval(applyTranslations, 800);
-    
-    // Woo AJAX add to cart + update checkout (packages cards) na strani Paketi
-    $(document).on('click', 'button[name="wjbpwpl_job_package"]', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const $btn = $(this);
-        const productId = $btn.val() || $btn.attr('value');
-
-        if (!productId) return;
-
-        // UI feedback
-        $btn.prop('disabled', true).addClass('loading');
-
-        // Woo endpoints
-        const addToCartUrl = window.location.origin + '/?wc-ajax=add_to_cart';
-        const updateReviewUrl = window.location.origin + '/?wc-ajax=update_order_review';
-
-        // 1) ADD TO CART
-        $.ajax({
-            url: addToCartUrl,
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                product_id: productId,
-                quantity: 1
-            }
-        })
-        .done(function (res) {
-
-            // Woo često vrati fragments; ako postoji, možemo da ih “apdejtujemo”
-            if (res && res.fragments) {
-                $.each(res.fragments, function (key, value) {
-                    $(key).replaceWith(value);
-                });
-            }
-
-            // 2) UPDATE ORDER REVIEW (checkout)
-            // Woo očekuje serialized checkout form, ali ako nisi na checkout-u,
-            // dovoljno je pingovati endpoint da refreshuje session/fragments.
-            return $.ajax({
-                url: updateReviewUrl,
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    security: (typeof wc_checkout_params !== 'undefined') ? wc_checkout_params.update_order_review_nonce : ''
-                }
-            });
-        })
-        .done(function () {
-            // ✅ Redirect na checkout (najpraktičnije posle add_to_cart)
-            window.location.href = window.location.origin + '/checkout/';
-        })
-        .fail(function (xhr) {
-            console.error('Woo AJAX error:', xhr);
-            // fallback: normal add-to-cart redirect
-            window.location.href = window.location.origin + '/?add-to-cart=' + encodeURIComponent(productId);
-        })
-        .always(function () {
-            $btn.prop('disabled', false).removeClass('loading');
-        });
-    });
 
     // Sakrij parent termine u select2 dropdownu (ako nisu rezultati pretrage i nisu prazni)
     var targetSelectIds = ['_candidate_category', '_employer_category', '_job_category'];
