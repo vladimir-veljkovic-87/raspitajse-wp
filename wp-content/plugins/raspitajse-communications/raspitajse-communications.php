@@ -2,12 +2,97 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.3.0
+ * Version: 0.4.0
  * Author: Raspitajse.com
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
+}
+
+/**
+ * Semantic sender identities owned by Raspitajse communications.
+ *
+ * SMTP credentials configure transport only and are never part of this
+ * contract. Production addresses must come from existing valid configuration.
+ */
+final class Raspitajse_Communications_Sender_Policy {
+
+    const CHANNEL_SYSTEM           = 'system';
+    const CHANNEL_CANDIDATE_ALERTS = 'candidate_alerts';
+    const CHANNEL_EMPLOYER_ALERTS  = 'employer_alerts';
+    const CHANNEL_JOB_EXPIRY       = 'job_expiry';
+
+    const DEFAULT_FROM_NAME = 'Raspitajse.com - Vaš pouzdan AI model';
+
+    /**
+     * Resolve one approved channel to a sender contract.
+     *
+     * @return array|WP_Error
+     */
+    public static function resolve( $channel ) {
+        $channels = array(
+            self::CHANNEL_SYSTEM,
+            self::CHANNEL_CANDIDATE_ALERTS,
+            self::CHANNEL_EMPLOYER_ALERTS,
+            self::CHANNEL_JOB_EXPIRY,
+        );
+
+        if ( ! is_string( $channel ) || ! in_array( $channel, $channels, true ) ) {
+            return new WP_Error(
+                'raspitajse_sender_policy_unknown_channel',
+                'Unknown Raspitajse sender-policy channel.'
+            );
+        }
+
+        $environment = function_exists( 'wp_get_environment_type' )
+            ? wp_get_environment_type()
+            : '';
+
+        if ( 'staging' === $environment ) {
+            $senders = array(
+                self::CHANNEL_SYSTEM           => 'noreply-system@stage.raspitajse.com',
+                self::CHANNEL_CANDIDATE_ALERTS => 'noreply-candidates@stage.raspitajse.com',
+                self::CHANNEL_EMPLOYER_ALERTS  => 'noreply-employers@stage.raspitajse.com',
+                self::CHANNEL_JOB_EXPIRY       => 'noreply-system@stage.raspitajse.com',
+            );
+
+            return array(
+                'from_email' => $senders[ $channel ],
+                'from_name'  => self::default_from_name(),
+                'reply_to'   => 'no-reply@stage.raspitajse.com',
+            );
+        }
+
+        if ( 'production' !== $environment ) {
+            return new WP_Error(
+                'raspitajse_sender_policy_unsupported_environment',
+                'Sender policy is not configured for this environment.'
+            );
+        }
+
+        if ( ! defined( 'SMTP_FROM' ) || ! is_email( SMTP_FROM ) ) {
+            return new WP_Error(
+                'raspitajse_sender_policy_missing_production_sender',
+                'A valid configured production sender is required.'
+            );
+        }
+
+        $from_name = self::default_from_name();
+        if ( defined( 'SMTP_FROM_NAME' ) && '' !== trim( (string) SMTP_FROM_NAME ) ) {
+            $from_name = sanitize_text_field( (string) SMTP_FROM_NAME );
+        }
+
+        return array(
+            'from_email' => (string) SMTP_FROM,
+            'from_name'  => $from_name,
+            'reply_to'   => (string) SMTP_FROM,
+        );
+    }
+
+    public static function default_from_name() {
+        return self::DEFAULT_FROM_NAME;
+    }
 }
 
 final class Raspitajse_Communications_Transport {
@@ -64,6 +149,31 @@ final class Raspitajse_Communications_Transport {
         }
 
         return '1' === (string) get_option( self::ENABLE_OPTION, '0' );
+    }
+
+    /**
+     * Send through a semantic policy channel.
+     *
+     * Policy headers are authoritative. No per-message sender override is
+     * approved yet; transport fallbacks still cover callers not migrated here.
+     *
+     * @return bool|WP_Error
+     */
+    public static function send( $channel, $to, $subject, $message, $headers = array(), $attachments = array() ) {
+        $sender = Raspitajse_Communications_Sender_Policy::resolve( $channel );
+        if ( is_wp_error( $sender ) ) {
+            return $sender;
+        }
+
+        $headers = self::apply_sender_headers( $headers, $sender );
+
+        return wp_mail(
+            $to,
+            $subject,
+            $message,
+            $headers,
+            $attachments
+        );
     }
 
     /**
@@ -144,7 +254,7 @@ final class Raspitajse_Communications_Transport {
             && ( empty( $phpmailer->From ) || false === strpos( $phpmailer->From, '@stage.raspitajse.com' ) )
         ) {
             $phpmailer->From     = 'noreply@stage.raspitajse.com';
-            $phpmailer->FromName = self::default_from_name();
+            $phpmailer->FromName = Raspitajse_Communications_Sender_Policy::default_from_name();
         }
 
         self::finish_mail_context();
@@ -159,7 +269,10 @@ final class Raspitajse_Communications_Transport {
         }
 
         if ( self::is_staging() ) {
-            return 'noreply-system@stage.raspitajse.com';
+            $sender = Raspitajse_Communications_Sender_Policy::resolve(
+                Raspitajse_Communications_Sender_Policy::CHANNEL_SYSTEM
+            );
+            return is_wp_error( $sender ) ? $email : $sender['from_email'];
         }
 
         // Do not invent production sender policy during the staging refactor.
@@ -182,7 +295,37 @@ final class Raspitajse_Communications_Transport {
             return (string) SMTP_FROM_NAME;
         }
 
-        return self::default_from_name();
+        return Raspitajse_Communications_Sender_Policy::default_from_name();
+    }
+
+    /**
+     * Remove unapproved sender overrides and append the resolved contract.
+     */
+    private static function apply_sender_headers( $headers, $sender ) {
+        if ( is_string( $headers ) ) {
+            $headers = preg_split( '/\r\n|\r|\n/', $headers );
+        }
+
+        if ( ! is_array( $headers ) ) {
+            $headers = array();
+        }
+
+        $resolved = array();
+        foreach ( $headers as $header ) {
+            if (
+                is_string( $header )
+                && preg_match( '/^\s*(from|reply-to)\s*:/i', $header )
+            ) {
+                continue;
+            }
+
+            $resolved[] = $header;
+        }
+
+        $resolved[] = 'From: ' . $sender['from_name'] . ' <' . $sender['from_email'] . '>';
+        $resolved[] = 'Reply-To: ' . $sender['reply_to'];
+
+        return $resolved;
     }
 
     /**
@@ -229,10 +372,6 @@ final class Raspitajse_Communications_Transport {
     private static function is_staging() {
         return function_exists( 'wp_get_environment_type' )
             && 'staging' === wp_get_environment_type();
-    }
-
-    private static function default_from_name() {
-        return 'Raspitajse.com - Vaš pouzdan AI model';
     }
 }
 
