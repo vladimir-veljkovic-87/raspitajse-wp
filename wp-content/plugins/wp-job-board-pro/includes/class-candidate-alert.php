@@ -158,7 +158,6 @@ class WP_Job_Board_Pro_Candidate_Alert {
 
 							// geting posts from $jobs object
 							$candidate_ids = $candidates->posts;
-	                        // error_log("Candidate IDS " . print_r($candidate_ids, true));
 
 							$candidate_ids = $candidates->posts;
 							$candidate_title = $candidate_url = $candidate_publish_date = $candidate_expiry_date = $location = $salary = $employer_name = $candidate_apply_email = '';
@@ -220,7 +219,6 @@ class WP_Job_Board_Pro_Candidate_Alert {
 									}
 									
 								}
-								// error_log("Candidate Listings: " . print_r($candidate_listings, true));
 								$candidate_listings = array_slice($candidate_listings, 0, 5);
 
 								$best_match_candidate = []; // Initialize $best_match_candidate
@@ -268,7 +266,6 @@ class WP_Job_Board_Pro_Candidate_Alert {
 										$best_match_candidate_key = $key;
 
 									} else {
-										// error_log("Candidate did not match: Salary: " . $candidate_salary . ", Experience: " . $normalized_experience);
 									}
 								}
 
@@ -282,7 +279,6 @@ class WP_Job_Board_Pro_Candidate_Alert {
 
 								if (!empty($candidate_listings) && is_array($candidate_listings)) {
 									foreach ($candidate_listings as $candidate) {
-										error_log('Processing Candidate: ' . print_r($candidate, true));
 										// Create a copy of the candidate entry template to replace placeholders
 										$candidate_entry = $candidate_entry_template;
 										
@@ -319,10 +315,6 @@ class WP_Job_Board_Pro_Candidate_Alert {
 									'best_alert_title' => $best_match_candidate['candidates_alert_url'],
 									'candidates_found' => $count_candidates,
 								));
-								
-								// Log candidate_data
-								error_log('Candidate Data: ' . print_r($candidate_content, true));
-								error_log("Content Args: " . print_r($content_args, true));
 								
 								$only_one_pass = true; // Set flag to true to avoid repeating
 									

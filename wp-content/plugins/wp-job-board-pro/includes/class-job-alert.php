@@ -142,7 +142,6 @@ class WP_Job_Board_Pro_Job_Alert {
 							$jobs_alert_url = WP_Job_Board_Pro_Mixes::get_jobs_page_url();
 							if ( !empty($params) ) {
 								foreach ($params as $key => $value) {
-									// error_log("Key: $key; Value: " . print_r($value, true));
 									if ( is_array($value) ) {
 										$jobs_alert_url = remove_query_arg( $key.'[]', $jobs_alert_url );
 										foreach ($value as $val) {
@@ -205,8 +204,6 @@ class WP_Job_Board_Pro_Job_Alert {
 								// Assuming $job_listings is your full array of job listings
                                 $job_listings = array_slice($job_listings, 0, 5);
 								
-								// Log the $job_content to check if it's populated correctly
-								// error_log("Job Listings: " . print_r($job_listings, true));
 
 								$newest_job = []; // initialize $newest_job
 								$newest_date = null; // Initialize the date for comparison
