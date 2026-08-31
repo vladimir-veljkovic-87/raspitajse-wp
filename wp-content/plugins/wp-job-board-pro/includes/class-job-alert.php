@@ -127,9 +127,7 @@ class WP_Job_Board_Pro_Job_Alert {
 							$count_jobs = $jobs->found_posts;
 							$job_alert_title = get_the_title($post_id);
 
-							$headers  = "From: Raspitajse.com - Vaš pouzdan AI model <noreply-candidates@stage.raspitajse.com>\r\n";
-							$headers .= "Reply-To: no-reply@stage.raspitajse.com\r\n";
-							$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+							$headers = "Content-Type: text/html; charset=UTF-8\r\n";
 
 							$author_id = get_post_field('post_author', $post_id);
 							$email_to = get_the_author_meta('user_email', $author_id);

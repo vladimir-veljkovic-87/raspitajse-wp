@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.4.0
+ * Version: 0.5.0
  * Author: Raspitajse.com
  */
 
@@ -115,6 +115,13 @@ final class Raspitajse_Communications_Transport {
     private static $mail_context_stack = array();
 
     /**
+     * Resolved sender contracts for narrowly scoped legacy business producers.
+     *
+     * @var array
+     */
+    private static $sender_contract_stack = array();
+
+    /**
      * Register transport hooks only after an explicit migration flag is enabled.
      */
     public static function boot() {
@@ -177,6 +184,44 @@ final class Raspitajse_Communications_Transport {
     }
 
     /**
+     * Run one existing business producer inside an explicit sender channel.
+     *
+     * The channel is request-local and stack-based so nested calls cannot leak
+     * sender identity into unrelated mail. A missing transport, policy, or
+     * callback fails closed before the business producer is invoked.
+     *
+     * @return mixed|WP_Error
+     */
+    public static function with_sender_channel( $channel, $callback ) {
+        if ( ! self::is_enabled() ) {
+            return new WP_Error(
+                'raspitajse_sender_transport_disabled',
+                'Raspitajse communications transport is disabled.'
+            );
+        }
+
+        if ( ! is_callable( $callback ) ) {
+            return new WP_Error(
+                'raspitajse_sender_callback_unavailable',
+                'Raspitajse sender business callback is unavailable.'
+            );
+        }
+
+        $sender = Raspitajse_Communications_Sender_Policy::resolve( $channel );
+        if ( is_wp_error( $sender ) ) {
+            return $sender;
+        }
+
+        self::$sender_contract_stack[] = $sender;
+
+        try {
+            return call_user_func( $callback );
+        } finally {
+            array_pop( self::$sender_contract_stack );
+        }
+    }
+
+    /**
      * Capture the original mail payload without mutating it.
      *
      * The legacy child-theme callback was registered on wp_mail without
@@ -185,6 +230,14 @@ final class Raspitajse_Communications_Transport {
      * it before later filters run.
      */
     public static function capture_mail_args( $args ) {
+        if ( is_array( $args ) && ! empty( self::$sender_contract_stack ) ) {
+            $sender          = end( self::$sender_contract_stack );
+            $args['headers'] = self::apply_sender_headers(
+                isset( $args['headers'] ) ? $args['headers'] : array(),
+                $sender
+            );
+        }
+
         $context = is_array( $args ) ? $args : array();
 
         self::$mail_context_stack[] = $context;
@@ -372,6 +425,50 @@ final class Raspitajse_Communications_Transport {
     private static function is_staging() {
         return function_exists( 'wp_get_environment_type' )
             && 'staging' === wp_get_environment_type();
+    }
+}
+
+/**
+ * Owned sender-channel bridge for the legacy candidate-to-job alert producer.
+ */
+final class Raspitajse_Communications_Candidate_Job_Alert_Bridge {
+
+    const HOOK     = 'wp_job_board_pro_email_daily_notices';
+    const PRIORITY = 10;
+
+    public static function boot() {
+        add_action( 'plugins_loaded', array( __CLASS__, 'replace_vendor_callback' ), 100 );
+    }
+
+    /**
+     * Keep the vendor matching/template producer, but own its sender context.
+     */
+    public static function replace_vendor_callback() {
+        $vendor_callback = array(
+            'WP_Job_Board_Pro_Job_Alert',
+            'send_job_alert_notice',
+        );
+
+        if ( self::PRIORITY !== has_action( self::HOOK, $vendor_callback ) ) {
+            return;
+        }
+
+        remove_action( self::HOOK, $vendor_callback, self::PRIORITY );
+        add_action(
+            self::HOOK,
+            array( __CLASS__, 'send_job_alert_notice' ),
+            self::PRIORITY
+        );
+    }
+
+    /**
+     * Invoke only the existing business producer under candidate_alerts policy.
+     */
+    public static function send_job_alert_notice() {
+        return Raspitajse_Communications_Transport::with_sender_channel(
+            Raspitajse_Communications_Sender_Policy::CHANNEL_CANDIDATE_ALERTS,
+            array( 'WP_Job_Board_Pro_Job_Alert', 'send_job_alert_notice' )
+        );
     }
 }
 
@@ -888,4 +985,5 @@ final class Raspitajse_Communications_Alert_Security {
 }
 
 Raspitajse_Communications_Transport::boot();
+Raspitajse_Communications_Candidate_Job_Alert_Bridge::boot();
 Raspitajse_Communications_Alert_Security::boot();
