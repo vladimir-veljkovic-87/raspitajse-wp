@@ -350,8 +350,19 @@ final class Raspitajse_Communications_Alert_Security {
         }
 
         $allowed_filters = self::get_allowed_filter_keys( $post_type );
+        $allowed_keys    = array_fill_keys(
+            array_merge(
+                array( 'action', 'nonce', '_wp_http_referer', 'name', 'email_frequency' ),
+                $allowed_filters
+            ),
+            true
+        );
 
         // Read only allowlisted keys; benign URL extras are never persisted.
+        if ( ! self::has_no_unknown_structures( $request, $allowed_keys ) ) {
+            return self::failure( __( 'Zahtjev sadrži nedozvoljenu strukturu.', 'raspitajse-communications' ) );
+        }
+
         if (
             ! self::has_expected_action( $request, $config['add_request_action'] )
             || ! self::has_scalar_referrer( $request )
@@ -527,6 +538,20 @@ final class Raspitajse_Communications_Alert_Security {
     private static function has_only_allowed_keys( $request, $allowed_keys ) {
         foreach ( array_keys( $request ) as $key ) {
             if ( ! is_string( $key ) || ! isset( $allowed_keys[ $key ] ) ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static function has_no_unknown_structures( $request, $allowed_keys ) {
+        foreach ( $request as $key => $value ) {
+            if ( ! is_string( $key ) ) {
+                return false;
+            }
+
+            if ( ! isset( $allowed_keys[ $key ] ) && ! is_scalar( $value ) ) {
                 return false;
             }
         }
