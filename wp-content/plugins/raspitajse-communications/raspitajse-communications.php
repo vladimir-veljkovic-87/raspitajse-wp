@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+require_once __DIR__ . '/includes/class-candidate-job-alert-delivery.php';
+
 /**
  * Semantic sender identities owned by Raspitajse communications.
  *
