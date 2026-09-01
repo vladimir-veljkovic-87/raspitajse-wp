@@ -8,7 +8,11 @@ This branch is the canonical specification/control plane for Codex work on Raspi
 - `codex-tasks` — task specifications and workflow rules only.
 - `codex-reports` — Codex execution reports only.
 
-`codex-tasks` MUST NOT be merged into `staging` and MUST NOT contain application/runtime changes.
+`codex-tasks` MUST NOT be merged into `staging` and MUST NOT be used as an application-source baseline.
+
+Because `codex-tasks` was created from repository history, it may contain inherited application files from the branch point. Those inherited files are **non-authoritative and may be stale**. Only `tasks/**` on `origin/codex-tasks` is authoritative for task specifications and workflow rules. All application/source reads, diffs, feature branches, tests, and integration work MUST use the declared `origin/staging` baseline, not application files inherited on `codex-tasks`.
+
+Codex SHOULD read task files directly from the remote ref (for example `git show origin/codex-tasks:tasks/current.md` and `git show origin/codex-tasks:tasks/README.md`) rather than checking out `codex-tasks` into the application working tree. If a temporary checkout/worktree is used, it must be separate, read-only, and must never become the source of application changes.
 
 ## Ownership and write rules
 
@@ -28,11 +32,12 @@ When `tasks/current.md` has `Status: READY`, Codex must:
 
 1. Fetch `origin/codex-tasks` and `origin/staging`.
 2. Read `tasks/current.md` **from `origin/codex-tasks` in full** before planning or modifying source.
-3. Verify that the current `origin/staging` SHA matches the task's declared `Baseline` exactly unless the task explicitly defines a safe mismatch procedure.
-4. Execute exactly the stated task and its safety/acceptance contract.
-5. Never broaden scope merely because adjacent defects are discovered. Record them and STOP if the task says so.
-6. Publish the final execution report through the existing `codex-reports` workflow.
-7. STOP after the task. Do not infer or begin the next task.
+3. Read `tasks/README.md` from `origin/codex-tasks`; its workflow and safety rules are mandatory.
+4. Verify that the current `origin/staging` SHA matches the task's declared `Baseline` exactly unless the task explicitly defines a safe mismatch procedure.
+5. Execute exactly the stated task and its safety/acceptance contract.
+6. Never broaden scope merely because adjacent defects are discovered. Record them and STOP if the task says so.
+7. Publish the final execution report through the existing `codex-reports` workflow.
+8. STOP after the task. Do not infer or begin the next task.
 
 If `Status` is anything other than `READY`, Codex MUST NOT begin implementation from this branch.
 
