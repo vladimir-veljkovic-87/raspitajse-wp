@@ -1152,7 +1152,6 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Delivery_Service {
         if (
             ! in_array( 'wp_job_board_pro_candidate', (array) $user->roles, true )
             || ! class_exists( 'WP_Job_Board_Pro_User' )
-            || ! WP_Job_Board_Pro_User::is_candidate( $owner_id )
             || 'approved' !== WP_Job_Board_Pro_User::get_user_status( $owner_id )
         ) {
             return self::error( 'owner_ineligible' );
