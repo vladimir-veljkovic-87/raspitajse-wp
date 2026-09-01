@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/includes/class-candidate-job-alert-delivery.php';
 require_once __DIR__ . '/includes/class-candidate-job-alert-integration.php';
+require_once __DIR__ . '/includes/class-candidate-job-alert-frequency-ui.php';
 
 /**
  * Semantic sender identities owned by Raspitajse communications.
@@ -1001,6 +1002,7 @@ Raspitajse_Communications_Transport::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Bridge::boot();
 Raspitajse_Communications_Alert_Security::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Evaluator::boot();
+Raspitajse_Communications_Candidate_Job_Alert_Frequency_UI::boot();
 
 register_activation_hook(
     __FILE__,

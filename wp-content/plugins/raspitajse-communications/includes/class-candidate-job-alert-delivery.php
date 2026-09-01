@@ -28,6 +28,20 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Schedule_Policy {
     const BIWEEKLY_ANCHOR = '1970-01-05 00:00:00';
 
     /**
+     * Canonical frequencies accepted for newly created candidate-to-job alerts.
+     *
+     * @return string[]
+     */
+    public static function current_frequencies() {
+        return array(
+            self::FREQUENCY_DAILY,
+            self::FREQUENCY_WEEKLY,
+            self::FREQUENCY_FORTNIGHTLY,
+            self::FREQUENCY_MONTHLY,
+        );
+    }
+
+    /**
      * Validate a frequency without inheriting legacy elapsed-day semantics.
      *
      * @return string|WP_Error
@@ -38,12 +52,7 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Schedule_Policy {
         }
 
         $frequency = sanitize_key( (string) $frequency );
-        $current   = array(
-            self::FREQUENCY_DAILY,
-            self::FREQUENCY_WEEKLY,
-            self::FREQUENCY_FORTNIGHTLY,
-            self::FREQUENCY_MONTHLY,
-        );
+        $current   = self::current_frequencies();
         $legacy    = array(
             self::FREQUENCY_BIANNUALLY,
             self::FREQUENCY_ANNUALLY,
