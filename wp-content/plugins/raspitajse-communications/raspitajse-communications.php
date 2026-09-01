@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.5.0
+ * Version: 0.6.0
  * Author: Raspitajse.com
  */
 
@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/includes/class-candidate-job-alert-delivery.php';
+require_once __DIR__ . '/includes/class-candidate-job-alert-integration.php';
 
 /**
  * Semantic sender identities owned by Raspitajse communications.
@@ -621,10 +622,20 @@ final class Raspitajse_Communications_Alert_Security {
             return self::failure( __( 'Učestalost e-pošte je obavezna.', 'wp-job-board-pro' ) );
         }
 
-        $frequency   = sanitize_key( wp_unslash( (string) $request['email_frequency'] ) );
-        $frequencies = call_user_func( array( $config['vendor_class'], 'get_email_frequency' ) );
-        if ( ! is_array( $frequencies ) || ! array_key_exists( $frequency, $frequencies ) ) {
-            return self::failure( __( 'Učestalost e-pošte nije dozvoljena.', 'raspitajse-communications' ) );
+        $frequency = sanitize_key( wp_unslash( (string) $request['email_frequency'] ) );
+        if ( 'job_alert' === $post_type ) {
+            $frequency = Raspitajse_Communications_Candidate_Job_Alert_Schedule_Policy::normalize_frequency(
+                $frequency,
+                false
+            );
+            if ( is_wp_error( $frequency ) ) {
+                return self::failure( __( 'Učestalost e-pošte nije dozvoljena.', 'raspitajse-communications' ) );
+            }
+        } else {
+            $frequencies = call_user_func( array( $config['vendor_class'], 'get_email_frequency' ) );
+            if ( ! is_array( $frequencies ) || ! array_key_exists( $frequency, $frequencies ) ) {
+                return self::failure( __( 'Učestalost e-pošte nije dozvoljena.', 'raspitajse-communications' ) );
+            }
         }
 
         $alert_query = array();
@@ -989,3 +1000,13 @@ final class Raspitajse_Communications_Alert_Security {
 Raspitajse_Communications_Transport::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Bridge::boot();
 Raspitajse_Communications_Alert_Security::boot();
+Raspitajse_Communications_Candidate_Job_Alert_Evaluator::boot();
+
+register_activation_hook(
+    __FILE__,
+    array( 'Raspitajse_Communications_Candidate_Job_Alert_Evaluator', 'activate' )
+);
+register_deactivation_hook(
+    __FILE__,
+    array( 'Raspitajse_Communications_Candidate_Job_Alert_Evaluator', 'deactivate' )
+);

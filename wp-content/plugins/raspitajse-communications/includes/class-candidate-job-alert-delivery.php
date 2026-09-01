@@ -2,8 +2,7 @@
 /**
  * Candidate-to-job alert delivery foundation.
  *
- * This file intentionally registers no cron event and replaces no callback.
- * The service is dormant until a bounded owned caller invokes it.
+ * This file owns state/claim policy; the integration file owns active hooks.
  *
  * @package raspitajse-communications
  */
@@ -785,7 +784,7 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Delivery_Store {
 }
 
 /**
- * Dormant, callable delivery-state service.
+ * Callable delivery-state service used by the bounded owned evaluator.
  */
 final class Raspitajse_Communications_Candidate_Job_Alert_Delivery_Service {
 
@@ -802,8 +801,6 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Delivery_Service {
 
     /**
      * Process one exact alert through injected query and mail seams.
-     *
-     * No hook or scheduler calls this method in 1.88.
      *
      * @return array|WP_Error
      */
@@ -1492,7 +1489,13 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Delivery_Service {
         );
         $state['failure_category'] = $category;
 
-        $saved = Raspitajse_Communications_Candidate_Job_Alert_Delivery_Store::save_state( $alert_id, $state );
+        // Keep the queryable due scalar aligned with the exact retry instant so
+        // the hourly evaluator does not repeatedly scan a window before retry.
+        $saved = self::save_state_and_due(
+            $alert_id,
+            $state,
+            $state['next_retry_gmt']
+        );
         if ( is_wp_error( $saved ) ) {
             return $saved;
         }
