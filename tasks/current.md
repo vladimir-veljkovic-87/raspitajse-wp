@@ -1,8 +1,8 @@
-# Zadatak 1.91 — Audit candidate-job legacy bridge retirement
+# Zadatak 1.92 — Retire candidate-job legacy bridge scaffolding
 
 Status: READY
 Baseline: 57a6b8696a96e7157272f4e69e1e55616cf078d2
-Previous task: 1.90
+Previous task: 1.91
 Target environment: staging
 Production: FORBIDDEN
 
@@ -10,458 +10,444 @@ Production: FORBIDDEN
 
 Fetch `origin/codex-tasks` and `origin/staging`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or touching application source. `tasks/README.md` is mandatory policy.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or modifying source. `tasks/README.md` is mandatory policy.
 
 `codex-tasks` is READ-ONLY. Do not modify, commit to, push to, merge into, rebase, force-update, or otherwise write to `codex-tasks`.
 
-Do not use application files inherited on `codex-tasks` as source truth. All application reads, searches, diffs and runtime inspection MUST use the declared `origin/staging` baseline.
+Do not use application files inherited on `codex-tasks` as source truth. All application reads/diffs/work MUST use the declared `origin/staging` baseline.
 
 Verify exact baseline first. If `origin/staging` is not exactly `57a6b8696a96e7157272f4e69e1e55616cf078d2`, STOP and report the mismatch.
 
-Execute exactly this task. This task is **READ-ONLY for application source and staging business state**. Publish the final execution report through the existing `codex-reports` workflow and STOP. Do not infer, implement, or begin 1.92.
+Execute exactly this task. Publish the final execution report through the existing `codex-reports` workflow and STOP. Do not infer or begin 1.93.
 
 ---
 
 ## 1. Context
 
-Zadatak 1.90 is PASS.
+Zadatak 1.91 is PASS and proved the legacy candidate-job sender bridge is now migration scaffolding only.
 
-Candidate→job alerts are now fully active through the Raspitajse-owned path:
+Approved retirement conclusions from 1.91:
+
+- `Raspitajse_Communications_Candidate_Job_Alert_Bridge::boot()` — DROP;
+- `replace_vendor_callback()` — DROP;
+- `send_job_alert_notice()` — DROP;
+- main `Bridge::boot()` invocation — DROP;
+- bridge `HOOK` and `PRIORITY` ownership — REDESIGN into evaluator-local compatibility constants;
+- evaluator dependency on bridge constants — REDESIGN to self-contained evaluator ownership;
+- temporary priority-100 vendor→bridge swap — DROP;
+- invariant that the direct WPJBP candidate→job daily sender is absent — KEEP, owned by evaluator cutover.
+
+Active candidate→job delivery already runs through:
 
 `raspitajse_candidate_job_alert_evaluator`
 → owned evaluator
-→ 1.88 delivery service/state/claim foundation
-→ owned WPJBP-compatible query adapter
+→ delivery service/state/claim
+→ owned query adapter
 → owned mailer
 → `candidate_alerts` SenderPolicy
 → owned Transport.
 
-Current stable runtime contract after 1.90:
+The bridge is absent from the active delivery path.
 
-- owned hourly evaluator event: exactly 1;
-- owned continuation event: normally 0;
-- WPJBP daily event: exactly 1 because five unrelated legacy callbacks still use it;
-- `wp_job_board_pro_email_daily_notices` callback count: exactly 5;
-- owned candidate-job bridge callback on daily hook: 0;
-- direct vendor candidate-job sender callback on daily hook: 0;
-- `_job_alert_send_email_time`: read-only legacy compatibility evidence only;
-- new candidate-job alert frequencies: daily / weekly / fortnightly / monthly;
-- legacy biannually / annually remain compatibility-only;
-- published global `job_alert` baseline: 0;
-- published legacy `candidate_alert`: 4;
-- Action Scheduler ID32733: `pending/0`.
+Current runtime baseline:
 
-One compatibility class from the earlier migration remains in source:
-
-`Raspitajse_Communications_Candidate_Job_Alert_Bridge`
-
-Current source evidence at the baseline shows:
-
-- the bridge still defines `HOOK` and `PRIORITY` constants;
-- `Bridge::boot()` registers `replace_vendor_callback` on `plugins_loaded` priority 100;
-- `replace_vendor_callback()` can temporarily replace the vendor daily sender with the bridge sender;
-- the owned evaluator registers `cutover_daily_hook()` on `plugins_loaded` priority 101;
-- evaluator cutover then removes both the direct vendor sender and the bridge sender;
-- evaluator currently references the bridge constants when removing those callbacks;
-- main plugin bootstrap still calls `Bridge::boot()`.
-
-The active delivery no longer uses `Bridge::send_job_alert_notice()`.
-
-This task must determine whether the bridge class can now be retired safely and define the smallest exact follow-up implementation slice.
+- owned hourly evaluator event exactly 1;
+- continuation event normally 0;
+- WPJBP daily event exactly 1;
+- WPJBP daily callback graph exactly 5 unrelated callbacks;
+- direct vendor candidate-job sender final registration 0;
+- bridge candidate-job sender final registration 0;
+- global `job_alert` count 0;
+- legacy published `candidate_alert` count 4;
+- ID32733 `pending/0`;
+- production untouched.
 
 ---
 
 ## 2. Goal
 
-Perform a **read-only retirement audit** of the legacy candidate-job sender bridge.
+Retire the obsolete candidate-job bridge scaffolding while preserving the final runtime invariant:
 
-Answer precisely:
+**The direct vendor `WP_Job_Board_Pro_Job_Alert::send_job_alert_notice` callback must not remain registered on `wp_job_board_pro_email_daily_notices`.**
 
-1. Is any operation of `Raspitajse_Communications_Candidate_Job_Alert_Bridge` still required after the 1.89/1.90 cutover?
-2. Which remaining behavior is true business/runtime necessity versus migration scaffolding?
-3. Can the class and its `boot()` call be removed without allowing the vendor candidate-job daily sender to become active?
-4. Where should the minimal vendor-callback suppression responsibility live after bridge retirement?
-5. What exact implementation and regression matrix should 1.92 use?
+The evaluator must become fully self-contained for this compatibility suppression.
 
-Do **not** remove or modify the bridge in 1.91.
+No business behavior redesign is allowed.
 
 ---
 
-## 3. Classification requirement
+## 3. Expected exact source changes
 
-Classify every remaining bridge responsibility as:
+Modify only these two owned files unless a hard blocker is proven:
 
-- `KEEP`
-- `REDESIGN`
-- `DROP`
+1. `wp-content/plugins/raspitajse-communications/raspitajse-communications.php`
+2. `wp-content/plugins/raspitajse-communications/includes/class-candidate-job-alert-integration.php`
 
-At minimum classify separately:
+Expected changes:
 
-- `Bridge::HOOK` constant;
-- `Bridge::PRIORITY` constant;
-- `Bridge::boot()`;
-- `Bridge::replace_vendor_callback()`;
-- `Bridge::send_job_alert_notice()`;
-- main plugin `Bridge::boot()` invocation;
-- evaluator dependency on bridge constants;
-- temporary priority-100 bridge registration before evaluator priority-101 cutover.
+### In `raspitajse-communications.php`
 
-Use business/runtime purpose, not historical existence, as the reason.
+- remove the entire `Raspitajse_Communications_Candidate_Job_Alert_Bridge` class;
+- remove `Raspitajse_Communications_Candidate_Job_Alert_Bridge::boot();`;
+- do not modify Transport/SenderPolicy/security/frequency UI semantics.
 
----
+### In `class-candidate-job-alert-integration.php`
 
-## 4. Full reference inventory
+- give `Raspitajse_Communications_Candidate_Job_Alert_Evaluator` ownership of the legacy daily-hook identity and priority;
+- preferred private constants:
+  - `LEGACY_DAILY_HOOK = 'wp_job_board_pro_email_daily_notices'`
+  - `LEGACY_DAILY_PRIORITY = 10`
+- keep `cutover_daily_hook()` on `plugins_loaded` priority 101;
+- remove only the exact vendor callback:
+  - `WP_Job_Board_Pro_Job_Alert::send_job_alert_notice`
+  - on the exact legacy daily hook
+  - at priority 10;
+- remove the now-impossible second removal of `Bridge::send_job_alert_notice`;
+- do not add any replacement callback to the WPJBP daily hook.
 
-Search the exact `origin/staging` tree for all references to:
-
-- `Raspitajse_Communications_Candidate_Job_Alert_Bridge`;
-- `send_job_alert_notice` related to candidate→job alerts;
-- `wp_job_board_pro_email_daily_notices`;
-- the bridge `HOOK` / `PRIORITY` constants if referenced indirectly;
-- vendor `WP_Job_Board_Pro_Job_Alert::send_job_alert_notice` registration/removal.
-
-For every reference report:
-
-`File | symbol/call site | load/hook phase | current runtime purpose | required after cutover YES/NO | classification`
-
-Do not limit the search to the communications plugin. Inspect WPJBP, theme/custom code and MU plugins as needed, read-only.
+If exact naming differs for code-style reasons, preserve the same ownership/semantics.
 
 ---
 
-## 5. Exact registration timeline
+## 4. Scope boundaries
 
-Reconstruct the candidate-job daily sender registration/removal timeline from plugin load through `plugins_loaded` completion.
+Do NOT change:
 
-Report exact evidence for:
+- delivery service/state machine;
+- query adapter;
+- matching/filter semantics;
+- renderer/mailer/templates;
+- SenderPolicy;
+- Transport behavior;
+- alert security handlers;
+- candidate-job frequency UI;
+- employer→candidate alerts;
+- candidate/job expiry notifications;
+- WooCommerce;
+- Action Scheduler;
+- WPJBP vendor source;
+- Superio/theme/MU plugins;
+- cron schedules/cadence;
+- legacy `_job_alert_send_email_time` behavior.
 
-1. when/how WPJBP registers `WP_Job_Board_Pro_Job_Alert::send_job_alert_notice`;
-2. when the bridge registers `replace_vendor_callback`;
-3. what exists on the daily hook immediately before priority 100;
-4. what exists immediately after priority 100;
-5. what evaluator `cutover_daily_hook()` does at priority 101;
-6. final post-`plugins_loaded` callback graph.
-
-Do not execute the daily hook.
-
-Read-only hook inspection/bootstrap is allowed.
-
----
-
-## 6. Intermediate priority-window risk
-
-Explicitly determine whether the current priority-100 → priority-101 transition has any real runtime purpose or risk.
-
-Audit whether any callback between/around those phases can synchronously execute:
-
-`wp_job_board_pro_email_daily_notices`
-
-before evaluator cutover completes.
-
-Check at minimum:
-
-- `plugins_loaded` callbacks near priorities 100 and 101;
-- direct `do_action('wp_job_board_pro_email_daily_notices')` call sites;
-- cron dispatch timing relative to plugin bootstrap;
-- any custom/manual runner capable of invoking that hook during plugin loading.
-
-Do not execute any runner or hook to prove this.
-
-If no legitimate execution can occur before `plugins_loaded` completes, say so with evidence rather than assuming it.
+This is compatibility-code retirement only.
 
 ---
 
-## 7. Vendor suppression ownership
+## 5. Vendor suppression invariant
 
-The active system still needs one invariant:
+After bootstrap, runtime must satisfy:
 
-**The vendor candidate→job daily sender must never remain registered in the final runtime graph.**
+- direct vendor candidate-job sender registrations on `wp_job_board_pro_email_daily_notices`: **0**;
+- bridge sender registrations: **class nonexistent / 0**;
+- remaining daily callback count: **5**;
+- all five remaining callbacks retain exact identity and priority 10.
 
-Compare minimal ownership options:
+Do not use `remove_all_actions()`.
 
-### Option A — keep current bridge scaffolding
-
-priority 100 vendor→bridge replacement, then priority 101 evaluator removes bridge.
-
-### Option B — remove bridge and let evaluator directly remove only vendor callback
-
-Evaluator owns its own daily-hook name/priority constants or exact local values.
-
-### Option C — move suppression into another existing owned integration/security component
-
-Only if there is a clear cohesion benefit.
-
-### Option D — any other proven smaller mechanism
-
-For each option evaluate:
-
-- correctness;
-- update safety;
-- load-order assumptions;
-- hidden dependency risk;
-- complexity;
-- rollback simplicity;
-- whether it keeps unrelated five daily callbacks untouched.
-
-Recommend the smallest correct option.
+Only exact callback removal is allowed.
 
 ---
 
-## 8. Constants ownership
+## 6. Plugins-loaded timing
 
-Audit whether `HOOK = wp_job_board_pro_email_daily_notices` and `PRIORITY = 10` belong conceptually to the retired bridge or to active evaluator/cutover integration.
+Retain evaluator cutover registration at:
 
-If bridge retirement is recommended, define exactly where those constants should move, or whether constants are unnecessary.
+`plugins_loaded` priority **101**.
 
-Do not duplicate magic values across multiple owned classes without reason.
+Reason established by 1.91:
 
----
+- WPJBP initializes/registers the vendor job-alert daily sender earlier at priority 10;
+- priority 101 is already proven to run after vendor registration;
+- no temporary bridge at priority 100 is needed.
 
-## 9. SenderPolicy/Transport dependency check
-
-Prove that active candidate→job delivery no longer requires:
-
-`Raspitajse_Communications_Transport::with_sender_channel()`
-
-through the bridge.
-
-Distinguish this from whether `with_sender_channel()` is still needed by other legacy/current flows.
-
-Do not remove or redesign Transport in this task.
-
-Report:
-
-- all current `with_sender_channel()` call sites;
-- which are bridge-only;
-- whether the method itself remains required elsewhere;
-- whether bridge retirement has any effect on `candidate_alerts` SenderPolicy behavior.
+Do not move cutover earlier unless exact evidence proves no load-order regression; the default requirement is to keep 101 unchanged.
 
 ---
 
-## 10. Vendor source compatibility state
+## 7. Static reference cleanup
 
-Review the earlier minimal vendor compatibility cleanup from 1.86 in:
+After edit, search exact staging source and prove:
 
-`WP_Job_Board_Pro_Job_Alert::send_job_alert_notice()`
+- zero references to `Raspitajse_Communications_Candidate_Job_Alert_Bridge`;
+- zero bridge bootstrap calls;
+- zero evaluator references to bridge constants;
+- zero bridge callback-removal references;
+- evaluator owns exactly one canonical legacy daily-hook definition and one canonical priority definition;
+- active delivery still has its own `with_sender_channel(candidate_alerts, ...)` call.
 
-Determine whether the vendor file still contains any Raspitajse-specific edit made only to support the bridge era.
-
-Classify each such remaining edit:
-
-- still required by another runtime path;
-- harmless but obsolete compatibility residue;
-- safe later cleanup candidate;
-- must remain untouched.
-
-Do not edit vendor source in 1.91.
-
-Do not broaden this into a full WPJBP sender refactor.
+Do not remove `Transport::with_sender_channel()`; 1.91 proved active delivery still uses it.
 
 ---
 
-## 11. Active owned delivery isolation
+## 8. Vendor compatibility edit remains untouched
 
-Prove bridge retirement would not change any active 1.89/1.90 responsibility:
+Do not revert or modify the earlier WPJBP vendor sender-header cleanup from 1.86.
 
-- owned hourly evaluator registration;
-- due discovery;
-- matching/query adapter;
-- delivery state/claim;
-- renderer/mailer;
-- `candidate_alerts` SenderPolicy;
-- Transport send path;
-- four-frequency create UI;
-- legacy frequency compatibility;
-- legacy `_job_alert_send_email_time` lazy-read behavior.
+It remains harmless defense-in-depth compatibility residue and is explicitly outside 1.92.
 
-Create a dependency map showing bridge edges versus active owned edges.
+No vendor file should appear in the diff.
 
 ---
 
-## 12. Five remaining daily callbacks
+## 9. Preflight runtime snapshot
 
-The following five are explicitly out of scope and must remain untouched:
+Before source mutation capture read-only:
 
-- `WP_Job_Board_Pro_Candidate::send_admin_expiring_notice`;
-- `WP_Job_Board_Pro_Candidate::send_candidate_expiring_notice`;
-- `WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice`;
-- `WP_Job_Board_Pro_Job_Listing::send_admin_expiring_notice`;
-- `WP_Job_Board_Pro_Job_Listing::send_employer_expiring_notice`.
-
-Audit only enough to prove bridge retirement does not affect their hook registration.
-
-Do not redesign or execute them.
-
----
-
-## 13. Runtime read-only observation
-
-Capture current staging state without running scheduled work:
-
-- final `origin/staging` SHA and deploy marker;
-- daily WPJBP event count/schedule;
-- exact five-callback graph and priorities;
-- owned evaluator event count/schedule;
-- continuation event count;
-- vendor candidate-job sender final registration count;
-- bridge sender final registration count;
-- bridge `replace_vendor_callback` registration on `plugins_loaded`;
-- evaluator `cutover_daily_hook` registration on `plugins_loaded`;
-- global `job_alert` count;
+- `origin/staging` SHA;
+- deploy marker;
+- environment exactly `staging`;
+- mail-safety loaded;
+- WPJBP daily cron event count/fingerprint;
+- exact five daily callbacks/priorities;
+- owned hourly evaluator event count/fingerprint;
+- owned continuation event count;
+- global `job_alert` count/fingerprint;
 - legacy published `candidate_alert` count/fingerprint;
 - pending AS count/fingerprint;
 - ID32733 status/attempts.
 
-Expected current final state remains:
-
-- daily callback count 5;
-- vendor candidate-job sender 0;
-- bridge candidate-job sender 0;
-- owned recurring event 1;
-- continuation 0 normally;
-- ID32733 `pending/0`.
+Do not execute any hook/runner to inspect this state.
 
 ---
 
-## 14. No mutation requirement
+## 10. Static acceptance
 
-Zadatak 1.91 is read-only for application/runtime state.
+Required before deploy:
 
-Do not:
+- exact diff contains only the two expected owned files;
+- bridge class removed cleanly;
+- evaluator self-contained;
+- PHP lint both changed files PASS;
+- `git diff --check` PASS;
+- focused full diff review PASS;
+- no unrelated formatting churn.
 
-- edit application source;
-- create a feature branch for application changes;
-- create an application commit;
-- deploy application code;
-- create fixture users/posts/alerts/jobs;
-- change options/meta;
-- schedule/unschedule cron;
-- alter callbacks;
-- invoke mail;
-- invoke HTTP/payment paths.
-
-The only expected write is the normal `codex-reports` report publication.
+If any WPJBP/theme/MU/security/delivery/frequency file changes unexpectedly, STOP.
 
 ---
 
-## 15. Scheduler safety
+## 11. Staging deploy
+
+If static checks PASS:
+
+- scoped feature branch from exact baseline;
+- commit only the two-file change;
+- deploy to staging using the repository's existing changed-file deployment workflow;
+- source/runtime hash parity required;
+- no production deploy;
+- no force update.
+
+If deployment validation fails, redeploy the exact previous staging SHA and STOP.
+
+No DB rollback should be needed because this slice must not mutate business data.
+
+---
+
+## 12. Post-deploy hook regression
+
+Read-only runtime bootstrap inspection after deploy must prove:
+
+### WPJBP daily hook
+
+Exactly 5 callbacks, all priority 10:
+
+1. `WP_Job_Board_Pro_Candidate::send_admin_expiring_notice`
+2. `WP_Job_Board_Pro_Candidate::send_candidate_expiring_notice`
+3. `WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice`
+4. `WP_Job_Board_Pro_Job_Listing::send_admin_expiring_notice`
+5. `WP_Job_Board_Pro_Job_Listing::send_employer_expiring_notice`
+
+Assert:
+
+- direct vendor `WP_Job_Board_Pro_Job_Alert::send_job_alert_notice` = 0;
+- bridge callback = nonexistent/0;
+- callback count = 5.
+
+Do not execute the daily hook.
+
+---
+
+## 13. Owned scheduler regression
+
+Assert after deploy:
+
+- `raspitajse_candidate_job_alert_evaluator` recurring event exactly 1;
+- cadence remains `hourly`;
+- evaluator callback registered exactly once;
+- continuation event count remains 0 unless pre-existing bounded work proves otherwise;
+- existing WPJBP daily cron event remains exactly 1 and unchanged;
+- no Action Scheduler action introduced.
+
+Do not run cron.
+
+---
+
+## 14. Active candidate-job smoke
+
+Because this slice removes only dormant compatibility scaffolding, prefer a **non-destructive/static + direct bounded integration smoke**, not a large 1.88/1.89 destructive matrix.
+
+Minimum prove:
+
+- evaluator class loads;
+- delivery service loads;
+- query adapter loads;
+- mailer loads;
+- frequency UI classes load;
+- `candidate_alerts` SenderPolicy still resolves normally on staging;
+- active delivery source still calls `Transport::with_sender_channel(CHANNEL_CANDIDATE_ALERTS, ...)`;
+- no owned code reintroduces `_job_alert_send_email_time` writes.
+
+If a direct evaluator/service invocation is not necessary to prove the bridge removal, do not create fixtures merely to generate mail.
+
+Expected `wp_mail` attempts for this task: **0**.
+
+---
+
+## 15. Frequency compatibility regression
+
+Focused non-destructive validation:
+
+- current/new frequencies: `daily`, `weekly`, `fortnightly`, `monthly` accepted;
+- legacy compatibility path: `biannually`, `annually` still accepted only with legacy compatibility enabled;
+- new-create UI canonical four-frequency behavior source remains unchanged;
+- no bridge retirement code touches frequency policy/UI.
+
+---
+
+## 16. Legacy delivery state compatibility
+
+Confirm source/runtime:
+
+- `_job_alert_send_email_time` remains read-only legacy input for lazy initialization;
+- no owned update/delete write to that key is introduced;
+- delivered-job ledger/state/claim semantics unchanged.
+
+No legacy data migration in 1.92.
+
+---
+
+## 17. Protected state after deploy
+
+Capture post-deploy and compare:
+
+- global `job_alert` count/fingerprint unchanged;
+- legacy published `candidate_alert` count/fingerprint unchanged;
+- WPJBP daily cron event unchanged;
+- owned hourly event remains exactly 1;
+- continuation event state stable;
+- pending AS count/fingerprint unchanged;
+- ID32733 remains `pending/0`.
+
+No fixtures should normally exist in this task.
+
+---
+
+## 18. Counters
+
+Report separately:
+
+- application source commits;
+- deploy count;
+- staging DB/post/meta/option mutations caused by task;
+- `wp_mail` attempts;
+- PHPMailer attempts;
+- SMTP attempts;
+- WP HTTP API attempts;
+- actual external network requests;
+- payment calls;
+- broad WP-Cron invocations;
+- exact WPJBP daily-hook invocations;
+- owned evaluator/continuation hook invocations;
+- Action Scheduler runner/due actions;
+- ID32733 executions.
+
+Expected operational side-effect counters:
+
+- business DB/data mutations: 0;
+- mail/PHPMailer/SMTP: 0/0/0;
+- network/payment: 0/0;
+- cron hook executions: 0;
+- AS runner/due actions: 0;
+- ID32733 executions: 0.
+
+---
+
+## 19. Safety
 
 Forbidden:
 
-- `wp cron event run`;
+- production access or mutation;
 - broad WP-Cron execution;
+- `wp cron event run`;
 - `do_action('wp_job_board_pro_email_daily_notices')`;
-- direct owned evaluator execution;
-- continuation hook execution;
-- Action Scheduler runner;
-- due actions;
-- ID32733 execution.
+- direct scheduled evaluator execution unless a narrowly justified smoke is truly required;
+- Action Scheduler runner/due actions;
+- ID32733 execution;
+- real SMTP;
+- external/vendor requests just to prove behavior;
+- payment calls;
+- employer→candidate migration;
+- expiry sender changes;
+- vendor/core edits.
 
-Inspection only.
+Production touched: **NO**.
 
----
-
-## 16. Production safety
-
-Production touched/accessed:
-
-**NO**.
-
-Do not inspect production DB merely to look for legacy bridge behavior. Source/staging evidence is sufficient for this retirement decision.
+Known host constraint remains `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC`. Do not retry known failing sandbox helpers indefinitely. Use proven namespace-free Git/filesystem workflow. If a process appears hung, identify the exact PID before terminating anything; never use broad kills.
 
 ---
 
-## 17. Proposed 1.92 implementation
+## 20. Integration
 
-If the audit proves the bridge is obsolete, define one **small exact removal slice** for 1.92.
+Only if all checks PASS:
 
-Preferred shape if supported by evidence:
+- source/runtime parity PASS;
+- runtime hook graph PASS;
+- protected state PASS;
+- feature commit integrated to `staging` by fast-forward only;
+- no force;
+- final staging worktree clean;
+- final `origin/staging` SHA equals deploy marker/runtime payload SHA.
 
-- move/own the daily-hook callback identity needed by evaluator cutover;
-- remove `Raspitajse_Communications_Candidate_Job_Alert_Bridge` class;
-- remove `Bridge::boot()`;
-- keep one owned final suppression of direct vendor candidate-job sender;
-- keep final daily callback count exactly 5;
-- do not touch evaluator delivery, matching, templates, SenderPolicy, employer→candidate or expiry flows.
-
-But do not force that solution if audit evidence shows another dependency.
-
-Give exact changed-file expectation and fixture/regression plan.
+If any invariant fails, STOP and do not integrate a partial retirement.
 
 ---
 
-## 18. 1.92 acceptance matrix design
-
-Design, but do not execute, the smallest convincing future matrix covering:
-
-1. PHP lint/diff check;
-2. bridge class absent from source if removal approved;
-3. zero remaining class references;
-4. final daily hook count 5;
-5. vendor candidate-job sender 0;
-6. bridge sender 0/nonexistent;
-7. five unrelated daily callbacks unchanged;
-8. owned hourly evaluator event exactly 1;
-9. active candidate-job direct bounded service/evaluator smoke if actually necessary;
-10. `candidate_alerts` SenderPolicy unchanged;
-11. no `_job_alert_send_email_time` writes reintroduced;
-12. legacy frequency compatibility unchanged;
-13. candidate-job create UI four frequencies unchanged;
-14. no AS change;
-15. ID32733 `pending/0`;
-16. SMTP/network/payment 0;
-17. production NO.
-
-Prefer static/runtime hook regression over a large destructive fixture because the expected change is compatibility-code retirement, not business behavior redesign.
-
----
-
-## 19. STOP conditions
-
-STOP and report instead of recommending removal if any of these are found:
-
-- another active subsystem calls `Bridge::send_job_alert_notice()`;
-- bridge replacement is required for a real runtime path before evaluator cutover;
-- removing bridge would allow vendor candidate-job sender to survive final bootstrap;
-- evaluator suppression cannot be made self-contained without changing unrelated daily callbacks;
-- a hidden vendor/plugin load-order dependency cannot be proven safely;
-- retirement would require redesigning delivery, matching, templates or SenderPolicy.
-
----
-
-## 20. Final report
+## 21. Final report
 
 Publish:
 
-**Zadatak 1.91 — Audit candidate-job legacy bridge retirement**
+**Zadatak 1.92 — Retire candidate-job legacy bridge scaffolding**
 
 Report must include:
 
-1. baseline/final SHA and proof application SHA unchanged;
-2. complete bridge reference inventory;
-3. KEEP / REDESIGN / DROP classification for each bridge responsibility;
-4. exact vendor registration source/timing;
-5. exact `plugins_loaded` priority timeline;
-6. intermediate priority-window risk assessment;
-7. all daily-hook execution call sites found;
-8. vendor suppression ownership options comparison;
-9. recommended minimal target ownership;
-10. constants ownership recommendation;
-11. `with_sender_channel()` dependency/call-site audit;
-12. remaining vendor compatibility-edit assessment;
-13. active owned delivery dependency map;
-14. proof five unrelated daily callbacks remain independent;
-15. current staging daily-hook graph;
-16. current owned hourly/continuation cron state;
-17. global `job_alert` baseline;
-18. legacy candidate-alert count/fingerprint;
-19. AS count/fingerprint;
-20. ID32733 `pending/0`;
-21. mail/SMTP/network/payment/cron/AS execution counters, expected all zero;
-22. production touched/accessed YES/NO;
-23. exact proposed Zadatak 1.92 implementation slice;
-24. exact proposed 1.92 regression matrix.
+1. baseline/final SHA;
+2. exact changed files;
+3. exact removed bridge symbols;
+4. evaluator-owned legacy hook/priority implementation;
+5. proof zero bridge references remain;
+6. proof no WPJBP/vendor/theme/MU changes;
+7. final `plugins_loaded` cutover ownership/timing;
+8. exact final daily-hook graph/count;
+9. direct vendor candidate-job sender registration count;
+10. bridge sender/class registration status;
+11. owned hourly evaluator event state;
+12. continuation event state;
+13. WPJBP daily cron event state;
+14. active delivery dependency smoke;
+15. `candidate_alerts` SenderPolicy regression;
+16. frequency compatibility regression;
+17. `_job_alert_send_email_time` read-only proof;
+18. global `job_alert` baseline/fingerprint;
+19. legacy `candidate_alert` count/fingerprint;
+20. AS count/fingerprint;
+21. ID32733 `pending/0`;
+22. mail/SMTP/network/payment/cron/AS counters;
+23. source/runtime hashes;
+24. cleanup/no-fixture proof;
+25. production touched/accessed YES/NO;
+26. exactly one proposed next small task.
 
 Then STOP.
 
-Do not edit or remove the bridge in 1.91.
-Do not begin 1.92.
+Do not begin 1.93.
