@@ -432,49 +432,6 @@ final class Raspitajse_Communications_Transport {
     }
 }
 
-/**
- * Owned sender-channel bridge for the legacy candidate-to-job alert producer.
- */
-final class Raspitajse_Communications_Candidate_Job_Alert_Bridge {
-
-    const HOOK     = 'wp_job_board_pro_email_daily_notices';
-    const PRIORITY = 10;
-
-    public static function boot() {
-        add_action( 'plugins_loaded', array( __CLASS__, 'replace_vendor_callback' ), 100 );
-    }
-
-    /**
-     * Keep the vendor matching/template producer, but own its sender context.
-     */
-    public static function replace_vendor_callback() {
-        $vendor_callback = array(
-            'WP_Job_Board_Pro_Job_Alert',
-            'send_job_alert_notice',
-        );
-
-        if ( self::PRIORITY !== has_action( self::HOOK, $vendor_callback ) ) {
-            return;
-        }
-
-        remove_action( self::HOOK, $vendor_callback, self::PRIORITY );
-        add_action(
-            self::HOOK,
-            array( __CLASS__, 'send_job_alert_notice' ),
-            self::PRIORITY
-        );
-    }
-
-    /**
-     * Invoke only the existing business producer under candidate_alerts policy.
-     */
-    public static function send_job_alert_notice() {
-        return Raspitajse_Communications_Transport::with_sender_channel(
-            Raspitajse_Communications_Sender_Policy::CHANNEL_CANDIDATE_ALERTS,
-            array( 'WP_Job_Board_Pro_Job_Alert', 'send_job_alert_notice' )
-        );
-    }
-}
 
 final class Raspitajse_Communications_Alert_Security {
 
@@ -999,7 +956,6 @@ final class Raspitajse_Communications_Alert_Security {
 }
 
 Raspitajse_Communications_Transport::boot();
-Raspitajse_Communications_Candidate_Job_Alert_Bridge::boot();
 Raspitajse_Communications_Alert_Security::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Evaluator::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Frequency_UI::boot();

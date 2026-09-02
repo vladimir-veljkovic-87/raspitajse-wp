@@ -380,6 +380,8 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Evaluator {
     const CONTINUATION_HOOK = 'raspitajse_candidate_job_alert_evaluator_continue';
     const BATCH_SIZE        = 20;
     const CONTINUATION_DELAY = 300;
+    private const LEGACY_DAILY_HOOK     = 'wp_job_board_pro_email_daily_notices';
+    private const LEGACY_DAILY_PRIORITY = 10;
 
     public static function boot() {
         add_action( 'plugins_loaded', array( __CLASS__, 'cutover_daily_hook' ), 101 );
@@ -399,14 +401,9 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Evaluator {
 
     public static function cutover_daily_hook() {
         remove_action(
-            Raspitajse_Communications_Candidate_Job_Alert_Bridge::HOOK,
+            self::LEGACY_DAILY_HOOK,
             array( 'WP_Job_Board_Pro_Job_Alert', 'send_job_alert_notice' ),
-            Raspitajse_Communications_Candidate_Job_Alert_Bridge::PRIORITY
-        );
-        remove_action(
-            Raspitajse_Communications_Candidate_Job_Alert_Bridge::HOOK,
-            array( 'Raspitajse_Communications_Candidate_Job_Alert_Bridge', 'send_job_alert_notice' ),
-            Raspitajse_Communications_Candidate_Job_Alert_Bridge::PRIORITY
+            self::LEGACY_DAILY_PRIORITY
         );
     }
 
