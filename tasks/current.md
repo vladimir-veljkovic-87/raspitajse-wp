@@ -1,8 +1,8 @@
-# Zadatak 1.98 — Audit employer→candidate `candidate_alert` lifecycle and decide retention
+# Zadatak 1.99 — Safely deactivate employer→candidate alert delivery and new creation
 
 Status: READY
 Baseline: 642c8c8efb51a56449fd7048c71d3216590d52bf
-Previous task: 1.97
+Previous task: 1.98
 Target environment: staging
 Production: FORBIDDEN
 
@@ -10,7 +10,7 @@ Production: FORBIDDEN
 
 Fetch `origin/codex-tasks` and `origin/staging`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or inspecting anything. `tasks/README.md` is mandatory policy.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or modifying source. `tasks/README.md` is mandatory policy.
 
 `codex-tasks` is READ-ONLY. Do not modify, commit to, push to, merge into, rebase, force-update, or otherwise write to `codex-tasks`.
 
@@ -20,465 +20,452 @@ Use exact application truth from `origin/staging` and verify first that it is ex
 
 If it differs, STOP and report the mismatch.
 
-Execute only Zadatak 1.98, publish the final report through the existing `codex-reports` workflow, and STOP. Do not implement redesign and do not begin 1.99.
+Execute only Zadatak 1.99. Work on a scoped feature branch from exact `origin/staging`, integrate to `staging` only after all acceptance criteria pass, publish the final report through the existing `codex-reports` workflow, and STOP. Do not begin 2.00 automatically.
 
 ---
 
-## 1. Context
+## 1. Context and decision already made
 
-The candidate→job alert subsystem has already been redesigned into a Raspitajse-owned delivery architecture. The remaining WPJBP vendor-residue provenance thread is parked; do not reopen it in this task.
+Zadatak 1.98 completed PASS and classified the employer→candidate `candidate_alert` product **DROP**.
 
-The still-active opposite-direction feature is **employer→candidate alerts**, represented by WPJBP `candidate_alert` objects and the daily callback:
+Evidence supporting DROP is already established and must not be re-litigated in this implementation task:
 
-`WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice`
+- there are exactly four published legacy `candidate_alert` objects on staging;
+- zero are owned by a currently valid employer + canonical employer-profile pair;
+- three are admin-owned legacy objects and one is orphaned/missing-owner;
+- two saved queries are empty/unconstrained, two currently match zero candidates;
+- active legacy delivery can fetch only one candidate and its so-called “best candidate” heuristic cannot meaningfully rank alternatives;
+- cadence/state semantics are defective: first-send frequency bypass, attempt-as-success state, no reliable retry/idempotency/claiming, concurrency duplication risk;
+- current employer-facing content implies AI matching although no model/AI inference exists;
+- the producer overreads personal candidate data and has a concrete cross-recipient content-reuse defect;
+- no genuine staging employer adoption or paid candidate-database entitlement is implemented in this path;
+- normal candidate browse/search already covers the deterministic filtering use case more completely.
 
-Earlier communications audit found four published legacy `candidate_alert` objects on staging and identified serious concerns in the legacy employer→candidate implementation, including:
+The business outcome may be revisited later only as a **new product discovery**, not as preservation or migration of these four legacy alerts.
 
-- employer/candidate lookup behavior that may rely on the wrong profile/meta relation;
-- result selection apparently constrained to a very small set rather than a robust candidate result set;
-- heuristic salary/experience matching while user-facing copy claims AI-like matching;
-- unnecessary candidate personal-data fields such as birthdate/email being available to rendering logic;
-- delivery cadence/state semantics inherited from legacy WPJBP behavior;
-- unclear business value and no explicit owner decision yet on whether this feature should remain.
-
-Zadatak 1.84 already moved candidate-alert add/remove mutation security into the Raspitajse-owned communications security layer. **Do not undo or bypass that work.**
-
-This task is therefore a **read-only business + technical audit** whose purpose is to make the employer→candidate retention decision evidence-based before any redesign or removal.
+This task therefore implements the smallest safe retirement slice.
 
 ---
 
 ## 2. Goal
 
-Answer conclusively, from current source + staging state:
+Safely retire active employer→candidate alert delivery and new alert creation while preserving historical auditability and all unrelated systems.
 
-1. What business outcome does employer→candidate `candidate_alert` currently provide?
-2. Who can create/manage these alerts now, and what ownership/security rules are authoritative?
-3. How does the daily delivery callback determine which alerts are due?
-4. How are matching candidates selected, ranked and capped?
-5. What candidate fields are read, rendered or potentially exposed?
-6. Does the implementation actually perform AI matching, or only deterministic/heuristic filtering?
-7. What delivery-state/idempotency semantics exist, and can candidates be repeatedly re-sent?
-8. What is the exact current data footprint of the four legacy alerts, without exposing PII?
-9. Is the feature materially valuable for Raspitajse employers?
-10. Should the business outcome be classified `KEEP`, `REDESIGN`, or `DROP`?
-11. If retained, what should a Raspitajse-owned target architecture look like?
-12. If dropped, what exact migration/deactivation behavior would safely preserve auditability and avoid accidental mail?
+After this task:
 
-No implementation in 1.98.
+1. `WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice` must no longer be registered on the final `wp_job_board_pro_email_daily_notices` graph.
+2. New employer→candidate `candidate_alert` creation must fail closed server-side.
+3. The two known candidate-alert creation surfaces must no longer offer new alert creation to users.
+4. Existing owner-only alert removal must continue to work.
+5. Existing REST restriction must remain.
+6. The four historical `candidate_alert` records and their metadata must remain byte-for-byte unchanged.
+7. No final notification email is sent.
+8. Candidate search/browse remains unchanged.
+9. Candidate→job owned alert delivery remains unchanged.
 
----
-
-## 3. Strict read-only scope
-
-Allowed:
-
-- read `origin/staging` source and Git history;
-- inspect the WPJBP candidate-alert class/templates/query helpers;
-- inspect Raspitajse-owned communications/security/SenderPolicy code;
-- read-only WP-CLI/database queries on staging necessary to understand counts/status/meta shape;
-- inspect registered hooks and scheduled events **without executing them**;
-- inspect relevant configuration/options without printing secrets or recipient PII;
-- produce sanitized fingerprints/counts and structural summaries.
-
-Forbidden:
-
-- source changes;
-- application commits/branches/pushes/deploys;
-- post/meta/option/user mutation;
-- candidate/job/profile mutation;
-- alert creation/deletion/update;
-- cron schedule mutation or hook execution;
-- Action Scheduler runner/action execution;
-- `wp_mail`, PHPMailer or SMTP;
-- payment calls;
-- external application/vendor HTTP;
-- production filesystem/database/backups/network access.
-
-The normal `codex-reports` publication is the only intended repository write.
+Do not build a replacement employer→candidate matching product.
 
 ---
 
-## 4. Exact source inventory
+## 3. Implementation ownership / file policy
 
-Identify all source paths participating in employer→candidate alert behavior, including at minimum:
+Prefer Raspitajse-owned implementation.
 
-- `WP_Job_Board_Pro_Candidate_Alert` class and its exact registration on `wp_job_board_pro_email_daily_notices`;
-- candidate-alert query/matching helpers;
-- candidate-alert email/template rendering paths;
-- frequency getter/options used by this feature;
-- Superio/theme template surfaces if they affect candidate-alert creation/management;
-- Raspitajse-owned alert security callbacks from 1.84;
-- SenderPolicy/Transport surfaces currently available for an `employer_alerts` channel;
-- any custom Raspitajse code still changing candidate-alert behavior.
+Expected primary ownership:
 
-For every relevant source unit state:
+- `wp-content/plugins/raspitajse-communications/`
 
-`Path | responsibility | active/dormant | vendor/owned/theme | KEEP/REDESIGN/DROP relevance`
+Theme-safe presentation changes may use an existing Raspitajse-owned child-theme layer only if necessary to hide a presentation surface.
 
-Do not broaden into unrelated candidate profile features.
+Do **not** modify:
 
----
+- WordPress core;
+- WooCommerce/vendor core;
+- WP Job Board Pro vendor source;
+- Superio parent-theme vendor source.
 
-## 5. Hook and scheduler graph
+If a creation surface cannot be safely hidden without editing WPJBP vendor code or the Superio parent theme, STOP and report the exact blocker instead of introducing a vendor fork.
 
-Read-only prove the current final registration graph after plugin bootstrap:
-
-- WPJBP daily hook event count/schedule/fingerprint;
-- exact five final daily callbacks and priorities;
-- exact registration count for `WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice`;
-- whether any Raspitajse wrapper/bridge exists around employer→candidate delivery;
-- whether any other cron/action path can invoke candidate-alert delivery;
-- whether Action Scheduler participates in this feature.
-
-Do **not** execute `wp_job_board_pro_email_daily_notices`, the candidate-alert callback, owned evaluator hooks, or any scheduler runner.
-
-Explain whether the current feature is traffic/cron dependent and whether the existing staging cron guard changes its effective behavior.
+Keep the patch narrow. Do not refactor unrelated communications code.
 
 ---
 
-## 6. Current legacy alert data footprint
+## 4. Exact daily-hook suppression
 
-Inspect all published `candidate_alert` posts on staging read-only.
+The active pre-task final daily-hook graph has exactly five callbacks at priority `10`:
 
-Expected historical count: `4`, but report actual current count.
+1. `WP_Job_Board_Pro_Candidate::send_admin_expiring_notice`
+2. `WP_Job_Board_Pro_Candidate::send_candidate_expiring_notice`
+3. `WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice`
+4. `WP_Job_Board_Pro_Job_Listing::send_admin_expiring_notice`
+5. `WP_Job_Board_Pro_Job_Listing::send_employer_expiring_notice`
 
-For each alert, do **not** expose raw IDs, emails, names, saved search values or other PII. Instead report a sanitized structural row such as:
+Implement an owned exact suppression after vendor registration that removes **only**:
 
-- deterministic sanitized fingerprint/token;
-- post status;
-- owner account existence YES/NO;
-- owner role category (employer/admin/other/missing) without username/email;
-- whether a canonical employer profile resolves;
-- frequency key;
-- whether saved query/filter payload exists and its structural type/keys only;
-- legacy send/due state presence and age bucket, not exact personal timestamps unless necessary;
-- whether alert appears due under current vendor rules;
-- obvious orphan/inconsistent state flags.
+`WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice`
 
-Report aggregate counts for:
+from:
 
-- valid employer-owned alerts;
-- admin-owned legacy alerts;
-- missing-owner alerts;
-- malformed/empty queries;
-- frequencies in use;
-- currently due vs not due according to vendor logic.
+`wp_job_board_pro_email_daily_notices`
 
-No mutation and no recipient exposure.
+at priority `10`.
 
----
+Do not remove, re-register, wrap, reorder or otherwise alter the other four callbacks.
 
-## 7. Creation, ownership and mutation security
+Do not execute the daily hook.
 
-Reconfirm 1.84 behavior specifically for employer→candidate alerts:
+Acceptance after bootstrap:
 
-- exact create/add routes;
-- exact delete/remove routes;
-- auth/anon admin-AJAX registrations;
-- nonce/capability checks;
-- authoritative `post_author` ownership;
-- canonical employer-profile resolution;
-- type/id validation;
-- allowlisted payload fields;
-- frequency validation;
-- nested unknown-field handling;
-- owner-only deletion and any admin override policy;
-- REST exposure status.
+- final daily callback count = exactly `4`;
+- the candidate-alert vendor callback registration count = `0`;
+- the four unrelated callbacks remain exactly once each at priority `10`;
+- the recurring `wpie_daily` cron event itself remains exactly one scheduled event and is not unscheduled/rescheduled.
 
-Prove whether the old wrong employer-candidate lookup/meta relation is still reachable in **mutation/security** code or only in legacy delivery/matching code.
-
-Do not change callbacks.
+Do not replace the dropped callback with an owned sender/evaluator.
 
 ---
 
-## 8. Due/cadence semantics
+## 5. Fail closed new `candidate_alert` creation
 
-Document exact legacy delivery timing behavior:
+Zadatak 1.84 made `Raspitajse_Communications_Alert_Security` authoritative for candidate-alert mutations. Preserve that security architecture.
 
-- supported frequencies and day values;
-- how `send_email_time` or equivalent state is interpreted;
-- whether an unsent alert is immediately due;
-- whether due calculation drifts from actual attempt time;
-- whether failed `wp_mail` advances state;
-- whether empty-result runs advance state;
-- whether repeated callback executions in the same day/window can resend;
-- whether there is locking/claiming/concurrency protection;
-- whether missed periods are coalesced or replayed;
-- timezone assumptions.
+For employer→candidate candidate alerts only:
 
-Compare these semantics to the Raspitajse-owned candidate→job delivery architecture only to identify reusable patterns. **Do not assume both products should have identical business cadence.**
+- keep the exact active add routes owned by the security layer;
+- preserve existing login/role/capability/nonce/type/payload validation boundaries;
+- after sufficient validation to remain fail-closed and predictable, return an explicit inactive/retired-feature error response;
+- do not create a post;
+- do not update alert meta;
+- do not silently fall through to vendor add handlers;
+- vendor add callbacks must remain absent;
+- anonymous add routes must remain fail closed;
+- no new `candidate_alert` may be created through any of the six known AJAX route variants.
 
-Classify each timing behavior as acceptable, defective, or business-decision-dependent.
+The response should be user-safe and non-PII. Do not claim temporary unavailability if the product is intentionally retired.
 
----
-
-## 9. Matching/query pipeline
-
-Trace employer→candidate matching end-to-end from one alert to final candidate set.
-
-Document:
-
-- where the saved query comes from;
-- how alert owner maps to employer profile;
-- all WP_Query/WPJBP query args generated;
-- status/publication/visibility constraints;
-- location/category/skill/experience/salary/education/language or other filters;
-- any custom scoring/ranking;
-- result ordering;
-- result limit/cap;
-- pagination behavior;
-- whether only one candidate can effectively be selected;
-- whether already-delivered candidates are excluded;
-- whether result history/ledger exists;
-- whether the same candidate may be sent repeatedly across periods.
-
-Explicitly verify the earlier suspicion that the implementation uses the wrong employer→candidate relation/meta and state the exact consequence if true.
-
-Do not run a real mail send. Pure read-only query inspection/counting is allowed if it does not expose PII.
+Do not broaden this behavior to candidate→job `job_alert` creation.
 
 ---
 
-## 10. “AI matching” claim audit
+## 6. Preserve owner-only removal and historical auditability
 
-Find every employer-facing string/template/configuration that claims or implies:
+Existing candidate-alert remove routes remain supported for cleanup by the rightful owner where ownership is valid.
 
-- AI matching;
-- smart matching;
-- recommended candidates;
-- personalized ranking.
+Preserve:
 
-Then compare that claim to actual implementation.
+- authentication;
+- nonce validation;
+- exact `candidate_alert` type validation;
+- positive integer ID validation;
+- exact `post_author === current user` ownership;
+- no admin override through frontend removal;
+- vendor remove callbacks absent;
+- owned security callback authoritative;
+- `candidate_alert.show_in_rest = false`.
 
-Classify the current matching engine as one of:
+Do not disable the remove handler merely because create is retired.
 
-- deterministic filtering only;
-- deterministic filtering + heuristics;
-- explicit scoring/ranking;
-- actual model/AI inference.
+Do not bulk-delete, trash, unpublish, rewrite, migrate, relabel or mutate any of the four historical alerts.
 
-If there is no real AI/model inference, state that clearly and identify which copy is misleading.
-
-Do not invent a replacement model. If retention is recommended, define the minimum honest product language for the current capability and separately describe what a future AI-powered version would require at architecture level.
-
----
-
-## 11. Candidate privacy / data-minimization audit
-
-Trace every candidate field read or passed into email/template rendering for employer alerts.
-
-For each field classify:
-
-`Field category | used for matching | used for rendering | necessary YES/NO | privacy risk | disposition`
-
-Pay special attention to:
-
-- direct email address;
-- birthdate/date of birth;
-- phone/contact data;
-- exact address/location;
-- salary expectations;
-- work history/experience;
-- profile image;
-- public profile URL;
-- any user/account identifiers.
-
-Determine whether employers receive data they could not otherwise access through the normal candidate profile/entitlement rules.
-
-Do not print actual field values.
-
-Any unnecessary sensitive/personal field should be classified `DROP` from future delivery payload even if legacy code currently reads it.
+Historical records must remain inspectable for auditability.
 
 ---
 
-## 12. Email producer / sender / template audit
+## 7. Hide the two exact creation surfaces
 
-Trace exact employer→candidate email production:
+Zadatak 1.98 identified these creation surfaces:
 
-- subject generation;
-- sender From/Reply-To headers;
-- HTML Content-Type;
-- template source and fallback path;
-- placeholders/variables;
-- number of candidates rendered;
-- branding/localization;
-- links/CTAs;
-- whether candidate direct contact data is embedded;
-- whether `wp_mail` result is checked;
-- when delivery state is updated relative to transport result.
+1. candidate-search page form from WPJBP `templates/loop/candidate/candidates-alert-form.php`;
+2. optional candidate-alert widget from `includes/widgets/class-widget-candidate-alert-form.php` / `templates/widgets/candidate-alert-form.php` when placed.
 
-Determine whether this active vendor path currently uses the Raspitajse `employer_alerts` SenderPolicy channel. If not, classify sender migration as `REDESIGN` if feature retention is recommended.
+Hide/disable these surfaces using owned hooks/filters/template resolution/widget registration controls or child-theme-safe mechanisms.
 
-Do not attempt any mail.
+Requirements:
 
----
+- no visible “create candidate alert” form on ordinary candidate search/browse;
+- no active widget creation surface when the candidate-alert widget is configured/placed;
+- ordinary candidate search/browse and its filters remain unchanged;
+- do not hide candidate profiles, browse results, filters, contact entitlement or unrelated widgets;
+- do not edit WPJBP vendor templates or Superio parent templates.
 
-## 13. Business-value decision
+If one surface is already unreachable under current theme/configuration, prove that and still ensure it cannot become active through the normal registered surface after this task.
 
-Based on source + live data, answer whether employer→candidate alerts are worth retaining for Raspitajse.
-
-Evaluate at least:
-
-- actual number/quality of current alerts;
-- whether valid employer users are actually using the feature;
-- whether current matching delivers meaningful candidates;
-- overlap with employer candidate-search/browse features;
-- overlap with any planned paid access to worker database;
-- privacy implications;
-- maintenance/cron/email complexity;
-- honesty of the current “AI” claim;
-- strategic value of proactively notifying employers about candidates.
-
-Choose exactly one classification:
-
-### `KEEP`
-Only if current behavior is already operationally/business sound and requires little change.
-
-### `REDESIGN`
-If the business outcome is valuable but legacy implementation should be replaced by Raspitajse-owned delivery/matching/state/privacy logic.
-
-### `DROP`
-If the feature has low business value, little genuine usage, or creates disproportionate privacy/maintenance risk.
-
-Do not choose REDESIGN merely because candidate→job was redesigned. The direction has a different product purpose and must stand on its own evidence.
+Do not use JavaScript-only hiding as the authorization boundary. Server-side creation must already fail closed.
 
 ---
 
-## 14. Target architecture if REDESIGN is recommended
+## 8. Management/read-only transition UX
 
-If and only if final classification is `REDESIGN`, produce a bounded target design covering:
+Do not remove the historical management/listing surface if doing so would prevent auditability or owner deletion.
 
-- owned evaluator/scheduler boundary;
-- alert ownership/config revision;
-- cadence model;
-- deterministic due windows;
-- locking/claims;
-- matching/query adapter;
-- result cap and ordering;
-- delivery ledger/idempotency policy;
-- data-minimized presentation DTO;
-- SenderPolicy `employer_alerts` channel;
-- transport success/failure state transitions;
-- empty-result behavior;
-- retry behavior;
-- legacy lazy migration;
-- treatment of the four existing alerts;
-- coexistence/cutover with the existing daily WPJBP callback;
-- security callbacks from 1.84 remaining authoritative.
+The active Superio override currently provides the employer candidate-alert management table.
 
-Do not copy candidate→job architecture 1:1 where the business semantics differ.
+For this task, minimum acceptable behavior is:
 
-State all business decisions still required before implementation.
+- historical alerts may still be listed;
+- owner-only removal may remain available;
+- no create/new-alert CTA is exposed from that management context;
+- no UI text promises that historical alerts are still actively sending.
+
+If the current management page already meets these minimums after the creation surfaces are hidden, do not redesign it.
+
+If a tiny owned/child-theme-safe copy change is necessary to avoid falsely claiming active delivery, make only that bounded presentation change and report it separately.
+
+Do not add a large retirement UX redesign.
 
 ---
 
-## 15. Safe retirement design if DROP is recommended
+## 9. Historical data preservation proof
 
-If and only if final classification is `DROP`, specify the smallest safe future retirement plan:
+Before any source change, capture a sanitized deterministic fingerprint of all published `candidate_alert` records and relevant meta shape, without printing raw IDs, emails, names, saved values or PII.
 
-- suppress/remove only the exact vendor daily candidate-alert delivery callback;
-- preserve unrelated five/daily hook behavior correctly accounting for the callback removal;
-- disable/hide new employer candidate-alert creation surfaces;
-- preserve historical alert objects read-only unless a separate deletion/migration decision is made;
-- do not send any final notification automatically;
-- do not delete candidate data;
-- retain auditability;
-- keep 1.84 security behavior safe during transition;
-- identify whether legacy alerts should become inactive via owned state or simply unreachable from runtime.
+Expected count: `4`.
 
-No retirement implementation in 1.98.
+After implementation + deployment + bounded tests, prove:
+
+- published `candidate_alert` count remains exactly `4`;
+- sanitized fingerprint is byte-for-byte/logically identical to before;
+- post status unchanged;
+- post author unchanged;
+- query meta unchanged;
+- frequency meta unchanged;
+- `_candidate_alert_send_email_time` unchanged;
+- all other existing candidate-alert meta unchanged.
+
+No fixture may reuse or mutate the four historical records.
 
 ---
 
-## 16. Protected current-state observation
+## 10. Bounded creation/removal fixture
 
-Capture before/final read-only state:
+Create a task-private staging fixture only if needed to prove server behavior. It must be isolated and cleaned exactly.
 
-- `origin/staging` SHA and deploy marker;
-- environment exactly staging;
-- staging mail-safety loaded;
-- WPJBP daily cron event count/schedule/fingerprint;
-- exact five daily callbacks and priorities;
-- employer→candidate vendor callback registration count;
-- candidate→job vendor sender registration remains 0;
-- owned candidate→job hourly evaluator count/schedule/fingerprint;
-- continuation count;
-- published `job_alert` count/fingerprint;
-- published `candidate_alert` count/fingerprint;
+Preferred fixture goals:
+
+### New-create fail-closed
+
+Prove an otherwise valid authenticated employer candidate-alert create request reaches the owned retirement boundary and:
+
+- returns the intended inactive-feature error;
+- creates zero posts;
+- writes zero candidate-alert meta;
+- triggers zero vendor add callback;
+- sends zero mail;
+- causes zero external HTTP/payment activity.
+
+### Removal preserved
+
+If practical without touching historical records, create a temporary fixture alert through direct controlled fixture setup **outside the retired public create path**, then prove the existing owner-only remove handler can remove only that fixture and rejects a non-owner. Clean the fixture exactly.
+
+If fixture creation would require unsafe/broad mutation, do not force it; static/runtime callback proof plus existing 1.84 accepted security evidence may be used instead. Explain the choice.
+
+Never use a historical alert for destructive testing.
+
+---
+
+## 11. Candidate→job protected invariants
+
+This task must not regress the already-owned candidate→job subsystem.
+
+After deployment, prove:
+
+- direct vendor `WP_Job_Board_Pro_Job_Alert::send_job_alert_notice` registration = `0`;
+- owned hourly `raspitajse_candidate_job_alert_evaluator` event count = exactly `1`;
+- evaluator schedule remains `hourly`;
+- continuation event count = `0` unless a pre-existing bounded event independently exists;
+- `job_alert` published count remains `0`;
+- candidate-job new-create frequency UI remains the owned four values: daily/weekly/fortnightly/monthly;
+- legacy getter compatibility remains available;
+- `_job_alert_send_email_time` remains owned-read-only compatibility input;
+- SenderPolicy/Transport behavior for candidate alerts remains unchanged.
+
+Do not execute the owned candidate→job evaluator or continuation hook.
+
+---
+
+## 12. Daily scheduler / unrelated notices protection
+
+The daily recurring event remains because four unrelated callbacks still depend on it.
+
+Do not:
+
+- unschedule `wp_job_board_pro_email_daily_notices`;
+- execute it;
+- change its recurrence;
+- change job expiry or candidate expiry callbacks;
+- decide retention of those four unrelated callbacks in this task.
+
+Acceptance:
+
+- daily recurring event count/schedule unchanged;
+- final callback graph exactly `4` unrelated callbacks;
+- employer→candidate candidate-alert callback `0`.
+
+---
+
+## 13. Action Scheduler / protected state
+
+Before/final, capture sanitized protected state:
+
 - pending Action Scheduler count/fingerprint;
 - ID32733 status/attempts.
 
-Expected historical state:
+Expected from 1.98 historical state:
 
-- staging SHA `642c8c8efb51a56449fd7048c71d3216590d52bf`;
-- daily callbacks `5` including employer→candidate candidate-alert callback;
-- candidate→job vendor sender `0`;
-- owned hourly evaluator `1`;
-- continuation `0`;
-- `job_alert` `0`;
-- `candidate_alert` `4`;
-- ID32733 `pending/0`.
+- ID32733 = `pending/0`.
 
-If counts differ, investigate read-only and report why. Do not repair/mutate.
+Do not execute Action Scheduler runners, due actions or ID32733.
+
+No AS action should be added for retired candidate-alert delivery.
 
 ---
 
-## 17. Zero-side-effect contract
+## 14. Mail / network / payment safety
 
-Expected effects:
+This task must not send an employer candidate-alert email.
 
-- application source writes: `0`;
-- application commits/branches/pushes/deploys: `0`;
-- WordPress post/meta/option/user/business mutations: `0`;
-- alert mutations: `0`;
-- cron schedule mutations/executions: `0`;
-- fixtures: `0`;
-- `wp_mail` / PHPMailer / SMTP: `0 / 0 / 0`;
-- application/vendor HTTP: `0`;
-- payment calls: `0`;
-- Action Scheduler mutations/executions: `0`;
-- ID32733 executions: `0`.
+Expected counters:
 
-Production accessed/touched: **NO**.
+- real `wp_mail`: `0`;
+- PHPMailer transport: `0`;
+- SMTP: `0`;
+- candidate-alert vendor sender executions: `0`;
+- candidate→job evaluator executions: `0`;
+- external application/vendor HTTP: `0`;
+- payment calls: `0`.
+
+If a bounded fixture uses the WordPress mail API accidentally, treat that as a failure unless intercepted by the existing staging mail-safety boundary and explicitly expected in the test design. Prefer no mail API call at all.
 
 ---
 
-## 18. HOST_NAMESPACE_PRESSURE
+## 15. Source quality / validation
+
+For every changed PHP file:
+
+- `php -l` PASS.
+
+For the final patch:
+
+- `git diff --check` PASS;
+- no debug logging;
+- no PII logging;
+- no secrets;
+- no hard-coded user IDs/emails;
+- no production-only URLs introduced;
+- no vendor/core modifications;
+- no JS-only security mechanism;
+- no unrelated refactor.
+
+Report exact changed files and diffstat.
+
+---
+
+## 16. Staging integration and deploy
+
+Follow the repository workflow from `tasks/README.md`.
+
+- branch from exact baseline;
+- implement narrow owned retirement slice;
+- run static tests before integration;
+- integrate to `staging` only after acceptance;
+- deploy only to staging;
+- prove source/deploy parity;
+- production remains untouched.
+
+If deploy marker/runtime source cannot be proven equal to final `staging` SHA, STOP and report PARTIAL/FAIL rather than claiming PASS.
+
+---
+
+## 17. Final expected runtime state
+
+Expected after PASS:
+
+- final daily callbacks: `4`;
+- exact remaining daily callbacks:
+  1. `WP_Job_Board_Pro_Candidate::send_admin_expiring_notice`
+  2. `WP_Job_Board_Pro_Candidate::send_candidate_expiring_notice`
+  3. `WP_Job_Board_Pro_Job_Listing::send_admin_expiring_notice`
+  4. `WP_Job_Board_Pro_Job_Listing::send_employer_expiring_notice`
+- employer→candidate vendor sender registration: `0`;
+- candidate→job vendor sender: `0`;
+- owned candidate→job hourly evaluator: `1`;
+- continuation: `0` unless independently pre-existing;
+- published `job_alert`: `0`;
+- published historical `candidate_alert`: `4`, fingerprint unchanged;
+- candidate-alert REST: false;
+- new candidate-alert create route: fail closed;
+- candidate-alert owner-only remove route: preserved;
+- two candidate-alert creation UI surfaces: inactive/hidden;
+- ordinary candidate search/browse: unchanged;
+- ID32733: `pending/0`;
+- mail/SMTP/payment/cron-runner/AS executions: `0`.
+
+---
+
+## 18. Zero-side-effect boundaries outside intended source/deploy
+
+Intended effects:
+
+- narrow application source changes in Raspitajse-owned layers;
+- one scoped feature commit/branch;
+- fast-forward integration to `staging` after acceptance;
+- staging deployment;
+- optionally isolated task fixture with exact cleanup.
+
+Forbidden effects:
+
+- production changes/access;
+- historical candidate-alert mutation;
+- candidate/profile/job business-data mutation outside exact cleaned fixture;
+- cron hook execution;
+- Action Scheduler execution;
+- real mail;
+- payment;
+- external vendor/application HTTP;
+- vendor/core source changes.
+
+---
+
+## 19. HOST_NAMESPACE_PRESSURE
 
 Known `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC` remains.
 
-Prefer namespace-free Git/filesystem/WP-CLI read paths already proven safe. If a sandbox helper fails with the known signature, do not retry indefinitely. Never use broad process kills.
+Use previously proven namespace-free Git/filesystem/WP-CLI paths when needed. If a sandbox helper fails with the known signature, do not retry indefinitely. Never use broad process kills.
 
 ---
 
-## 19. Final report
+## 20. Final report
 
 Publish:
 
-**Zadatak 1.98 — Audit employer→candidate `candidate_alert` lifecycle and decide retention**
+**Zadatak 1.99 — Safely deactivate employer→candidate alert delivery and new creation**
 
 Report must include:
 
-1. PASS/PARTIAL and exact meaning;
-2. baseline/final application SHA unchanged;
-3. source inventory and active/dormant graph;
-4. exact daily hook/scheduler graph;
-5. sanitized four-alert data footprint and anomalies;
-6. creation/ownership/security findings;
-7. due/cadence semantics;
-8. matching/query pipeline and ranking/cap findings;
-9. exact verdict on whether matching is AI, heuristic or deterministic;
-10. privacy/data-minimization table;
-11. email producer/sender/template findings;
-12. exact `wp_mail`/state-update/idempotency semantics;
-13. employer usage/business-value assessment;
-14. final `KEEP`, `REDESIGN`, or `DROP` decision with rationale;
-15. if REDESIGN: target architecture + unresolved business decisions;
-16. if DROP: safe retirement design;
-17. exact candidate-alert callback registration and protected candidate→job invariants;
-18. `job_alert` / `candidate_alert` / AS sanitized fingerprints;
-19. ID32733 `pending/0` or observed read-only state;
-20. mail/SMTP/network/payment/cron/AS counters, all expected 0;
-21. production accessed/touched YES/NO;
-22. exactly one proposed next small task **only if the decision is sufficiently supported**; otherwise state the exact business decision needed before implementation.
+1. result PASS/PARTIAL/FAIL and exact meaning;
+2. declared baseline SHA;
+3. feature branch/commit and final staging SHA;
+4. staging deploy marker/runtime parity;
+5. exact changed files + diffstat;
+6. proof no vendor/core/parent-theme files changed;
+7. exact owned callback suppression implementation;
+8. before/final daily callback graph and fingerprint;
+9. proof daily recurring event remains scheduled unchanged;
+10. proof employer→candidate vendor sender registration `1→0`;
+11. new create routes fail closed and create zero posts/meta;
+12. owner-only remove routes remain authoritative;
+13. REST remains false;
+14. creation form/widget surfaces are inactive/hidden;
+15. ordinary candidate search/browse remains available;
+16. historical `candidate_alert` count/fingerprint before/final, expected `4` unchanged;
+17. candidate→job vendor sender `0` and owned hourly evaluator `1`;
+18. continuation count;
+19. `job_alert` count/fingerprint;
+20. AS count/fingerprint and ID32733 `pending/0`;
+21. PHP lint + `git diff --check`;
+22. fixture design/results/cleanup if used;
+23. mail/PHPMailer/SMTP/network/payment/cron/AS execution counters;
+24. production accessed/touched YES/NO;
+25. explicit statement that the legacy employer→candidate alert product is now **retired from active delivery and new creation**, while historical records remain preserved for audit/removal.
 
-Then STOP. Do not begin 1.99 automatically.
+Then STOP. Do not begin a replacement matching product or Zadatak 2.00 automatically.
