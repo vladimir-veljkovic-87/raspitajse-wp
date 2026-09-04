@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.9.0
+ * Version: 0.9.1
  * Author: Raspitajse.com
  */
 
@@ -462,6 +462,11 @@ final class Raspitajse_Communications_Job_Listing_Expiry {
             array( __CLASS__, 'suppress_legacy_callbacks' ),
             103
         );
+        add_action(
+            'plugins_loaded',
+            array( __CLASS__, 'retire_orphaned_daily_schedule' ),
+            104
+        );
         add_action( 'init', array( __CLASS__, 'ensure_schedule' ), 20 );
         add_action( self::HOOK, array( __CLASS__, 'run' ) );
     }
@@ -496,6 +501,19 @@ final class Raspitajse_Communications_Job_Listing_Expiry {
         foreach ( $expiry_callbacks as $callback ) {
             remove_action( self::LEGACY_EXPIRY_HOOK, $callback, 10 );
         }
+    }
+
+    /**
+     * Clear only the callback-free legacy daily event after final suppression.
+     *
+     * @return int|false|WP_Error
+     */
+    public static function retire_orphaned_daily_schedule() {
+        if ( false !== has_action( self::LEGACY_DAILY_HOOK ) ) {
+            return 0;
+        }
+
+        return wp_clear_scheduled_hook( self::LEGACY_DAILY_HOOK );
     }
 
     /**
