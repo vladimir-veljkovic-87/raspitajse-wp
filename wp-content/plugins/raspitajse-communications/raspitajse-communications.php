@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.7.0
+ * Version: 0.8.0
  * Author: Raspitajse.com
  */
 
@@ -429,6 +429,322 @@ final class Raspitajse_Communications_Transport {
     private static function is_staging() {
         return function_exists( 'wp_get_environment_type' )
             && 'staging' === wp_get_environment_type();
+    }
+}
+
+
+/**
+ * Own job-listing expiry without retaining candidate time-expiry behavior.
+ */
+final class Raspitajse_Communications_Job_Listing_Expiry {
+
+    const HOOK         = 'raspitajse_job_listing_expiry_evaluator';
+    const BATCH_SIZE   = 50;
+    const CLAIM_OPTION = 'raspitajse_job_listing_expiry_claim';
+    const CLAIM_TTL    = 600;
+
+    private const LEGACY_DAILY_HOOK  = 'wp_job_board_pro_email_daily_notices';
+    private const LEGACY_EXPIRY_HOOK = 'wp_job_board_pro_check_for_expired_jobs';
+
+    /**
+     * Register the owned policy, callback suppression and self-healing schedule.
+     */
+    public static function boot() {
+        add_filter(
+            'wp-job-board-pro-calculate-candidate-expiry',
+            array( __CLASS__, 'disable_candidate_expiry' ),
+            PHP_INT_MAX,
+            2
+        );
+
+        add_action(
+            'plugins_loaded',
+            array( __CLASS__, 'suppress_legacy_callbacks' ),
+            103
+        );
+        add_action( 'init', array( __CLASS__, 'ensure_schedule' ), 20 );
+        add_action( self::HOOK, array( __CLASS__, 'run' ) );
+    }
+
+    /**
+     * Candidate profiles never receive an automatic time-based duration.
+     */
+    public static function disable_candidate_expiry( $duration, $candidate_id ) {
+        return 0;
+    }
+
+    /**
+     * Remove only the six legacy callbacks retired by the product contract.
+     */
+    public static function suppress_legacy_callbacks() {
+        $daily_callbacks = array(
+            array( 'WP_Job_Board_Pro_Candidate', 'send_admin_expiring_notice' ),
+            array( 'WP_Job_Board_Pro_Candidate', 'send_candidate_expiring_notice' ),
+            array( 'WP_Job_Board_Pro_Job_Listing', 'send_admin_expiring_notice' ),
+            array( 'WP_Job_Board_Pro_Job_Listing', 'send_employer_expiring_notice' ),
+        );
+
+        foreach ( $daily_callbacks as $callback ) {
+            remove_action( self::LEGACY_DAILY_HOOK, $callback, 10 );
+        }
+
+        $expiry_callbacks = array(
+            array( 'WP_Job_Board_Pro_Candidate', 'check_for_expired_candidates' ),
+            array( 'WP_Job_Board_Pro_Job_Listing', 'check_for_expired_jobs' ),
+        );
+
+        foreach ( $expiry_callbacks as $callback ) {
+            remove_action( self::LEGACY_EXPIRY_HOOK, $callback, 10 );
+        }
+    }
+
+    /**
+     * Restore one missing owned event without duplicating an existing event.
+     */
+    public static function ensure_schedule() {
+        if ( ! wp_next_scheduled( self::HOOK ) ) {
+            wp_schedule_event( time() + 300, 'hourly', self::HOOK );
+        }
+    }
+
+    /**
+     * Clear only this component's recurring event on plugin deactivation.
+     */
+    public static function deactivate() {
+        wp_clear_scheduled_hook( self::HOOK );
+    }
+
+    /**
+     * Expire one bounded batch behind a global atomic evaluator claim.
+     *
+     * @return array<string,int|bool|string>
+     */
+    public static function run() {
+        $result = array(
+            'claim_acquired' => false,
+            'claim_released' => false,
+            'selected'       => 0,
+            'expired'        => 0,
+            'skipped'        => 0,
+            'failed'         => 0,
+        );
+
+        $claim_token = self::acquire_claim();
+        if ( ! $claim_token ) {
+            $result['reason'] = 'active_claim';
+            return $result;
+        }
+
+        $result['claim_acquired'] = true;
+
+        try {
+            $today   = current_datetime()->format( 'Y-m-d' );
+            $job_ids = self::due_job_ids( $today );
+
+            if ( is_wp_error( $job_ids ) ) {
+                $result['failed'] = 1;
+                $result['reason'] = 'query_failed';
+            } else {
+                $result['selected'] = count( $job_ids );
+
+                foreach ( $job_ids as $job_id ) {
+                    try {
+                        if ( ! self::is_due_job( $job_id, $today ) ) {
+                            $result['skipped']++;
+                            continue;
+                        }
+
+                        $updated = wp_update_post(
+                            array(
+                                'ID'          => $job_id,
+                                'post_status' => 'expired',
+                            ),
+                            true
+                        );
+
+                        if ( is_wp_error( $updated ) || ! $updated ) {
+                            $result['failed']++;
+                            continue;
+                        }
+
+                        $result['expired']++;
+                    } catch ( Throwable $throwable ) {
+                        $result['failed']++;
+                    }
+                }
+            }
+        } finally {
+            $result['claim_released'] = self::release_claim( $claim_token );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Select at most one deterministic batch of potentially due job IDs.
+     *
+     * Every row is revalidated immediately before transition.
+     *
+     * @return int[]|WP_Error
+     */
+    private static function due_job_ids( $today ) {
+        global $wpdb;
+
+        $sql = $wpdb->prepare(
+            "SELECT posts.ID
+            FROM {$wpdb->posts} AS posts
+            INNER JOIN {$wpdb->postmeta} AS expiry
+                ON expiry.post_id = posts.ID
+                AND expiry.meta_key = %s
+            WHERE posts.post_type = 'job_listing'
+                AND posts.post_status = 'publish'
+                AND expiry.meta_value REGEXP %s
+                AND STR_TO_DATE(expiry.meta_value, '%%Y-%%m-%%d') IS NOT NULL
+                AND expiry.meta_value < %s
+            GROUP BY posts.ID
+            ORDER BY MIN(expiry.meta_value) ASC, posts.ID ASC
+            LIMIT %d",
+            '_job_expiry_date',
+            '^[0-9]{4}-[0-9]{2}-[0-9]{2}$',
+            $today,
+            self::BATCH_SIZE
+        );
+
+        $job_ids = $wpdb->get_col( $sql );
+        if ( '' !== $wpdb->last_error ) {
+            return new WP_Error(
+                'raspitajse_job_expiry_query_failed',
+                'The job expiry query could not be completed.'
+            );
+        }
+
+        return array_map( 'absint', $job_ids );
+    }
+
+    /**
+     * Re-read all mutable eligibility immediately before status transition.
+     */
+    private static function is_due_job( $job_id, $today ) {
+        $job = get_post( $job_id );
+        if (
+            ! $job instanceof WP_Post
+            || 'job_listing' !== $job->post_type
+            || 'publish' !== $job->post_status
+        ) {
+            return false;
+        }
+
+        $expiry = self::valid_date(
+            get_post_meta( $job_id, '_job_expiry_date', true )
+        );
+
+        return null !== $expiry && $expiry < $today;
+    }
+
+    /**
+     * Accept only a real, canonical Y-m-d value in the WordPress timezone.
+     */
+    private static function valid_date( $value ) {
+        if (
+            ! is_string( $value )
+            || 1 !== preg_match( '/^\d{4}-\d{2}-\d{2}$/D', $value )
+        ) {
+            return null;
+        }
+
+        $date   = DateTimeImmutable::createFromFormat( '!Y-m-d', $value, wp_timezone() );
+        $errors = DateTimeImmutable::getLastErrors();
+
+        if (
+            ! $date
+            || ( false !== $errors && ( $errors['warning_count'] || $errors['error_count'] ) )
+            || $date->format( 'Y-m-d' ) !== $value
+        ) {
+            return null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Acquire an atomic option-backed claim, replacing only an exact stale row.
+     *
+     * @return string|false
+     */
+    private static function acquire_claim() {
+        global $wpdb;
+
+        $token   = wp_generate_uuid4();
+        $payload = wp_json_encode(
+            array(
+                'token'      => $token,
+                'expires_at' => time() + self::CLAIM_TTL,
+            )
+        );
+
+        if ( add_option( self::CLAIM_OPTION, $payload, '', 'no' ) ) {
+            return $token;
+        }
+
+        $current = get_option( self::CLAIM_OPTION, null );
+        $decoded = is_string( $current ) ? json_decode( $current, true ) : null;
+
+        if (
+            is_array( $decoded )
+            && ! empty( $decoded['token'] )
+            && ! empty( $decoded['expires_at'] )
+            && (int) $decoded['expires_at'] > time()
+        ) {
+            return false;
+        }
+
+        $updated = $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE {$wpdb->options}
+                SET option_value = %s
+                WHERE option_name = %s
+                    AND option_value = %s",
+                $payload,
+                self::CLAIM_OPTION,
+                maybe_serialize( $current )
+            )
+        );
+
+        wp_cache_delete( self::CLAIM_OPTION, 'options' );
+
+        return 1 === $updated ? $token : false;
+    }
+
+    /**
+     * Release only the exact claim owned by this worker.
+     */
+    private static function release_claim( $token ) {
+        global $wpdb;
+
+        $current = get_option( self::CLAIM_OPTION, null );
+        $decoded = is_string( $current ) ? json_decode( $current, true ) : null;
+
+        if (
+            ! is_array( $decoded )
+            || empty( $decoded['token'] )
+            || ! hash_equals( (string) $decoded['token'], (string) $token )
+        ) {
+            return false;
+        }
+
+        $deleted = $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM {$wpdb->options}
+                WHERE option_name = %s
+                    AND option_value = %s",
+                self::CLAIM_OPTION,
+                maybe_serialize( $current )
+            )
+        );
+
+        wp_cache_delete( self::CLAIM_OPTION, 'options' );
+
+        return 1 === $deleted;
     }
 }
 
@@ -1013,6 +1329,7 @@ final class Raspitajse_Communications_Alert_Security {
 }
 
 Raspitajse_Communications_Transport::boot();
+Raspitajse_Communications_Job_Listing_Expiry::boot();
 Raspitajse_Communications_Alert_Security::boot();
 Raspitajse_Communications_Employer_Candidate_Alert_Retirement::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Evaluator::boot();
@@ -1025,4 +1342,8 @@ register_activation_hook(
 register_deactivation_hook(
     __FILE__,
     array( 'Raspitajse_Communications_Candidate_Job_Alert_Evaluator', 'deactivate' )
+);
+register_deactivation_hook(
+    __FILE__,
+    array( 'Raspitajse_Communications_Job_Listing_Expiry', 'deactivate' )
 );
