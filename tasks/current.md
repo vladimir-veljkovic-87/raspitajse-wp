@@ -1,8 +1,8 @@
-# Zadatak 1.99 — Safely deactivate employer→candidate alert delivery and new creation
+# Zadatak 2.00 — Audit remaining job/candidate expiry notices and expiry lifecycle decisions
 
 Status: READY
-Baseline: 642c8c8efb51a56449fd7048c71d3216590d52bf
-Previous task: 1.98
+Baseline: d9a095893b3751051135333e08dd3a0148db6d9b
+Previous task: 1.99
 Target environment: staging
 Production: FORBIDDEN
 
@@ -10,462 +10,413 @@ Production: FORBIDDEN
 
 Fetch `origin/codex-tasks` and `origin/staging`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or modifying source. `tasks/README.md` is mandatory policy.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or inspecting source/runtime. `tasks/README.md` is mandatory policy.
 
 `codex-tasks` is READ-ONLY. Do not modify, commit to, push to, merge into, rebase, force-update, or otherwise write to `codex-tasks`.
 
 Use exact application truth from `origin/staging` and verify first that it is exactly:
 
-`642c8c8efb51a56449fd7048c71d3216590d52bf`
+`d9a095893b3751051135333e08dd3a0148db6d9b`
 
-If it differs, STOP and report the mismatch.
+If it differs, STOP and report the exact mismatch.
 
-Execute only Zadatak 1.99. Work on a scoped feature branch from exact `origin/staging`, integrate to `staging` only after all acceptance criteria pass, publish the final report through the existing `codex-reports` workflow, and STOP. Do not begin 2.00 automatically.
+Execute only Zadatak 2.00, publish the final report through the existing `codex-reports` workflow, and STOP. This is a read-only audit. Do not implement suppression/redesign and do not begin 2.01 automatically.
 
 ---
 
-## 1. Context and decision already made
+## 1. Context and binding business decisions
 
-Zadatak 1.98 completed PASS and classified the employer→candidate `candidate_alert` product **DROP**.
+Zadatak 1.99 retired employer→candidate `candidate_alert` delivery and creation. The final WPJBP daily hook now intentionally retains exactly four unrelated expiry-notice callbacks:
 
-Evidence supporting DROP is already established and must not be re-litigated in this implementation task:
+1. `WP_Job_Board_Pro_Candidate::send_admin_expiring_notice`
+2. `WP_Job_Board_Pro_Candidate::send_candidate_expiring_notice`
+3. `WP_Job_Board_Pro_Job_Listing::send_admin_expiring_notice`
+4. `WP_Job_Board_Pro_Job_Listing::send_employer_expiring_notice`
 
-- there are exactly four published legacy `candidate_alert` objects on staging;
-- zero are owned by a currently valid employer + canonical employer-profile pair;
-- three are admin-owned legacy objects and one is orphaned/missing-owner;
-- two saved queries are empty/unconstrained, two currently match zero candidates;
-- active legacy delivery can fetch only one candidate and its so-called “best candidate” heuristic cannot meaningfully rank alternatives;
-- cadence/state semantics are defective: first-send frequency bypass, attempt-as-success state, no reliable retry/idempotency/claiming, concurrency duplication risk;
-- current employer-facing content implies AI matching although no model/AI inference exists;
-- the producer overreads personal candidate data and has a concrete cross-recipient content-reuse defect;
-- no genuine staging employer adoption or paid candidate-database entitlement is implemented in this path;
-- normal candidate browse/search already covers the deterministic filtering use case more completely.
+Candidate→job alerts remain on the owned hourly evaluator and are out of scope except as protected invariants.
 
-The business outcome may be revisited later only as a **new product discovery**, not as preservation or migration of these four legacy alerts.
+The owner has made a binding current product decision:
 
-This task therefore implements the smallest safe retirement slice.
+**Candidate profiles do NOT auto-expire merely because time passes.**
+
+Do not reinterpret this as a request to invent a candidate expiry window. A future stale-profile confirmation/reminder product may be considered separately, but it is not the same as legacy candidate expiry and must not be assumed here.
+
+Job listings are a different business object. Their listing duration/expiry may remain a legitimate product rule and must be audited independently from candidate profiles.
+
+The purpose of 2.00 is to decide, with current source/runtime evidence, what to KEEP / REDESIGN / DROP for the remaining expiry lifecycle and notifications.
 
 ---
 
 ## 2. Goal
 
-Safely retire active employer→candidate alert delivery and new alert creation while preserving historical auditability and all unrelated systems.
+Answer conclusively:
 
-After this task:
+1. What exact lifecycle makes a `job_listing` expire today, and is that lifecycle still required by Raspitajse package/job-duration rules?
+2. What exact lifecycle can make a `candidate` expire today, whether it is registered/scheduled/reachable, and whether it conflicts with the owner decision that candidate profiles do not auto-expire?
+3. What configuration/options gate each of the four remaining daily notice callbacks?
+4. Which callbacks are operationally active, dormant-by-config, or dangerous-if-enabled?
+5. What actual staging job/candidate expiry data exists, without exposing PII?
+6. Who receives each notice, what content/template is used, and what sender/header path is used?
+7. Does any retained notice use the Raspitajse SenderPolicy/Transport architecture, especially the existing `job_expiry` channel?
+8. Are there duplicate-send, success-state, timezone, batching, or privacy issues?
+9. For each of the four callbacks, choose exactly one: `KEEP`, `REDESIGN`, or `DROP`.
+10. Separately classify the underlying **job expiry lifecycle** and **candidate expiry lifecycle** as `KEEP`, `REDESIGN`, or `DROP`.
+11. If the evidence justifies one small next task, propose exactly one bounded 2.01 task; otherwise state that no implementation task is justified yet.
 
-1. `WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice` must no longer be registered on the final `wp_job_board_pro_email_daily_notices` graph.
-2. New employer→candidate `candidate_alert` creation must fail closed server-side.
-3. The two known candidate-alert creation surfaces must no longer offer new alert creation to users.
-4. Existing owner-only alert removal must continue to work.
-5. Existing REST restriction must remain.
-6. The four historical `candidate_alert` records and their metadata must remain byte-for-byte unchanged.
-7. No final notification email is sent.
-8. Candidate search/browse remains unchanged.
-9. Candidate→job owned alert delivery remains unchanged.
-
-Do not build a replacement employer→candidate matching product.
-
----
-
-## 3. Implementation ownership / file policy
-
-Prefer Raspitajse-owned implementation.
-
-Expected primary ownership:
-
-- `wp-content/plugins/raspitajse-communications/`
-
-Theme-safe presentation changes may use an existing Raspitajse-owned child-theme layer only if necessary to hide a presentation surface.
-
-Do **not** modify:
-
-- WordPress core;
-- WooCommerce/vendor core;
-- WP Job Board Pro vendor source;
-- Superio parent-theme vendor source.
-
-If a creation surface cannot be safely hidden without editing WPJBP vendor code or the Superio parent theme, STOP and report the exact blocker instead of introducing a vendor fork.
-
-Keep the patch narrow. Do not refactor unrelated communications code.
+No implementation in 2.00.
 
 ---
 
-## 4. Exact daily-hook suppression
+## 3. Strict read-only scope
 
-The active pre-task final daily-hook graph has exactly five callbacks at priority `10`:
+Allowed:
 
-1. `WP_Job_Board_Pro_Candidate::send_admin_expiring_notice`
-2. `WP_Job_Board_Pro_Candidate::send_candidate_expiring_notice`
-3. `WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice`
-4. `WP_Job_Board_Pro_Job_Listing::send_admin_expiring_notice`
-5. `WP_Job_Board_Pro_Job_Listing::send_employer_expiring_notice`
+- read `origin/staging` source and Git history;
+- read-only WordPress bootstrap/WP-CLI/database inspection on staging;
+- inspect options/configuration without printing secrets;
+- inspect registered hooks and scheduled cron events **without executing them**;
+- inspect job/candidate counts, statuses, expiry-meta shape and sanitized fingerprints;
+- inspect email subject/content configuration structurally without printing recipient PII or full rendered bodies;
+- inspect Raspitajse communications SenderPolicy/Transport code and active registrations.
 
-Implement an owned exact suppression after vendor registration that removes **only**:
+Forbidden:
 
-`WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice`
+- application source changes;
+- application commits/branches/pushes/deploys;
+- post/meta/option/user mutation;
+- job/candidate/profile status changes;
+- expiry-date changes;
+- cron schedule mutation or hook execution;
+- Action Scheduler runner/action execution;
+- `wp_mail`, PHPMailer or SMTP;
+- payment calls;
+- external application/vendor HTTP;
+- production filesystem/database/backups/network access.
 
-from:
-
-`wp_job_board_pro_email_daily_notices`
-
-at priority `10`.
-
-Do not remove, re-register, wrap, reorder or otherwise alter the other four callbacks.
-
-Do not execute the daily hook.
-
-Acceptance after bootstrap:
-
-- final daily callback count = exactly `4`;
-- the candidate-alert vendor callback registration count = `0`;
-- the four unrelated callbacks remain exactly once each at priority `10`;
-- the recurring `wpie_daily` cron event itself remains exactly one scheduled event and is not unscheduled/rescheduled.
-
-Do not replace the dropped callback with an owned sender/evaluator.
+Only normal `codex-reports` publication may write to the repository.
 
 ---
 
-## 5. Fail closed new `candidate_alert` creation
+## 4. Exact source inventory
 
-Zadatak 1.84 made `Raspitajse_Communications_Alert_Security` authoritative for candidate-alert mutations. Preserve that security architecture.
+At minimum inspect:
 
-For employer→candidate candidate alerts only:
+- `wp-content/plugins/wp-job-board-pro/includes/class-candidate.php`
+- `wp-content/plugins/wp-job-board-pro/includes/class-job_listing.php`
+- `wp-content/plugins/wp-job-board-pro/includes/class-email.php`
+- relevant WPJBP option/settings definitions for candidate/job expiry and notice toggles;
+- relevant cron/scheduler registration code for expiry checks;
+- relevant default/configured email templates for the four notices;
+- `wp-content/plugins/raspitajse-communications/` SenderPolicy/Transport and current retirement/evaluator registrations;
+- package/job-duration logic only where necessary to establish whether job expiry is a genuine Raspitajse business requirement.
 
-- keep the exact active add routes owned by the security layer;
-- preserve existing login/role/capability/nonce/type/payload validation boundaries;
-- after sufficient validation to remain fail-closed and predictable, return an explicit inactive/retired-feature error response;
-- do not create a post;
-- do not update alert meta;
-- do not silently fall through to vendor add handlers;
-- vendor add callbacks must remain absent;
-- anonymous add routes must remain fail closed;
-- no new `candidate_alert` may be created through any of the six known AJAX route variants.
+For each relevant unit report:
 
-The response should be user-safe and non-PII. Do not claim temporary unavailability if the product is intentionally retired.
+`Path | responsibility | runtime reachability | vendor/owned/theme | business disposition relevance`
 
-Do not broaden this behavior to candidate→job `job_alert` creation.
-
----
-
-## 6. Preserve owner-only removal and historical auditability
-
-Existing candidate-alert remove routes remain supported for cleanup by the rightful owner where ownership is valid.
-
-Preserve:
-
-- authentication;
-- nonce validation;
-- exact `candidate_alert` type validation;
-- positive integer ID validation;
-- exact `post_author === current user` ownership;
-- no admin override through frontend removal;
-- vendor remove callbacks absent;
-- owned security callback authoritative;
-- `candidate_alert.show_in_rest = false`.
-
-Do not disable the remove handler merely because create is retired.
-
-Do not bulk-delete, trash, unpublish, rewrite, migrate, relabel or mutate any of the four historical alerts.
-
-Historical records must remain inspectable for auditability.
+Do not broaden into unrelated candidate/job features.
 
 ---
 
-## 7. Hide the two exact creation surfaces
+## 5. Reconfirm final daily graph after 1.99
 
-Zadatak 1.98 identified these creation surfaces:
+Read-only prove after plugin bootstrap:
 
-1. candidate-search page form from WPJBP `templates/loop/candidate/candidates-alert-form.php`;
-2. optional candidate-alert widget from `includes/widgets/class-widget-candidate-alert-form.php` / `templates/widgets/candidate-alert-form.php` when placed.
+- recurring `wp_job_board_pro_email_daily_notices` event count = exactly `1`;
+- exact schedule/interval/timestamp/fingerprint;
+- final callback count = exactly `4`;
+- exact callbacks are the four listed in section 1, each once at priority `10`;
+- employer→candidate `WP_Job_Board_Pro_Candidate_Alert::send_candidate_alert_notice` registration remains `0`;
+- candidate→job vendor sender remains `0`;
+- owned candidate→job hourly evaluator remains exactly `1`;
+- continuation remains `0` unless independently pre-existing.
 
-Hide/disable these surfaces using owned hooks/filters/template resolution/widget registration controls or child-theme-safe mechanisms.
+Do not execute any of these hooks.
 
-Requirements:
+Also determine whether any separate cron hook, Action Scheduler action, init/request path, or external runner can invoke:
 
-- no visible “create candidate alert” form on ordinary candidate search/browse;
-- no active widget creation surface when the candidate-alert widget is configured/placed;
-- ordinary candidate search/browse and its filters remain unchanged;
-- do not hide candidate profiles, browse results, filters, contact entitlement or unrelated widgets;
-- do not edit WPJBP vendor templates or Superio parent templates.
+- `WP_Job_Board_Pro_Candidate::check_for_expired_candidates`
+- `WP_Job_Board_Pro_Job_Listing::check_for_expired_jobs`
 
-If one surface is already unreachable under current theme/configuration, prove that and still ensure it cannot become active through the normal registered surface after this task.
-
-Do not use JavaScript-only hiding as the authorization boundary. Server-side creation must already fail closed.
-
----
-
-## 8. Management/read-only transition UX
-
-Do not remove the historical management/listing surface if doing so would prevent auditability or owner deletion.
-
-The active Superio override currently provides the employer candidate-alert management table.
-
-For this task, minimum acceptable behavior is:
-
-- historical alerts may still be listed;
-- owner-only removal may remain available;
-- no create/new-alert CTA is exposed from that management context;
-- no UI text promises that historical alerts are still actively sending.
-
-If the current management page already meets these minimums after the creation surfaces are hidden, do not redesign it.
-
-If a tiny owned/child-theme-safe copy change is necessary to avoid falsely claiming active delivery, make only that bounded presentation change and report it separately.
-
-Do not add a large retirement UX redesign.
+Report exact registration/reachability and schedule, if any. Do not run them.
 
 ---
 
-## 9. Historical data preservation proof
+## 6. Candidate expiry lifecycle — binding owner decision
 
-Before any source change, capture a sanitized deterministic fingerprint of all published `candidate_alert` records and relevant meta shape, without printing raw IDs, emails, names, saved values or PII.
+Trace the full candidate expiry lifecycle from profile creation/update through any `expiry_date` calculation and eventual status transition.
 
-Expected count: `4`.
+Document exactly:
 
-After implementation + deployment + bounded tests, prove:
+- current `resume_duration` / equivalent option value and its meaning;
+- where candidate expiry dates are calculated/written;
+- whether existing candidate posts actually contain expiry-date meta;
+- whether `check_for_expired_candidates()` is registered anywhere;
+- whether it can change `publish → expired` automatically under current runtime;
+- whether any separate delete/trash-old-expired-candidates path is reachable;
+- whether profile editing/reactivation recalculates expiry;
+- current counts by sanitized status/expiry bucket.
 
-- published `candidate_alert` count remains exactly `4`;
-- sanitized fingerprint is byte-for-byte/logically identical to before;
-- post status unchanged;
-- post author unchanged;
-- query meta unchanged;
-- frequency meta unchanged;
-- `_candidate_alert_send_email_time` unchanged;
-- all other existing candidate-alert meta unchanged.
+Important source-safety question:
 
-No fixture may reuse or mutate the four historical records.
+`WP_Job_Board_Pro_Candidate::get_expiring_candidates()` currently appears to reference `$wpdb` without declaring/importing it in that method. Verify this exact fact from current source and explain the consequence if either candidate expiry-notice callback were enabled and reached the helper. Do **not** execute the defective path merely to prove the failure.
 
----
+Business rule for classification:
 
-## 10. Bounded creation/removal fixture
+- automatic candidate expiry based only on elapsed time conflicts with the current owner decision and therefore cannot be classified KEEP as a product outcome;
+- a possible future “please confirm your profile is still current” reminder is a separate product and must not be used to justify retaining legacy expiry machinery.
 
-Create a task-private staging fixture only if needed to prove server behavior. It must be isolated and cleaned exactly.
+Choose a final disposition for:
 
-Preferred fixture goals:
-
-### New-create fail-closed
-
-Prove an otherwise valid authenticated employer candidate-alert create request reaches the owned retirement boundary and:
-
-- returns the intended inactive-feature error;
-- creates zero posts;
-- writes zero candidate-alert meta;
-- triggers zero vendor add callback;
-- sends zero mail;
-- causes zero external HTTP/payment activity.
-
-### Removal preserved
-
-If practical without touching historical records, create a temporary fixture alert through direct controlled fixture setup **outside the retired public create path**, then prove the existing owner-only remove handler can remove only that fixture and rejects a non-owner. Clean the fixture exactly.
-
-If fixture creation would require unsafe/broad mutation, do not force it; static/runtime callback proof plus existing 1.84 accepted security evidence may be used instead. Explain the choice.
-
-Never use a historical alert for destructive testing.
+- candidate auto-expiry lifecycle;
+- admin candidate-expiry notice;
+- candidate self-expiry notice.
 
 ---
 
-## 11. Candidate→job protected invariants
+## 7. Job expiry lifecycle
 
-This task must not regress the already-owned candidate→job subsystem.
+Trace the job-listing expiry lifecycle independently.
 
-After deployment, prove:
+Document exactly:
 
-- direct vendor `WP_Job_Board_Pro_Job_Alert::send_job_alert_notice` registration = `0`;
-- owned hourly `raspitajse_candidate_job_alert_evaluator` event count = exactly `1`;
-- evaluator schedule remains `hourly`;
-- continuation event count = `0` unless a pre-existing bounded event independently exists;
-- `job_alert` published count remains `0`;
-- candidate-job new-create frequency UI remains the owned four values: daily/weekly/fortnightly/monthly;
-- legacy getter compatibility remains available;
-- `_job_alert_send_email_time` remains owned-read-only compatibility input;
-- SenderPolicy/Transport behavior for candidate alerts remains unchanged.
+- where `_...expiry_date` is calculated/written for jobs;
+- how duration is derived from WPJBP/package/product data;
+- interaction with the Raspitajse package rules already implemented in `raspitajse-commerce` (package entitlement validity is separate from the duration of an already-published job);
+- current package/job durations if source/configuration makes them authoritative;
+- whether `check_for_expired_jobs()` is registered/reachable;
+- exact `publish → expired` behavior;
+- whether old expired jobs can be trashed and whether that path is enabled/reachable;
+- current staging job counts/statuses and expiry-date buckets, sanitized and without titles/owners/PII.
 
-Do not execute the owned candidate→job evaluator or continuation hook.
+Explicitly separate these two concepts:
 
----
+1. package entitlement validity — time window in which an employer may consume package ads;
+2. individual published job listing duration — how long the published job remains active.
 
-## 12. Daily scheduler / unrelated notices protection
+Determine whether automatic **job listing expiry** is a legitimate business requirement even if expiry-email notices are disabled or redesigned.
 
-The daily recurring event remains because four unrelated callbacks still depend on it.
-
-Do not:
-
-- unschedule `wp_job_board_pro_email_daily_notices`;
-- execute it;
-- change its recurrence;
-- change job expiry or candidate expiry callbacks;
-- decide retention of those four unrelated callbacks in this task.
-
-Acceptance:
-
-- daily recurring event count/schedule unchanged;
-- final callback graph exactly `4` unrelated callbacks;
-- employer→candidate candidate-alert callback `0`.
+Choose a final disposition for the underlying job expiry lifecycle.
 
 ---
 
-## 13. Action Scheduler / protected state
+## 8. Four notice callbacks — configuration and due semantics
 
-Before/final, capture sanitized protected state:
+For each callback inspect exact option keys and current values:
 
+- enable/disable flag;
+- days-before-expiry value;
+- template subject/content source;
+- configured content non-empty YES/NO;
+- recipient resolution;
+- query used to select expiring objects;
+- date/timezone calculation;
+- whether selection is exact-date only, range-based, or otherwise;
+- whether repeated daily execution can resend the same notice;
+- whether any persistent sent ledger/marker exists;
+- whether `wp_mail` result is checked;
+- what happens after mail failure;
+- batching/result limits;
+- behavior if recipient cannot be resolved.
+
+Do not send mail.
+
+For each callback report:
+
+`Callback | enabled now | days | due objects now (count only) | recipient category | delivery-state model | active/dormant | major defects | KEEP/REDESIGN/DROP`
+
+---
+
+## 9. Sender / email template / privacy audit
+
+Trace the exact mail production path for all four notices.
+
+Document:
+
+- From behavior;
+- Reply-To behavior;
+- Content-Type;
+- recipient source;
+- subject/content renderer;
+- configured-content vs default-template fallback;
+- key variables made available to the template;
+- links/CTAs;
+- whether any candidate/employer personal data beyond what is necessary is exposed;
+- whether admin notices contain data that adds operational value.
+
+Determine whether any callback currently enters Raspitajse SenderPolicy/Transport.
+
+Specifically inspect the existing `job_expiry` SenderPolicy channel introduced earlier and state:
+
+- whether it is currently used by these vendor callbacks;
+- whether it is suitable for a future owned employer job-expiry notice if that outcome is retained;
+- whether admin notices should use `system` instead if retained.
+
+Do not create a new sender channel in this task.
+
+---
+
+## 10. Business-value decision per notice
+
+Classify each callback separately, based on actual current data/config and product value:
+
+### Candidate admin expiry notice
+Given that candidate profiles do not auto-expire, determine whether this notice has any valid business purpose. Do not retain it merely because vendor code exists.
+
+### Candidate self expiry notice
+Same rule: do not tell candidates their profile is “expiring” if Raspitajse has decided profiles do not auto-expire. A future stale-data confirmation reminder must be treated as a new product.
+
+### Job admin expiry notice
+Determine whether notifying site administrators before each job expires provides meaningful operational value or only noise/duplicate vendor behavior.
+
+### Employer job expiry notice
+Determine whether notifying the employer that a published job is approaching its actual listing end provides useful business value. If yes but implementation/sender/state is weak, prefer `REDESIGN` rather than preserving vendor mail logic.
+
+For each choose exactly one:
+
+- `KEEP` — current outcome and implementation are sufficiently sound;
+- `REDESIGN` — business outcome is worth retaining, but should move to a Raspitajse-owned implementation;
+- `DROP` — business outcome is unnecessary/misleading/risky.
+
+Do not choose REDESIGN automatically; justify it with product value.
+
+---
+
+## 11. If job employer notice is retained, define only a bounded target design
+
+If `send_employer_expiring_notice` is classified `REDESIGN`, provide a concise target design only, not implementation:
+
+- owned scheduler/evaluator boundary;
+- canonical job-expiry source;
+- deterministic “N days before actual expiry” window;
+- one notice per job/window;
+- idempotency/claim behavior;
+- no notice for already expired/unpublished/cancelled jobs;
+- recipient resolved from canonical employer/user ownership;
+- SenderPolicy `job_expiry` channel;
+- transport result handling;
+- no package-entitlement confusion;
+- no duplicate notices after delayed cron runs;
+- template/content ownership in Raspitajse-owned/configured layer.
+
+State any business decision still needed, especially the preferred days-before-expiry value, only if current configuration/product evidence does not already resolve it.
+
+---
+
+## 12. Actual staging data footprint
+
+Read-only capture sanitized counts/fingerprints for:
+
+### Candidates
+- total candidate posts by relevant status;
+- published candidates with expiry meta;
+- empty expiry meta;
+- already-past expiry values;
+- future expiry values by coarse age bucket;
+- candidate records that legacy notice code would consider due today, count only.
+
+### Jobs
+- total job listings by relevant status;
+- published jobs with expiry meta;
+- expired jobs;
+- past/future/empty expiry values by coarse bucket;
+- jobs the admin/employer notice code would consider due today, count only.
+
+Do not output raw post IDs, titles, owner names/emails, candidate names, or exact private data.
+
+If zero live jobs means a notice cannot be product-validated from staging usage, say so explicitly rather than inventing demand.
+
+---
+
+## 13. Protected-state observation
+
+Capture before/final read-only state and prove unchanged:
+
+- `origin/staging` SHA and deploy marker;
+- environment exactly staging;
+- staging mail safety loaded;
+- daily event count/schedule/fingerprint;
+- exact four daily callbacks/fingerprint;
+- candidate-alert sender remains `0`;
+- candidate→job vendor sender `0`;
+- candidate→job hourly evaluator `1`;
+- continuation `0` unless independently pre-existing;
+- published `job_alert` count/fingerprint;
+- published historical `candidate_alert` count/fingerprint;
 - pending Action Scheduler count/fingerprint;
 - ID32733 status/attempts.
 
-Expected from 1.98 historical state:
+Expected from 1.99:
 
-- ID32733 = `pending/0`.
+- staging SHA `d9a095893b3751051135333e08dd3a0148db6d9b`;
+- daily callbacks `4`;
+- employer→candidate sender `0`;
+- candidate→job vendor sender `0`;
+- owned hourly evaluator `1`;
+- continuation `0`;
+- `job_alert` `0`;
+- historical `candidate_alert` `4`;
+- ID32733 `pending/0`.
 
-Do not execute Action Scheduler runners, due actions or ID32733.
-
-No AS action should be added for retired candidate-alert delivery.
-
----
-
-## 14. Mail / network / payment safety
-
-This task must not send an employer candidate-alert email.
-
-Expected counters:
-
-- real `wp_mail`: `0`;
-- PHPMailer transport: `0`;
-- SMTP: `0`;
-- candidate-alert vendor sender executions: `0`;
-- candidate→job evaluator executions: `0`;
-- external application/vendor HTTP: `0`;
-- payment calls: `0`.
-
-If a bounded fixture uses the WordPress mail API accidentally, treat that as a failure unless intercepted by the existing staging mail-safety boundary and explicitly expected in the test design. Prefer no mail API call at all.
+If any expected value differs, investigate read-only and report the cause. Do not repair it in this task.
 
 ---
 
-## 15. Source quality / validation
+## 14. Zero-side-effect contract
 
-For every changed PHP file:
+Expected effects:
 
-- `php -l` PASS.
+- application source writes: `0`;
+- application commits/branches/pushes/deploys: `0`;
+- WordPress post/meta/option/user/business mutations: `0`;
+- job/candidate/profile mutations: `0`;
+- cron schedule mutations/executions: `0`;
+- fixtures: `0`;
+- `wp_mail` / PHPMailer / SMTP: `0 / 0 / 0`;
+- application/vendor HTTP: `0`;
+- payment calls: `0`;
+- Action Scheduler mutations/executions: `0`;
+- ID32733 executions: `0`.
 
-For the final patch:
-
-- `git diff --check` PASS;
-- no debug logging;
-- no PII logging;
-- no secrets;
-- no hard-coded user IDs/emails;
-- no production-only URLs introduced;
-- no vendor/core modifications;
-- no JS-only security mechanism;
-- no unrelated refactor.
-
-Report exact changed files and diffstat.
+Production filesystem/database/backups/network/application: **NO ACCESS / NO TOUCH**.
 
 ---
 
-## 16. Staging integration and deploy
-
-Follow the repository workflow from `tasks/README.md`.
-
-- branch from exact baseline;
-- implement narrow owned retirement slice;
-- run static tests before integration;
-- integrate to `staging` only after acceptance;
-- deploy only to staging;
-- prove source/deploy parity;
-- production remains untouched.
-
-If deploy marker/runtime source cannot be proven equal to final `staging` SHA, STOP and report PARTIAL/FAIL rather than claiming PASS.
-
----
-
-## 17. Final expected runtime state
-
-Expected after PASS:
-
-- final daily callbacks: `4`;
-- exact remaining daily callbacks:
-  1. `WP_Job_Board_Pro_Candidate::send_admin_expiring_notice`
-  2. `WP_Job_Board_Pro_Candidate::send_candidate_expiring_notice`
-  3. `WP_Job_Board_Pro_Job_Listing::send_admin_expiring_notice`
-  4. `WP_Job_Board_Pro_Job_Listing::send_employer_expiring_notice`
-- employer→candidate vendor sender registration: `0`;
-- candidate→job vendor sender: `0`;
-- owned candidate→job hourly evaluator: `1`;
-- continuation: `0` unless independently pre-existing;
-- published `job_alert`: `0`;
-- published historical `candidate_alert`: `4`, fingerprint unchanged;
-- candidate-alert REST: false;
-- new candidate-alert create route: fail closed;
-- candidate-alert owner-only remove route: preserved;
-- two candidate-alert creation UI surfaces: inactive/hidden;
-- ordinary candidate search/browse: unchanged;
-- ID32733: `pending/0`;
-- mail/SMTP/payment/cron-runner/AS executions: `0`.
-
----
-
-## 18. Zero-side-effect boundaries outside intended source/deploy
-
-Intended effects:
-
-- narrow application source changes in Raspitajse-owned layers;
-- one scoped feature commit/branch;
-- fast-forward integration to `staging` after acceptance;
-- staging deployment;
-- optionally isolated task fixture with exact cleanup.
-
-Forbidden effects:
-
-- production changes/access;
-- historical candidate-alert mutation;
-- candidate/profile/job business-data mutation outside exact cleaned fixture;
-- cron hook execution;
-- Action Scheduler execution;
-- real mail;
-- payment;
-- external vendor/application HTTP;
-- vendor/core source changes.
-
----
-
-## 19. HOST_NAMESPACE_PRESSURE
+## 15. HOST_NAMESPACE_PRESSURE
 
 Known `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC` remains.
 
-Use previously proven namespace-free Git/filesystem/WP-CLI paths when needed. If a sandbox helper fails with the known signature, do not retry indefinitely. Never use broad process kills.
+Prefer namespace-free Git/filesystem/WP-CLI read paths already proven safe. If a helper fails with the known signature, do not retry indefinitely. Never use broad process kills.
 
 ---
 
-## 20. Final report
+## 16. Final report
 
 Publish:
 
-**Zadatak 1.99 — Safely deactivate employer→candidate alert delivery and new creation**
+**Zadatak 2.00 — Audit remaining job/candidate expiry notices and expiry lifecycle decisions**
 
 Report must include:
 
-1. result PASS/PARTIAL/FAIL and exact meaning;
-2. declared baseline SHA;
-3. feature branch/commit and final staging SHA;
-4. staging deploy marker/runtime parity;
-5. exact changed files + diffstat;
-6. proof no vendor/core/parent-theme files changed;
-7. exact owned callback suppression implementation;
-8. before/final daily callback graph and fingerprint;
-9. proof daily recurring event remains scheduled unchanged;
-10. proof employer→candidate vendor sender registration `1→0`;
-11. new create routes fail closed and create zero posts/meta;
-12. owner-only remove routes remain authoritative;
-13. REST remains false;
-14. creation form/widget surfaces are inactive/hidden;
-15. ordinary candidate search/browse remains available;
-16. historical `candidate_alert` count/fingerprint before/final, expected `4` unchanged;
-17. candidate→job vendor sender `0` and owned hourly evaluator `1`;
-18. continuation count;
-19. `job_alert` count/fingerprint;
-20. AS count/fingerprint and ID32733 `pending/0`;
-21. PHP lint + `git diff --check`;
-22. fixture design/results/cleanup if used;
-23. mail/PHPMailer/SMTP/network/payment/cron/AS execution counters;
-24. production accessed/touched YES/NO;
-25. explicit statement that the legacy employer→candidate alert product is now **retired from active delivery and new creation**, while historical records remain preserved for audit/removal.
+1. PASS/PARTIAL and exact meaning;
+2. baseline/final SHA proof;
+3. exact final four-callback daily graph and event state;
+4. separate registration/reachability of `check_for_expired_candidates` and `check_for_expired_jobs`;
+5. source inventory;
+6. candidate expiry lifecycle and current configuration/data footprint;
+7. explicit verification of the `$wpdb` defect or proof it does not exist;
+8. job expiry lifecycle and package-vs-listing-duration distinction;
+9. exact current notice option values for all four callbacks;
+10. sanitized due-object counts;
+11. recipient/sender/template/content-path audit;
+12. SenderPolicy/Transport usage and `job_expiry` channel relevance;
+13. per-notice KEEP / REDESIGN / DROP decision with reasons;
+14. candidate auto-expiry lifecycle KEEP / REDESIGN / DROP;
+15. job listing expiry lifecycle KEEP / REDESIGN / DROP;
+16. if employer job-expiry notice is REDESIGN, bounded owned target design;
+17. protected job_alert/candidate_alert/AS fingerprints and ID32733 `pending/0`;
+18. zero mail/SMTP/network/payment/cron/AS execution counters;
+19. production accessed/touched YES/NO;
+20. exactly one proposed next small task only if evidence justifies it.
 
-Then STOP. Do not begin a replacement matching product or Zadatak 2.00 automatically.
+Then STOP. Do not begin 2.01 automatically.
