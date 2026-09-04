@@ -1,8 +1,8 @@
-# Zadatak 2.02 — Implement owned employer job-expiry notification on the job-only lifecycle
+# Zadatak 2.03 — Retire the orphan legacy daily expiry schedule after final owned-scheduler regression
 
 Status: READY
-Baseline: 862c5e5c47f4172807bb898ee6253c15b178a32d
-Previous task: 2.01
+Baseline: d09abafb154d1e4e004696361aa28c4c7f1920e7
+Previous task: 2.02
 Target environment: staging
 Production: FORBIDDEN
 
@@ -14,514 +14,373 @@ Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in ful
 
 `codex-tasks` is READ-ONLY. Do not modify, commit to, push to, merge into, rebase, force-update, or otherwise write to `codex-tasks`.
 
-Use exact application truth from `origin/staging` and verify first that it is exactly:
+Verify that fresh `origin/staging` is exactly:
 
-`862c5e5c47f4172807bb898ee6253c15b178a32d`
+`d09abafb154d1e4e004696361aa28c4c7f1920e7`
 
-If it differs, STOP and report the mismatch.
+If it differs, STOP and report the mismatch. Do not silently rebase this task.
 
-Execute only Zadatak 2.02. Work on one scoped feature branch from exact `origin/staging`, integrate to `staging` only after all acceptance criteria pass, publish the final report through the existing `codex-reports` workflow, and STOP. Do not begin 2.03 automatically.
+Execute only Zadatak 2.03. Work on one scoped feature branch from exact `origin/staging`, integrate to `staging` only after all acceptance criteria pass, publish the final report through the existing `codex-reports` workflow, and STOP. Do not begin 2.04 automatically.
 
 ---
 
-## 1. Context and fixed decisions
+## 1. Context already established
 
-Zadatak 2.00 classified employer job-expiry notification as **REDESIGN**. Zadatak 2.01 then established the prerequisite owned job-only expiry boundary and retired the legacy notice/lifecycle callbacks.
+Zadatak 2.01 and 2.02 completed the expiry migration:
 
-Current required runtime truth from 2.01:
+- candidate time-based auto-expiry is retired;
+- all legacy candidate/job expiry notice callbacks are absent;
+- the legacy shared expiry checker callbacks are absent;
+- job listing status expiry is owned by `raspitajse_job_listing_expiry_evaluator`;
+- employer pre-expiry notification is owned by `raspitajse_employer_job_expiry_notice_evaluator`;
+- both owned evaluators are hourly, self-healing, bounded and independent;
+- candidate→job alert delivery remains separately owned and hourly;
+- no active business callback remains on the legacy daily expiry-notice hook.
 
-- `origin/staging` / deploy marker = `862c5e5c47f4172807bb898ee6253c15b178a32d`;
-- legacy `wp_job_board_pro_email_daily_notices` callback count = `0`;
-- all four legacy expiry notice callbacks = `0`;
-- legacy shared expiry callbacks = `0`;
-- candidate automatic expiry calculation is forced disabled by the owned late filter;
-- owned job expiry hook = `raspitajse_job_listing_expiry_evaluator`;
-- owned job expiry evaluator callback count = exactly `1`;
-- owned job expiry event count = exactly `1`, schedule `hourly`;
-- job expiry evaluator batch size = `50`, global claim TTL = `600` seconds;
-- owned evaluator consumes canonical `_job_expiry_date` and expires only `publish` jobs whose valid `Y-m-d` expiry date is strictly before the current WordPress site-calendar date;
-- no replacement expiry email sender currently exists;
-- `Raspitajse_Communications_Sender_Policy::CHANNEL_JOB_EXPIRY` already exists;
-- staging job-expiry sender resolves to the approved staging system identity through SenderPolicy;
-- `Raspitajse_Communications_Transport::send()` is the approved semantic-channel transport boundary;
-- package-entitlement validity and published-listing lifetime are separate clocks and must remain separate.
+Final 2.02 runtime truth:
 
-Do not restore or reuse the legacy WPJBP employer notice sender/template/state model.
+- `wp_job_board_pro_email_daily_notices` callback count = `0`;
+- one old recurring WP-Cron event for that hook still exists;
+- legacy event recurrence = `wpie_daily`, interval `86400`, args `[]`;
+- this event is now orphaned: it has no business callback to execute;
+- `wp_job_board_pro_check_for_expired_jobs` callback/event count = `0/0`;
+- `raspitajse_job_listing_expiry_evaluator` = exactly one callback + one hourly event;
+- `raspitajse_employer_job_expiry_notice_evaluator` = exactly one callback + one hourly event;
+- candidate→job owned evaluator remains exactly one callback + one hourly event;
+- Action Scheduler pending count = `7`;
+- ID32733 = `pending/0`.
+
+The purpose of 2.03 is **only** to remove the now-useless legacy daily schedule and make that retirement durable without disturbing any owned scheduler.
+
+Do not revisit expiry business decisions in this task.
 
 ---
 
 ## 2. Goal
 
-Implement one Raspitajse-owned employer notification that warns the canonical employer that a published job listing is approaching its listing expiry.
-
 After PASS:
 
-1. Exactly one owned employer job-expiry notification evaluator exists.
-2. It uses the canonical `_job_expiry_date`; it does not derive expiry from package entitlement validity.
-3. The notification window is deterministic and calendar-based.
-4. A job/expiry-date pair can be successfully delivered at most once.
-5. Failed/interrupted attempts remain retryable without duplicate successful delivery.
-6. Overlapping workers cannot send the same job/expiry-date concurrently.
-7. Recipient resolution is canonical, validated and employer-owned.
-8. Sending occurs only through `Raspitajse_Communications_Transport::send()` with `CHANNEL_JOB_EXPIRY`.
-9. Subject/body are Raspitajse-owned and do not depend on WPJBP vendor expiry templates/options.
-10. The 2.01 job status expiry evaluator remains unchanged in behavior and schedule.
-11. Candidate expiry/admin notices remain retired.
-12. No production access/touch.
+1. `wp_job_board_pro_email_daily_notices` still has exactly `0` callbacks.
+2. Scheduled events for `wp_job_board_pro_email_daily_notices` are exactly `0`.
+3. The legacy daily event cannot be silently recreated during ordinary bootstrap while the hook remains callback-free.
+4. The owned job-status expiry evaluator remains exactly `1/hourly`.
+5. The owned employer pre-expiry notification evaluator remains exactly `1/hourly`.
+6. The owned candidate→job evaluator remains exactly `1/hourly`.
+7. No evaluator, legacy cron hook, broad WP-Cron runner, Action Scheduler runner or mail path is executed.
+8. No business data is mutated.
+9. Production is untouched.
+
+This is a scheduler-retirement task, not a lifecycle redesign.
 
 ---
 
-## 3. Scope and ownership
+## 3. Ownership and allowed source surface
 
-Prefer implementation inside:
+Implement the durable retirement in a Raspitajse-owned layer, preferably:
 
-- `wp-content/plugins/raspitajse-communications/`
+`wp-content/plugins/raspitajse-communications/`
 
-A small owned class/file plus one owned template file is acceptable and preferred over enlarging the main plugin file if that keeps responsibilities clear.
+Keep the patch extremely narrow.
 
 Do **not** modify:
 
 - WordPress core;
 - WP Job Board Pro vendor source;
-- WP Job Board Pro WooCommerce Paid Listings vendor source;
-- WooCommerce vendor/core;
+- WP Job Board Pro Paid Listings vendor source;
+- WooCommerce core/vendor;
 - Superio parent theme;
-- legacy WPJBP expiry email templates;
-- Raspitajse Commerce entitlement policy except read-only inspection if needed.
+- Raspitajse Commerce unless a concrete blocker proves it necessary;
+- cron storage directly with ad-hoc SQL when WordPress scheduler APIs can perform the exact retirement.
 
-Do not recreate the old vendor callback 1:1.
-
----
-
-## 4. Notification calendar semantics
-
-Use the WordPress site timezone/calendar APIs (`current_datetime()`, `wp_timezone()`, immutable date objects or equivalent).
-
-For 2.02, the business notification window is exactly:
-
-**one site-calendar day before the listing's canonical `_job_expiry_date`**.
-
-A job is initially due for notification only when:
-
-- post type = `job_listing`;
-- post status = `publish`;
-- `_job_expiry_date` is a valid real `Y-m-d` date;
-- expiry date equals **tomorrow** in the WordPress site timezone;
-- the same job + exact expiry-date revision has not already been successfully delivered.
-
-Do not notify for:
-
-- missing/empty/malformed expiry date;
-- expiry date today;
-- past expiry date;
-- expiry more than one site-calendar day away;
-- non-published job;
-- already successfully delivered same job/expiry-date revision.
-
-If the job expiry date later changes, the new date is a new notification revision and may become eligible independently when it reaches its own one-day-before window.
-
-Do not use raw PHP `date()` against a legacy adjusted timestamp.
+Do not copy or edit the vendor activation/deactivation scheduler implementation.
 
 ---
 
-## 5. Scheduling and evaluator boundary
+## 4. Exact legacy event to retire
 
-Create one dedicated owned notification hook, for example:
+Target hook only:
+
+`wp_job_board_pro_email_daily_notices`
+
+Before source mutation, prove at runtime after plugin bootstrap:
+
+- callback count = exactly `0`;
+- scheduled event count = exactly `1`;
+- recurrence is `wpie_daily`;
+- interval is `86400`;
+- args are `[]`;
+- capture a sanitized canonical event fingerprint.
+
+If the hook unexpectedly contains any callback or the schedule shape materially differs, STOP and report PARTIAL/FAIL rather than deleting an event whose business purpose is no longer proven.
+
+Do not execute the event.
+
+---
+
+## 5. Durable owned retirement behavior
+
+Implement one small owned bootstrap-time retirement boundary that runs only **after** vendor callbacks and the existing Raspitajse expiry suppressions have been registered/applied.
+
+Required behavior:
+
+1. Inspect the final callback graph for `wp_job_board_pro_email_daily_notices`.
+2. Only when its final callback count is exactly `0`, clear all scheduled instances of that exact hook through the normal WordPress cron API.
+3. Do not clear any other hook.
+4. Be idempotent: repeated bootstraps with no legacy event produce no additional mutation and do not create anything.
+5. If any callback later reappears on the legacy hook, fail safe by **not** clearing a schedule merely on assumption; do not mask a new/unclassified producer. Report this condition if encountered during task validation.
+6. Do not add a replacement daily schedule.
+7. Do not alter the owned hourly schedulers.
+
+An implementation within the existing expiry boundary or one tiny dedicated scheduler-retirement component is acceptable. Avoid a generic cron cleanup framework.
+
+The intended one-time staging state mutation is removal of the orphan legacy WP-Cron event. That exact scheduler mutation is authorized by this task.
+
+---
+
+## 6. Owned scheduler regression — mandatory
+
+Before and after retirement, capture canonical sanitized rows/fingerprints for these owned WP-Cron events:
+
+### Job status expiry
+
+Hook:
+
+`raspitajse_job_listing_expiry_evaluator`
+
+Required final state:
+
+- callback count = `1`;
+- event count = `1`;
+- recurrence = `hourly`;
+- interval = `3600`;
+- args = `[]`;
+- callback identity remains `Raspitajse_Communications_Job_Listing_Expiry::run` at priority `10`;
+- before/final event row logically identical unless bootstrap created a previously missing event under its already-approved self-healing contract; if that happens, report it precisely instead of hiding it.
+
+### Employer expiry notice
+
+Hook:
 
 `raspitajse_employer_job_expiry_notice_evaluator`
 
-Use one simple recurring WP-Cron event. `hourly` is preferred.
+Required final state:
 
-Requirements:
-
-- exactly one registered callback at priority `10`;
-- exactly one recurring hourly event;
-- self-healing `ensure_schedule()` behavior on bootstrap/request, analogous in safety to 2.01;
-- repeated bootstrap must not create duplicates;
-- deactivation clears only this component's own event;
-- do not use the empty legacy daily hook;
-- do not use the legacy shared expiry hook;
-- do not use Action Scheduler;
-- do not execute a broad WP-Cron runner.
-
-The status-expiry evaluator from 2.01 must remain a separate hook/event and must not be merged with email delivery.
-
----
-
-## 6. Bounded selection
-
-Notification evaluation must be bounded and deterministic.
-
-Use an explicit batch cap, recommended `50` jobs per run.
-
-Selection order should be stable, for example expiry date then post ID.
-
-Before attempting each send, re-read and revalidate:
-
-- post type;
-- `publish` status;
-- current exact `_job_expiry_date`;
-- current site-calendar eligibility;
-- current delivery state for that exact expiry-date revision.
-
-Stale query results must not send a notification after the job was unpublished, expired, deleted, or had its expiry date changed.
-
----
-
-## 7. Canonical employer recipient
-
-Resolve the recipient from the job's canonical employer ownership relation. Reuse the already-established canonical Raspitajse/WPJBP employer mapping where available; do not reintroduce the previously identified reverse-meta employer lookup defect.
-
-Recipient rules:
-
-1. Resolve the authoritative employer user/profile for the job.
-2. Require a valid employer user/profile relationship, not an arbitrary admin or unrelated post author.
-3. Prefer the canonical employer profile email if present and valid.
-4. A fallback to the canonical employer account email is acceptable only when it belongs to the same validated employer identity and the profile email is absent/invalid.
-5. Validate with `is_email()` before send.
-6. If no canonical valid recipient exists, fail that record safely and leave it retryable only if a later data correction could make it deliverable.
-
-Do not send to:
-
-- site admin merely as fallback;
-- unrelated post author;
-- candidate email;
-- hard-coded address.
-
-Do not log raw recipient email, user ID, profile ID or other PII in the report.
-
----
-
-## 8. Delivery state and idempotency
-
-Implement owned per-job/per-expiry-date delivery state. Do not rely on the legacy `_job_alert_send_email_time` or vendor expiry options.
-
-The state model must distinguish at minimum:
-
-- never attempted / eligible;
-- in-flight claim;
-- failed/retryable attempt;
-- successfully delivered.
-
-Successful delivery identity is:
-
-`job + exact canonical _job_expiry_date`
-
-Requirements:
-
-- once Transport reports successful delivery for a revision, future evaluator runs must not send that same revision again;
-- failed sends must **not** be marked delivered;
-- a changed expiry date is treated as a new revision;
-- stale in-flight state can recover automatically;
-- state must remain bounded and local to the job/notification purpose;
-- do not create a new database table for this slice unless an unavoidable concrete blocker is proven first.
-
-Use Raspitajse-owned meta keys/namespaces. Do not overwrite vendor expiry meta.
-
----
-
-## 9. Concurrency claim and retry behavior
-
-Prevent concurrent duplicate sends for the same revision.
-
-A small atomic claim mechanism is required. It may be per-job revision or a global evaluator claim plus exact per-revision state, provided concurrency is actually proven safe.
-
-Requirements:
-
-- atomic claim acquisition;
-- collision-resistant ownership token where applicable;
-- bounded stale-claim TTL, recommended `600` seconds;
-- exact-token release/recovery;
-- second overlapping worker cannot send the same revision;
-- stale claim can recover after TTL;
-- claim artifacts are removed/settled after success/failure.
-
-Retry policy must be bounded. For transient Transport/mail failure, implement a small capped retry state with deterministic backoff; recommended contract for this task:
-
-- maximum `3` attempts for one job/expiry-date revision;
-- attempts occur only while the listing is still `publish` and still has the same expiry date;
-- retries must not extend beyond the last active day represented by that expiry-date revision;
-- no infinite retry loop;
-- no immediate tight-loop retry inside one evaluator invocation.
-
-If recipient data is invalid/missing, record a safe retryable failure state without sending; do not invent a recipient.
-
----
-
-## 10. Owned template/content
-
-Do not use the WPJBP `employer_notice_expiring_listing` vendor template or its option body as authoritative content.
-
-Create a Raspitajse-owned template/rendering boundary with a narrow explicit view model.
-
-Minimum content fields:
-
-- job title;
-- canonical listing expiry date formatted in the site timezone;
-- job/listing URL if safely available;
-- employer dashboard / my-jobs URL only if a canonical existing helper can produce it safely.
-
-Do not expose:
-
-- candidate data;
-- package entitlement validity date as if it were job expiry;
-- order/payment data;
-- internal IDs;
-- admin edit URLs;
-- secrets or debug values.
-
-Requirements:
-
-- HTML escaped appropriately;
-- subject escaped/sanitized;
-- translatable strings / WordPress i18n, not a vendor-branded hard-coded blob;
-- no claim that AI generated or selected the expiry;
-- copy must clearly describe listing expiry, not account/package expiry.
-
-The report may include subject/template fingerprints and variable names, but not raw recipient addresses or a full rendered private email body.
-
----
-
-## 11. SenderPolicy / Transport boundary
-
-Every real application send attempt must go only through:
-
-`Raspitajse_Communications_Transport::send( Raspitajse_Communications_Sender_Policy::CHANNEL_JOB_EXPIRY, ... )`
-
-Acceptance:
-
-- no direct vendor `WP_Job_Board_Pro_Email::wp_mail()` usage in the new feature;
-- no direct unmanaged `wp_mail()` call from the new evaluator/mailer;
-- no caller-provided From/Reply-To override;
-- SenderPolicy supplies the semantic sender contract;
-- staging sender contract resolves successfully;
-- unsupported/missing production sender configuration remains fail-closed per existing policy;
-- do not change SMTP credentials or global transport architecture.
-
----
-
-## 12. Isolated no-real-mail staging fixture
-
-A deterministic staging fixture is required, using only disposable task-private jobs/employer identity.
-
-Do not use real/historical business records.
-
-Intercept mail **before PHPMailer/SMTP** using a task-private bounded mechanism such as `pre_wp_mail` so the application path through `Transport::send()` is exercised but no real transport occurs.
-
-The fixture must prove at minimum:
-
-1. tomorrow-expiry published job + valid canonical employer is selected once;
-2. captured send uses `CHANNEL_JOB_EXPIRY` sender headers/policy;
-3. successful intercepted delivery marks only that job/expiry-date revision delivered;
-4. second evaluator run does not send it again;
-5. today expiry is not selected as a new initial notice;
-6. future >1 day, past, malformed, missing/empty and non-published jobs are not selected;
-7. changing the delivered fixture to a different future expiry date creates a new revision, but it is not eligible until that new date reaches tomorrow;
-8. simulated Transport/mail failure does not mark delivered and increments bounded attempt state;
-9. a later eligible retry can succeed and then becomes idempotent;
-10. overlapping claim attempt cannot produce duplicate send;
-11. stale claim recovery works;
-12. missing/invalid canonical recipient produces zero mail attempt and safe state.
-
-No PHPMailer/SMTP network attempt is allowed.
-
-The fixture may invoke only the **owned notification evaluator** directly. Do not execute broad cron, legacy notice hooks, the 2.01 status evaluator, candidate→job evaluator or Action Scheduler runner.
-
-Cleanup all disposable posts/users/profiles/meta/options/claims exactly. After cleanup, real staging job/employer/package/candidate fingerprints must equal pre-fixture business state.
-
-Do not print fixture emails or IDs in the report.
-
----
-
-## 13. Preserve 2.01 job expiry lifecycle
-
-The existing `Raspitajse_Communications_Job_Listing_Expiry` behavior is protected.
-
-Final proof must show:
-
-- status evaluator hook unchanged;
 - callback count = `1`;
-- schedule count = `1`, `hourly`;
-- batch size remains `50`;
-- claim TTL remains `600` unless there is a compelling bug fix explicitly required by this task (otherwise no change);
-- candidate expiry filter remains late and effective;
-- legacy daily callbacks remain `0`;
-- legacy shared expiry callbacks remain `0`;
-- no employer mail is sent from the status evaluator itself;
-- `_job_expiry_date` writer path remains vendor/Paid Listings-owned and unchanged.
+- event count = `1`;
+- recurrence = `hourly`;
+- interval = `3600`;
+- args = `[]`;
+- callback identity remains `Raspitajse_Communications_Employer_Job_Expiry_Notification::run` at priority `10`;
+- delivery state/claim schema and retry contract are unchanged.
 
-Do not combine status expiry and email notification into one callback.
+### Candidate→job evaluator
 
----
+Preserve the already-owned candidate→job evaluator:
 
-## 14. Package entitlement separation
+- vendor candidate→job sender registration = `0`;
+- owned evaluator callback count = `1`;
+- owned recurring event count = `1`;
+- recurrence = `hourly`;
+- continuation event count = `0` unless a pre-existing independently justified state exists.
 
-Prove unchanged:
-
-- Raspitajse Commerce package entitlement validity remains the existing 30-calendar-day consumption rule;
-- notification eligibility never queries entitlement valid-until as a substitute for `_job_expiry_date`;
-- a package expiring does not itself trigger this email;
-- a published job's listing duration remains independent from unused package validity.
-
-No entitlement recalculation or migration.
+Do not execute any of these three owned evaluators.
 
 ---
 
-## 15. Existing alert / historical protected state
+## 7. Legacy expiry regression
 
-Before/final prove unchanged:
+Final runtime must prove:
 
-- employer→candidate vendor sender = `0`;
-- new `candidate_alert` creation remains retired/fail-closed;
-- historical published `candidate_alert` count = `4`, fingerprint unchanged;
-- candidate→job vendor sender = `0`;
-- owned candidate→job evaluator event/callback = exactly `1 hourly`;
-- candidate→job continuation = `0` unless independently pre-existing;
-- published `job_alert` = `0`;
-- candidate profile statuses/expiry footprint unchanged.
+- `wp_job_board_pro_email_daily_notices` callbacks = `0`;
+- `wp_job_board_pro_email_daily_notices` events = `0`;
+- `wp_job_board_pro_check_for_expired_jobs` callbacks = `0`;
+- `wp_job_board_pro_check_for_expired_jobs` events = `0`;
+- candidate automatic expiry calculation remains disabled by the existing owned late filter;
+- no legacy candidate/job expiry sender/checker is re-registered.
 
-Do not execute either alert-delivery subsystem.
+Do not execute either legacy hook.
 
 ---
 
-## 16. Action Scheduler / legacy scheduler protection
+## 8. No business-data fixture is needed
 
-Capture before/final:
+This task should not need job/candidate/employer fixtures because it changes scheduler ownership only.
 
-- pending Action Scheduler count/fingerprint;
-- ID32733 status/attempts;
-- legacy daily event state;
-- legacy shared expiry event state.
+Do not create business-data fixtures merely to prove cron deletion.
 
-Expected historical protected state from 2.01:
+Instead use bounded bootstrap/runtime inspection to prove:
 
-- pending AS count `7`;
-- ID32733 = `pending/0`;
-- legacy daily event still exists but has zero callbacks;
-- legacy shared expiry event count = `0`.
+1. legacy event exists before retirement;
+2. the owned retirement boundary removes it;
+3. a second bootstrap leaves it absent;
+4. all three owned hourly scheduler rows remain correct;
+5. no callback execution occurred.
 
-Do not run, mutate or clean Action Scheduler in 2.02.
-
-Do not clean the orphan legacy daily WP-Cron event here; that belongs to later final scheduler cleanup.
+If a source-level test helper is needed, keep it task-private and do not persist application/business state.
 
 ---
 
-## 17. Mail/network/payment safety
+## 9. Protected business state
 
-Authorized test behavior is limited to **intercepted** `wp_mail` calls produced by the new `Transport::send()` path in the task-private fixture.
+Capture sanitized before/final fingerprints for the already-protected state and prove no drift:
 
-Required counters/meaning:
+- candidate profiles and statuses;
+- historical published `candidate_alert` count/fingerprint;
+- published `job_alert` count/fingerprint;
+- existing jobs count/fingerprint;
+- employers/employer-users where already covered by the existing harness;
+- job packages/entitlement records;
+- candidate-alert retirement state;
+- candidate→job alert state.
 
-- real external email deliveries: `0`;
-- PHPMailer SMTP sends: `0`;
-- application external HTTP: `0`;
-- payment calls: `0`;
-- legacy expiry sender executions: `0`;
-- candidate→job evaluator executions: `0`;
-- job status expiry evaluator executions: `0` during this fixture;
-- broad WP-Cron runner executions: `0`;
-- Action Scheduler runner/due-action executions: `0`.
+Expected current high-level invariants from 2.02 include:
 
-Report intercepted `wp_mail` attempt counts only as sanitized numbers; no addresses or full bodies.
+- candidate profiles count `2` (`publish=1`, `pending=1`);
+- historical published `candidate_alert` count `4`;
+- published `job_alert` count `0`;
+- existing jobs count `0`.
+
+Do not fail solely because a sanitized hash implementation differs from a previous task; compare before/final within this task and explain the canonicalization used.
+
+No business record mutation is authorized.
 
 ---
 
-## 18. Static/source quality
+## 10. Action Scheduler protection
+
+Before/final capture:
+
+- pending Action Scheduler count and sanitized fingerprint;
+- ID32733 status/attempts.
+
+Expected historical state:
+
+- pending = `7`;
+- ID32733 = `pending/0`.
+
+Do not execute, cancel, reschedule, claim or mutate any Action Scheduler action.
+
+This task uses only WP-Cron scheduler APIs for the exact orphan hook.
+
+---
+
+## 11. Mail / network / payment safety
+
+Expected counters for the entire task:
+
+- `wp_mail` attempts = `0`;
+- PHPMailer = `0`;
+- SMTP = `0`;
+- external application/vendor HTTP = `0`;
+- payment calls = `0`;
+- broad WP-Cron runner executions = `0`;
+- legacy daily-hook executions = `0`;
+- shared legacy expiry-hook executions = `0`;
+- job-status evaluator executions = `0`;
+- employer-notice evaluator executions = `0`;
+- candidate→job evaluator executions = `0`;
+- Action Scheduler runner/due-action executions = `0`.
+
+Do not send even an intercepted test email in 2.03; mail behavior was already proven in 2.02.
+
+---
+
+## 12. Static/source validation
 
 For every changed PHP file:
 
 - `php -l` PASS.
 
-For final patch:
+For the final patch:
 
 - `git diff --check` PASS;
-- no debug/PII logging;
+- no debug or PII logging;
 - no secrets;
 - no hard-coded user IDs/emails;
-- no production URLs introduced;
-- no vendor/core/parent-theme modifications;
-- no second listing-expiry source of truth;
-- no entitlement-expiry conflation;
-- no direct unmanaged sender override;
+- no production URLs;
+- no vendor/core/parent-theme changes;
+- no broad scheduler cleanup abstraction;
 - no unrelated refactor.
 
 Report exact changed files and diffstat.
 
 ---
 
-## 19. Staging integration/deploy
+## 13. Staging integration and deploy
 
 Follow `tasks/README.md` exactly.
 
 - branch from exact baseline;
-- implement one focused owned slice;
-- run static and isolated fixture acceptance;
-- integrate to `staging` only after acceptance passes;
+- implement the narrow owned retirement boundary;
+- static validation before deploy;
 - deploy only to staging;
-- prove final local staging, `origin/staging`, deploy marker and runtime source parity;
-- production remains untouched.
+- validate the exact authorized scheduler mutation and all protected scheduler graphs;
+- integrate to `staging` only after acceptance passes;
+- final local/origin staging SHA, deploy marker and changed runtime file hashes must agree.
 
-If runtime/deploy parity cannot be proven equal to final staging SHA, report PARTIAL/FAIL rather than PASS.
+Production remains forbidden.
+
+If source/runtime/deploy parity cannot be proven, do not claim PASS.
 
 ---
 
-## 20. Final expected runtime state
+## 14. Final expected runtime state
 
-After PASS, expected runtime includes:
+After PASS:
 
-- owned job status expiry evaluator: `1`, hourly;
-- owned employer job-expiry notification evaluator: `1`, hourly;
-- candidate automatic expiry disabled;
-- legacy daily expiry notice callbacks: `0`;
-- legacy shared expiry callbacks: `0`;
-- legacy employer expiry sender: `0`;
-- canonical notification source = `_job_expiry_date`;
-- initial notification window = exactly one site-calendar day before expiry date;
-- notification sends only through `Transport::send(CHANNEL_JOB_EXPIRY, ...)`;
-- successful delivery idempotent per job + exact expiry date;
-- failed delivery retryable with max 3 attempts and no tight loop;
-- no duplicate overlapping delivery;
-- no real SMTP/email delivered during fixture;
-- historical candidate/candidate-alert/job-alert/package data unchanged after cleanup;
-- pending AS protected state unchanged;
-- ID32733 remains `pending/0`;
+- legacy daily hook callbacks: `0`;
+- legacy daily scheduled events: `0`;
+- legacy shared expiry callbacks/events: `0/0`;
+- owned job-status expiry callback/event: `1 / 1 hourly`;
+- owned employer expiry-notice callback/event: `1 / 1 hourly`;
+- owned candidate→job callback/event: `1 / 1 hourly`;
+- candidate→job continuation: `0` unless independently pre-existing;
+- candidate auto-expiry: disabled;
+- employer→candidate vendor sender: `0`;
+- candidate→job vendor sender: `0`;
+- candidate-alert new creation: still retired/fail-closed;
+- Action Scheduler pending count/fingerprint unchanged;
+- ID32733: `pending/0`;
+- business fingerprints unchanged;
+- mail/SMTP/network/payment/evaluator executions: `0`;
 - production touched: NO.
 
 ---
 
-## 21. Final report
+## 15. HOST_NAMESPACE_PRESSURE
+
+Known `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC` may still occur.
+
+If the known sandbox signature occurs, classify it once and switch to previously proven namespace-free Git/filesystem/WP-CLI paths. Do not loop retries and do not use broad process kills.
+
+---
+
+## 16. Final report
 
 Publish:
 
-**Zadatak 2.02 — Implement owned employer job-expiry notification on the job-only lifecycle**
+**Zadatak 2.03 — Retire the orphan legacy daily expiry schedule after final owned-scheduler regression**
 
-Report must include:
+The report must include:
 
 1. PASS/PARTIAL/FAIL and exact meaning;
-2. declared baseline, feature branch/commit, final staging SHA;
+2. declared baseline, feature branch/commit and final staging SHA;
 3. deploy marker/runtime parity;
 4. exact changed files + diffstat;
-5. proof no vendor/core/parent-theme files changed;
-6. notification hook/event names, callback counts and schedule;
-7. exact one-day-before calendar semantics and timezone handling;
-8. query batch cap/order and per-record revalidation;
-9. canonical employer recipient resolution rules and sanitized fixture proof;
-10. owned delivery-state keys/model and per-expiry-date revision identity;
-11. concurrency claim TTL/ownership/stale recovery proof;
-12. max-attempt/backoff retry proof;
-13. owned template location/view-model and sanitized subject/body fingerprints;
-14. proof all sends route only through `Transport::send(CHANNEL_JOB_EXPIRY)`;
-15. intercepted no-real-mail fixture matrix and counters;
-16. proof successful second run is idempotent;
-17. proof failed attempt remains retryable and later success marks delivered once;
-18. proof invalid recipient causes zero send attempt;
-19. proof 2.01 job status evaluator behavior/schedule unchanged;
-20. proof package entitlement validity remains separate;
-21. candidate/candidate-alert/job-alert protected fingerprints;
-22. Action Scheduler + ID32733 before/final state;
-23. mail/SMTP/network/payment/cron/AS execution counters;
-24. cleanup proof;
-25. production touched: NO;
-26. exactly one proposed next task, but do not create or start it.
+5. proof no vendor/core/parent-theme file changed;
+6. exact implementation of the durable legacy-schedule retirement boundary;
+7. before/final legacy daily callback count and event row/fingerprint;
+8. proof legacy daily event changed exactly `1 → 0` and remains `0` after a second bootstrap;
+9. before/final owned job-status evaluator callback/event row/fingerprint;
+10. before/final owned employer-notice evaluator callback/event row/fingerprint;
+11. before/final owned candidate→job callback/event/continuation state;
+12. legacy shared-expiry callback/event state;
+13. candidate auto-expiry disabled proof;
+14. protected business fingerprints before/final;
+15. Action Scheduler count/fingerprint and ID32733 before/final;
+16. mail/network/payment/runner/evaluator execution counters;
+17. static validation results;
+18. production untouched proof;
+19. exactly one proposed next task, but do not create/start it.
 
-STOP after publishing the report.
+Do not infer or execute the next task.
