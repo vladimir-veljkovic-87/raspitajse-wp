@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.8.0
+ * Version: 0.9.0
  * Author: Raspitajse.com
  */
 
@@ -748,6 +748,716 @@ final class Raspitajse_Communications_Job_Listing_Expiry {
     }
 }
 
+/**
+ * Calendar eligibility, delivery state, claim, rendering and bounded evaluation.
+ */
+final class Raspitajse_Communications_Employer_Job_Expiry_Notification {
+
+    const HOOK           = 'raspitajse_employer_job_expiry_notice_evaluator';
+    const BATCH_SIZE     = 50;
+    const CLAIM_TTL      = 600;
+    const MAX_ATTEMPTS   = 3;
+    const SCHEMA_VERSION = 1;
+
+    const META_STATE   = '_raspitajse_job_expiry_notice_state';
+    const CLAIM_PREFIX = 'raspitajse_job_expiry_notice_claim_';
+
+    const STATUS_IN_FLIGHT = 'in_flight';
+    const STATUS_FAILED    = 'failed';
+    const STATUS_DELIVERED = 'delivered';
+
+    /**
+     * Register the bounded evaluator and self-healing schedule.
+     */
+    public static function boot() {
+        add_action( 'init', array( __CLASS__, 'ensure_schedule' ), 20 );
+        add_action( self::HOOK, array( __CLASS__, 'run' ), 10 );
+    }
+
+    /**
+     * Restore one missing event without duplicating an existing event.
+     */
+    public static function ensure_schedule() {
+        if ( ! wp_next_scheduled( self::HOOK ) ) {
+            wp_schedule_event( time() + 300, 'hourly', self::HOOK );
+        }
+    }
+
+    /**
+     * Clear only this component's event on plugin deactivation.
+     */
+    public static function deactivate() {
+        wp_clear_scheduled_hook( self::HOOK );
+    }
+
+    /**
+     * Evaluate one deterministic batch for tomorrow in the site calendar.
+     *
+     * @return array<string,int|string>
+     */
+    public static function run() {
+        $result = array(
+            'selected'          => 0,
+            'claimed'           => 0,
+            'delivered'         => 0,
+            'retryable_failed'  => 0,
+            'invalid_recipient' => 0,
+            'terminal'          => 0,
+            'skipped'           => 0,
+            'failed'            => 0,
+        );
+
+        $site_now = current_datetime();
+        $tomorrow = $site_now->modify( '+1 day' )->format( 'Y-m-d' );
+        $now_gmt  = self::format_gmt( $site_now );
+        $job_ids  = self::due_job_ids( $tomorrow );
+
+        if ( is_wp_error( $job_ids ) ) {
+            $result['failed'] = 1;
+            $result['reason'] = 'query_failed';
+            return $result;
+        }
+
+        $result['selected'] = count( $job_ids );
+
+        foreach ( $job_ids as $job_id ) {
+            try {
+                $outcome = self::process_job( $job_id, $tomorrow, $now_gmt );
+                if ( is_wp_error( $outcome ) ) {
+                    $result['failed']++;
+                    continue;
+                }
+
+                if ( ! empty( $outcome['claimed'] ) ) {
+                    $result['claimed']++;
+                }
+
+                $name = isset( $outcome['outcome'] ) ? $outcome['outcome'] : 'failed';
+                if ( array_key_exists( $name, $result ) ) {
+                    $result[ $name ]++;
+                } else {
+                    $result['failed']++;
+                }
+            } catch ( Throwable $throwable ) {
+                $result['failed']++;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Read the bounded delivery state for a job.
+     *
+     * @return array|null|WP_Error
+     */
+    public static function read_state( $job_id ) {
+        $job_id = absint( $job_id );
+        $state  = get_post_meta( $job_id, self::META_STATE, true );
+
+        if ( '' === $state ) {
+            return null;
+        }
+
+        if (
+            ! $job_id
+            || ! is_array( $state )
+            || self::SCHEMA_VERSION !== (int) ( $state['schema_version'] ?? 0 )
+            || null === self::valid_date( $state['expiry_date'] ?? null )
+            || ! in_array(
+                $state['status'] ?? '',
+                array( self::STATUS_IN_FLIGHT, self::STATUS_FAILED, self::STATUS_DELIVERED ),
+                true
+            )
+            || (int) ( $state['attempt_count'] ?? -1 ) < 1
+            || (int) ( $state['attempt_count'] ?? 0 ) > self::MAX_ATTEMPTS
+            || ! self::valid_gmt_or_empty( $state['last_attempt_gmt'] ?? null )
+            || ! self::valid_gmt_or_empty( $state['next_retry_gmt'] ?? null )
+            || ! self::valid_gmt_or_empty( $state['delivered_at_gmt'] ?? null )
+            || ! is_string( $state['failure_code'] ?? null )
+        ) {
+            return self::error( 'invalid_state' );
+        }
+
+        return $state;
+    }
+
+    /**
+     * Acquire one atomic per-job/per-expiry-date claim.
+     *
+     * @return array|WP_Error
+     */
+    public static function acquire_claim( $job_id, $expiry_date, $now_gmt = null, $token = null ) {
+        $job_id     = absint( $job_id );
+        $expiry_date = self::valid_date( $expiry_date );
+        $now        = self::parse_gmt( null === $now_gmt ? self::now_gmt() : $now_gmt );
+
+        if ( ! $job_id || null === $expiry_date || is_wp_error( $now ) ) {
+            return self::error( 'invalid_claim' );
+        }
+
+        if ( null === $token ) {
+            try {
+                $token = bin2hex( random_bytes( 16 ) );
+            } catch ( Exception $exception ) {
+                $token = str_replace( '-', '', wp_generate_uuid4() );
+            }
+        }
+
+        if ( ! is_string( $token ) || 1 !== preg_match( '/^[a-zA-Z0-9_-]{16,128}$/D', $token ) ) {
+            return self::error( 'invalid_claim_token' );
+        }
+
+        $claim = array(
+            'schema_version' => self::SCHEMA_VERSION,
+            'token'          => $token,
+            'job_id'         => $job_id,
+            'expiry_date'    => $expiry_date,
+            'acquired_at_gmt'=> self::format_gmt( $now ),
+            'expires_at_gmt' => self::format_gmt( $now->modify( '+' . self::CLAIM_TTL . ' seconds' ) ),
+        );
+        $key = self::claim_key( $job_id, $expiry_date );
+
+        if ( add_option( $key, $claim, '', 'no' ) ) {
+            return $claim;
+        }
+
+        $snapshot = self::read_claim_snapshot( $job_id, $expiry_date );
+        if ( is_wp_error( $snapshot ) ) {
+            return $snapshot;
+        }
+
+        if ( null === $snapshot ) {
+            return add_option( $key, $claim, '', 'no' )
+                ? $claim
+                : self::error( 'already_claimed' );
+        }
+
+        $expires = self::parse_gmt( $snapshot['claim']['expires_at_gmt'] ?? '' );
+        if ( is_wp_error( $expires ) ) {
+            return self::error( 'invalid_claim' );
+        }
+
+        if ( $expires > $now ) {
+            return self::error( 'already_claimed' );
+        }
+
+        if ( ! self::compare_delete_raw_claim( $job_id, $expiry_date, $snapshot['raw'] ) ) {
+            return self::error( 'already_claimed' );
+        }
+
+        return add_option( $key, $claim, '', 'no' )
+            ? $claim
+            : self::error( 'already_claimed' );
+    }
+
+    /**
+     * Release only an exact ownership token.
+     *
+     * @return true|WP_Error
+     */
+    public static function release_claim( $job_id, $expiry_date, $token ) {
+        $snapshot = self::read_claim_snapshot( $job_id, $expiry_date );
+        if ( is_wp_error( $snapshot ) ) {
+            return $snapshot;
+        }
+        if ( null === $snapshot ) {
+            return self::error( 'claim_not_found' );
+        }
+
+        $current = (string) ( $snapshot['claim']['token'] ?? '' );
+        if ( ! is_string( $token ) || '' === $current || ! hash_equals( $current, $token ) ) {
+            return self::error( 'claim_ownership_mismatch' );
+        }
+
+        return self::compare_delete_raw_claim( $job_id, $expiry_date, $snapshot['raw'] )
+            ? true
+            : self::error( 'claim_changed' );
+    }
+
+    /**
+     * Process one selected job behind its exact revision claim.
+     *
+     * @return array|WP_Error
+     */
+    private static function process_job( $job_id, $tomorrow, $now_gmt ) {
+        if ( ! self::is_eligible_job( $job_id, $tomorrow ) ) {
+            return self::outcome( 'skipped' );
+        }
+
+        $state = self::read_state( $job_id );
+        if ( is_wp_error( $state ) ) {
+            return $state;
+        }
+
+        $decision = self::state_decision( $state, $tomorrow, $now_gmt );
+        if ( 'attempt' !== $decision ) {
+            return self::outcome( $decision );
+        }
+
+        $claim = self::acquire_claim( $job_id, $tomorrow, $now_gmt );
+        if ( is_wp_error( $claim ) ) {
+            return 'raspitajse_job_expiry_notice_already_claimed' === $claim->get_error_code()
+                ? self::outcome( 'skipped' )
+                : $claim;
+        }
+
+        $outcome = null;
+        try {
+            if ( ! self::is_eligible_job( $job_id, $tomorrow ) ) {
+                $outcome = self::outcome( 'skipped', true );
+            } else {
+                $state = self::read_state( $job_id );
+                if ( is_wp_error( $state ) ) {
+                    $outcome = $state;
+                } else {
+                    $decision = self::state_decision( $state, $tomorrow, $now_gmt );
+                    if ( 'attempt' !== $decision ) {
+                        $outcome = self::outcome( $decision, true );
+                    } else {
+                        $attempt_count = is_array( $state ) && $tomorrow === ( $state['expiry_date'] ?? '' )
+                            ? (int) $state['attempt_count'] + 1
+                            : 1;
+                        $in_flight = self::state(
+                            $tomorrow,
+                            self::STATUS_IN_FLIGHT,
+                            $attempt_count,
+                            $now_gmt,
+                            self::format_gmt( self::parse_gmt( $now_gmt )->modify( '+' . self::CLAIM_TTL . ' seconds' ) ),
+                            '',
+                            ''
+                        );
+                        $saved = self::save_state( $job_id, $in_flight );
+
+                        if ( is_wp_error( $saved ) ) {
+                            $outcome = $saved;
+                        } elseif ( ! self::is_eligible_job( $job_id, $tomorrow ) ) {
+                            $outcome = self::save_failure( $job_id, $in_flight, 'eligibility_changed', $now_gmt );
+                        } else {
+                            $recipient = self::resolve_recipient( $job_id );
+                            if ( is_wp_error( $recipient ) ) {
+                                $saved_failure = self::save_failure( $job_id, $in_flight, 'invalid_recipient', $now_gmt );
+                                $outcome = is_wp_error( $saved_failure )
+                                    ? $saved_failure
+                                    : self::outcome( 'invalid_recipient', true );
+                            } else {
+                                $mail = self::render( $job_id, $tomorrow );
+                                if ( is_wp_error( $mail ) ) {
+                                    $outcome = self::save_failure( $job_id, $in_flight, 'render_failed', $now_gmt );
+                                } else {
+                                    $sent = Raspitajse_Communications_Transport::send(
+                                        Raspitajse_Communications_Sender_Policy::CHANNEL_JOB_EXPIRY,
+                                        $recipient,
+                                        $mail['subject'],
+                                        $mail['message'],
+                                        array( 'Content-Type: text/html; charset=UTF-8' )
+                                    );
+
+                                    if ( true === $sent ) {
+                                        $delivered = self::state(
+                                            $tomorrow,
+                                            self::STATUS_DELIVERED,
+                                            $attempt_count,
+                                            $now_gmt,
+                                            '',
+                                            $now_gmt,
+                                            ''
+                                        );
+                                        $saved = self::save_state( $job_id, $delivered );
+                                        $outcome = is_wp_error( $saved )
+                                            ? $saved
+                                            : self::outcome( 'delivered', true );
+                                    } else {
+                                        $outcome = self::save_failure( $job_id, $in_flight, 'transport_rejected', $now_gmt );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch ( Throwable $throwable ) {
+            $outcome = self::error( 'processing_exception' );
+        } finally {
+            $released = self::release_claim( $job_id, $tomorrow, $claim['token'] );
+            if ( is_wp_error( $released ) && ! is_wp_error( $outcome ) ) {
+                $outcome = self::error( 'claim_release_failed' );
+            }
+        }
+
+        return $outcome;
+    }
+
+    /**
+     * Return the current revision's action without mutating it.
+     */
+    private static function state_decision( $state, $expiry_date, $now_gmt ) {
+        if ( null === $state || $expiry_date !== ( $state['expiry_date'] ?? '' ) ) {
+            return 'attempt';
+        }
+        if ( self::STATUS_DELIVERED === $state['status'] ) {
+            return 'skipped';
+        }
+        if ( (int) $state['attempt_count'] >= self::MAX_ATTEMPTS ) {
+            return 'terminal';
+        }
+
+        $retry = self::parse_gmt( $state['next_retry_gmt'] );
+        $now   = self::parse_gmt( $now_gmt );
+        if ( is_wp_error( $retry ) || is_wp_error( $now ) ) {
+            return 'failed';
+        }
+
+        return $now >= $retry ? 'attempt' : 'skipped';
+    }
+
+    /**
+     * Persist a bounded retry or terminal failure.
+     *
+     * @return array|WP_Error
+     */
+    private static function save_failure( $job_id, $state, $code, $now_gmt ) {
+        $attempts = (int) $state['attempt_count'];
+        $retry_at = '';
+        if ( $attempts < self::MAX_ATTEMPTS ) {
+            $delays   = array( 900, 3600 );
+            $retry_at = self::format_gmt(
+                self::parse_gmt( $now_gmt )->modify( '+' . $delays[ $attempts - 1 ] . ' seconds' )
+            );
+        }
+
+        $failed = self::state(
+            $state['expiry_date'],
+            self::STATUS_FAILED,
+            $attempts,
+            $now_gmt,
+            $retry_at,
+            '',
+            $code
+        );
+        $saved = self::save_state( $job_id, $failed );
+        if ( is_wp_error( $saved ) ) {
+            return $saved;
+        }
+
+        return self::outcome( $attempts >= self::MAX_ATTEMPTS ? 'terminal' : 'retryable_failed', true );
+    }
+
+    /**
+     * Resolve only a mutually verified WPJBP employer profile/account pair.
+     *
+     * @return string|WP_Error
+     */
+    private static function resolve_recipient( $job_id ) {
+        if ( ! class_exists( 'WP_Job_Board_Pro_User' ) ) {
+            return self::error( 'employer_mapping_unavailable' );
+        }
+
+        $employer_id = absint( get_post_meta( $job_id, '_job_employer_posted_by', true ) );
+        $employer    = $employer_id ? get_post( $employer_id ) : null;
+        if (
+            ! $employer instanceof WP_Post
+            || 'employer' !== $employer->post_type
+            || 'publish' !== $employer->post_status
+        ) {
+            return self::error( 'invalid_employer_profile' );
+        }
+
+        $user_id = absint( WP_Job_Board_Pro_User::get_user_by_employer_id( $employer_id ) );
+        $user    = $user_id ? get_userdata( $user_id ) : false;
+        if (
+            ! $user instanceof WP_User
+            || ! WP_Job_Board_Pro_User::is_employer( $user_id )
+            || $employer_id !== absint( WP_Job_Board_Pro_User::get_employer_by_user_id( $user_id ) )
+        ) {
+            return self::error( 'invalid_employer_identity' );
+        }
+
+        $profile_email = trim( (string) get_post_meta( $employer_id, '_employer_email', true ) );
+        if ( is_email( $profile_email ) ) {
+            return sanitize_email( $profile_email );
+        }
+
+        $account_email = trim( (string) $user->user_email );
+        if ( is_email( $account_email ) ) {
+            return sanitize_email( $account_email );
+        }
+
+        return self::error( 'invalid_employer_recipient' );
+    }
+
+    /**
+     * Render one owned template from a narrow escaped-at-output view model.
+     *
+     * @return array|WP_Error
+     */
+    private static function render( $job_id, $expiry_date ) {
+        $date = self::date_object( $expiry_date );
+        if ( ! $date ) {
+            return self::error( 'invalid_expiry_date' );
+        }
+
+        $job_title = trim( wp_strip_all_tags( (string) get_the_title( $job_id ) ) );
+        if ( '' === $job_title ) {
+            return self::error( 'missing_job_title' );
+        }
+
+        $permalink = get_permalink( $job_id );
+        $view      = array(
+            'job_title'   => $job_title,
+            'expiry_date' => wp_date( get_option( 'date_format' ), $date->getTimestamp(), wp_timezone() ),
+            'job_url'     => is_string( $permalink ) ? esc_url_raw( $permalink ) : '',
+        );
+        $message = self::render_message( $view );
+        if ( '' === $message ) {
+            return self::error( 'empty_message' );
+        }
+        return array(
+            'subject' => sanitize_text_field(
+                sprintf(
+                    /* translators: %s: job listing title. */
+                    __( 'Vaš oglas „%s“ ističe sutra', 'raspitajse-communications' ),
+                    $job_title
+                )
+            ),
+            'message' => $message,
+        );
+    }
+
+    /**
+     * Render the owned HTML template from the narrow view model.
+     */
+    private static function render_message( $view ) {
+        ob_start();
+        ?>
+        <div>
+            <h2><?php esc_html_e( 'Vaš oglas za posao uskoro ističe', 'raspitajse-communications' ); ?></h2>
+            <p>
+                <?php
+                printf(
+                    /* translators: 1: job title, 2: listing expiry date. */
+                    esc_html__( 'Oglas „%1$s“ ističe %2$s.', 'raspitajse-communications' ),
+                    esc_html( $view['job_title'] ),
+                    esc_html( $view['expiry_date'] )
+                );
+                ?>
+            </p>
+            <p><?php esc_html_e( 'Pregledajte oglas i, ako je potrebno, ažurirajte ga prije isteka.', 'raspitajse-communications' ); ?></p>
+            <?php if ( '' !== $view['job_url'] ) : ?>
+                <p>
+                    <a href="<?php echo esc_url( $view['job_url'] ); ?>">
+                        <?php esc_html_e( 'Pregledaj oglas', 'raspitajse-communications' ); ?>
+                    </a>
+                </p>
+            <?php endif; ?>
+        </div>
+        <?php
+        $message = ob_get_clean();
+        return is_string( $message ) ? trim( $message ) : '';
+    }
+    /**
+     * Select one bounded, stable batch for the exact tomorrow date.
+     *
+     * @return int[]|WP_Error
+     */
+    private static function due_job_ids( $tomorrow ) {
+        global $wpdb;
+
+        $sql = $wpdb->prepare(
+            "SELECT posts.ID
+            FROM {$wpdb->posts} AS posts
+            INNER JOIN {$wpdb->postmeta} AS expiry
+                ON expiry.post_id = posts.ID
+                AND expiry.meta_key = %s
+            WHERE posts.post_type = 'job_listing'
+                AND posts.post_status = 'publish'
+                AND expiry.meta_value = %s
+            GROUP BY posts.ID
+            ORDER BY MIN(expiry.meta_value) ASC, posts.ID ASC
+            LIMIT %d",
+            '_job_expiry_date',
+            $tomorrow,
+            self::BATCH_SIZE
+        );
+
+        $job_ids = $wpdb->get_col( $sql );
+        if ( '' !== $wpdb->last_error ) {
+            return self::error( 'query_failed' );
+        }
+
+        return array_map( 'absint', $job_ids );
+    }
+
+    /**
+     * Re-read all mutable eligibility immediately before delivery.
+     */
+    private static function is_eligible_job( $job_id, $tomorrow ) {
+        $job = get_post( $job_id );
+        if (
+            ! $job instanceof WP_Post
+            || 'job_listing' !== $job->post_type
+            || 'publish' !== $job->post_status
+        ) {
+            return false;
+        }
+
+        return $tomorrow === self::valid_date(
+            get_post_meta( $job_id, '_job_expiry_date', true )
+        );
+    }
+
+    /**
+     * Persist and verify one bounded non-PII state value.
+     *
+     * @return true|WP_Error
+     */
+    private static function save_state( $job_id, $state ) {
+        update_post_meta( absint( $job_id ), self::META_STATE, $state );
+        return get_post_meta( absint( $job_id ), self::META_STATE, true ) === $state
+            ? true
+            : self::error( 'state_write_failed' );
+    }
+
+    private static function state( $expiry_date, $status, $attempts, $last_attempt, $next_retry, $delivered_at, $failure_code ) {
+        return array(
+            'schema_version'   => self::SCHEMA_VERSION,
+            'expiry_date'      => $expiry_date,
+            'status'           => $status,
+            'attempt_count'    => (int) $attempts,
+            'last_attempt_gmt' => $last_attempt,
+            'next_retry_gmt'   => $next_retry,
+            'delivered_at_gmt' => $delivered_at,
+            'failure_code'     => sanitize_key( $failure_code ),
+        );
+    }
+
+    private static function outcome( $name, $claimed = false ) {
+        return array( 'outcome' => $name, 'claimed' => (bool) $claimed );
+    }
+
+    /**
+     * @return array|null|WP_Error
+     */
+    private static function read_claim_snapshot( $job_id, $expiry_date ) {
+        global $wpdb;
+
+        $key = self::claim_key( $job_id, $expiry_date );
+        $raw = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s LIMIT 1",
+                $key
+            )
+        );
+        if ( null === $raw ) {
+            return null;
+        }
+
+        $claim = maybe_unserialize( $raw );
+        if (
+            ! is_array( $claim )
+            || self::SCHEMA_VERSION !== (int) ( $claim['schema_version'] ?? 0 )
+            || absint( $job_id ) !== (int) ( $claim['job_id'] ?? 0 )
+            || $expiry_date !== ( $claim['expiry_date'] ?? '' )
+            || empty( $claim['token'] )
+        ) {
+            return self::error( 'invalid_claim' );
+        }
+
+        return array( 'raw' => $raw, 'claim' => $claim );
+    }
+
+    private static function compare_delete_raw_claim( $job_id, $expiry_date, $raw ) {
+        global $wpdb;
+
+        if ( ! is_string( $raw ) ) {
+            return false;
+        }
+
+        $key     = self::claim_key( $job_id, $expiry_date );
+        $deleted = $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s",
+                $key,
+                $raw
+            )
+        );
+
+        if ( 1 === (int) $deleted ) {
+            wp_cache_delete( $key, 'options' );
+            wp_cache_delete( 'alloptions', 'options' );
+            wp_cache_delete( 'notoptions', 'options' );
+            return true;
+        }
+
+        return false;
+    }
+
+    private static function claim_key( $job_id, $expiry_date ) {
+        return self::CLAIM_PREFIX . substr( hash( 'sha256', absint( $job_id ) . '|' . $expiry_date ), 0, 24 );
+    }
+
+    private static function valid_date( $value ) {
+        $date = self::date_object( $value );
+        return $date ? $date->format( 'Y-m-d' ) : null;
+    }
+
+    private static function date_object( $value ) {
+        if ( ! is_string( $value ) || 1 !== preg_match( '/^\d{4}-\d{2}-\d{2}$/D', $value ) ) {
+            return null;
+        }
+
+        $date   = DateTimeImmutable::createFromFormat( '!Y-m-d', $value, wp_timezone() );
+        $errors = DateTimeImmutable::getLastErrors();
+        if (
+            false === $date
+            || ( is_array( $errors ) && ( $errors['warning_count'] || $errors['error_count'] ) )
+            || $date->format( 'Y-m-d' ) !== $value
+        ) {
+            return null;
+        }
+
+        return $date;
+    }
+
+    private static function now_gmt() {
+        return self::format_gmt( current_datetime() );
+    }
+
+    private static function parse_gmt( $value ) {
+        if ( ! is_string( $value ) || '' === $value ) {
+            return self::error( 'invalid_gmt' );
+        }
+
+        $timezone = new DateTimeZone( 'UTC' );
+        $date     = DateTimeImmutable::createFromFormat( '!Y-m-d H:i:s', $value, $timezone );
+        $errors   = DateTimeImmutable::getLastErrors();
+        if (
+            false === $date
+            || ( is_array( $errors ) && ( $errors['warning_count'] || $errors['error_count'] ) )
+            || $date->format( 'Y-m-d H:i:s' ) !== $value
+        ) {
+            return self::error( 'invalid_gmt' );
+        }
+
+        return $date;
+    }
+
+    private static function valid_gmt_or_empty( $value ) {
+        return is_string( $value ) && ( '' === $value || ! is_wp_error( self::parse_gmt( $value ) ) );
+    }
+
+    private static function format_gmt( DateTimeInterface $value ) {
+        $immutable = DateTimeImmutable::createFromInterface( $value );
+        return $immutable->setTimezone( new DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i:s' );
+    }
+
+    private static function error( $code ) {
+        return new WP_Error(
+            'raspitajse_job_expiry_notice_' . sanitize_key( $code ),
+            'Employer job expiry notification rejected the operation.'
+        );
+    }
+}
 
 /**
  * Disable only legacy employer-to-candidate alert delivery and creation UI.
@@ -1330,6 +2040,7 @@ final class Raspitajse_Communications_Alert_Security {
 
 Raspitajse_Communications_Transport::boot();
 Raspitajse_Communications_Job_Listing_Expiry::boot();
+Raspitajse_Communications_Employer_Job_Expiry_Notification::boot();
 Raspitajse_Communications_Alert_Security::boot();
 Raspitajse_Communications_Employer_Candidate_Alert_Retirement::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Evaluator::boot();
@@ -1346,4 +2057,8 @@ register_deactivation_hook(
 register_deactivation_hook(
     __FILE__,
     array( 'Raspitajse_Communications_Job_Listing_Expiry', 'deactivate' )
+);
+register_deactivation_hook(
+    __FILE__,
+    array( 'Raspitajse_Communications_Employer_Job_Expiry_Notification', 'deactivate' )
 );
