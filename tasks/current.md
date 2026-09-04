@@ -1,8 +1,8 @@
-# Zadatak 2.06 — Implement a fail-closed staging external selective allowlist runner for approved Raspitajse cron hooks
+# Zadatak 2.07 — Close the auxiliary WP-CLI HTTP evidence gap with one fully guarded check-only observation before scheduler activation
 
 Status: READY
-Baseline: 544a31171132a3ce95323162df2519ac0135840a
-Previous task: 2.05
+Baseline: 43ac33e6e96fdc0062233e6419cfb761633113c5
+Previous task: 2.06
 Target environment: staging
 Production: FORBIDDEN
 
@@ -10,479 +10,453 @@ Production: FORBIDDEN
 
 Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, and `origin/staging`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or modifying source. `tasks/README.md` is mandatory policy.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or modifying anything. `tasks/README.md` is mandatory policy.
 
 `codex-tasks` is READ-ONLY. Do not modify, commit to, push to, merge into, rebase, force-update, or otherwise write to `codex-tasks`.
 
 Verify that fresh `origin/staging` is exactly:
 
-`544a31171132a3ce95323162df2519ac0135840a`
+`43ac33e6e96fdc0062233e6419cfb761633113c5`
 
 If it differs, STOP and report the mismatch. Do not silently rebase this task.
 
-Execute only Zadatak 2.06. Work on one scoped feature branch from exact `origin/staging`. Integrate to `staging` only after the implementation and acceptance evidence pass. Publish the final report through the existing `codex-reports` workflow and STOP. Do not begin 2.07 automatically.
+Execute only Zadatak 2.07. This task is intentionally narrow. Do not activate any Hostinger/hPanel cron, crontab, systemd timer, request-driven WP-Cron or other external scheduler. Do not begin 2.08 automatically.
+
+Publish the final report through the existing `codex-reports` workflow and STOP.
 
 ---
 
 ## 1. Context already established
 
-Zadatak 2.05 completed PASS and proved that each approved Raspitajse-owned WP-Cron event can be invoked safely through the normal exact WP-CLI event path, sequentially and at most once, while broad cron remains unsafe.
+Zadatak 2.06 implemented and integrated the staging-only fail-closed selective owned cron runner.
 
-Approved owned hooks are exactly:
+Final integrated/deployed staging SHA from 2.06:
+
+`43ac33e6e96fdc0062233e6419cfb761633113c5`
+
+2.06 implementation:
+
+- `tools/raspitajse-staging-owned-cron-runner.sh`
+- `tools/raspitajse-staging-owned-cron-guard.php`
+
+The runner is intentionally limited to exactly these owned hooks, in this order:
 
 1. `raspitajse_job_listing_expiry_evaluator`
 2. `raspitajse_employer_job_expiry_notice_evaluator`
 3. `raspitajse_candidate_job_alert_evaluator`
 
-2.05 proved:
+2.06 acceptance itself passed:
 
-- exact invocation count `1/1/1`;
-- all three remain exactly one callback + one `hourly` event;
-- no broad `/wp-cron.php`, `--due-now`, `--all`, Action Scheduler, continuation, vendor/core cron or arbitrary hook execution;
-- no business mutations because due business work was `0`;
-- `wp_mail=0`, PHPMailer/SMTP `0`, payment `0`, actual external network `0`;
-- Action Scheduler pending `7`, protected ID32733 `pending/0` unchanged;
-- only the three owned recurring timestamps advanced normally;
-- `DISABLE_WP_CRON=true` remains correct;
-- preferred architecture from 2.04 is `EXTERNAL_SELECTIVE_ALLOWLIST_RUNNER`.
+- fixed allowlist only;
+- no arbitrary hook/path/callback passthrough;
+- due-only semantics;
+- deterministic sequential execution;
+- overlap lock;
+- per-hook timeout and whole-cycle bound;
+- callback/event/environment/runtime guards;
+- broad cron forbidden;
+- Action Scheduler forbidden;
+- continuation forbidden;
+- no vendor/core cron execution;
+- one naturally due staging cycle executed exactly `1/1/1`;
+- real business due-work was `0`;
+- business mutations `0`;
+- `wp_mail=0`, PHPMailer/SMTP `0`;
+- payment/order/refund mutations `0`;
+- Action Scheduler pending `7` unchanged;
+- protected ID32733 remained `pending/0`;
+- production untouched.
 
-The current application staging SHA did not change in 2.05 because it was an execution-only validation.
+2.06 was reported **PARTIAL only because of an auxiliary transport-evidence gap**:
 
-This task implements the runner itself. It does **not** activate Hostinger/hPanel cron or any server scheduler.
+- two mandatory environment checks and one sanitized role-count WP-CLI diagnostic were run outside the runtime HTTP guard;
+- therefore those three auxiliary WP-CLI processes could not be retroactively classified as actual external-network `0`;
+- no protected/business drift occurred;
+- all instrumented acceptance paths showed WP HTTP API attempts intercepted before transport and actual external network `0`.
+
+This task exists only to close that evidence gap before any scheduler activation is considered.
 
 ---
 
 ## 2. Goal
 
-Implement a small Raspitajse-owned, staging-only external runner that can later be called by a server scheduler and that:
+Produce one complete, fully guarded, reproducible staging observation proving that **all WP-CLI bootstraps needed for the runner's preflight/check-only path are covered by the same pre-transport HTTP guard**, with:
 
-- has a fixed internal allowlist of only the three approved hooks;
-- never accepts an arbitrary hook from command-line/user input;
-- runs only an allowlisted event that is actually due/overdue;
-- executes due allowlisted hooks sequentially in deterministic order, each at most once per runner process;
-- uses the normal exact WP-CLI cron event path rather than reproducing WordPress recurrence logic;
-- fails closed if callback/event identity, environment, runtime parity, safety guards or protected-state preconditions differ;
-- cannot reach broad WP-Cron, Action Scheduler, candidate-job continuation, legacy expiry hooks, vendor/core scheduled hooks, payment/refund/order mutation paths, or arbitrary external application HTTP;
-- has bounded runtime and overlap protection;
-- emits sanitized machine-readable/operationally useful results without PII/secrets.
+- zero cron hook execution;
+- zero Action Scheduler execution;
+- zero business mutation;
+- zero mail transport;
+- zero payment/order/refund mutation;
+- zero actual external application/vendor network transport;
+- complete transport accounting for every WP-CLI process used by the observation;
+- exact protected-state parity before/final.
 
-The implementation must be suitable for a later real staging scheduler activation without becoming a demo/test-only path.
+The intended success result is to remove the only stated reason 2.06 was PARTIAL.
+
+Do not redesign or broadly refactor the runner if the existing implementation can be proven correct with a narrow guard/path correction or task-private fully guarded observation.
 
 ---
 
-## 3. Owned source boundary
+## 3. Execution boundary — CHECK-ONLY ONLY
 
-Prefer a narrow operational implementation under `tools/`, for example:
+For the entire 2.07 runtime validation:
+
+- use only the runner's fixed `--check-only` mode and task-private read-only supporting observations that are fully HTTP-instrumented;
+- do **not** run the normal execution mode;
+- do **not** execute any of the three owned cron hooks;
+- do **not** execute any continuation hook;
+- do **not** call `/wp-cron.php`;
+- do **not** call `wp cron event run --due-now`;
+- do **not** call `wp cron event run --all`;
+- do **not** execute any exact cron event directly in this task;
+- do **not** run or claim Action Scheduler;
+- do **not** execute ID32733;
+- do **not** repair, reschedule, add, delete or advance any cron row;
+- do **not** create disposable business fixtures unless an unavoidable blocker is proven and explicitly reported; default is zero fixtures and zero business writes.
+
+If any hook execution occurs, result cannot be PASS.
+
+---
+
+## 4. Baseline / parity gate
+
+Before any WordPress bootstrap, prove:
+
+- local source staging HEAD = fresh `origin/staging` = declared baseline;
+- staging deploy marker = same SHA;
+- source worktree clean;
+- runtime environment identifies as staging;
+- Communications source/runtime parity exact;
+- the two 2.06 runner/guard files exist at expected paths and are source-clean;
+- `DISABLE_WP_CRON=true` remains effective;
+- request-driven cron remains disabled;
+- staging mail-safety is loaded/configured;
+- production access/touch = NO.
+
+If source/runtime/deploy parity is not exact, STOP and report BLOCKED/PARTIAL rather than observing stale runtime.
+
+---
+
+## 5. HTTP guard requirement
+
+The core requirement is that **every WordPress/WP-CLI bootstrap process used for acceptance evidence is instrumented before WordPress can perform application/vendor HTTP transport**.
+
+Use the existing proven guard mechanism where possible. Before each relevant WordPress bootstrap:
+
+- establish `WP_HTTP_BLOCK_EXTERNAL=true` or the task's already-proven equivalent before WordPress bootstrap;
+- install a pre-transport WordPress HTTP guard at the earliest reliable boundary available for this environment;
+- count sanitized WP HTTP API attempts;
+- classify/intercept them before transport;
+- record `actual_external_network=0` only when deterministically established;
+- fail closed on an unexpected caller/path that is not the already-understood staging-local LiteSpeed CLI shutdown purge behavior;
+- do not allow the observation harness itself to create an uninstrumented WP-CLI process.
+
+The final report must enumerate **every WordPress/WP-CLI process used in acceptance evidence** and state whether it was guarded. PASS requires all such processes to be guarded.
+
+Git fetch/report publication traffic is control-plane traffic and should remain distinguished from application runtime network evidence.
+
+---
+
+## 6. Narrow source-change policy
+
+Prefer **no source change** if the evidence gap can be closed by a task-private fully guarded observation against the integrated 2.06 runner.
+
+If and only if the integrated 2.06 runner itself starts auxiliary WP-CLI bootstraps outside its own guard, make the smallest Raspitajse-owned correction required under `tools/` so all runner preflight/check-only WP-CLI bootstraps share the same guard boundary.
+
+Allowed source scope if needed:
 
 - `tools/raspitajse-staging-owned-cron-runner.sh`
-- an optional small companion PHP guard/verifier under `tools/` if that is materially cleaner than embedding PHP in shell.
+- `tools/raspitajse-staging-owned-cron-guard.php`
+- at most one small Raspitajse-owned helper under `tools/` if materially necessary.
 
-Do not modify WordPress core, WP Job Board Pro, Paid Listings, WooCommerce, Superio parent/child theme, Raspitajse Commerce, or vendor plugin code.
+Forbidden source changes:
 
-Do not modify the three owned evaluator implementations unless a concrete defect blocks the runner. If such a defect is discovered, STOP/PARTIAL and report it rather than broadening 2.06 silently.
+- WordPress core;
+- WooCommerce;
+- WP Job Board Pro;
+- Paid Listings;
+- Superio/theme code;
+- Raspitajse Commerce;
+- Raspitajse Communications application behavior;
+- MU mail-safety behavior;
+- deployment target/path logic;
+- business rules;
+- entitlement rules;
+- cron evaluator behavior.
 
-Do not create a generic cron framework. This is a narrow staging operational boundary for exactly three already-approved hooks.
-
-The existing staging deployment contract/path constants may be reused where appropriate. Do not add secrets or credentials.
-
----
-
-## 4. Runner interface and fixed allowlist
-
-The operational runner must have **no arbitrary hook parameter**.
-
-Preferred interface:
-
-- ordinary invocation with no positional arguments performs one bounded selective cycle;
-- any unexpected positional argument or unsupported option exits fail-closed before WordPress execution;
-- if a diagnostic/check-only mode is implemented, it must be a fixed enumerated mode and must not allow a caller to supply a hook name, PHP callback, command, path, or arbitrary WP-CLI argument.
-
-The internal execution order must be fixed:
-
-1. job-listing expiry;
-2. employer job-expiry notice;
-3. candidate→job alert evaluator.
-
-Each can execute at most once in one runner process.
-
-Never construct the hook name from untrusted input.
+Do not broaden 2.07 into runner redesign.
 
 ---
 
-## 5. Staging/environment and parity gate
+## 7. Required guarded observation
 
-Before executing any hook, fail closed unless all applicable checks pass:
+Run exactly one final acceptance observation of:
 
-- WordPress environment is exactly `staging`;
-- `DISABLE_WP_CRON` remains effectively `true`;
-- staging mail-safety MU control is loaded;
-- expected staging site root is the known staging root, not production;
-- deployment state marker exists and refers to the source currently intended for staging;
-- inspected Raspitajse Communications source/runtime parity is exact for the deployed application code;
-- repository/source state used by the runner is clean enough to make the executed code unambiguous;
-- production path/domain/database is not selected.
+`bash tools/raspitajse-staging-owned-cron-runner.sh --check-only`
 
-The runner must not perform `git fetch`, network update checks, or repository mutation as part of its steady-state cycle.
+under complete HTTP instrumentation.
 
-Do not hard-code production paths or make production a supported mode.
+Expected behavioral result:
 
----
+- command exits successfully;
+- zero owned hook execution;
+- zero non-owned hook execution;
+- zero cron row advancement;
+- each owned hook remains exactly one callback + one hourly event;
+- hooks may report `not_due`/`due` as read-only state, but **no execution may occur in check-only mode regardless of due state**;
+- no Action Scheduler interaction;
+- no continuation execution;
+- no broad cron path;
+- no arbitrary input path;
+- no scheduler activation.
 
-## 6. Exact callback/event contract gate
-
-Immediately before any execution, prove all three allowlisted registrations are still the approved contracts.
-
-For every allowlisted hook require:
-
-- callback count exactly `1`;
-- exact expected owned callback identity;
-- expected priority/accepted-args contract;
-- scheduled event count exactly `1`;
-- recurrence exactly `hourly`;
-- interval exactly `3600`;
-- event args exactly empty;
-- no duplicate event row.
-
-Also require before every execution cycle:
-
-- candidate→job continuation event count `0`;
-- vendor candidate→job sender registration `0`;
-- employer→candidate vendor sender registration `0`;
-- legacy daily expiry callback/event `0/0`;
-- legacy shared expiry callback/event `0/0`;
-- candidate automatic expiry remains disabled.
-
-If any identity/count/recurrence/args invariant differs, execute **nothing** and exit nonzero with a sanitized reason code.
-
-Do not rely only on hook names; callback identity matters.
+If the runner's check-only mode would execute due hooks, STOP and report FAIL because that violates the intended public interface established in 2.06.
 
 ---
 
-## 7. Due-event semantics
+## 8. Auxiliary diagnostics must use same guard
 
-The runner must inspect the scheduled timestamp for each allowlisted hook.
+Any environment check, role-count diagnostic, cron inventory read, protected fingerprint read or similar WordPress/WP-CLI diagnostic used for acceptance must run through the same pre-transport guard.
 
-- Execute an allowlisted hook only when its single scheduled event is due or overdue relative to the current WordPress/server clock.
-- Future events are a clean no-op and must not be forced early.
-- Use the normal exact WP-CLI event command for the one fixed hook; do not call `/wp-cron.php`, `wp cron event run --due-now`, `--all`, or manually reproduce recurrence state.
-- After an executed recurring event, verify it still exists exactly once, remains hourly with empty args, and its next timestamp moved forward normally.
-- A no-op cycle must not mutate cron rows.
+Specifically close the exact 2.06 gap:
 
-The runner must not repair, reschedule, unschedule or otherwise touch non-allowlisted cron rows.
+- the two mandatory environment checks that were previously uninstrumented;
+- the sanitized employer-role/user-count diagnostic that was previously uninstrumented.
 
----
+You may redesign the acceptance harness to avoid separate WP-CLI processes entirely if that is cleaner and safer, but do not lose the required evidence.
 
-## 8. Overlap lock and bounded runtime
-
-Implement a host-local fail-closed overlap guard appropriate for one staging server.
-
-Preferred behavior:
-
-- nonblocking lock acquisition;
-- a second concurrent runner exits without executing any hook;
-- kernel-backed `flock` is preferred if available because crash cleanup is automatic;
-- if the required locking primitive is unavailable, fail closed rather than running unlocked;
-- no broad process killing;
-- no PID guessing.
-
-Bound runtime:
-
-- per-hook child execution must have a hard timeout (historical validated value: 45 seconds is acceptable);
-- the full cycle must have a bounded upper limit;
-- timeout or unexpected child failure stops later hook execution and returns nonzero;
-- do not continue after an unexpected partial failure.
-
-Prove overlap behavior in a task-private test without invoking a second business hook execution.
+Do not run an unguarded `wp ...` command merely because it is read-only.
 
 ---
 
-## 9. Action Scheduler hard deny
+## 9. Cron invariants
 
-The runner must never invoke:
+Before and final, prove:
 
-- `action_scheduler_run_queue`;
-- Action Scheduler CLI runner/queue runner;
-- any due-action command;
-- protected action ID32733;
-- arbitrary Action Scheduler hook input.
+- full cron event count and fingerprint;
+- non-allowlisted cron fingerprint;
+- all three owned event rows count `1` each;
+- all three owned rows remain `hourly`, interval `3600`, args `[]`;
+- owned callback count/identity/fingerprint unchanged;
+- candidate-job continuation event count `0` unless independently pre-existing;
+- legacy daily callback/event `0/0`;
+- legacy shared-expiry callback/event `0/0`;
+- vendor candidate→job sender `0`;
+- employer→candidate vendor sender `0`;
+- candidate auto-expiry remains disabled.
 
-Before and after acceptance prove:
+Because check-only must not mutate scheduling, PASS requires the full cron canonical state to remain identical except for clock-derived presentation fields excluded from canonicalization.
 
-- pending Action Scheduler count unchanged from current protected state;
-- sanitized pending fingerprint unchanged;
+---
+
+## 10. Action Scheduler hard protection
+
+Before/final prove:
+
+- pending count remains `7` unless a truly pre-existing independent change is detected before execution, in which case stop and report mismatch;
+- pending fingerprint unchanged;
 - ID32733 remains `pending/0`;
-- AS execution/claim/cancel/reschedule/cleanup counters `0`.
+- AS runner execution count `0`;
+- due action executions `0`;
+- claims/cancels/reschedules/cleanup `0`.
 
-If the protected AS state differs unexpectedly during preflight, fail closed before owned hook execution.
-
----
-
-## 10. Continuation / broad cron / arbitrary execution hard deny
-
-Categorically reject and never invoke:
-
-- `/wp-cron.php`;
-- `wp cron event run --due-now`;
-- `wp cron event run --all`;
-- arbitrary `wp cron event run <user-input>`;
-- candidate-job continuation hook/event;
-- legacy daily expiry hook;
-- legacy shared expiry hook;
-- vendor/core scheduled hooks.
-
-The runner must not expose a generic passthrough for extra WP-CLI arguments.
-
-Static audit and tests must prove there is no string-concatenation/input path that can turn this tool into a generic cron runner.
+Any attempt by the runner/check-only observation to reach Action Scheduler is FAIL.
 
 ---
 
-## 11. Mail boundary
+## 11. Mail / notification safety
 
-The staging runner must support the fact that two approved owned evaluators may legitimately create application mail when real staging business work is due in the future.
+Across all WordPress processes used for acceptance:
 
-Therefore:
+- application `wp_mail` attempts: expected `0`;
+- PHPMailer attempts: `0`;
+- SMTP attempts: `0`;
+- real/uncontrolled recipients: `0`.
 
-- do not globally redesign or disable the owned Transport path;
-- require staging mail-safety to be loaded before any hook execution;
-- preserve SenderPolicy/Transport ownership (`CHANNEL_JOB_EXPIRY` and candidate-alert channel as already implemented);
-- production SMTP must remain unreachable because this tool is staging-only;
-- no caller-supplied From/Reply-To override;
-- no real SMTP delivery in acceptance.
+Keep staging mail-safety loaded. If any mail path appears unexpectedly, intercept before PHPMailer, stop and report FAIL/PARTIAL as appropriate.
 
-For 2.06 acceptance, do not create real recipient-facing business work. `wp_mail`, PHPMailer and SMTP should remain `0` unless the task uses an explicitly disposable, fully intercepted fixture authorized by this specification. Prefer zero mail.
+Do not render or report private mail body/recipient data.
 
 ---
 
-## 12. HTTP/network guard
+## 12. HTTP / network acceptance
 
-The three owned evaluators do not require external application HTTP to perform their approved business logic.
+Final evidence must clearly distinguish:
 
-The runner must fail closed against unexpected actual external application network transport during the selective cycle.
+- WP HTTP API attempt count;
+- guard-intercepted pre-transport count;
+- known staging-local LiteSpeed CLI shutdown purge attempts, if present;
+- unexpected HTTP attempt count;
+- actual external network request count.
 
-It is acceptable to reuse the proven 2.05 staging guard approach that blocks/intercepts WordPress HTTP before transport. Known LiteSpeed CLI-shutdown HTTP attempts may be observed only if deterministically intercepted before network transport.
+PASS requires:
 
-Acceptance must report separately:
+- every application-runtime WP HTTP attempt is accounted for;
+- every such attempt is intercepted before transport or otherwise proven non-external by a deterministic guard;
+- unexpected attempts `0`;
+- actual external application/vendor network requests `0`;
+- no uninstrumented WP-CLI bootstrap remains in the acceptance evidence set.
 
-- WP HTTP API attempts;
-- guard-intercepted attempts;
-- actual external network requests.
-
-Required actual external network requests: `0`.
-
-Do not disable repository/control-plane Git traffic outside the application runtime guard when publishing the report.
+Do not claim zero network merely because a command was read-only.
 
 ---
 
-## 13. Payment/order/refund hard deny
+## 13. Payment/order/refund hard guard
 
-The runner must not permit the approved cron hooks to reach payment/order/refund mutation paths.
-
-Use task/runtime guards sufficient to fail closed on unexpected WooCommerce payment/order/refund lifecycle callbacks during acceptance.
-
-Before/final prove the protected WooCommerce order/refund fingerprint unchanged.
-
-Required acceptance:
+Across all acceptance processes:
 
 - payment transport/charge attempts `0`;
-- order lifecycle mutations `0`;
-- refund lifecycle mutations `0`.
+- order lifecycle mutation calls `0`;
+- refund lifecycle mutation calls `0`;
+- order/refund fingerprints unchanged.
 
-Do not refactor WooCommerce standard lifecycle.
-
----
-
-## 14. Operational output
-
-Produce concise sanitized output suitable for a future server scheduler log.
-
-At minimum include machine-readable or deterministic fields for:
-
-- overall result: `PASS`, `NOOP`, `LOCKED`, or fail-closed error;
-- environment;
-- start/end or duration;
-- for each fixed hook: `not_due`, `executed`, `skipped_after_failure`, or fail-closed status;
-- count of executed hooks;
-- no PII, emails, job titles, post IDs, order IDs, alert IDs, URLs with secrets, raw cron args, mail bodies, tokens or credentials.
-
-Errors must be sanitized reason codes/messages, not raw dumps of WordPress data.
-
-No debug logging containing business data.
+No payment test is authorized in 2.07.
 
 ---
 
-## 15. Acceptance strategy
+## 14. Protected business-state invariants
 
-### A. Static/source validation
-
-At minimum:
-
-- `bash -n` on changed shell script(s);
-- `php -l` on changed PHP helper(s), if any;
-- `git diff --check`;
-- executable bit correct for the operational shell runner;
-- no secrets/PII/hard-coded user IDs/emails/production URLs;
-- no vendor/core/theme changes;
-- no generic hook passthrough;
-- no broad cron command in executable path.
-
-Use `shellcheck` only if already available; do not install packages.
-
-### B. Pure/task-private fail-closed tests
-
-Without touching production or business records, prove at least:
-
-1. unexpected positional argument is rejected before WordPress cron execution;
-2. unsupported mode/option is rejected;
-3. overlap lock blocks a second concurrent invocation without hook execution;
-4. synthetic/mocked callback mismatch is rejected;
-5. synthetic/mocked event-count/recurrence/args mismatch is rejected;
-6. arbitrary/non-allowlisted hook cannot be injected;
-7. Action Scheduler and continuation cannot be selected;
-8. timeout/error stops later hooks.
-
-These may use task-private mocks/harnesses. Do not add a production backdoor solely to make tests possible.
-
-### C. Staging runtime smoke
-
-Immediately before any real runner invocation, take the same sanitized protected-state/due-work gate used in 2.05.
-
-If any real business work is due for any of the three owned evaluators, do **not** execute that real work in 2.06 merely to test the wrapper. Use check-only/no-op acceptance plus task-private tests and report why. Do not create fake real recipients.
-
-If real business due work is `0` and one or more allowlisted cron event rows are naturally due/overdue, one ordinary runner cycle may execute those due owned events through the exact normal path. Each fixed hook still max once. Future events must remain untouched.
-
-Do not force a future cron event early just to obtain an execution proof; 2.05 already proved the exact event execution path.
-
-After any runtime cycle prove exact cleanup/invariants and no business mutation.
-
----
-
-## 16. Protected business/runtime invariants
-
-Before/final prove sanitized unchanged business state for at least:
+Before/final prove unchanged, sanitized only:
 
 - candidates count/status/fingerprint;
 - candidate expiry-meta footprint;
 - historical published `candidate_alert` count/fingerprint;
 - published `job_alert` count/fingerprint;
 - job listing count/status/fingerprint;
-- employers and employer users count/fingerprint;
-- job package/entitlement count/status/fingerprint;
-- WooCommerce orders status/fingerprint;
-- refunds count/fingerprint;
+- employers fingerprint;
+- WPJBP employer-user count/fingerprint using the corrected proven role selector from 2.06;
+- package/entitlement count/status/fingerprint;
+- WooCommerce order status/fingerprint;
+- refund count/fingerprint;
+- all owned claim-family counts return to exact before state;
 - candidate-alert creation remains fail-closed;
-- employer→candidate vendor sender `0`;
-- candidate→job vendor sender `0`;
-- legacy daily callback/event `0/0`;
-- legacy shared expiry callback/event `0/0`;
-- three owned callback/event pairs remain `1/1 hourly`;
-- candidate-job continuation event `0`;
-- candidate auto-expiry disabled;
-- all owned claim families return to pre-task state;
-- Action Scheduler pending count/fingerprint unchanged;
-- ID32733 remains `pending/0`.
+- package entitlement behavior unchanged;
+- listing expiry source remains canonical `_job_expiry_date` only;
+- employer expiry notice transport remains owned SenderPolicy/Transport with `CHANNEL_JOB_EXPIRY`.
 
-If a naturally due owned cron event is executed, the only expected persistent cron mutation is that exact event's normal recurring timestamp advancement. Non-allowlisted cron fingerprint must remain unchanged.
+No raw emails, user IDs, order IDs, tokens or PII in the report.
 
 ---
 
-## 17. Deployment/integration boundary
+## 15. Runner interface and fail-closed regression
 
-This is an operational-tool implementation task.
+Re-prove without executing hooks:
 
-- Work from one scoped feature branch based on exact baseline.
-- Keep application runtime changes at zero unless a blocker is explicitly reported.
-- A `changed` staging deployment may be used after acceptance to advance the staging deploy marker to the final commit even if the new `tools/` file itself is executed from the repository rather than copied into `wp-content` by the deploy allowlist.
-- Prove the deployed application subtree remains byte-identical where no application file changed.
-- Fast-forward `staging` only after acceptance passes.
-- Final `origin/staging`, local staging and deploy marker must refer to the same final task commit.
+- no args => normal mode exists but is **not invoked in 2.07**;
+- only `--check-only` is accepted for this task's runtime acceptance;
+- unexpected positional arguments fail;
+- unsupported options fail;
+- arbitrary hook input impossible;
+- fixed internal allowlist remains exactly three hooks;
+- fixed execution order unchanged;
+- lock and timeout configuration unchanged unless a narrowly justified evidence-only fix is necessary;
+- no code path to `--due-now`, `--all`, `/wp-cron.php`, Action Scheduler runner, continuation hook or vendor/core cron.
 
-Do not activate or edit Hostinger/hPanel cron, user crontab, systemd timers, or any external scheduler in 2.06.
-
----
-
-## 18. Safety counters
-
-Expected task-wide unless a specifically authorized no-business runtime cycle advances due owned cron timestamps:
-
-- production access/touch: `NO`;
-- broad WP-Cron runs: `0`;
-- non-allowlisted cron executions: `0`;
-- Action Scheduler executions/mutations: `0`;
-- candidate-job continuation executions: `0`;
-- real business mutations: `0`;
-- `wp_mail`: preferably `0`;
-- PHPMailer/SMTP: `0`;
-- actual external application network: `0`;
-- payment/order/refund mutations: `0`;
-- arbitrary command/hook execution: `0`.
-
-Any unexpected side effect is a stop condition.
+Use static inspection/private mocks where needed; do not execute business hooks.
 
 ---
 
-## 19. HOST_NAMESPACE_PRESSURE
+## 16. Source quality if code changes are necessary
 
-Known `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC` applies.
+If source changes are made:
 
-Use the proven namespace-free Git/filesystem/WP-CLI path when needed. If a sandbox-dependent helper returns the known signature, apply the circuit breaker immediately and do not loop retries or use broad process kills.
+- `bash -n` changed shell files;
+- `php -l` changed PHP files;
+- `git diff --check`;
+- preserve executable mode of the shell runner;
+- no secrets/PII/debug dumps/hard-coded private IDs/emails;
+- no production URLs/paths except existing safe environment checks where already canonical;
+- one focused feature branch from exact baseline;
+- integrate to staging only after all acceptance criteria pass;
+- deploy staging only;
+- final source/origin/staging/deploy/runtime parity exact.
 
-The operational runner itself must not depend on Codex sandbox tooling.
-
----
-
-## 20. PASS criteria
-
-PASS only if all are true:
-
-- a Raspitajse-owned staging selective runner exists in source;
-- fixed allowlist is exactly the three approved hooks;
-- no arbitrary hook/CLI passthrough exists;
-- only due/overdue allowlisted events can execute;
-- fixed sequential order and max-once-per-cycle behavior are proven;
-- overlap lock and bounded timeout behavior are proven;
-- staging/environment/runtime/callback/event guards fail closed;
-- broad cron, Action Scheduler, continuation, legacy/vendor/core cron are unreachable from the runner;
-- staging mail-safety is mandatory and no real SMTP occurs;
-- actual external application network remains `0` in acceptance;
-- payment/order/refund mutations remain `0`;
-- protected business/AS state unchanged;
-- any natural owned-event timestamp advancement is exact and limited to executed allowlisted rows;
-- no Hostinger/server scheduler is activated;
-- source quality checks pass;
-- final staging/source/deploy-marker integration is unambiguous;
-- production remains untouched.
-
-PARTIAL/FAIL rather than weakening a guard if the host lacks a required safe primitive or a runtime invariant cannot be proven.
+If no source change is necessary, do not create a no-op application commit merely to record the task.
 
 ---
 
-## 21. Final report
+## 17. Scheduler activation remains forbidden
+
+Do not create/modify/enable:
+
+- Hostinger/hPanel scheduled tasks;
+- user crontab;
+- system cron;
+- systemd timers;
+- HTTP cron services;
+- GitHub Actions scheduler;
+- WordPress request spawning.
+
+2.07 only closes the evidence gap. Scheduler activation, if later authorized, belongs to a separate READY task.
+
+---
+
+## 18. HOST_NAMESPACE_PRESSURE
+
+Known `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC` still applies.
+
+If encountered:
+
+- apply the documented circuit breaker immediately;
+- do not retry the same sandbox helper repeatedly;
+- continue with proven namespace-free Git/filesystem/WP-CLI methods;
+- do not use broad process kills;
+- if a bounded task-private child stalls, inspect and terminate only that exact child/process group if its documented timeout is exceeded.
+
+---
+
+## 19. Acceptance criteria
+
+PASS requires all of the following:
+
+1. Exact baseline/deploy/runtime parity gate passes.
+2. Final `--check-only` observation runs exactly once.
+3. Cron hook execution count is `0` across all hooks.
+4. No cron row is advanced/rescheduled/added/deleted by 2.07.
+5. Every acceptance-evidence WP-CLI bootstrap is HTTP-instrumented.
+6. The exact three previously uninstrumented diagnostic needs are now covered by the guard or eliminated by a fully guarded consolidated observation.
+7. WP HTTP attempts are fully accounted for.
+8. Actual external application/vendor network requests `0`.
+9. `wp_mail=0`, PHPMailer/SMTP `0`.
+10. Payment/order/refund mutations `0`.
+11. Action Scheduler executions/mutations `0`; pending/fingerprint unchanged; ID32733 `pending/0`.
+12. Protected business fingerprints unchanged.
+13. Runner fixed allowlist/interface/fail-closed properties unchanged.
+14. Scheduler activation `0`.
+15. Production access/touch `NO`.
+16. Temporary task artifacts cleaned exactly.
+
+If any acceptance WP-CLI process remains unguarded, result must not be PASS.
+
+---
+
+## 20. Final report
 
 Publish:
 
-**Zadatak 2.06 — Implement a fail-closed staging external selective allowlist runner for approved Raspitajse cron hooks**
+**Zadatak 2.07 — Close the auxiliary WP-CLI HTTP evidence gap with one fully guarded check-only observation before scheduler activation**
 
 Report must include:
 
-1. PASS/PARTIAL/FAIL and exact meaning;
-2. baseline, feature/final commit, `origin/staging`, deploy marker;
-3. exact changed files/diffstat;
-4. runner command/interface and fixed allowlist;
-5. environment/runtime parity guards;
-6. callback/event contract validation;
-7. due-only semantics;
-8. overlap/timeout behavior;
-9. fail-closed test matrix;
-10. any staging runtime smoke execution, exact hook counts and cron timestamp changes;
-11. non-allowlisted cron fingerprint before/final;
-12. Action Scheduler pending fingerprint and ID32733 before/final;
-13. mail/PHPMailer/SMTP counters;
-14. HTTP API/interception/actual-network counters;
-15. payment/order/refund counters;
-16. protected business fingerprints before/final;
-17. scheduler activation changes = `0`;
-18. production = `NO ACCESS / NO TOUCH`;
-19. warnings/tooling notes;
-20. exactly one proposed next small task and STOP.
+- PASS/PARTIAL/FAIL and exact meaning;
+- baseline and final staging SHA;
+- whether source changes were necessary;
+- exact changed files/diffstat if any;
+- exact count of WordPress/WP-CLI processes used for acceptance;
+- guarded vs unguarded process count;
+- `--check-only` invocation count;
+- total cron hook execution count;
+- before/final cron fingerprints;
+- Action Scheduler pending/fingerprint + ID32733;
+- mail/SMTP counters;
+- WP HTTP API attempt/intercept/unexpected/actual-external counters;
+- payment/order/refund counters;
+- protected business-state parity;
+- cleanup proof;
+- production NO;
+- whether the 2.06 evidence gap is fully closed;
+- exactly one proposed next task, but do not create or start it.
 
-The likely next slice, if PASS, is a separately authorized staging scheduler activation/observation task using this runner. Do not activate it in 2.06.
+If PASS, the natural next task may evaluate/authorize **staging scheduler activation for the already-proven selective runner**, but do not activate anything in 2.07.
+
+STOP after report publication and verification.
