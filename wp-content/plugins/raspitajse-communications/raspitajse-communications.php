@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.6.0
+ * Version: 0.7.0
  * Author: Raspitajse.com
  */
 
@@ -433,6 +433,57 @@ final class Raspitajse_Communications_Transport {
 }
 
 
+/**
+ * Disable only legacy employer-to-candidate alert delivery and creation UI.
+ */
+final class Raspitajse_Communications_Employer_Candidate_Alert_Retirement {
+
+    const DAILY_HOOK     = 'wp_job_board_pro_email_daily_notices';
+    const ARCHIVE_HOOK   = 'wp_job_board_pro_before_candidate_archive';
+    const DAILY_PRIORITY = 10;
+    const FORM_PRIORITY  = 20;
+
+    public static function boot() {
+        // Both vendor classes register callbacks while plugins are loading.
+        add_action( 'plugins_loaded', array( __CLASS__, 'suppress_vendor_callbacks' ), 102 );
+        add_action( 'widgets_init', array( __CLASS__, 'unregister_creation_widget' ), PHP_INT_MAX );
+    }
+
+    /**
+     * Keep the daily event and unrelated callbacks while retiring one sender
+     * and its candidate-archive create form.
+     */
+    public static function suppress_vendor_callbacks() {
+        if ( class_exists( 'WP_Job_Board_Pro_Candidate_Alert' ) ) {
+            remove_action(
+                self::DAILY_HOOK,
+                array( 'WP_Job_Board_Pro_Candidate_Alert', 'send_candidate_alert_notice' ),
+                self::DAILY_PRIORITY
+            );
+        }
+
+        if ( class_exists( 'WP_Job_Board_Pro_Candidate' ) ) {
+            remove_action(
+                self::ARCHIVE_HOOK,
+                array( 'WP_Job_Board_Pro_Candidate', 'display_candidates_alert_form' ),
+                self::FORM_PRIORITY
+            );
+        }
+    }
+
+    /**
+     * Prevent a configured legacy widget from rendering its creation form.
+     */
+    public static function unregister_creation_widget() {
+        if ( ! class_exists( 'WP_Job_Board_Pro_Widget_Candidate_Alert_Form' ) ) {
+            return;
+        }
+
+        unregister_widget( 'WP_Job_Board_Pro_Widget_Candidate_Alert_Form' );
+    }
+}
+
+
 final class Raspitajse_Communications_Alert_Security {
 
     public static function boot() {
@@ -611,6 +662,12 @@ final class Raspitajse_Communications_Alert_Security {
             if ( '' !== $sanitized_value && array() !== $sanitized_value ) {
                 $alert_query[ $filter_key ] = $sanitized_value;
             }
+        }
+
+        if ( 'candidate_alert' === $post_type ) {
+            return self::failure(
+                __( 'Obaveštenja o kandidatima više nisu aktivna.', 'raspitajse-communications' )
+            );
         }
 
         $user_id = get_current_user_id();
@@ -957,6 +1014,7 @@ final class Raspitajse_Communications_Alert_Security {
 
 Raspitajse_Communications_Transport::boot();
 Raspitajse_Communications_Alert_Security::boot();
+Raspitajse_Communications_Employer_Candidate_Alert_Retirement::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Evaluator::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Frequency_UI::boot();
 
