@@ -263,7 +263,7 @@ function raspitajse_staging_owned_cron_post_snapshot( $post_types, $meta_keys = 
 function raspitajse_staging_owned_cron_employer_users_snapshot() {
     global $wpdb;
 
-    $like = '%' . $wpdb->esc_like( '"employer"' ) . '%';
+    $like = '%' . $wpdb->esc_like( '"wp_job_board_pro_employer"' ) . '%';
     $rows = $wpdb->get_results(
         $wpdb->prepare(
             "SELECT u.ID, u.user_registered, u.user_status
