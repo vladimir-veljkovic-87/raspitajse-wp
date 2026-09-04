@@ -1,8 +1,8 @@
-# Zadatak 2.03 — Retire the orphan legacy daily expiry schedule after final owned-scheduler regression
+# Zadatak 2.04 — Read-only audit of steady-state staging WP-Cron trigger readiness after expiry scheduler cleanup
 
 Status: READY
-Baseline: d09abafb154d1e4e004696361aa28c4c7f1920e7
-Previous task: 2.02
+Baseline: 544a31171132a3ce95323162df2519ac0135840a
+Previous task: 2.03
 Target environment: staging
 Production: FORBIDDEN
 
@@ -10,377 +10,484 @@ Production: FORBIDDEN
 
 Fetch `origin/codex-tasks` and `origin/staging`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or modifying source. `tasks/README.md` is mandatory policy.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning or inspecting runtime. `tasks/README.md` is mandatory policy.
 
 `codex-tasks` is READ-ONLY. Do not modify, commit to, push to, merge into, rebase, force-update, or otherwise write to `codex-tasks`.
 
 Verify that fresh `origin/staging` is exactly:
 
-`d09abafb154d1e4e004696361aa28c4c7f1920e7`
+`544a31171132a3ce95323162df2519ac0135840a`
 
 If it differs, STOP and report the mismatch. Do not silently rebase this task.
 
-Execute only Zadatak 2.03. Work on one scoped feature branch from exact `origin/staging`, integrate to `staging` only after all acceptance criteria pass, publish the final report through the existing `codex-reports` workflow, and STOP. Do not begin 2.04 automatically.
+Execute only Zadatak 2.04. This is a **strictly read-only audit**. Do not create a feature branch unless repository policy mechanically requires one for report generation; do not modify application source, WordPress options, cron storage, database business state, Action Scheduler state, mail state, server scheduler state or deployment state.
+
+Publish the final report through the existing `codex-reports` workflow and STOP. Do not begin 2.05 automatically.
 
 ---
 
 ## 1. Context already established
 
-Zadatak 2.01 and 2.02 completed the expiry migration:
+Zadatak 2.03 completed PASS and left the expiry/alert scheduler state intentionally simplified:
 
-- candidate time-based auto-expiry is retired;
-- all legacy candidate/job expiry notice callbacks are absent;
-- the legacy shared expiry checker callbacks are absent;
-- job listing status expiry is owned by `raspitajse_job_listing_expiry_evaluator`;
-- employer pre-expiry notification is owned by `raspitajse_employer_job_expiry_notice_evaluator`;
-- both owned evaluators are hourly, self-healing, bounded and independent;
-- candidate→job alert delivery remains separately owned and hourly;
-- no active business callback remains on the legacy daily expiry-notice hook.
+- legacy `wp_job_board_pro_email_daily_notices`: callback count `0`, event count `0`;
+- legacy `wp_job_board_pro_check_for_expired_jobs`: callback count `0`, event count `0`;
+- owned job-status expiry evaluator: exactly `1` callback + `1 hourly` event;
+- owned employer job-expiry notification evaluator: exactly `1` callback + `1 hourly` event;
+- owned candidate→job evaluator: exactly `1` callback + `1 hourly` event;
+- candidate→job continuation event: `0`;
+- candidate auto-expiry remains disabled;
+- both legacy alert senders remain absent;
+- new employer→candidate `candidate_alert` creation remains retired/fail-closed;
+- Action Scheduler pending count remained `7`;
+- ID32733 remained `pending/0`;
+- production remained untouched.
 
-Final 2.02 runtime truth:
+Historical staging evidence also shows `DISABLE_WP_CRON=true`, so browser/request-triggered WordPress cron spawning is not the steady-state trigger mechanism.
 
-- `wp_job_board_pro_email_daily_notices` callback count = `0`;
-- one old recurring WP-Cron event for that hook still exists;
-- legacy event recurrence = `wpie_daily`, interval `86400`, args `[]`;
-- this event is now orphaned: it has no business callback to execute;
-- `wp_job_board_pro_check_for_expired_jobs` callback/event count = `0/0`;
-- `raspitajse_job_listing_expiry_evaluator` = exactly one callback + one hourly event;
-- `raspitajse_employer_job_expiry_notice_evaluator` = exactly one callback + one hourly event;
-- candidate→job owned evaluator remains exactly one callback + one hourly event;
-- Action Scheduler pending count = `7`;
-- ID32733 = `pending/0`.
-
-The purpose of 2.03 is **only** to remove the now-useless legacy daily schedule and make that retirement durable without disturbing any owned scheduler.
-
-Do not revisit expiry business decisions in this task.
+This task does **not** run cron. Its purpose is to determine whether a future narrow steady-state trigger validation can be authorized safely, and exactly what that authorization boundary must be.
 
 ---
 
 ## 2. Goal
 
-After PASS:
+Produce a complete, sanitized readiness decision for staging WP-Cron execution after the expiry scheduler cleanup.
 
-1. `wp_job_board_pro_email_daily_notices` still has exactly `0` callbacks.
-2. Scheduled events for `wp_job_board_pro_email_daily_notices` are exactly `0`.
-3. The legacy daily event cannot be silently recreated during ordinary bootstrap while the hook remains callback-free.
-4. The owned job-status expiry evaluator remains exactly `1/hourly`.
-5. The owned employer pre-expiry notification evaluator remains exactly `1/hourly`.
-6. The owned candidate→job evaluator remains exactly `1/hourly`.
-7. No evaluator, legacy cron hook, broad WP-Cron runner, Action Scheduler runner or mail path is executed.
-8. No business data is mutated.
-9. Production is untouched.
+The report must answer:
 
-This is a scheduler-retirement task, not a lifecycle redesign.
+1. What recurring/single WP-Cron events currently exist on staging?
+2. Which are overdue, current, future, duplicated or orphaned?
+3. Which hooks have callbacks, and what would each callback do if run?
+4. Which due hooks are Raspitajse-owned and already classified versus vendor/core/unclassified?
+5. Is any broad runner (`wp cron event run --due-now`, HTTP wp-cron trigger, server cron calling wp-cron broadly, or equivalent) safe now? The default assumption is **NO until proven otherwise**.
+6. Is there an existing external/server trigger for staging? If so, what exact command/URL/interval does it use and is it active?
+7. What exact recovery/safety prerequisites must be satisfied before any later execution task?
+8. What is the narrowest safe next validation slice?
 
----
+Final classification must be exactly one of:
 
-## 3. Ownership and allowed source surface
+- `READY_FOR_SELECTIVE_VALIDATION`
+- `BLOCKED`
+- `NOT_READY`
 
-Implement the durable retirement in a Raspitajse-owned layer, preferably:
-
-`wp-content/plugins/raspitajse-communications/`
-
-Keep the patch extremely narrow.
-
-Do **not** modify:
-
-- WordPress core;
-- WP Job Board Pro vendor source;
-- WP Job Board Pro Paid Listings vendor source;
-- WooCommerce core/vendor;
-- Superio parent theme;
-- Raspitajse Commerce unless a concrete blocker proves it necessary;
-- cron storage directly with ad-hoc SQL when WordPress scheduler APIs can perform the exact retirement.
-
-Do not copy or edit the vendor activation/deactivation scheduler implementation.
+Do not implement the runner or execute any scheduled hook in 2.04.
 
 ---
 
-## 4. Exact legacy event to retire
+## 3. Strict zero-execution boundary
 
-Target hook only:
+Do **not** execute any of the following, directly or indirectly:
 
-`wp_job_board_pro_email_daily_notices`
+- `wp cron event run ...`;
+- `wp cron event run --due-now`;
+- `wp cron test` if it causes spawning/execution rather than pure inspection;
+- HTTP requests to `wp-cron.php`;
+- `do_action()` for scheduled business hooks;
+- owned job-status expiry evaluator;
+- owned employer job-expiry notification evaluator;
+- owned candidate→job evaluator;
+- candidate→job continuation hook;
+- Action Scheduler runner, queue runner or due actions;
+- ID32733;
+- mail sender callbacks;
+- payment callbacks;
+- external/vendor application callbacks.
 
-Before source mutation, prove at runtime after plugin bootstrap:
+Do not temporarily toggle `DISABLE_WP_CRON`.
 
-- callback count = exactly `0`;
-- scheduled event count = exactly `1`;
-- recurrence is `wpie_daily`;
-- interval is `86400`;
-- args are `[]`;
-- capture a sanitized canonical event fingerprint.
+Do not add, delete, reschedule, unschedule or repair any cron event in this task.
 
-If the hook unexpectedly contains any callback or the schedule shape materially differs, STOP and report PARTIAL/FAIL rather than deleting an event whose business purpose is no longer proven.
-
-Do not execute the event.
-
----
-
-## 5. Durable owned retirement behavior
-
-Implement one small owned bootstrap-time retirement boundary that runs only **after** vendor callbacks and the existing Raspitajse expiry suppressions have been registered/applied.
-
-Required behavior:
-
-1. Inspect the final callback graph for `wp_job_board_pro_email_daily_notices`.
-2. Only when its final callback count is exactly `0`, clear all scheduled instances of that exact hook through the normal WordPress cron API.
-3. Do not clear any other hook.
-4. Be idempotent: repeated bootstraps with no legacy event produce no additional mutation and do not create anything.
-5. If any callback later reappears on the legacy hook, fail safe by **not** clearing a schedule merely on assumption; do not mask a new/unclassified producer. Report this condition if encountered during task validation.
-6. Do not add a replacement daily schedule.
-7. Do not alter the owned hourly schedulers.
-
-An implementation within the existing expiry boundary or one tiny dedicated scheduler-retirement component is acceptable. Avoid a generic cron cleanup framework.
-
-The intended one-time staging state mutation is removal of the orphan legacy WP-Cron event. That exact scheduler mutation is authorized by this task.
+Inspection commands must be read-only.
 
 ---
 
-## 6. Owned scheduler regression — mandatory
+## 4. Current application/runtime parity gate
 
-Before and after retirement, capture canonical sanitized rows/fingerprints for these owned WP-Cron events:
+Before runtime audit, prove:
 
-### Job status expiry
+- local/source staging HEAD = `origin/staging` = declared baseline;
+- staging deploy marker = same SHA;
+- inspected Raspitajse Communications source/runtime file parity;
+- WordPress environment = staging;
+- production access/touch = NO.
 
-Hook:
+If source/runtime parity is not exact, report `BLOCKED` and do not continue into a readiness conclusion based on stale runtime.
+
+---
+
+## 5. Full WP-Cron inventory
+
+Capture a sanitized deterministic inventory of **all currently scheduled WP-Cron event rows** without running them.
+
+For every unique hook report at minimum:
+
+- hook name;
+- event count;
+- recurrence name or single-event status;
+- interval if recurring;
+- next timestamp;
+- next timestamp as UTC and WordPress-site-calendar time;
+- relative state: overdue / due-now / future;
+- oldest overdue age where applicable;
+- args shape/count only, without printing sensitive values;
+- callback count on the hook after normal plugin bootstrap;
+- callback identities in sanitized class/function form;
+- whether duplicate event rows exist for the same logical recurring hook.
+
+Provide:
+
+- total cron event count;
+- total unique hook count;
+- count of overdue events;
+- count of recurring vs single events;
+- canonical full cron fingerprint before/final.
+
+Do not print secrets, tokens, emails, URLs containing secrets, raw serialized option payloads or business PII.
+
+---
+
+## 6. Classify every scheduled hook
+
+For every currently scheduled hook, classify it as one of:
+
+- `OWNED_APPROVED` — Raspitajse-owned hook whose behavior and invariants are already classified and bounded;
+- `CORE_LOW_RISK` — WordPress core maintenance hook with understood standard purpose and no Raspitajse custom side-effect concern;
+- `VENDOR_CLASSIFIED` — vendor hook whose business purpose/side effects are already explicitly classified in prior work;
+- `UNCLASSIFIED` — side effects or business purpose not yet sufficiently proven;
+- `PROTECTED_DO_NOT_RUN` — known protected or dangerous path that must not be executed by a broad trigger.
+
+For each hook summarize business/technical effect if executed:
+
+- read-only;
+- business-state mutation;
+- mail/notification;
+- external HTTP/vendor call;
+- payment/order mutation;
+- Action Scheduler queue work;
+- cleanup/deletion;
+- unknown.
+
+If a hook delegates into Action Scheduler, WooCommerce maintenance, vendor telemetry/update checks, cleanup, mail, payment, external HTTP or an unclassified custom callback, make that explicit.
+
+Do not assume a WordPress/Woo/vendor cron hook is safe merely because it is common.
+
+---
+
+## 7. Re-prove the three owned hourly schedulers
+
+Without executing them, prove current callback/event identity and configuration for:
+
+### A. Job-status expiry
 
 `raspitajse_job_listing_expiry_evaluator`
 
-Required final state:
+Expected:
 
-- callback count = `1`;
-- event count = `1`;
-- recurrence = `hourly`;
-- interval = `3600`;
-- args = `[]`;
-- callback identity remains `Raspitajse_Communications_Job_Listing_Expiry::run` at priority `10`;
-- before/final event row logically identical unless bootstrap created a previously missing event under its already-approved self-healing contract; if that happens, report it precisely instead of hiding it.
+- callback count `1`;
+- recurring event count `1`;
+- recurrence `hourly`;
+- batch size `50`;
+- claim TTL `600`;
+- evaluator consumes canonical `_job_expiry_date` only;
+- no mail path.
 
-### Employer expiry notice
-
-Hook:
+### B. Employer job-expiry notice
 
 `raspitajse_employer_job_expiry_notice_evaluator`
 
-Required final state:
+Expected:
 
-- callback count = `1`;
-- event count = `1`;
-- recurrence = `hourly`;
-- interval = `3600`;
-- args = `[]`;
-- callback identity remains `Raspitajse_Communications_Employer_Job_Expiry_Notification::run` at priority `10`;
-- delivery state/claim schema and retry contract are unchanged.
+- callback count `1`;
+- recurring event count `1`;
+- recurrence `hourly`;
+- due window remains exactly tomorrow in site calendar;
+- max attempts `3`;
+- backoff remains `15/60` minutes;
+- claim TTL `600`;
+- send path remains only owned Transport + `CHANNEL_JOB_EXPIRY`.
 
-### Candidate→job evaluator
+### C. Candidate→job alert evaluator
 
-Preserve the already-owned candidate→job evaluator:
+`raspitajse_candidate_job_alert_evaluator`
 
-- vendor candidate→job sender registration = `0`;
-- owned evaluator callback count = `1`;
-- owned recurring event count = `1`;
-- recurrence = `hourly`;
-- continuation event count = `0` unless a pre-existing independently justified state exists.
+Expected:
 
-Do not execute any of these three owned evaluators.
+- callback count `1`;
+- recurring event count `1`;
+- recurrence `hourly`;
+- continuation scheduled event count `0` unless independently pre-existing;
+- vendor candidate→job sender remains `0`.
 
----
-
-## 7. Legacy expiry regression
-
-Final runtime must prove:
-
-- `wp_job_board_pro_email_daily_notices` callbacks = `0`;
-- `wp_job_board_pro_email_daily_notices` events = `0`;
-- `wp_job_board_pro_check_for_expired_jobs` callbacks = `0`;
-- `wp_job_board_pro_check_for_expired_jobs` events = `0`;
-- candidate automatic expiry calculation remains disabled by the existing owned late filter;
-- no legacy candidate/job expiry sender/checker is re-registered.
-
-Do not execute either legacy hook.
+Capture callback/event fingerprints and compare to 2.03 where possible.
 
 ---
 
-## 8. No business-data fixture is needed
+## 8. Due-work / backlog assessment for owned hooks
 
-This task should not need job/candidate/employer fixtures because it changes scheduler ownership only.
+Read-only calculate what each owned evaluator **would currently select** if invoked now, without calling the evaluator itself and without mutating claims/state.
 
-Do not create business-data fixtures merely to prove cron deletion.
+Report sanitized counts only:
 
-Instead use bounded bootstrap/runtime inspection to prove:
+### Job-status expiry
 
-1. legacy event exists before retirement;
-2. the owned retirement boundary removes it;
-3. a second bootstrap leaves it absent;
-4. all three owned hourly scheduler rows remain correct;
-5. no callback execution occurred.
+- currently published jobs with valid canonical `_job_expiry_date` strictly before today;
+- count that would fit first batch (`<=50`);
+- whether backlog exceeds one batch.
 
-If a source-level test helper is needed, keep it task-private and do not persist application/business state.
+### Employer job-expiry notice
 
----
+- currently published jobs whose canonical expiry date is tomorrow;
+- delivered/current-revision count;
+- retryable-failed current-revision count;
+- terminal-failed current-revision count;
+- never-attempted count;
+- invalid/missing canonical employer-recipient count;
+- no recipient values.
 
-## 9. Protected business state
+### Candidate→job
 
-Capture sanitized before/final fingerprints for the already-protected state and prove no drift:
+- published `job_alert` count;
+- count currently due by owned cadence if derivable read-only;
+- count with any existing active claim/continuation state if applicable;
+- do not render messages or evaluate mail delivery.
 
-- candidate profiles and statuses;
-- historical published `candidate_alert` count/fingerprint;
-- published `job_alert` count/fingerprint;
-- existing jobs count/fingerprint;
-- employers/employer-users where already covered by the existing harness;
-- job packages/entitlement records;
-- candidate-alert retirement state;
-- candidate→job alert state.
-
-Expected current high-level invariants from 2.02 include:
-
-- candidate profiles count `2` (`publish=1`, `pending=1`);
-- historical published `candidate_alert` count `4`;
-- published `job_alert` count `0`;
-- existing jobs count `0`.
-
-Do not fail solely because a sanitized hash implementation differs from a previous task; compare before/final within this task and explain the canonicalization used.
-
-No business record mutation is authorized.
+The point is to know whether a future trigger would be a no-op, a bounded mutation, or a user-visible communication event.
 
 ---
 
-## 10. Action Scheduler protection
+## 9. WP-Cron spawning/trigger configuration
 
-Before/final capture:
+Read-only inspect the active staging trigger configuration.
 
-- pending Action Scheduler count and sanitized fingerprint;
-- ID32733 status/attempts.
+At minimum determine:
+
+- effective `DISABLE_WP_CRON` value;
+- `ALTERNATE_WP_CRON` if defined;
+- `WP_CRON_LOCK_TIMEOUT` if defined;
+- whether WordPress request spawning is therefore enabled/disabled;
+- whether a repository/deployment script contains an explicit cron runner;
+- whether the staging account exposes a user-level crontab or other directly inspectable scheduler entry that calls WordPress cron.
+
+If a user-level/system scheduler is inspectable safely, report only:
+
+- whether an entry exists;
+- cadence;
+- sanitized command shape;
+- whether it targets staging specifically;
+- whether it is broad (`--due-now` / wp-cron.php) or selective.
+
+Do not modify crontab, hPanel scheduler, systemd timers or any server scheduler.
+
+Do not access production scheduler configuration.
+
+If Hostinger/hPanel scheduler truth is not visible from the shell/repository, state `UNKNOWN` rather than guessing.
+
+---
+
+## 10. Broad-runner safety analysis
+
+Explicitly evaluate these potential trigger modes without executing them:
+
+1. HTTP request to `/wp-cron.php`;
+2. WP-CLI `wp cron event run --due-now`;
+3. WP-CLI run of one exact hook;
+4. direct invocation of one owned evaluator through a task-private harness;
+5. server cron invoking a narrow wrapper that only runs allowlisted owned hooks.
+
+For each mode classify:
+
+- `SAFE_FOR_FUTURE_BOUNDED_TEST`
+- `UNSAFE`
+- `UNKNOWN`
+
+Explain why.
+
+A broad runner is **UNSAFE** if any currently due/overdue hook is `UNCLASSIFIED` or `PROTECTED_DO_NOT_RUN`, or if it could transitively trigger Action Scheduler/vendor/external/payment/mail work outside an approved fixture boundary.
+
+Do not recommend a broad runner merely because the three Raspitajse hooks are individually bounded.
+
+---
+
+## 11. Action Scheduler interaction audit
+
+Read-only prove current Action Scheduler protected state:
+
+- pending count;
+- sanitized pending fingerprint;
+- ID32733 status/attempts;
+- whether any WP-Cron event/callback can trigger Action Scheduler queue processing;
+- whether that event is scheduled/due/overdue;
+- whether a broad WP-Cron trigger could therefore execute pending AS work.
 
 Expected historical state:
 
-- pending = `7`;
-- ID32733 = `pending/0`.
+- pending count `7`;
+- ID32733 `pending/0`.
 
-Do not execute, cancel, reschedule, claim or mutate any Action Scheduler action.
+Do not run, claim, cancel, reschedule or inspect payload content containing PII/secrets beyond what is necessary for sanitized classification.
 
-This task uses only WP-Cron scheduler APIs for the exact orphan hook.
-
----
-
-## 11. Mail / network / payment safety
-
-Expected counters for the entire task:
-
-- `wp_mail` attempts = `0`;
-- PHPMailer = `0`;
-- SMTP = `0`;
-- external application/vendor HTTP = `0`;
-- payment calls = `0`;
-- broad WP-Cron runner executions = `0`;
-- legacy daily-hook executions = `0`;
-- shared legacy expiry-hook executions = `0`;
-- job-status evaluator executions = `0`;
-- employer-notice evaluator executions = `0`;
-- candidate→job evaluator executions = `0`;
-- Action Scheduler runner/due-action executions = `0`.
-
-Do not send even an intercepted test email in 2.03; mail behavior was already proven in 2.02.
+If a broad WP-Cron trigger can reach Action Scheduler, that is a mandatory safety-gate finding.
 
 ---
 
-## 12. Static/source validation
+## 12. Mail / network / payment side-effect reachability
 
-For every changed PHP file:
+Read-only identify currently scheduled hooks that could reach:
 
-- `php -l` PASS.
+- `wp_mail` / owned Transport;
+- PHPMailer/SMTP;
+- WordPress HTTP API/external vendor requests;
+- WooCommerce order/payment/refund paths;
+- data deletion/cleanup.
 
-For the final patch:
+Report hook names and high-level path only.
 
-- `git diff --check` PASS;
-- no debug or PII logging;
-- no secrets;
-- no hard-coded user IDs/emails;
-- no production URLs;
-- no vendor/core/parent-theme changes;
-- no broad scheduler cleanup abstraction;
-- no unrelated refactor.
+Do not send mail or perform HTTP/payment calls.
 
-Report exact changed files and diffstat.
+For owned employer expiry notice, distinguish:
 
----
+- application `wp_mail` attempt through Transport;
+- staging mail-safety interception;
+- real SMTP delivery.
 
-## 13. Staging integration and deploy
-
-Follow `tasks/README.md` exactly.
-
-- branch from exact baseline;
-- implement the narrow owned retirement boundary;
-- static validation before deploy;
-- deploy only to staging;
-- validate the exact authorized scheduler mutation and all protected scheduler graphs;
-- integrate to `staging` only after acceptance passes;
-- final local/origin staging SHA, deploy marker and changed runtime file hashes must agree.
-
-Production remains forbidden.
-
-If source/runtime/deploy parity cannot be proven, do not claim PASS.
+Do not treat interception as authorization to run it against real staging business records.
 
 ---
 
-## 14. Final expected runtime state
+## 13. Recovery and rollback prerequisites for a later validation task
 
-After PASS:
+Define the exact safety prerequisites a future trigger-validation task must satisfy before any execution is authorized.
 
-- legacy daily hook callbacks: `0`;
-- legacy daily scheduled events: `0`;
-- legacy shared expiry callbacks/events: `0/0`;
-- owned job-status expiry callback/event: `1 / 1 hourly`;
-- owned employer expiry-notice callback/event: `1 / 1 hourly`;
-- owned candidate→job callback/event: `1 / 1 hourly`;
-- candidate→job continuation: `0` unless independently pre-existing;
-- candidate auto-expiry: disabled;
-- employer→candidate vendor sender: `0`;
-- candidate→job vendor sender: `0`;
-- candidate-alert new creation: still retired/fail-closed;
+At minimum decide whether the future task needs:
+
+- exact baseline/deploy parity gate;
+- pre/post full cron fingerprint;
+- pre/post Action Scheduler fingerprint + ID32733;
+- pre/post candidate/job/alert/package fingerprints;
+- no-real-mail guard;
+- HTTP/network guard;
+- payment guard;
+- task-private disposable fixture only;
+- exact hook allowlist;
+- maximum number of hook invocations;
+- exact cleanup verification;
+- claim cleanup checks;
+- stop-on-unexpected-callback behavior;
+- prohibition on broad `--due-now`.
+
+If any additional prerequisite is needed, specify it.
+
+---
+
+## 14. Decision on steady-state trigger architecture
+
+Based on evidence, state the preferred architecture for staging steady-state triggering, but do not implement it.
+
+Choose one:
+
+- `EXTERNAL_BROAD_WP_CRON`
+- `EXTERNAL_SELECTIVE_ALLOWLIST_RUNNER`
+- `REQUEST_DRIVEN_WP_CRON`
+- `OTHER`
+- `BLOCKED_PENDING_MORE_CLASSIFICATION`
+
+The recommendation must account for:
+
+- `DISABLE_WP_CRON`;
+- unclassified/protected scheduled hooks;
+- the three owned hourly evaluators;
+- Action Scheduler reachability;
+- future maintainability/self-healing schedules;
+- avoiding demo/test-only special cases.
+
+Do not propose changing WooCommerce standard lifecycle merely to make cron simpler.
+
+---
+
+## 15. Protected business/runtime invariants
+
+Before/final prove unchanged:
+
+- candidates count/status/fingerprint;
+- candidate expiry-meta footprint;
+- historical published `candidate_alert` count/fingerprint;
+- published `job_alert` count/fingerprint;
+- job count/status/fingerprint;
+- employer/employer-user count fingerprint, sanitized;
+- job-package/entitlement count/status/fingerprint;
+- candidate-alert create remains fail-closed;
+- employer→candidate vendor sender remains `0`;
+- candidate→job vendor sender remains `0`;
+- legacy daily callback/event remains `0/0`;
+- legacy shared-expiry callback/event remains `0/0`;
+- three owned hourly callback/event pairs remain `1/1`;
+- candidate→job continuation event remains `0` unless pre-existing state differs;
 - Action Scheduler pending count/fingerprint unchanged;
-- ID32733: `pending/0`;
-- business fingerprints unchanged;
-- mail/SMTP/network/payment/evaluator executions: `0`;
-- production touched: NO.
+- ID32733 remains `pending/0`.
+
+No fixtures are required for 2.04. Prefer zero database writes of any kind.
 
 ---
 
-## 15. HOST_NAMESPACE_PRESSURE
+## 16. Safety counters
 
-Known `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC` may still occur.
+Expected for the entire task:
 
-If the known sandbox signature occurs, classify it once and switch to previously proven namespace-free Git/filesystem/WP-CLI paths. Do not loop retries and do not use broad process kills.
+- source writes: `0`;
+- application commits/pushes/deploys: `0`;
+- WordPress option writes: `0`;
+- cron add/delete/reschedule: `0`;
+- cron hook executions: `0`;
+- Action Scheduler mutations/executions: `0`;
+- `wp_mail`: `0`;
+- PHPMailer/SMTP: `0`;
+- external application/vendor HTTP: `0`;
+- payment calls: `0`;
+- business-data mutations: `0`;
+- production access/touch: `NO`.
+
+If any inspection helper unexpectedly mutates runtime, stop and report FAIL/PARTIAL rather than continuing.
 
 ---
 
-## 16. Final report
+## 17. HOST_NAMESPACE_PRESSURE
+
+Known Hostinger `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC` still applies.
+
+Use proven namespace-free read-only Git/filesystem/WP-CLI/database inspection paths where needed. If a sandbox helper fails with the known signature, do not retry indefinitely and do not use broad process kills.
+
+---
+
+## 18. Final report
 
 Publish:
 
-**Zadatak 2.03 — Retire the orphan legacy daily expiry schedule after final owned-scheduler regression**
+**Zadatak 2.04 — Read-only audit of steady-state staging WP-Cron trigger readiness after expiry scheduler cleanup**
 
-The report must include:
+Report must include:
 
-1. PASS/PARTIAL/FAIL and exact meaning;
-2. declared baseline, feature branch/commit and final staging SHA;
-3. deploy marker/runtime parity;
-4. exact changed files + diffstat;
-5. proof no vendor/core/parent-theme file changed;
-6. exact implementation of the durable legacy-schedule retirement boundary;
-7. before/final legacy daily callback count and event row/fingerprint;
-8. proof legacy daily event changed exactly `1 → 0` and remains `0` after a second bootstrap;
-9. before/final owned job-status evaluator callback/event row/fingerprint;
-10. before/final owned employer-notice evaluator callback/event row/fingerprint;
-11. before/final owned candidate→job callback/event/continuation state;
-12. legacy shared-expiry callback/event state;
-13. candidate auto-expiry disabled proof;
-14. protected business fingerprints before/final;
-15. Action Scheduler count/fingerprint and ID32733 before/final;
-16. mail/network/payment/runner/evaluator execution counters;
-17. static validation results;
-18. production untouched proof;
-19. exactly one proposed next task, but do not create/start it.
+1. result PASS/PARTIAL/FAIL and exact meaning;
+2. final readiness classification: `READY_FOR_SELECTIVE_VALIDATION`, `BLOCKED` or `NOT_READY`;
+3. baseline/source/deploy/runtime parity proof;
+4. full sanitized WP-Cron inventory and fingerprint;
+5. hook-by-hook classification table;
+6. overdue/due/future counts and backlog summary;
+7. exact three owned hourly callback/event proofs;
+8. read-only due-work counts for the three owned evaluators;
+9. effective WP-Cron constants and request-spawn state;
+10. discovered external/server trigger evidence or explicit UNKNOWN;
+11. broad-runner safety analysis for the five trigger modes;
+12. Action Scheduler reachability and protected-state proof;
+13. mail/network/payment side-effect reachability;
+14. exact future validation recovery/guard prerequisites;
+15. preferred steady-state trigger architecture decision;
+16. protected business/runtime fingerprints before/final;
+17. safety counters proving zero execution/mutation;
+18. production accessed/touched NO;
+19. exactly one proposed next task, if and only if evidence supports it.
 
-Do not infer or execute the next task.
+If the evidence supports a next step, propose only a narrow task such as:
+
+**Zadatak 2.05 — Bounded selective staging trigger validation for approved Raspitajse-owned cron hooks**
+
+The proposal must explicitly forbid broad due-now execution and must remain uncreated/unstarted.
