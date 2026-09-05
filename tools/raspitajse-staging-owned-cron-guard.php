@@ -139,13 +139,13 @@ function raspitajse_staging_owned_cron_record_progress( $hook, $summary ) {
 function raspitajse_staging_owned_cron_job_expiry_observation( $summary ) {
     $selected = isset( $summary['selected'] ) ? (int) $summary['selected'] : 0;
     $failed   = isset( $summary['failed'] ) ? (int) $summary['failed'] : 0;
-    raspitajse_staging_owned_cron_record_progress( 'raspitajse_job_listing_expiry_evaluator', array( 'selected' => $selected, 'processed' => $selected, 'succeeded' => max( 0, $selected - $failed ), 'failed' => $failed ) );
+    raspitajse_staging_owned_cron_record_progress( 'raspitajse_job_listing_expiry_evaluator', array( 'selected' => $selected, 'processed' => (int) ( ( $summary['expired'] ?? 0 ) + ( $summary['skipped'] ?? 0 ) + $failed ), 'succeeded' => (int) ( $summary['expired'] ?? 0 ), 'failed' => $failed ) );
 }
 
 function raspitajse_staging_owned_cron_employer_expiry_observation( $summary ) {
     $selected = isset( $summary['selected'] ) ? (int) $summary['selected'] : 0;
     $failed   = isset( $summary['failed'] ) ? (int) $summary['failed'] : 0;
-    raspitajse_staging_owned_cron_record_progress( 'raspitajse_employer_job_expiry_notice_evaluator', array( 'selected' => $selected, 'processed' => $selected, 'succeeded' => max( 0, $selected - $failed ), 'failed' => $failed ) );
+    raspitajse_staging_owned_cron_record_progress( 'raspitajse_employer_job_expiry_notice_evaluator', array( 'selected' => $selected, 'processed' => (int) ( ( $summary['delivered'] ?? 0 ) + ( $summary['retryable_failed'] ?? 0 ) + ( $summary['invalid_recipient'] ?? 0 ) + ( $summary['terminal'] ?? 0 ) + ( $summary['skipped'] ?? 0 ) + $failed ), 'succeeded' => (int) ( $summary['delivered'] ?? 0 ), 'failed' => $failed ) );
 }
 
 function raspitajse_staging_owned_cron_candidate_alert_observation( $summary ) {
@@ -731,6 +731,7 @@ function raspitajse_staging_owned_cron_snapshot() {
         'now_epoch'                => $now,
         'owned'                    => $owned,
         'negative_contract'        => $negative,
+        'continuation_events'      => (int) $negative['continuation_events'],
         'contract_fingerprint'     => hash( 'sha256', wp_json_encode( array( $contract_basis, $negative ) ) ),
         'full_cron_fingerprint'    => raspitajse_staging_owned_cron_fingerprint( false ),
         'nonallow_cron_fingerprint'=> raspitajse_staging_owned_cron_fingerprint( true ),

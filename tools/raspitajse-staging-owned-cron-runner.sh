@@ -274,8 +274,8 @@ FINAL=( "${SNAP[@]}" )
 for index in 0 1 2; do
   timestamp_index=$(( 7 + index * 3 )); fingerprint_index=$(( 8 + index * 3 ))
   if [[ "${STATUSES[${index}]}" == "executed" ]]; then
-    delta=$(( FINAL[timestamp_index] - BASE[timestamp_index] ))
-    (( delta > 0 && delta % 3600 == 0 )) || fail_closed "owned_timestamp_not_normally_advanced" "${index}"
+    delta=$(( FINAL[timestamp_index] - BASE[timestamp_index] )); final_now="$(date +%s)"
+    (( delta == 3600 || ( FINAL[timestamp_index] >= START_EPOCH + 3595 && FINAL[timestamp_index] <= final_now + 3605 ) )) || fail_closed "owned_timestamp_not_normally_advanced" "${index}"
     [[ "${FINAL[${fingerprint_index}]}" != "${BASE[${fingerprint_index}]}" ]] || fail_closed "owned_event_fingerprint_not_advanced" "${index}"
   else
     [[ "${FINAL[${timestamp_index}]}" == "${BASE[${timestamp_index}]}" ]] || fail_closed "not_due_timestamp_moved" "${index}"
