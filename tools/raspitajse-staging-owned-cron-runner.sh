@@ -84,7 +84,7 @@ guard_progress_json() {
   "${PHP_BIN}" -r '
     $state=json_decode((string)@file_get_contents($argv[1]),true);
     $progress=is_array($state)&&isset($state["progress"])&&is_array($state["progress"])?$state["progress"]:[];
-    echo json_encode($progress,JSON_UNESCAPED_SLASHES);
+    echo json_encode((object) $progress,JSON_UNESCAPED_SLASHES);
   ' "${STATE_FILE}" 2>/dev/null || printf '{}'
 }
 
