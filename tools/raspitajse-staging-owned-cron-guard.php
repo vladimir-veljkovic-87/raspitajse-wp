@@ -15,6 +15,10 @@ if ( ! defined( 'WP_HTTP_BLOCK_EXTERNAL' ) ) {
 }
 
 const RASPITAJSE_STAGING_CRON_ROOT = '/home/u601262303/domains/raspitajse.com/public_html/public_html_stage';
+if ( 'selective_runner_v1' === getenv( 'RASPITAJSE_STAGING_CRON_CONTEXT' ) && ! defined( 'RASPITAJSE_STAGING_SELECTIVE_RUNNER' ) ) {
+    define( 'RASPITAJSE_STAGING_SELECTIVE_RUNNER', true );
+}
+
 
 /**
  * The complete executable allowlist. Keep this map literal and caller-independent.
@@ -86,6 +90,73 @@ function raspitajse_staging_owned_cron_increment( $key ) {
     } finally {
         fclose( $handle );
     }
+}
+
+function raspitajse_staging_owned_cron_record_progress( $hook, $summary ) {
+    $allowed_hooks = array_keys( raspitajse_staging_owned_cron_contracts() );
+    if ( ! in_array( $hook, $allowed_hooks, true ) || ! is_array( $summary ) ) {
+        return;
+    }
+
+    $row = array();
+    foreach ( array( 'selected', 'processed', 'succeeded', 'failed' ) as $key ) {
+        if ( isset( $summary[ $key ] ) && is_numeric( $summary[ $key ] ) ) {
+            $row[ $key ] = max( 0, (int) $summary[ $key ] );
+        }
+    }
+    if ( array_key_exists( 'has_more', $summary ) ) {
+        $row['has_more'] = (bool) $summary['has_more'];
+    }
+
+    $path = raspitajse_staging_owned_cron_state_file();
+    if ( '' === $path ) {
+        return;
+    }
+    $handle = @fopen( $path, 'c+' );
+    if ( false === $handle ) {
+        throw new RuntimeException( 'guard_state_unavailable' );
+    }
+    try {
+        if ( ! flock( $handle, LOCK_EX ) ) {
+            throw new RuntimeException( 'guard_state_lock_failed' );
+        }
+        rewind( $handle );
+        $state = json_decode( (string) stream_get_contents( $handle ), true );
+        $state = is_array( $state ) ? $state : array();
+        $state['progress'] = isset( $state['progress'] ) && is_array( $state['progress'] ) ? $state['progress'] : array();
+        $state['progress'][ $hook ] = $row;
+        rewind( $handle );
+        if ( ! ftruncate( $handle, 0 ) || false === fwrite( $handle, wp_json_encode( $state ) ) ) {
+            throw new RuntimeException( 'guard_state_write_failed' );
+        }
+        fflush( $handle );
+        flock( $handle, LOCK_UN );
+    } finally {
+        fclose( $handle );
+    }
+}
+
+function raspitajse_staging_owned_cron_job_expiry_observation( $summary ) {
+    $selected = isset( $summary['selected'] ) ? (int) $summary['selected'] : 0;
+    $failed   = isset( $summary['failed'] ) ? (int) $summary['failed'] : 0;
+    raspitajse_staging_owned_cron_record_progress( 'raspitajse_job_listing_expiry_evaluator', array( 'selected' => $selected, 'processed' => $selected, 'succeeded' => max( 0, $selected - $failed ), 'failed' => $failed ) );
+}
+
+function raspitajse_staging_owned_cron_employer_expiry_observation( $summary ) {
+    $selected = isset( $summary['selected'] ) ? (int) $summary['selected'] : 0;
+    $failed   = isset( $summary['failed'] ) ? (int) $summary['failed'] : 0;
+    raspitajse_staging_owned_cron_record_progress( 'raspitajse_employer_job_expiry_notice_evaluator', array( 'selected' => $selected, 'processed' => $selected, 'succeeded' => max( 0, $selected - $failed ), 'failed' => $failed ) );
+}
+
+function raspitajse_staging_owned_cron_candidate_alert_observation( $summary ) {
+    raspitajse_staging_owned_cron_record_progress(
+        'raspitajse_candidate_job_alert_evaluator',
+        array(
+            'processed' => isset( $summary['processed'] ) ? (int) $summary['processed'] : 0,
+            'failed'    => isset( $summary['errors'] ) ? (int) $summary['errors'] : 0,
+            'has_more'  => ! empty( $summary['has_more'] ),
+        )
+    );
 }
 
 function raspitajse_staging_owned_cron_http_guard( $preempt, $args, $url ) {
@@ -425,6 +496,9 @@ function raspitajse_staging_owned_cron_bootstrap() {
     add_filter( 'pre_wp_mail', 'raspitajse_staging_owned_cron_mail_guard', PHP_INT_MIN, 2 );
     add_action( 'phpmailer_init', 'raspitajse_staging_owned_cron_phpmailer_guard', PHP_INT_MAX, 1 );
     add_action( 'all', 'raspitajse_staging_owned_cron_monitor_hook', PHP_INT_MIN, 1 );
+    add_action( 'raspitajse_job_listing_expiry_evaluator_observation', 'raspitajse_staging_owned_cron_job_expiry_observation', 10, 1 );
+    add_action( 'raspitajse_employer_job_expiry_notice_evaluator_observation', 'raspitajse_staging_owned_cron_employer_expiry_observation', 10, 1 );
+    add_action( 'raspitajse_candidate_job_alert_evaluator_observation', 'raspitajse_staging_owned_cron_candidate_alert_observation', 10, 1 );
 }
 WP_CLI::add_hook( 'after_wp_load', 'raspitajse_staging_owned_cron_bootstrap' );
 
@@ -433,6 +507,93 @@ WP_CLI::add_hook( 'after_wp_load', 'raspitajse_staging_owned_cron_bootstrap' );
  *
  * @return array<string,mixed>
  */
+/**
+ * Return the bounded normal-cycle snapshot: only safety, owned contracts/events,
+ * continuation absence, and due timestamps. Deep state remains in snapshot().
+ *
+ * @return array<string,mixed>
+ */
+function raspitajse_staging_owned_cron_light_snapshot() {
+    $reasons        = array();
+    $contracts      = raspitajse_staging_owned_cron_contracts();
+    $owned          = array();
+    $contract_basis = array();
+    $now            = time();
+    $root           = realpath( ABSPATH );
+
+    if ( 'staging' !== wp_get_environment_type() ) {
+        $reasons[] = 'environment_not_staging';
+    }
+    if ( false === $root || realpath( RASPITAJSE_STAGING_CRON_ROOT ) !== $root ) {
+        $reasons[] = 'staging_root_mismatch';
+    }
+    if ( ! defined( 'DISABLE_WP_CRON' ) || true !== DISABLE_WP_CRON ) {
+        $reasons[] = 'wp_cron_not_disabled';
+    }
+    if ( ! defined( 'WP_HTTP_BLOCK_EXTERNAL' ) || true !== WP_HTTP_BLOCK_EXTERNAL ) {
+        $reasons[] = 'external_http_not_blocked';
+    }
+    if ( ! function_exists( 'raspitajse_staging_mail_safety_is_staging' ) || ! raspitajse_staging_mail_safety_is_staging() ) {
+        $reasons[] = 'mail_safety_missing';
+    }
+    if ( ! function_exists( 'raspitajse_staging_mail_safety_recipient' ) || '' === raspitajse_staging_mail_safety_recipient() ) {
+        $reasons[] = 'mail_safety_recipient_invalid';
+    }
+
+    foreach ( $contracts as $hook => $expected ) {
+        $callbacks = raspitajse_staging_owned_cron_callbacks( $hook );
+        $events    = raspitajse_staging_owned_cron_events( $hook );
+        $valid     = 1 === count( $callbacks ) && $expected === $callbacks[0]
+            && 1 === count( $events )
+            && 'hourly' === $events[0]['schedule']
+            && 3600 === $events[0]['interval']
+            && true === $events[0]['args_empty'];
+        if ( ! $valid ) {
+            $reasons[] = 'owned_contract_mismatch_' . $hook;
+        }
+        $owned[ $hook ] = array(
+            'valid'               => $valid,
+            'callback_count'      => count( $callbacks ),
+            'callback_fingerprint'=> hash( 'sha256', wp_json_encode( $callbacks ) ),
+            'event_count'         => count( $events ),
+            'event_fingerprint'   => hash( 'sha256', wp_json_encode( $events ) ),
+            'timestamp'           => 1 === count( $events ) ? (int) $events[0]['timestamp'] : 0,
+            'due'                 => 1 === count( $events ) && (int) $events[0]['timestamp'] <= $now,
+        );
+        $event_shape = array_map(
+            static function ( $event ) {
+                unset( $event['timestamp'] );
+                return $event;
+            },
+            $events
+        );
+        $contract_basis[ $hook ] = array( 'callbacks' => $callbacks, 'event_shape' => $event_shape );
+    }
+
+    $continuation_events = count( raspitajse_staging_owned_cron_events( 'raspitajse_candidate_job_alert_evaluator_continue' ) );
+    if ( 0 !== $continuation_events ) {
+        $reasons[] = 'continuation_event_present';
+    }
+    if ( false !== get_transient( 'doing_cron' ) ) {
+        $reasons[] = 'doing_cron_not_clear';
+    }
+
+    return array(
+        'ok'                   => empty( $reasons ),
+        'reason_codes'         => $reasons,
+        'environment'          => wp_get_environment_type(),
+        'doing_cron_clear'      => false === get_transient( 'doing_cron' ),
+        'continuation_events'   => $continuation_events,
+        'owned'                => $owned,
+        'contract_fingerprint' => hash( 'sha256', wp_json_encode( $contract_basis ) ),
+    );
+}
+
+function raspitajse_staging_owned_cron_emit_light_snapshot() {
+    $json = wp_json_encode( raspitajse_staging_owned_cron_light_snapshot(), JSON_UNESCAPED_SLASHES );
+    echo 'RASPITAJSE_OWNED_CRON_SNAPSHOT=' . base64_encode( $json ) . PHP_EOL;
+}
+
 function raspitajse_staging_owned_cron_snapshot() {
     $reasons   = array();
     $contracts = raspitajse_staging_owned_cron_contracts();

@@ -436,7 +436,7 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Evaluator {
             ? (string) $options['now_gmt']
             : Raspitajse_Communications_Candidate_Job_Alert_Schedule_Policy::now_gmt();
         if ( is_wp_error( Raspitajse_Communications_Candidate_Job_Alert_Schedule_Policy::parse_gmt( $now_gmt ) ) ) {
-            return array( 'processed' => 0, 'errors' => 1, 'continued' => false, 'status' => 'invalid_now' );
+            return array( 'processed' => 0, 'errors' => 1, 'continued' => false, 'has_more' => false, 'status' => 'invalid_now' );
         }
 
         $cursor_due = isset( $options['cursor_due'] ) && is_string( $options['cursor_due'] )
@@ -497,12 +497,14 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Evaluator {
         if ( ! $has_more ) {
             $has_more = (bool) self::due_rows( $now_gmt, $cursor_due, $cursor_id, 1 );
         }
-        $continued = $has_more ? self::schedule_continuation( $cursor_due, $cursor_id ) : false;
+        $runner_context = defined( 'RASPITAJSE_STAGING_SELECTIVE_RUNNER' ) && true === RASPITAJSE_STAGING_SELECTIVE_RUNNER;
+        $continued      = $has_more && ! $runner_context ? self::schedule_continuation( $cursor_due, $cursor_id ) : false;
 
         $summary = array(
             'processed' => $processed,
             'errors'    => $errors,
             'continued' => $continued,
+            'has_more'  => $has_more,
             'status'    => 'complete',
             'outcomes'  => $outcomes,
         );

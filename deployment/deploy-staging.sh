@@ -8,6 +8,7 @@ REPO_DIR="/home/u601262303/repo/raspitajse-wp"
 EXPECTED_TARGET_SITE_ROOT="/home/u601262303/domains/raspitajse.com/public_html/public_html_stage"
 TARGET_SITE_ROOT="${EXPECTED_TARGET_SITE_ROOT}"
 STATE_FILE="/home/u601262303/deploy-state/raspitajse-staging.commit"
+MANIFEST_FILE="/home/u601262303/deploy-state/raspitajse-staging-communications.manifest"
 
 ALLOWLIST=(
   "wp-content/themes/superio-child"
@@ -29,6 +30,7 @@ REMOVED_PLUGIN_ROOTS=(
 TMP_CHANGED=""
 TMP_DELETED=""
 TMP_STATE=""
+TMP_MANIFEST=""
 
 usage() {
   cat <<'EOF'
@@ -44,6 +46,7 @@ cleanup() {
   [[ -z "${TMP_CHANGED}" ]] || rm -f -- "${TMP_CHANGED}"
   [[ -z "${TMP_DELETED}" ]] || rm -f -- "${TMP_DELETED}"
   [[ -z "${TMP_STATE}" ]] || rm -f -- "${TMP_STATE}"
+  [[ -z "${TMP_MANIFEST}" ]] || rm -f -- "${TMP_MANIFEST}"
 }
 
 fail() {
@@ -210,6 +213,28 @@ case "${MODE}" in
   changed) changed_deploy ;;
 esac
 
+COMMUNICATIONS_PATH="wp-content/plugins/raspitajse-communications"
+[[ -d "${REPO_DIR}/${COMMUNICATIONS_PATH}" && -d "${TARGET_SITE_ROOT}/${COMMUNICATIONS_PATH}" ]] \
+  || fail "Communications source/runtime tree is missing after deploy."
+tree_hash() {
+  local root="$1"
+  (
+    cd -- "${root}"
+    find . -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}'
+  )
+}
+SOURCE_COMMUNICATIONS_SHA="$(tree_hash "${REPO_DIR}/${COMMUNICATIONS_PATH}")"
+RUNTIME_COMMUNICATIONS_SHA="$(tree_hash "${TARGET_SITE_ROOT}/${COMMUNICATIONS_PATH}")"
+[[ "${SOURCE_COMMUNICATIONS_SHA}" =~ ^[0-9a-f]{64}$ ]] || fail "Invalid source communications tree hash."
+[[ "${SOURCE_COMMUNICATIONS_SHA}" == "${RUNTIME_COMMUNICATIONS_SHA}" ]] \
+  || fail "Communications runtime parity verification failed after deploy."
+
+mkdir -p "$(dirname "${MANIFEST_FILE}")"
+TMP_MANIFEST="${MANIFEST_FILE}.tmp.$$"
+printf 'format=1\ncommit=%s\ncommunications_sha256=%s\n' "${HEAD_SHA}" "${SOURCE_COMMUNICATIONS_SHA}" > "${TMP_MANIFEST}"
+mv -f -- "${TMP_MANIFEST}" "${MANIFEST_FILE}"
+TMP_MANIFEST=""
+
 mkdir -p "$(dirname "${STATE_FILE}")"
 TMP_STATE="${STATE_FILE}.tmp.$$"
 printf '%s\n' "${HEAD_SHA}" > "${TMP_STATE}"
@@ -222,3 +247,4 @@ echo "Branch: ${BRANCH}"
 echo "Commit: ${HEAD_SHA}"
 echo "Target: ${TARGET_SITE_ROOT}"
 echo "State marker: ${STATE_FILE}"
+echo "Communications manifest: ${MANIFEST_FILE}"

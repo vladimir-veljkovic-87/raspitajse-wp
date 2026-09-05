@@ -550,6 +550,7 @@ final class Raspitajse_Communications_Job_Listing_Expiry {
         $claim_token = self::acquire_claim();
         if ( ! $claim_token ) {
             $result['reason'] = 'active_claim';
+            do_action( 'raspitajse_job_listing_expiry_evaluator_observation', $result );
             return $result;
         }
 
@@ -595,6 +596,7 @@ final class Raspitajse_Communications_Job_Listing_Expiry {
             $result['claim_released'] = self::release_claim( $claim_token );
         }
 
+        do_action( 'raspitajse_job_listing_expiry_evaluator_observation', $result );
         return $result;
     }
 
@@ -833,6 +835,7 @@ final class Raspitajse_Communications_Employer_Job_Expiry_Notification {
         if ( is_wp_error( $job_ids ) ) {
             $result['failed'] = 1;
             $result['reason'] = 'query_failed';
+            do_action( 'raspitajse_employer_job_expiry_notice_evaluator_observation', $result );
             return $result;
         }
 
@@ -861,6 +864,7 @@ final class Raspitajse_Communications_Employer_Job_Expiry_Notification {
             }
         }
 
+        do_action( 'raspitajse_employer_job_expiry_notice_evaluator_observation', $result );
         return $result;
     }
 
