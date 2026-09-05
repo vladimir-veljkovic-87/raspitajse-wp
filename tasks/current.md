@@ -1,8 +1,8 @@
-# Zadatak 2.11 — Audit the selective staging cron runner/guard for steady-state KEEP / REDESIGN / DROP
+# Zadatak 2.12 — Implement the bounded lightweight steady-state runner/guard redesign and separate deep diagnostic health checks
 
 Status: READY
 Baseline: 43ac33e6e96fdc0062233e6419cfb761633113c5
-Previous task: 2.10
+Previous task: 2.11
 Target environment: staging
 Production: FORBIDDEN
 
@@ -10,7 +10,7 @@ Production: FORBIDDEN
 
 Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, and `origin/staging`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before doing any work. `codex-tasks` is READ-ONLY.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning, creating a feature branch/worktree, bootstrapping WordPress, or changing source. `codex-tasks` is READ-ONLY.
 
 Verify fresh `origin/staging` is exactly:
 
@@ -18,332 +18,553 @@ Verify fresh `origin/staging` is exactly:
 
 If it differs, STOP and report the mismatch. Do not silently rebase this task.
 
-Execute only Zadatak 2.11. Publish the final report through the existing `codex-reports` workflow and STOP. Do not begin 2.12.
+Execute only Zadatak 2.12. Publish all task-state/final reports through the existing `codex-reports` workflow. Do not begin 2.13 automatically.
 
 ---
 
-## 1. Context already accepted
+## 1. Accepted context
 
 Zadatak 2.10 PASS established:
 
 `STEADY_STATE_SELECTIVE_STAGING_SCHEDULER_ACCEPTED`
 
-The accepted staging scheduler architecture is:
+The accepted scheduler architecture is immutable for this task:
 
-- exactly one Hostinger/hPanel staging scheduler entry;
+- exactly one human-owned Hostinger/hPanel staging scheduler entry;
 - cadence `*/15 * * * *`;
-- final command invokes the zero-argument selective runner;
+- command invokes the zero-argument selective runner;
 - `DISABLE_WP_CRON=true` remains intentional;
-- no broad `/wp-cron.php`, `wp cron event run --due-now`, Action Scheduler queue runner, daemon/loop, or equivalent substitute;
+- no broad `/wp-cron.php`, `wp cron event run --due-now`, `--all`, Action Scheduler queue runner, daemon/loop, GitHub Actions scheduler, system cron substitute, or equivalent broad trigger;
 - fixed owned hook order:
   1. `raspitajse_job_listing_expiry_evaluator`
   2. `raspitajse_employer_job_expiry_notice_evaluator`
   3. `raspitajse_candidate_job_alert_evaluator`.
 
-Accepted 2.10 evidence also proved exact T0 -> one natural provider fire -> T1 attribution, unchanged non-allowlisted cron state, unchanged Action Scheduler/protected business state, no mail/SMTP/payment/external-network side effects, and production untouched.
+Zadatak 2.11 PASS selected architecture outcome:
 
-Current staging tool files are:
+`REDESIGN_BOUNDED`
 
-- `tools/raspitajse-staging-owned-cron-runner.sh`
-- `tools/raspitajse-staging-owned-cron-guard.php`
+2.11 concluded:
 
-Accepted file SHA-256 values from the scheduler arc:
+- KEEP the runner and guard as the permanent staging execution boundary;
+- do **not** remove either component;
+- KEEP the fixed three-hook allowlist/order, zero-argument normal mode, arbitrary-argument rejection, due-only semantics, exact-hook execution, overlap lock, per-hook timeout, whole-cycle watchdog, staging targeting, deploy-marker/HEAD parity, HTTP blocking, mail/SMTP/payment telemetry, and fail-closed structured output;
+- REDESIGN the normal 15-minute path so activation-grade global snapshots do not run on every provider fire;
+- target normal-path process shape approximately `2 + N` WordPress bootstraps, where `N` is the number of actually executed owned hooks, instead of current `5 + 2N`;
+- move deep global cron/Action Scheduler/protected-business/provenance checks to explicit diagnostic/health tooling rather than deleting the capability;
+- remove fixed historical ID32733 and real-business-due-zero gating from the normal 15-minute execution path;
+- tighten normal scheduled mode to staging branch only; feature-branch use may exist only for explicit diagnostics/testing and must never become the scheduled steady-state path;
+- resolve the candidate-alert continuation-policy mismatch without widening the fixed scheduler contract;
+- clarify runtime telemetry so `actual_external_network=0` is not presented as proof beyond the guarded WP HTTP transport scope;
+- add bounded sanitized business-progress telemetry sufficient to identify backlog/`has_more` without IDs, recipients, query text, mail bodies, or PII.
 
-- runner: `6237e827c8fd34f3d91b8ea442ecb827e2a4a62992c57994188a8a38da729ce4`
-- guard: `c784b87500ce7af00be71e2b4aee8f35c3aec8a80175f72c3e0d5d6047720b8d`
-
-This task does **not** assume either file should be removed. The purpose is to determine which responsibilities are permanent operational safety and which were temporary activation/proof scaffolding.
+This task implements exactly that bounded redesign. It is not a general Communications refactor and not a cron subsystem rewrite.
 
 ---
 
 ## 2. Goal
 
-Perform a **read-only architecture and operational-cost audit** of the steady-state selective staging cron runner and guard.
+Implement a lightweight permanent staging execution path that preserves the accepted safety boundary while moving deep activation/regression evidence out of every natural 15-minute run.
 
-For every distinct responsibility in the runner/guard, classify it as:
+Success means:
 
-- **KEEP** — still required in steady-state because it materially prevents unsafe, broad, duplicate, stale, or mis-targeted execution;
-- **REDESIGN** — the protection/business need remains, but the current implementation is heavier, coupled, duplicated, brittle, or inappropriate to execute every 15 minutes;
-- **DROP** — activation/test/provenance scaffolding that no longer provides meaningful steady-state value once the selective scheduler has been accepted.
+1. the existing Hostinger scheduler command and cadence remain unchanged;
+2. the zero-argument runner still exposes only the same three owned hooks in the same order;
+3. every normal natural cycle uses one lightweight guarded preflight, one process for each actually due/executed hook, and one lightweight guarded final verification — target `2 + N` WordPress bootstraps;
+4. expensive/global diagnostics remain available through explicit no-business-execution diagnostic tooling;
+5. candidate-alert continuation behavior no longer creates a scheduler surface outside the fixed three-hook contract when invoked by this selective runner;
+6. one post-deploy **natural Hostinger fire** proves the redesigned steady-state path before final PASS.
 
-The task must answer:
-
-1. What should remain on every natural 15-minute run?
-2. What should move to deploy-time, CI, a separate health check, or explicit diagnostic tooling?
-3. What can be removed entirely?
-4. What is the simplest safe steady-state architecture that preserves the accepted scheduler guarantees?
-5. Is any implementation follow-up actually justified, or should the current runner/guard simply remain unchanged?
-
-This task is audit/design only. **Expected application/source changes: 0.**
+Do not optimize away a meaningful safety control merely to reduce process count.
 
 ---
 
-## 3. Hard no-mutation boundary
+## 3. Hard scheduler/control-plane boundary
 
-Do not modify or remove:
+Do **not** edit, delete, disable, recreate, duplicate, or manually trigger the Hostinger/hPanel scheduler entry.
 
-- the Hostinger/hPanel scheduler entry;
-- runner or guard files;
-- WordPress core;
-- WooCommerce;
-- WP Job Board Pro;
-- Paid Listings;
-- Superio/theme code;
-- Raspitajse Communications;
-- Raspitajse Commerce;
-- MU mail-safety;
-- cron rows;
-- Action Scheduler actions;
-- database/business data;
-- deployment marker or runtime code.
+Do not change its cadence or command.
 
-Do not create a feature branch, source commit, staging deploy, fixture, cron event, scheduler entry, or application mutation.
+Do not create any second scheduler entry, temporary scheduler entry, web-cron, root/system cron, systemd timer, Action Scheduler runner, GitHub Actions schedule, daemon/loop/nohup substitute, or request-driven WP-Cron path.
 
-Do not manually invoke:
+The existing scheduler may naturally fire while implementation work is happening. The task must be safe under that fact:
 
-- the zero-argument runner;
-- `--check-only` runner;
-- any owned cron hook;
-- broad WP-Cron;
-- Action Scheduler queue processing.
+- until staging integration, the accepted baseline runner remains active;
+- during any short source/deploy mismatch window, existing fail-closed source/deploy parity must prevent business execution;
+- after staging deployment, the first natural fire of the redesigned runner becomes acceptance evidence.
 
-The accepted natural Hostinger scheduler may continue operating normally while the audit runs. Do not pause, edit, recreate, or disable it.
+Codex must not use manual normal-runner execution as a substitute for that natural-fire proof.
 
 Production scheduler/filesystem/database/runtime/WordPress access is forbidden.
 
 ---
 
-## 4. Required source inspection
+## 4. Source scope
 
-Read both tool files in full from fresh `origin/staging`, not from inherited files on `codex-tasks`:
+Expected source scope is bounded to Raspitajse-owned files required by the 2.11 decision.
 
-- `tools/raspitajse-staging-owned-cron-runner.sh`
-- `tools/raspitajse-staging-owned-cron-guard.php`
+Primary expected files/components:
 
-Also inspect only the directly relevant owned Communications code for the three allowlisted evaluators and their scheduling/bootstrap contracts, enough to understand what the runner must protect. Do not broaden into a new Communications refactor.
+- `tools/raspitajse-staging-owned-cron-runner.sh`;
+- `tools/raspitajse-staging-owned-cron-guard.php`;
+- one new or clearly separated Raspitajse-owned deep diagnostic/health tool if needed;
+- the minimum directly relevant `raspitajse-communications` candidate-job-alert evaluator code required to suppress continuation creation specifically under the selective-runner execution context and expose sanitized progress telemetry;
+- narrowly scoped test/fixture files for these components.
 
-Read the final 2.10 PASS report and the relevant 2.06/2.07 reports if needed to distinguish original activation-proof requirements from true ongoing requirements.
+Do not modify:
 
-Do not reverse-engineer irrelevant vendor internals.
+- WordPress core;
+- WooCommerce core/vendor files;
+- WP Job Board Pro vendor files;
+- Paid Listings vendor files;
+- Superio/theme vendor files;
+- unrelated Communications behavior;
+- Raspitajse Commerce business semantics;
+- existing candidate/job/package business rules;
+- Hostinger scheduler configuration.
+
+If the redesign appears to require broader vendor/application changes, STOP and report the architectural blocker rather than broadening scope.
 
 ---
 
-## 5. Mandatory responsibility inventory
+## 5. Feature-branch and staging-integration rules
 
-At minimum, separately inventory and classify all responsibilities in these categories. Split further where the implementation has distinct responsibilities.
+Start implementation from the exact fresh baseline on a scoped feature branch/worktree according to `tasks/README.md`.
 
-### A. Scheduler execution boundary
+Because the live Hostinger scheduler targets the staging repository path, do not leave the shared scheduled worktree checked out on a feature branch during implementation. Prefer an isolated worktree/path for feature development if available through the proven namespace-free workflow.
 
-- fixed three-hook allowlist;
-- fixed hook order;
-- zero-argument production mode;
-- strict rejection of arbitrary arguments;
-- `--check-only` diagnostic mode;
-- due-only semantics;
-- exact-hook WP-CLI execution rather than broad cron execution.
+The accepted live staging worktree must remain on `staging` until bounded integration.
 
-### B. Concurrency and process safety
+Do not deploy feature-branch code into the live staging runtime as an ad hoc test.
 
-- nonblocking `flock` overlap prevention;
-- per-hook timeout;
-- whole-cycle watchdog/timeout;
-- bounded cleanup of task-private temporary state;
-- fail-closed behavior and structured terminal status.
+Integrate to `staging` only after source/static/private acceptance passes and after capturing the required pre-integration protected/runtime snapshot defined below.
 
-### C. Environment/deploy/source gates
+Fast-forward staging only; no force push or history rewrite.
 
-- staging-root identity/path check;
-- deploy marker presence and HEAD parity;
-- source branch allowlist;
-- clean worktree requirement;
-- required binary/primitives checks;
-- runner/guard file assumptions;
-- Communications source/runtime aggregate hash parity.
+---
 
-### D. Runtime side-effect guards
+## 6. Required steady-state runner redesign
 
-- `WP_HTTP_BLOCK_EXTERNAL` / pre-transport HTTP interception;
-- unexpected HTTP attribution logic;
-- `wp_mail` interception/counting;
-- PHPMailer/SMTP interception/counting;
-- payment-path interception/counting;
-- whether these are permanent staging safety controls or activation-only measurement controls.
+### 6.1 Permanent every-run controls — KEEP
 
-### E. Callback/event contract validation
+The normal zero-argument path must still enforce on every natural provider fire:
 
-- exact callback identity;
-- callback priority/accepted-args verification;
+- exact staging root identity and no redirect/symlink to another target;
+- normal scheduled mode only when repository branch is exactly `staging`;
+- clean scheduled worktree;
+- current HEAD equals deploy marker;
+- runtime environment is staging;
+- `DISABLE_WP_CRON=true`;
+- staging mail-safety is loaded/configured;
+- fixed literal allowlist of exactly the same three owned hooks;
+- fixed literal hook order;
+- empty scheduler/cron event args;
 - exactly one recurring event per owned hook;
-- hourly/3600 recurrence verification;
-- empty event args verification;
-- contract fingerprinting.
+- expected hourly/3600 recurrence;
+- exact callback identity, priority, accepted-args shape;
+- due-only behavior; future events must not be forced;
+- exact-hook execution only, never broad cron execution;
+- nonblocking `flock` overlap protection;
+- 45-second per-hook timeout or equally strict existing bound;
+- 180-second whole-cycle watchdog or equally strict existing bound;
+- permanent WP HTTP pre-transport blocking for the runner context;
+- unexpected WP HTTP attribution counter;
+- wp_mail/PHPMailer/SMTP telemetry;
+- payment/order/refund-path guard/telemetry already owned by the guard;
+- fail closed on material environment/contract mismatch;
+- structured sanitized JSON terminal output.
 
-### F. Broad-state/protected-state snapshots
+Do not weaken these controls.
+
+### 6.2 Bootstrap/process shape
+
+Redesign the normal run so it no longer performs repeated deep snapshots before and after each hook.
+
+Target normal-cycle shape:
+
+- one lightweight guarded preflight WordPress bootstrap;
+- one exact-hook WP-CLI process for each hook that is actually due and executed;
+- one lightweight guarded final verification WordPress bootstrap;
+- therefore approximately `2 + N` WordPress bootstraps for `N=0..3`.
+
+A materially equivalent implementation is acceptable if it preserves safety and is demonstrably simpler, but if normal mode still requires the old `5 + 2N` deep-snapshot architecture, result cannot be PASS without a documented reason that invalidates the 2.11 design.
+
+The preflight must determine due/not-due state and capture the minimum targeted owned-event state needed for final attribution.
+
+The final verification must prove:
+
+- only hooks reported executed advanced according to normal recurrence;
+- not-due hooks did not advance in that cycle;
+- no owned callback/event duplication/disappearance/args/recurrence drift;
+- no forbidden continuation event was created;
+- runtime safety counters are internally consistent.
+
+Do not require global business state to be zero in order for steady-state work to execute.
+
+---
+
+## 7. Separate deep diagnostic health capability
+
+Preserve deep diagnostic capability, but remove it from the normal scheduled path.
+
+Create or clearly separate an explicit diagnostic mode/tool that performs the expensive checks identified by 2.11, including as applicable:
 
 - full cron fingerprint;
 - non-allowlisted cron fingerprint;
-- Action Scheduler pending fingerprint/count;
-- protected ID32733 status/attempts;
-- owned claim families;
-- real-business-due counts;
+- Action Scheduler pending count/fingerprint;
+- protected historical AS state such as ID32733 for audit visibility, but **not** as a normal-run gate;
+- owned claim family counts/staleness;
 - protected business aggregate/component fingerprints;
-- candidate expiry footprint and retired legacy callback/sender assertions;
-- any related heavy DB/query work performed as part of a normal runner cycle.
+- candidate-expiry footprint;
+- retired legacy callback/sender assertions;
+- complete Communications source/runtime tree or manifest verification;
+- other deep activation/regression evidence already implemented in the existing guard.
 
-### G. Observability
+Rules:
 
-- structured JSON result;
-- per-hook status values;
-- execution count;
-- duration;
-- safety counters;
-- what minimum telemetry is useful for normal Hostinger `View Output` steady-state troubleshooting.
+- diagnostic mode must be read-only with respect to business/cron/AS execution;
+- it must not execute any owned hook;
+- it must not run broad cron or Action Scheduler;
+- it must be explicit/manual or deploy/health-check tooling, not a second scheduled 15-minute job;
+- `--check-only` may remain as a safe explicit diagnostic interface if its semantics are clear and no business hook executes;
+- do not create a new scheduler for deep diagnostics in this task.
 
-For each item report:
-
-- current purpose;
-- original scheduler-activation purpose if different;
-- steady-state failure/risk it protects against;
-- runtime cost/complexity characteristics;
-- KEEP / REDESIGN / DROP;
-- recommended steady-state location: every-run / deploy-time / CI / periodic health-check / manual diagnostic / remove;
-- migration risk if changed.
+If functionality is split into a new file, keep it Raspitajse-owned under `tools/` with a clear name and no vendor coupling.
 
 ---
 
-## 6. Runtime cost and coupling analysis
+## 8. Deploy/runtime parity redesign
 
-Without manually running the runner, identify which operations are likely to dominate each 15-minute invocation, including at minimum:
+The current normal path recursively hashes both Communications source and runtime trees every 15 minutes. Remove that heavy full-tree traversal from every-run execution only if an equally strong bounded deploy/runtime integrity mechanism replaces it.
 
-- full filesystem tree hashing;
-- WordPress bootstrap count;
-- DB-wide or post/meta snapshot queries;
-- cron-array serialization/fingerprinting;
-- Action Scheduler inspection;
-- protected business fingerprint generation;
-- repeated source/runtime parity checks;
-- HTTP/mail/payment guard registration and bookkeeping.
+Preferred architecture from 2.11:
 
-Use already recorded provider durations from the accepted scheduler reports as evidence where useful; do not invent benchmark numbers.
+- retain HEAD/deploy-marker equality every run;
+- establish an atomic deployment manifest or equivalent deterministic Communications deployment fingerprint at deploy/integration time;
+- verify the lightweight manifest/fingerprint every normal run without recursively traversing the full tree;
+- retain explicit full-tree hashing in the deep diagnostic health path.
 
-Distinguish:
+Do not create a second source of business truth. This manifest is deployment integrity metadata only.
 
-- cheap deterministic safety gates appropriate for every run;
-- expensive checks that may belong at deploy-time or periodic health checks;
-- evidence-only counters that were valuable during activation but may not justify permanent cost.
+The manifest must be:
 
-Do not optimize merely for speed: safety guarantees take precedence where a meaningful failure mode still exists.
+- generated deterministically from the deployed owned Communications artifact;
+- tied to the staging deployment/commit identity;
+- written atomically only after runtime deployment verification passes;
+- fail-closed if missing, malformed, stale, or inconsistent with the current deploy marker;
+- free of secrets/PII.
 
----
+If the repository already has a better Raspitajse-owned deploy-state primitive, reuse it rather than inventing parallel machinery.
 
-## 7. Required steady-state architecture recommendation
-
-Produce one concrete recommended architecture, not only classifications.
-
-The recommendation must preserve, unless the audit gives a specific stronger replacement:
-
-- one external 15-minute staging scheduler;
-- no request-driven WP-Cron;
-- no broad cron runner;
-- no Action Scheduler runner substitution;
-- fixed Raspitajse-owned hook allowlist;
-- no arbitrary hook/input execution surface;
-- overlap protection;
-- bounded execution time;
-- staging-only targeting;
-- fail-closed behavior on material safety mismatch;
-- enough observable output to diagnose a failed natural run.
-
-Explicitly define:
-
-1. **every-run core** — exact responsibilities that should execute on every provider fire;
-2. **deploy-time/CI gate** — checks better validated when staging is deployed or code changes;
-3. **periodic/manual health check** — deeper fingerprints/snapshots worth retaining but not necessarily every 15 minutes;
-4. **retired proof scaffolding** — checks/counters that can be dropped if no longer operationally useful.
-
-If the current implementation is already the best tradeoff, say **KEEP AS-IS** and justify it. Do not manufacture a cleanup task merely because 2.11 exists.
+If no safe atomic manifest mechanism can be implemented within this bounded task, keep the full-tree check rather than weakening parity, and report the exact blocker. Do not silently drop source/runtime verification.
 
 ---
 
-## 8. Security and failure-mode analysis
+## 9. Candidate-alert continuation-policy fix
 
-For every proposed REDESIGN or DROP, state what could go wrong after removal and what compensating control prevents regression.
+2.11 identified a real mismatch:
 
-At minimum consider:
+- the candidate-job-alert evaluator can create a continuation event when more work remains;
+- the accepted selective scheduler contract permits only the three fixed owned hourly hooks;
+- the current guard treats continuation events as forbidden;
+- no approved external runner consumes such continuation events.
 
-- wrong environment/path;
-- stale or mismatched deployed Communications code;
-- duplicate runner overlap;
-- a developer accidentally widening the hook set;
-- callback/event drift after future plugin/refactor changes;
-- unexpected external network/mail/payment behavior on staging;
-- broad cron/Action Scheduler execution accidentally reintroduced;
-- scheduler still firing during a dirty/incomplete deployment;
-- opaque failures in Hostinger `View Output`.
+Resolve this in Raspitajse-owned code without adding another scheduler surface.
 
-No recommendation may weaken safety merely to reduce runtime cost without naming and replacing the lost control.
+Required behavior when the candidate evaluator is invoked under the selective staging runner context:
 
----
+- do not create/schedule a continuation event;
+- preserve bounded batch processing and existing idempotency/ledger/claim guarantees;
+- expose sanitized progress such as selected/processed/succeeded/failed/`has_more` counts as appropriate;
+- if more work remains, leave it for later normal passes of the existing owned candidate-alert hook rather than creating a new cron entry;
+- no candidate IDs, emails, saved-query text, job IDs, recipients, rendered mail bodies, or PII in runner/provider output.
 
-## 9. Decision outcome
+Outside the selective-runner context, do not change continuation behavior unless the code proves the continuation surface is now entirely retired and a broader change is explicitly required to preserve one consistent production design. If broader semantics are unclear, scope the suppression to the runner context and report the remaining follow-up question.
 
-Finish with one of exactly these architecture outcomes:
-
-### `KEEP_AS_IS`
-Use when the current runner/guard is justified as the permanent staging steady-state implementation and cleanup would not materially improve simplicity/cost/risk.
-
-### `REDESIGN_BOUNDED`
-Use when specific responsibilities should move out of every-run execution or be simplified while preserving the accepted safety boundary. List the exact bounded changes that a future task may implement.
-
-### `DROP_TEMPORARY_COMPONENT`
-Use only if a whole temporary component can safely be removed without weakening the accepted steady-state guarantees. Prove why the remaining architecture is sufficient.
-
-Do **not** implement the decision in 2.11.
+Do not weaken candidate-alert once-ever delivery ledger, config revision, claims, retry/idempotency, or matching semantics.
 
 ---
 
-## 10. Acceptance criteria
+## 10. Observability contract
+
+Preserve the stable top-level provider-facing JSON concepts:
+
+- `result`;
+- `environment`;
+- `mode`;
+- `reason`;
+- `duration_seconds`;
+- `executed_hooks`;
+- fixed-order per-hook statuses;
+- safety counters.
+
+You may add versioned/additive fields, but do not break the existing fields without a compelling compatibility reason.
+
+Clarify network telemetry:
+
+- retain hard WP HTTP pre-transport blocking;
+- do not imply that `actual_external_network=0` proves absence of every possible raw socket/network mechanism unless such coverage is actually implemented;
+- prefer an additive sanitized field/name that explicitly states WP HTTP transport was blocked/intercepted, while keeping old output compatibility where practical.
+
+Add only minimum business-progress telemetry useful for diagnosing bounded processing, for example per-hook aggregate counts such as:
+
+- selected;
+- processed;
+- succeeded;
+- failed;
+- has_more.
+
+Only emit aggregates actually supported by the callback/result contract. Do not invent success counts from absence of errors.
+
+No PII/secrets/raw queries/payloads in output or reports.
+
+---
+
+## 11. Normal-path responsibilities to remove or move
+
+The normal 15-minute path should no longer fail solely because of these activation/history diagnostics:
+
+- fixed protected Action Scheduler ID32733 `pending/0` state;
+- global Action Scheduler pending fingerprint/count stability;
+- protected business aggregate/component fingerprint equality;
+- real-business-due count equals zero;
+- all owned claim families globally equal zero;
+- full global cron fingerprint equality unrelated to targeted owned events;
+- non-allowlisted cron fingerprint equality as a per-fire business gate;
+- repeated candidate-expiry/legacy-retirement evidence on every hook transition.
+
+Move those checks into deep diagnostic/deploy/periodic health tooling as defined above.
+
+Important: removing a normal-run gate does **not** authorize executing broad cron, Action Scheduler, vendor senders, candidate auto-expiry, payment, or production behavior. Existing execution boundaries remain fixed.
+
+---
+
+## 12. Static/private acceptance before staging integration
+
+Before touching staging, prove the redesign in an isolated/source-only way.
+
+At minimum validate:
+
+- shell syntax and PHP lint;
+- fixed allowlist/order unchanged and duplicated literals remain consistent or are consolidated safely;
+- zero-argument normal mode accepted;
+- arbitrary args/options/injection strings rejected before WordPress execution;
+- `--check-only`/deep diagnostic executes no business hook;
+- normal scheduled mode rejects feature branch/non-staging branch;
+- feature diagnostic contract, if retained, cannot become normal scheduled execution;
+- overlap lock behavior;
+- fail-closed missing guard/manifest/deploy mismatch cases;
+- preflight classification for 0/1/2/3 due hooks;
+- exact fixed execution order;
+- child error and timeout stop later hooks;
+- final targeted timestamp verification catches executed/not-due mismatch, duplicate event, changed args, wrong recurrence, wrong callback;
+- no broad cron/AS command path exists;
+- HTTP/mail/payment guard matrix remains effective;
+- candidate runner-context continuation suppression produces no continuation cron row and preserves bounded `has_more` semantics;
+- deep diagnostic mode remains no-execution/read-only;
+- structured output is sanitized and schema-compatible.
+
+Use fixtures/mocks/private harnesses that do not send real mail, payments or external HTTP and do not mutate real staging business data.
+
+Do not manually run the live zero-argument staging runner as a test.
+
+---
+
+## 13. Pre-integration live staging acceptance gate
+
+Immediately before staging integration/deployment, perform one fully guarded read-only live snapshot using the accepted safety mechanism. Do not execute business hooks.
+
+Prove at minimum:
+
+- fresh `origin/staging` still equals baseline and source worktree is clean;
+- current runtime/deploy marker corresponds to baseline;
+- runtime environment staging;
+- `DISABLE_WP_CRON=true`;
+- current accepted three callback/event contracts valid;
+- continuation rows `0`;
+- legacy daily/shared-expiry callbacks/events `0`;
+- retired vendor candidate-job and employer-candidate senders `0`;
+- candidate auto-expiry disabled;
+- Action Scheduler current state captured for comparison but not forced to historical immutability;
+- ID32733 status/attempts recorded for protected comparison;
+- protected business aggregate/component fingerprints captured;
+- current owned event timestamps captured;
+- no current runner lock/process conflict that would make deployment unsafe.
+
+If material protected/business drift is found, STOP before integration.
+
+Natural owned timestamp movement caused by the already-accepted scheduler is not itself drift; attribute by hook/event shape and current time rather than comparing to stale historical timestamp constants.
+
+---
+
+## 14. Staging integration and deployment
+
+After all pre-integration gates pass:
+
+1. integrate the scoped implementation into `staging` through the repository workflow;
+2. deploy only the changed Raspitajse-owned runtime files required by this task;
+3. update any new deploy-integrity manifest and the existing deploy marker atomically/in the proven safe order;
+4. verify source/runtime parity for the changed owned files;
+5. keep the Hostinger scheduler untouched;
+6. do not manually invoke the normal runner after deployment.
+
+If a natural scheduler fire lands during the short HEAD/marker/runtime transition, the runner must fail closed rather than partially execute. Report any observed fail-closed provider/runtime evidence if available; do not treat safe fail-closed as business regression.
+
+Do not modify production.
+
+---
+
+## 15. Post-deploy two-stage acceptance
+
+Because Codex does not have the authorized hPanel provider-output surface, final acceptance is explicitly two-stage.
+
+### Stage A — implementation/deploy readiness
+
+After deployment, take a fresh guarded read-only T0 snapshot of the redesigned runtime and prove:
+
+- staging source HEAD = fresh `origin/staging` = deploy marker;
+- changed runtime files match source;
+- runner/guard/deep diagnostic syntax/lint and deployment integrity pass;
+- fixed callback/event contracts valid;
+- no continuation row;
+- no business/mail/payment/external side effect from diagnostics;
+- protected business state unchanged from the pre-integration snapshot except legitimate owned cron timestamp movement attributable to natural scheduler fires during deployment;
+- Action Scheduler not executed by this task;
+- production untouched.
+
+Then publish:
+
+`PARTIAL — READY_FOR_HUMAN_NATURAL_FIRE_OBSERVATION`
+
+and STOP.
+
+The report must include the exact final staging SHA, T0 owned timestamps, expected redesigned output schema, and instruct the human operator to return the **first complete natural Hostinger View Output JSON after that T0**. Do not ask the human to change or manually trigger the scheduler.
+
+### Stage B — resume after human supplies first natural provider output
+
+On resume:
+
+- fetch fresh refs and re-read this task/README;
+- confirm `origin/staging` still equals the Stage A final staging SHA; otherwise STOP with mismatch;
+- accept only the complete first natural provider JSON after T0 as human/provider evidence;
+- take one fully guarded read-only T1 snapshot promptly;
+- reconcile T0 -> provider fire -> T1.
 
 PASS requires:
 
-- baseline/source/deploy context verified read-only;
-- full runner and guard audited from `origin/staging`;
-- all material responsibilities inventoried;
-- every responsibility classified KEEP / REDESIGN / DROP;
-- runtime-cost/coupling analysis completed without manual runner execution;
-- one explicit steady-state architecture proposed;
-- every REDESIGN/DROP has failure-mode and compensating-control analysis;
-- one final architecture outcome selected from the three allowed values;
-- scheduler mutations `0`;
-- manual runner/hook/broad-cron/Action-Scheduler executions `0`;
-- source changes/commits/deploys `0`;
-- production touched `NO`.
+- provider `result=PASS`, `environment=staging`, `mode=run`;
+- redesigned runner reports the expected lightweight execution path/process count or equivalent observability proving the old `5 + 2N` deep path is gone;
+- only the fixed three hooks are represented, in fixed order;
+- each reported `executed` hook advances exactly one hourly recurrence;
+- each reported `not_due` hook remains unchanged for that observed fire window;
+- no continuation event created;
+- callback/event shape remains exact;
+- provider HTTP/mail/PHPMailer/SMTP/payment counters satisfy the guard contract;
+- no unexpected WP HTTP transport escapes;
+- protected business fingerprints unchanged except legitimate business mutations only if real due work existed and the task contract explicitly proves them safe. For this acceptance window, prefer/require no real business side-effect fixture; do not fabricate business work;
+- no broad cron or AS execution;
+- production untouched.
 
-If the audit cannot distinguish a responsibility safely, classify it conservatively as KEEP and record the evidence gap rather than deleting by assumption.
+If provider output is ERROR/LOCKED/ambiguous, or T0/T1 attribution fails, do not improvise. Report PARTIAL/FAIL with exact safe blocker. Do not mutate the Hostinger scheduler as a recovery shortcut.
 
 ---
 
-## 11. Final report
+## 16. Protected behavior invariants
 
-The report must include:
+Throughout implementation and acceptance preserve:
 
-- result and final architecture outcome;
-- live staging/source baseline and cleanliness;
-- concise accepted scheduler context from 2.10;
-- responsibility matrix with purpose, cost, KEEP/REDESIGN/DROP and destination;
-- every-run core recommendation;
-- deploy-time/CI recommendation;
-- periodic/manual diagnostic recommendation;
-- retired-proof-scaffolding recommendation;
-- failure-mode/compensating-control table for every REDESIGN/DROP;
-- whether an implementation follow-up is materially justified;
-- scheduler/manual runner/hook/AS mutation counters, all zero;
-- production touched NO;
+- candidate profiles do not auto-expire by age;
+- employer→candidate alerts remain retired;
+- candidate→job owned evaluator remains the only active candidate job-alert sender path;
+- job listing expiry remains separate from package entitlement expiry;
+- package 30-day consumption validity remains separate from published-job duration;
+- SenderPolicy and mail-safety behavior remain intact;
+- no real SMTP transport during tests;
+- no payment/charge/refund execution;
+- ID32733 is never executed;
+- no broad Action Scheduler runner;
+- no production access.
+
+If any of these invariants would need to change, STOP and report scope conflict.
+
+---
+
+## 17. HOST_NAMESPACE_PRESSURE
+
+Known `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC` still applies.
+
+On first confirmed signature:
+
+- activate the documented circuit breaker;
+- do not repeatedly retry the same sandbox-dependent helper;
+- use proven namespace-free Git/filesystem/WP-CLI methods;
+- do not wait for host capacity;
+- do not use broad process kills;
+- if a bounded task-private child exceeds its timeout, inspect and terminate only that exact child/process group.
+
+This does not authorize bypassing scheduler, source, deploy, runtime, or safety gates.
+
+---
+
+## 18. Acceptance criteria
+
+Final PASS requires all of the following:
+
+- bounded source scope only;
+- runner and guard retained;
+- Hostinger scheduler untouched and still exactly one `*/15` zero-argument runner entry by human/provider context;
+- fixed three-hook allowlist/order unchanged;
+- no arbitrary execution surface;
+- no broad cron/AS path;
+- normal mode staging-only;
+- overlap/timeouts/watchdog/fail-closed preserved;
+- lightweight preflight/final architecture implemented;
+- normal process shape approximately `2 + N` and old repeated deep snapshots removed from natural path;
+- deep diagnostic health capability preserved separately and executes no business hook;
+- source/runtime deployment integrity remains fail-closed without per-fire full-tree traversal, or full-tree traversal retained with documented blocker if no safe replacement exists;
+- fixed ID32733/global AS/protected-business/real-due-zero checks no longer gate the normal 15-minute path;
+- candidate selective-runner continuation mismatch resolved with no continuation scheduler surface;
+- provider JSON remains structured/sanitized and network scope wording is accurate;
+- static/private tests PASS;
+- staging integration/deploy PASS;
+- Stage A guarded T0 PASS;
+- first natural Hostinger fire observed by human/provider and Stage B T0/fire/T1 reconciliation PASS;
+- no real external network/mail/SMTP/payment side effects;
+- Action Scheduler execution `0`;
+- production touched `NO`.
+
+If Stage A is complete but human natural-fire evidence has not yet been supplied, result must be PARTIAL/READY as specified, not PASS.
+
+---
+
+## 19. Final report requirements
+
+Final report must include:
+
+- result and whether Stage A only or whole task PASS;
+- baseline, feature SHA if used, final staging SHA, deploy marker and source/runtime parity;
+- exact files changed and why;
+- before/after normal runner process/bootstrap model;
+- every-run core retained;
+- deep diagnostic checks moved out of normal path;
+- deploy-integrity mechanism and failure behavior;
+- candidate continuation-policy implementation and tests;
+- output schema/telemetry changes;
+- static/private test matrix and counts;
+- pre-integration protected snapshot summary;
+- Stage A T0 and, on final resume, provider/T1 attribution;
+- current Action Scheduler count/fingerprint and ID32733 status/attempts for evidence only, with AS executions `0`;
+- protected business fingerprint before/after;
+- HTTP/mail/SMTP/payment counters;
+- scheduler mutations `0`;
+- production touched `NO`;
+- cleanup status;
 - exactly one proposed next task, not created or started.
 
-Next-task rule:
+If whole-task PASS is achieved, the proposed next task should leave the cron/scheduler implementation arc and move to the higher-value next area:
 
-- if the outcome is `REDESIGN_BOUNDED` or `DROP_TEMPORARY_COMPONENT`, propose one bounded implementation task for that exact decision;
-- if the outcome is `KEEP_AS_IS`, propose the next higher-value read-only task: **WP Job Board Pro security/upgrade readiness audit with fresh authoritative vulnerability/version verification**.
+**WP Job Board Pro security/upgrade readiness audit with fresh authoritative vulnerability/version verification.**
 
-STOP after publishing the report. Do not begin 2.12.
+Do not implement that upgrade in 2.12.
+
+STOP after publishing the report. Do not begin 2.13.
