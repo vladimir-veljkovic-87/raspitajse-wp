@@ -503,11 +503,6 @@ function raspitajse_staging_owned_cron_bootstrap() {
 WP_CLI::add_hook( 'after_wp_load', 'raspitajse_staging_owned_cron_bootstrap' );
 
 /**
- * Return a complete sanitized gate snapshot. No PII or raw meta/cron args leave it.
- *
- * @return array<string,mixed>
- */
-/**
  * Return the bounded normal-cycle snapshot: only safety, owned contracts/events,
  * continuation absence, and due timestamps. Deep state remains in snapshot().
  *
@@ -594,6 +589,11 @@ function raspitajse_staging_owned_cron_emit_light_snapshot() {
     echo 'RASPITAJSE_OWNED_CRON_SNAPSHOT=' . base64_encode( $json ) . PHP_EOL;
 }
 
+/**
+ * Return a complete sanitized gate snapshot. No PII or raw meta/cron args leave it.
+ *
+ * @return array<string,mixed>
+ */
 function raspitajse_staging_owned_cron_snapshot() {
     $reasons   = array();
     $contracts = raspitajse_staging_owned_cron_contracts();
