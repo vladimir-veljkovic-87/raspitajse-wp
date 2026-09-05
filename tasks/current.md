@@ -1,8 +1,8 @@
-# Zadatak 2.12 — Implement the bounded lightweight steady-state runner/guard redesign and separate deep diagnostic health checks
+# Zadatak 2.13 — WP Job Board Pro security/upgrade readiness audit with fresh authoritative vulnerability/version verification
 
 Status: READY
-Baseline: 43ac33e6e96fdc0062233e6419cfb761633113c5
-Previous task: 2.11
+Baseline: 77d3a1019e0248a2abacd607fd508ed6868da70b
+Previous task: 2.12
 Target environment: staging
 Production: FORBIDDEN
 
@@ -10,561 +10,461 @@ Production: FORBIDDEN
 
 Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, and `origin/staging`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning, creating a feature branch/worktree, bootstrapping WordPress, or changing source. `codex-tasks` is READ-ONLY.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before doing any inspection, WordPress bootstrap, public research, artifact handling, or source analysis. Treat `codex-tasks` as READ-ONLY.
 
 Verify fresh `origin/staging` is exactly:
 
-`43ac33e6e96fdc0062233e6419cfb761633113c5`
+`77d3a1019e0248a2abacd607fd508ed6868da70b`
 
-If it differs, STOP and report the mismatch. Do not silently rebase this task.
+If it differs, STOP and report the mismatch. Do not silently rebase or widen this task.
 
-Execute only Zadatak 2.12. Publish all task-state/final reports through the existing `codex-reports` workflow. Do not begin 2.13 automatically.
+Read the final Zadatak 2.12 PASS report. Read the relevant 1.93–1.97 vendor-provenance reports as needed to distinguish proven facts from historical assumptions.
+
+Execute only Zadatak 2.13. This task is audit/readiness only. **Expected source changes: 0. Expected staging deploys: 0.** Publish the final report through the existing `codex-reports` workflow and STOP. Do not begin 2.14 automatically.
 
 ---
 
 ## 1. Accepted context
 
-Zadatak 2.10 PASS established:
+Zadatak 2.12 PASS established:
 
-`STEADY_STATE_SELECTIVE_STAGING_SCHEDULER_ACCEPTED`
+`LIGHTWEIGHT_STEADY_STATE_SELECTIVE_RUNNER_ACCEPTED`
 
-The accepted scheduler architecture is immutable for this task:
+The scheduler/communications execution boundary is not in scope for redesign here. The accepted staging scheduler remains one human-owned `*/15 * * * *` zero-argument selective runner with `DISABLE_WP_CRON=true` and the fixed three owned hooks. Do not mutate it.
 
-- exactly one human-owned Hostinger/hPanel staging scheduler entry;
-- cadence `*/15 * * * *`;
-- command invokes the zero-argument selective runner;
-- `DISABLE_WP_CRON=true` remains intentional;
-- no broad `/wp-cron.php`, `wp cron event run --due-now`, `--all`, Action Scheduler queue runner, daemon/loop, GitHub Actions scheduler, system cron substitute, or equivalent broad trigger;
-- fixed owned hook order:
-  1. `raspitajse_job_listing_expiry_evaluator`
-  2. `raspitajse_employer_job_expiry_notice_evaluator`
-  3. `raspitajse_candidate_job_alert_evaluator`.
+Historical WP Job Board Pro evidence from 1.93–1.97 established, subject to fresh verification in this task:
 
-Zadatak 2.11 PASS selected architecture outcome:
+- the site has been operating with a WP Job Board Pro 1.2.x lineage and prior inspections identified `1.2.73` as the apparent current version;
+- an artifact named as 1.2.66 was a valid historical older package only;
+- a later locally supplied artifact named as 1.2.73 failed clean-vendor provenance because it contained Raspitajse-specific/customized content and a backup-style root layout;
+- therefore that 1.2.73 artifact must **not** be treated as a clean upstream reference or upgrade package;
+- candidate→job vendor cleanup was intentionally parked until a future WPJBP upgrade/normalization step;
+- three known later-modified WPJBP files requiring explicit upgrade treatment are:
+  1. `wp-content/plugins/wp-job-board-pro/includes/class-job-alert.php`
+  2. `wp-content/plugins/wp-job-board-pro/includes/email-templates-default/html-job-alert-notice.php`
+  3. `wp-content/plugins/wp-job-board-pro/templates/misc/my-jobs-alerts.php`.
 
-`REDESIGN_BOUNDED`
-
-2.11 concluded:
-
-- KEEP the runner and guard as the permanent staging execution boundary;
-- do **not** remove either component;
-- KEEP the fixed three-hook allowlist/order, zero-argument normal mode, arbitrary-argument rejection, due-only semantics, exact-hook execution, overlap lock, per-hook timeout, whole-cycle watchdog, staging targeting, deploy-marker/HEAD parity, HTTP blocking, mail/SMTP/payment telemetry, and fail-closed structured output;
-- REDESIGN the normal 15-minute path so activation-grade global snapshots do not run on every provider fire;
-- target normal-path process shape approximately `2 + N` WordPress bootstraps, where `N` is the number of actually executed owned hooks, instead of current `5 + 2N`;
-- move deep global cron/Action Scheduler/protected-business/provenance checks to explicit diagnostic/health tooling rather than deleting the capability;
-- remove fixed historical ID32733 and real-business-due-zero gating from the normal 15-minute execution path;
-- tighten normal scheduled mode to staging branch only; feature-branch use may exist only for explicit diagnostics/testing and must never become the scheduled steady-state path;
-- resolve the candidate-alert continuation-policy mismatch without widening the fixed scheduler contract;
-- clarify runtime telemetry so `actual_external_network=0` is not presented as proof beyond the guarded WP HTTP transport scope;
-- add bounded sanitized business-progress telemetry sufficient to identify backlog/`has_more` without IDs, recipients, query text, mail bodies, or PII.
-
-This task implements exactly that bounded redesign. It is not a general Communications refactor and not a cron subsystem rewrite.
+A prior public-source concern suggested a critical unauthenticated privilege-escalation advisory and a possible patched threshold around `1.2.85`. **That is not a binding fact for this task. Re-verify it from fresh authoritative/current sources.** Public advisory metadata has changed over time and may contain conflicting product/version wording, so the report must distinguish exact affected ranges, product slugs/names, patched-version confidence, and source freshness rather than copying a stale summary.
 
 ---
 
 ## 2. Goal
 
-Implement a lightweight permanent staging execution path that preserves the accepted safety boundary while moving deep activation/regression evidence out of every natural 15-minute run.
+Produce a decision-grade, read-only security and upgrade-readiness audit for the currently active WP Job Board Pro installation.
 
-Success means:
+The task must answer all of the following:
 
-1. the existing Hostinger scheduler command and cadence remain unchanged;
-2. the zero-argument runner still exposes only the same three owned hooks in the same order;
-3. every normal natural cycle uses one lightweight guarded preflight, one process for each actually due/executed hook, and one lightweight guarded final verification — target `2 + N` WordPress bootstraps;
-4. expensive/global diagnostics remain available through explicit no-business-execution diagnostic tooling;
-5. candidate-alert continuation behavior no longer creates a scheduler surface outside the fixed three-hook contract when invoked by this selective runner;
-6. one post-deploy **natural Hostinger fire** proves the redesigned steady-state path before final PASS.
+1. What exact WP Job Board Pro version is present in source, deployed runtime, and active WordPress state on staging?
+2. Is that exact version currently affected by any known published security vulnerability, especially unauthenticated privilege escalation? What are the exact CVE/advisory IDs, affected ranges, patched versions, severity, and confidence?
+3. What is the latest **official/vendor-supported** WP Job Board Pro version that can be established today, and from what authoritative source?
+4. Is there a clean, trustworthy upgrade artifact already available locally or from a clearly official unauthenticated source? If not, what exact artifact must the user obtain?
+5. Which Raspitajse-owned components, hooks, templates, customizations, post types/meta contracts, and vendor-file changes could be affected by upgrading WPJBP?
+6. Which current vendor customizations should disappear during normalization, which business needs must remain in Raspitajse-owned code, and which compatibility dependencies require testing?
+7. What exact staging upgrade procedure, acceptance matrix, rollback plan, and safety gates are required before any future implementation task may upgrade the plugin?
+8. Is the project READY for a controlled staging upgrade, or is it blocked by artifact provenance, version/security evidence, or unresolved compatibility risk?
 
-Do not optimize away a meaningful safety control merely to reduce process count.
-
----
-
-## 3. Hard scheduler/control-plane boundary
-
-Do **not** edit, delete, disable, recreate, duplicate, or manually trigger the Hostinger/hPanel scheduler entry.
-
-Do not change its cadence or command.
-
-Do not create any second scheduler entry, temporary scheduler entry, web-cron, root/system cron, systemd timer, Action Scheduler runner, GitHub Actions schedule, daemon/loop/nohup substitute, or request-driven WP-Cron path.
-
-The existing scheduler may naturally fire while implementation work is happening. The task must be safe under that fact:
-
-- until staging integration, the accepted baseline runner remains active;
-- during any short source/deploy mismatch window, existing fail-closed source/deploy parity must prevent business execution;
-- after staging deployment, the first natural fire of the redesigned runner becomes acceptance evidence.
-
-Codex must not use manual normal-runner execution as a substitute for that natural-fire proof.
-
-Production scheduler/filesystem/database/runtime/WordPress access is forbidden.
+Do not perform the upgrade in 2.13.
 
 ---
 
-## 4. Source scope
+## 3. Hard no-mutation boundary
 
-Expected source scope is bounded to Raspitajse-owned files required by the 2.11 decision.
-
-Primary expected files/components:
-
-- `tools/raspitajse-staging-owned-cron-runner.sh`;
-- `tools/raspitajse-staging-owned-cron-guard.php`;
-- one new or clearly separated Raspitajse-owned deep diagnostic/health tool if needed;
-- the minimum directly relevant `raspitajse-communications` candidate-job-alert evaluator code required to suppress continuation creation specifically under the selective-runner execution context and expose sanitized progress telemetry;
-- narrowly scoped test/fixture files for these components.
+Do not modify, install, update, downgrade, deactivate, reactivate, replace, delete, or restore WP Job Board Pro or any other plugin/theme.
 
 Do not modify:
 
 - WordPress core;
-- WooCommerce core/vendor files;
-- WP Job Board Pro vendor files;
-- Paid Listings vendor files;
-- Superio/theme vendor files;
-- unrelated Communications behavior;
-- Raspitajse Commerce business semantics;
-- existing candidate/job/package business rules;
+- WooCommerce;
+- WP Job Board Pro;
+- WP Job Board Pro Paid Listings;
+- Superio/theme vendor code;
+- child-theme code;
+- Raspitajse Communications;
+- Raspitajse Commerce;
+- MU mail safety;
+- deployment manifests/markers;
+- cron rows;
+- Action Scheduler rows;
+- database/business data;
 - Hostinger scheduler configuration.
 
-If the redesign appears to require broader vendor/application changes, STOP and report the architectural blocker rather than broadening scope.
+Do not create a feature branch or staging deployment. Do not run an installer, upgrader, database migration, activation hook, plugin update check, broad WP-Cron, Action Scheduler queue runner, or owned business hook.
+
+Do not exploit or proof-of-concept the suspected registration vulnerability against staging. Do not create users, attempt administrator registration, change roles/capabilities, or submit malicious registration requests. Security verification in this task is source/advisory/readiness analysis only.
+
+Production filesystem/database/runtime/WordPress/scheduler access is forbidden.
 
 ---
 
-## 5. Feature-branch and staging-integration rules
+## 4. Public research authorization and source quality
 
-Start implementation from the exact fresh baseline on a scoped feature branch/worktree according to `tasks/README.md`.
+Fresh public **read-only control-plane research is explicitly authorized for this task** because authoritative vulnerability/version verification is the purpose of the audit.
 
-Because the live Hostinger scheduler targets the staging repository path, do not leave the shared scheduled worktree checked out on a feature branch during implementation. Prefer an isolated worktree/path for feature development if available through the proven namespace-free workflow.
+Allowed:
 
-The accepted live staging worktree must remain on `staging` until bounded integration.
-
-Do not deploy feature-branch code into the live staging runtime as an ad hoc test.
-
-Integrate to `staging` only after source/static/private acceptance passes and after capturing the required pre-integration protected/runtime snapshot defined below.
-
-Fast-forward staging only; no force push or history rewrite.
-
----
-
-## 6. Required steady-state runner redesign
-
-### 6.1 Permanent every-run controls — KEEP
-
-The normal zero-argument path must still enforce on every natural provider fire:
-
-- exact staging root identity and no redirect/symlink to another target;
-- normal scheduled mode only when repository branch is exactly `staging`;
-- clean scheduled worktree;
-- current HEAD equals deploy marker;
-- runtime environment is staging;
-- `DISABLE_WP_CRON=true`;
-- staging mail-safety is loaded/configured;
-- fixed literal allowlist of exactly the same three owned hooks;
-- fixed literal hook order;
-- empty scheduler/cron event args;
-- exactly one recurring event per owned hook;
-- expected hourly/3600 recurrence;
-- exact callback identity, priority, accepted-args shape;
-- due-only behavior; future events must not be forced;
-- exact-hook execution only, never broad cron execution;
-- nonblocking `flock` overlap protection;
-- 45-second per-hook timeout or equally strict existing bound;
-- 180-second whole-cycle watchdog or equally strict existing bound;
-- permanent WP HTTP pre-transport blocking for the runner context;
-- unexpected WP HTTP attribution counter;
-- wp_mail/PHPMailer/SMTP telemetry;
-- payment/order/refund-path guard/telemetry already owned by the guard;
-- fail closed on material environment/contract mismatch;
-- structured sanitized JSON terminal output.
-
-Do not weaken these controls.
-
-### 6.2 Bootstrap/process shape
-
-Redesign the normal run so it no longer performs repeated deep snapshots before and after each hook.
-
-Target normal-cycle shape:
-
-- one lightweight guarded preflight WordPress bootstrap;
-- one exact-hook WP-CLI process for each hook that is actually due and executed;
-- one lightweight guarded final verification WordPress bootstrap;
-- therefore approximately `2 + N` WordPress bootstraps for `N=0..3`.
-
-A materially equivalent implementation is acceptable if it preserves safety and is demonstrably simpler, but if normal mode still requires the old `5 + 2N` deep-snapshot architecture, result cannot be PASS without a documented reason that invalidates the 2.11 design.
-
-The preflight must determine due/not-due state and capture the minimum targeted owned-event state needed for final attribution.
-
-The final verification must prove:
-
-- only hooks reported executed advanced according to normal recurrence;
-- not-due hooks did not advance in that cycle;
-- no owned callback/event duplication/disappearance/args/recurrence drift;
-- no forbidden continuation event was created;
-- runtime safety counters are internally consistent.
-
-Do not require global business state to be zero in order for steady-state work to execute.
-
----
-
-## 7. Separate deep diagnostic health capability
-
-Preserve deep diagnostic capability, but remove it from the normal scheduled path.
-
-Create or clearly separate an explicit diagnostic mode/tool that performs the expensive checks identified by 2.11, including as applicable:
-
-- full cron fingerprint;
-- non-allowlisted cron fingerprint;
-- Action Scheduler pending count/fingerprint;
-- protected historical AS state such as ID32733 for audit visibility, but **not** as a normal-run gate;
-- owned claim family counts/staleness;
-- protected business aggregate/component fingerprints;
-- candidate-expiry footprint;
-- retired legacy callback/sender assertions;
-- complete Communications source/runtime tree or manifest verification;
-- other deep activation/regression evidence already implemented in the existing guard.
+- official ApusThemes/WP Job Board Pro/Superio product or changelog pages;
+- ThemeForest/Envato public product metadata/changelog pages;
+- CVE.org/MITRE/CNA records;
+- NVD;
+- Wordfence Threat Intelligence;
+- Patchstack;
+- other reputable vulnerability databases only as corroboration;
+- public unauthenticated release metadata or a clearly official public artifact URL if one exists.
 
 Rules:
 
-- diagnostic mode must be read-only with respect to business/cron/AS execution;
-- it must not execute any owned hook;
-- it must not run broad cron or Action Scheduler;
-- it must be explicit/manual or deploy/health-check tooling, not a second scheduled 15-minute job;
-- `--check-only` may remain as a safe explicit diagnostic interface if its semantics are clear and no business hook executes;
-- do not create a new scheduler for deep diagnostics in this task.
+- this authorization applies to Codex/control-plane research only, **not WordPress runtime outbound HTTP**;
+- do not trigger a WordPress/plugin update check or vendor heartbeat to discover versions;
+- do not log in to Envato/ThemeForest/ApusThemes, use stored credentials/tokens, accept license terms, purchase anything, change an account, or contact the vendor;
+- do not expose query strings, signed URLs, license keys, tokens, cookies, account data, or secrets in the report;
+- if an official package requires authentication or a user-owned download, report the exact artifact requirement instead of bypassing access controls;
+- a public unauthenticated official ZIP may be downloaded only to task-private scratch for read-only inspection if provenance is unambiguous; do not install or execute it, and remove scratch after reporting;
+- record source URL/domain, retrieval date/time, source role (vendor/CNA/NVD/secondary), and what exact claim each source supports;
+- prefer primary vendor/CNA records over aggregators, but explicitly report disagreements rather than silently reconciling them;
+- if public network access is unavailable, do not invent current version/advisory facts: report the evidence gap.
 
-If functionality is split into a new file, keep it Raspitajse-owned under `tools/` with a clear name and no vendor coupling.
-
----
-
-## 8. Deploy/runtime parity redesign
-
-The current normal path recursively hashes both Communications source and runtime trees every 15 minutes. Remove that heavy full-tree traversal from every-run execution only if an equally strong bounded deploy/runtime integrity mechanism replaces it.
-
-Preferred architecture from 2.11:
-
-- retain HEAD/deploy-marker equality every run;
-- establish an atomic deployment manifest or equivalent deterministic Communications deployment fingerprint at deploy/integration time;
-- verify the lightweight manifest/fingerprint every normal run without recursively traversing the full tree;
-- retain explicit full-tree hashing in the deep diagnostic health path.
-
-Do not create a second source of business truth. This manifest is deployment integrity metadata only.
-
-The manifest must be:
-
-- generated deterministically from the deployed owned Communications artifact;
-- tied to the staging deployment/commit identity;
-- written atomically only after runtime deployment verification passes;
-- fail-closed if missing, malformed, stale, or inconsistent with the current deploy marker;
-- free of secrets/PII.
-
-If the repository already has a better Raspitajse-owned deploy-state primitive, reuse it rather than inventing parallel machinery.
-
-If no safe atomic manifest mechanism can be implemented within this bounded task, keep the full-tree check rather than weakening parity, and report the exact blocker. Do not silently drop source/runtime verification.
+Historical local metadata, cached WordPress update transients, reseller/download sites, filenames, and archive names are **not authoritative evidence of the latest official version**.
 
 ---
 
-## 9. Candidate-alert continuation-policy fix
+## 5. Mandatory current-version and active-state verification
 
-2.11 identified a real mismatch:
+Verify the current WPJBP installation from fresh staging/source evidence.
 
-- the candidate-job-alert evaluator can create a continuation event when more work remains;
-- the accepted selective scheduler contract permits only the three fixed owned hourly hooks;
-- the current guard treats continuation events as forbidden;
-- no approved external runner consumes such continuation events.
+At minimum establish:
 
-Resolve this in Raspitajse-owned code without adding another scheduler surface.
+- source plugin root/path;
+- source main plugin header `Version` and any authoritative version constant(s);
+- deployed runtime plugin header/version constant(s);
+- source/runtime relevant file parity or explain any expected deployment difference;
+- whether `wp-job-board-pro` is active in staging WordPress state;
+- current companion Paid Listings version/status where directly relevant to upgrade compatibility;
+- Superio version only to the extent needed to determine whether WPJBP is bundled/coupled to the theme release.
 
-Required behavior when the candidate evaluator is invoked under the selective staging runner context:
+If WordPress bootstrap is needed for active-state verification, use a **fully guarded read-only invocation** that blocks WP HTTP transport and mail/payment side effects. Do not run update APIs or mutation commands. Report guarded process count and intercepted/unexpected HTTP/mail/payment counters.
 
-- do not create/schedule a continuation event;
-- preserve bounded batch processing and existing idempotency/ledger/claim guarantees;
-- expose sanitized progress such as selected/processed/succeeded/failed/`has_more` counts as appropriate;
-- if more work remains, leave it for later normal passes of the existing owned candidate-alert hook rather than creating a new cron entry;
-- no candidate IDs, emails, saved-query text, job IDs, recipients, rendered mail bodies, or PII in runner/provider output.
+If the source header, runtime header, version constant, active-state metadata, theme bundle metadata, or cached update metadata disagree, treat the disagreement as a finding and establish which source is authoritative for the actually executing code.
 
-Outside the selective-runner context, do not change continuation behavior unless the code proves the continuation surface is now entirely retired and a broader change is explicitly required to preserve one consistent production design. If broader semantics are unclear, scope the suppression to the runner context and report the remaining follow-up question.
-
-Do not weaken candidate-alert once-ever delivery ledger, config revision, claims, retry/idempotency, or matching semantics.
+Do not rely on the historical claim `1.2.73` without fresh verification.
 
 ---
 
-## 10. Observability contract
+## 6. Mandatory vulnerability/advisory verification
 
-Preserve the stable top-level provider-facing JSON concepts:
+Search current authoritative sources for **all known relevant WP Job Board Pro vulnerabilities**, not only the previously suspected one.
 
-- `result`;
-- `environment`;
-- `mode`;
-- `reason`;
-- `duration_seconds`;
-- `executed_hooks`;
-- fixed-order per-hook statuses;
-- safety counters.
+For every relevant advisory report:
 
-You may add versioned/additive fields, but do not break the existing fields without a compelling compatibility reason.
+- CVE/advisory ID;
+- title/vulnerability class;
+- affected product name and slug exactly as published;
+- vulnerable version range;
+- patched/fixed version, if proven;
+- CVSS/severity;
+- authentication/privilege requirement;
+- publication and latest modification dates;
+- source/CNA/vendor identity;
+- whether the currently verified staging version falls in the affected range;
+- confidence: CONFIRMED / CORROBORATED / CONFLICTING / UNVERIFIED.
 
-Clarify network telemetry:
+Special handling for the prior privilege-escalation concern:
 
-- retain hard WP HTTP pre-transport blocking;
-- do not imply that `actual_external_network=0` proves absence of every possible raw socket/network mechanism unless such coverage is actually implemented;
-- prefer an additive sanitized field/name that explicitly states WP HTTP transport was blocked/intercepted, while keeping old output compatibility where practical.
+- independently verify whether `CVE-2024-12213` is the correct record;
+- verify whether the affected range is `< 1.2.85`, `<= 1.2.76`, another range, or source-dependent;
+- verify the oldest confirmed patched version and distinguish “confirmed patched in X” from “all later versions proven safe”;
+- explicitly inspect current CNA/Wordfence affected-version data and current NVD text/configuration;
+- if a current source mentions a different-looking version such as a `2.x` range, determine whether it refers to the same WP Job Board Pro product, a related non-Pro plugin, Superio theme packaging, or inconsistent advisory metadata. **Do not merge different product/version lines by assumption.**
 
-Add only minimum business-progress telemetry useful for diagnosing bounded processing, for example per-hook aggregate counts such as:
+Also determine whether there are other advisories affecting the currently installed version or the prospective target version.
 
-- selected;
-- processed;
-- succeeded;
-- failed;
-- has_more.
-
-Only emit aggregates actually supported by the callback/result contract. Do not invent success counts from absence of errors.
-
-No PII/secrets/raw queries/payloads in output or reports.
+Do not perform exploit validation against the site.
 
 ---
 
-## 11. Normal-path responsibilities to remove or move
+## 7. Latest official version and clean-artifact provenance
 
-The normal 15-minute path should no longer fail solely because of these activation/history diagnostics:
+Establish the latest official/vendor-supported WP Job Board Pro version with the highest confidence available today.
 
-- fixed protected Action Scheduler ID32733 `pending/0` state;
-- global Action Scheduler pending fingerprint/count stability;
-- protected business aggregate/component fingerprint equality;
-- real-business-due count equals zero;
-- all owned claim families globally equal zero;
-- full global cron fingerprint equality unrelated to targeted owned events;
-- non-allowlisted cron fingerprint equality as a per-fire business gate;
-- repeated candidate-expiry/legacy-retirement evidence on every hook transition.
+Evidence hierarchy:
 
-Move those checks into deep diagnostic/deploy/periodic health tooling as defined above.
+1. official ApusThemes/WP Job Board Pro or Superio release/changelog/package metadata;
+2. official ThemeForest/Envato Superio bundle/changelog metadata where WPJBP is distributed as a bundled plugin;
+3. signed/official package metadata already legitimately present locally;
+4. reputable third-party vulnerability/version metadata only as corroboration, not the sole basis for `latest official`.
 
-Important: removing a normal-run gate does **not** authorize executing broad cron, Action Scheduler, vendor senders, candidate auto-expiry, payment, or production behavior. Existing execution boundaries remain fixed.
+Report:
 
----
+- latest official version proved;
+- source and release/update date if available;
+- whether the release is standalone or bundled with a specific Superio release;
+- PHP/WordPress/WooCommerce/other minimum requirements if published;
+- whether a clean package is available for the future staging upgrade.
 
-## 12. Static/private acceptance before staging integration
+Inspect these historical local artifact facts without changing them:
 
-Before touching staging, prove the redesign in an isolated/source-only way.
+- `/home/u601262303/repo/vendor-artifacts/wp-job-board-pro.zip` was previously identified as historical `1.2.66`;
+- `/home/u601262303/repo/vendor-artifacts/wp-job-board-pro-1.2.73.zip` was previously identified as contaminated/customized and must not be promoted to clean provenance merely because its filename/version matches.
 
-At minimum validate:
+Also inspect only reasonable known local/package locations for a newer clean artifact, such as the repository vendor-artifacts area and Superio bundled-plugin/package locations. Do not perform an unbounded home-directory crawl.
 
-- shell syntax and PHP lint;
-- fixed allowlist/order unchanged and duplicated literals remain consistent or are consolidated safely;
-- zero-argument normal mode accepted;
-- arbitrary args/options/injection strings rejected before WordPress execution;
-- `--check-only`/deep diagnostic executes no business hook;
-- normal scheduled mode rejects feature branch/non-staging branch;
-- feature diagnostic contract, if retained, cannot become normal scheduled execution;
-- overlap lock behavior;
-- fail-closed missing guard/manifest/deploy mismatch cases;
-- preflight classification for 0/1/2/3 due hooks;
-- exact fixed execution order;
-- child error and timeout stop later hooks;
-- final targeted timestamp verification catches executed/not-due mismatch, duplicate event, changed args, wrong recurrence, wrong callback;
-- no broad cron/AS command path exists;
-- HTTP/mail/payment guard matrix remains effective;
-- candidate runner-context continuation suppression produces no continuation cron row and preserves bounded `has_more` semantics;
-- deep diagnostic mode remains no-execution/read-only;
-- structured output is sanitized and schema-compatible.
+For every candidate ZIP/package used as evidence, record:
 
-Use fixtures/mocks/private harnesses that do not send real mail, payments or external HTTP and do not mutate real staging business data.
+- exact path/source;
+- SHA-256;
+- plugin header/constant version;
+- archive root/layout;
+- ZIP safety/path traversal result;
+- provenance classification: OFFICIAL_CLEAN / HISTORICAL_ONLY / CUSTOMIZED_CONTAMINATED / UNKNOWN;
+- whether it is eligible for a future controlled upgrade.
 
-Do not manually run the live zero-argument staging runner as a test.
+If no clean official target artifact is available, do **not** block the audit itself. Conclude that the implementation upgrade is blocked pending user acquisition of the exact official package.
 
 ---
 
-## 13. Pre-integration live staging acceptance gate
+## 8. Raspitajse/WPJBP dependency and customization inventory
 
-Immediately before staging integration/deployment, perform one fully guarded read-only live snapshot using the accepted safety mechanism. Do not execute business hooks.
+Inventory the **current dependencies that matter to an upgrade** without reverse-engineering irrelevant vendor internals.
 
-Prove at minimum:
+Search current owned/source code for direct dependencies on WPJBP and Paid Listings, including as applicable:
 
-- fresh `origin/staging` still equals baseline and source worktree is clean;
-- current runtime/deploy marker corresponds to baseline;
-- runtime environment staging;
-- `DISABLE_WP_CRON=true`;
-- current accepted three callback/event contracts valid;
-- continuation rows `0`;
-- legacy daily/shared-expiry callbacks/events `0`;
-- retired vendor candidate-job and employer-candidate senders `0`;
-- candidate auto-expiry disabled;
-- Action Scheduler current state captured for comparison but not forced to historical immutability;
-- ID32733 status/attempts recorded for protected comparison;
-- protected business aggregate/component fingerprints captured;
-- current owned event timestamps captured;
-- no current runner lock/process conflict that would make deployment unsafe.
+- `WP_Job_Board_Pro_*` classes/static methods/functions;
+- WPJBP hooks/actions/filters;
+- custom AJAX/REST callback replacement/removal;
+- post types such as jobs, employers, candidates, alerts, packages;
+- WPJBP meta keys consumed by Raspitajse-owned code;
+- template overrides under child theme/custom layers;
+- package/Paid Listings integration points;
+- candidate/job alert management/security adapters;
+- owned job-expiry and notification cutovers;
+- candidate auto-expiry disablement;
+- legacy vendor sender suppression;
+- cron/scheduler assumptions relevant to plugin bootstrap;
+- employer/profile lookup dependencies;
+- dashboard/frontend templates directly tied to WPJBP markup or methods.
 
-If material protected/business drift is found, STOP before integration.
+Do not treat every WPJBP internal symbol as a migration requirement. Report only dependencies that Raspitajse still uses or deliberately suppresses.
 
-Natural owned timestamp movement caused by the already-accepted scheduler is not itself drift; attribute by hook/event shape and current time rather than comparing to stale historical timestamp constants.
+For each material dependency classify:
 
----
+- KEEP compatibility contract;
+- REDESIGN after upgrade if vendor internals changed;
+- DROP obsolete vendor customization;
+- TEST ONLY because owned code should already isolate it.
 
-## 14. Staging integration and deployment
-
-After all pre-integration gates pass:
-
-1. integrate the scoped implementation into `staging` through the repository workflow;
-2. deploy only the changed Raspitajse-owned runtime files required by this task;
-3. update any new deploy-integrity manifest and the existing deploy marker atomically/in the proven safe order;
-4. verify source/runtime parity for the changed owned files;
-5. keep the Hostinger scheduler untouched;
-6. do not manually invoke the normal runner after deployment.
-
-If a natural scheduler fire lands during the short HEAD/marker/runtime transition, the runner must fail closed rather than partially execute. Report any observed fail-closed provider/runtime evidence if available; do not treat safe fail-closed as business regression.
-
-Do not modify production.
+Include migration risk: LOW / MEDIUM / HIGH / CRITICAL.
 
 ---
 
-## 15. Post-deploy two-stage acceptance
+## 9. Vendor-file normalization inventory
 
-Because Codex does not have the authorized hPanel provider-output surface, final acceptance is explicitly two-stage.
+Revisit the three known customized WPJBP files and find any additional **current site-specific vendor-file modifications that materially affect upgrade behavior**.
 
-### Stage A — implementation/deploy readiness
+Known required files:
 
-After deployment, take a fresh guarded read-only T0 snapshot of the redesigned runtime and prove:
+1. `wp-content/plugins/wp-job-board-pro/includes/class-job-alert.php`
+2. `wp-content/plugins/wp-job-board-pro/includes/email-templates-default/html-job-alert-notice.php`
+3. `wp-content/plugins/wp-job-board-pro/templates/misc/my-jobs-alerts.php`
 
-- staging source HEAD = fresh `origin/staging` = deploy marker;
-- changed runtime files match source;
-- runner/guard/deep diagnostic syntax/lint and deployment integrity pass;
-- fixed callback/event contracts valid;
-- no continuation row;
-- no business/mail/payment/external side effect from diagnostics;
-- protected business state unchanged from the pre-integration snapshot except legitimate owned cron timestamp movement attributable to natural scheduler fires during deployment;
-- Action Scheduler not executed by this task;
-- production untouched.
+For each, establish:
 
-Then publish:
+- what site-specific behavior is still present today;
+- whether that behavior is reachable or already superseded by Raspitajse-owned code;
+- whether a clean vendor upgrade should overwrite/remove it;
+- whether any surviving business/UI requirement must first exist in an owned layer;
+- whether a child-theme/template override, owned plugin adapter, or no replacement is the correct post-upgrade location.
 
-`PARTIAL — READY_FOR_HUMAN_NATURAL_FIRE_OBSERVATION`
+Use git history/current code and clean-artifact comparison only where provenance is trustworthy. Do not use the contaminated 1.2.73 archive as a clean baseline.
 
-and STOP.
+If exact upstream diff cannot be proven without a clean same-version artifact, state that limitation. It is sufficient to identify site-specific current behavior and upgrade overwrite risk without fabricating a vendor-original diff.
 
-The report must include the exact final staging SHA, T0 owned timestamps, expected redesigned output schema, and instruct the human operator to return the **first complete natural Hostinger View Output JSON after that T0**. Do not ask the human to change or manually trigger the scheduler.
-
-### Stage B — resume after human supplies first natural provider output
-
-On resume:
-
-- fetch fresh refs and re-read this task/README;
-- confirm `origin/staging` still equals the Stage A final staging SHA; otherwise STOP with mismatch;
-- accept only the complete first natural provider JSON after T0 as human/provider evidence;
-- take one fully guarded read-only T1 snapshot promptly;
-- reconcile T0 -> provider fire -> T1.
-
-PASS requires:
-
-- provider `result=PASS`, `environment=staging`, `mode=run`;
-- redesigned runner reports the expected lightweight execution path/process count or equivalent observability proving the old `5 + 2N` deep path is gone;
-- only the fixed three hooks are represented, in fixed order;
-- each reported `executed` hook advances exactly one hourly recurrence;
-- each reported `not_due` hook remains unchanged for that observed fire window;
-- no continuation event created;
-- callback/event shape remains exact;
-- provider HTTP/mail/PHPMailer/SMTP/payment counters satisfy the guard contract;
-- no unexpected WP HTTP transport escapes;
-- protected business fingerprints unchanged except legitimate business mutations only if real due work existed and the task contract explicitly proves them safe. For this acceptance window, prefer/require no real business side-effect fixture; do not fabricate business work;
-- no broad cron or AS execution;
-- production untouched.
-
-If provider output is ERROR/LOCKED/ambiguous, or T0/T1 attribution fails, do not improvise. Report PARTIAL/FAIL with exact safe blocker. Do not mutate the Hostinger scheduler as a recovery shortcut.
+The target architecture remains: vendor WPJBP files should return to clean vendor ownership during the controlled upgrade wherever Raspitajse business behavior is already owned elsewhere.
 
 ---
 
-## 16. Protected behavior invariants
+## 10. Security-boundary compatibility review
 
-Throughout implementation and acceptance preserve:
+Pay special attention to whether a newer WPJBP can coexist with the Raspitajse security/communications boundary already accepted.
 
-- candidate profiles do not auto-expire by age;
-- employer→candidate alerts remain retired;
-- candidate→job owned evaluator remains the only active candidate job-alert sender path;
-- job listing expiry remains separate from package entitlement expiry;
-- package 30-day consumption validity remains separate from published-job duration;
-- SenderPolicy and mail-safety behavior remain intact;
-- no real SMTP transport during tests;
-- no payment/charge/refund execution;
-- ID32733 is never executed;
-- no broad Action Scheduler runner;
-- no production access.
+At minimum evaluate the future upgrade risk for:
 
-If any of these invariants would need to change, STOP and report scope conflict.
+- alert add/remove AJAX and admin-AJAX endpoints replaced by the owned alert-management security adapter;
+- role/profile/capability/nonce/ownership checks introduced in 1.84;
+- REST alert management remaining disabled where intended;
+- candidate→job vendor sender remaining retired while the owned candidate evaluator continues;
+- employer→candidate alerts remaining retired;
+- legacy daily expiry notices remaining retired;
+- candidate auto-expiry remaining disabled;
+- owned job listing expiry and employer pre-expiry notification hooks remaining authoritative;
+- fixed selective staging cron runner retaining exactly its three owned hooks;
+- SenderPolicy channels and caller-independent From/Reply-To behavior;
+- package/Paid Listings entitlement flow and the canonical 30-day consumption policy;
+- HPOS-safe Raspitajse Commerce employer/order logic;
+- current frontend/dashboard template expectations.
 
----
-
-## 17. HOST_NAMESPACE_PRESSURE
-
-Known `HOST_NAMESPACE_PRESSURE / bwrap ENOSPC` still applies.
-
-On first confirmed signature:
-
-- activate the documented circuit breaker;
-- do not repeatedly retry the same sandbox-dependent helper;
-- use proven namespace-free Git/filesystem/WP-CLI methods;
-- do not wait for host capacity;
-- do not use broad process kills;
-- if a bounded task-private child exceeds its timeout, inspect and terminate only that exact child/process group.
-
-This does not authorize bypassing scheduler, source, deploy, runtime, or safety gates.
+Do not assume a newer vendor version preserves hook names, callback priorities, class signatures, template structures, post/meta contracts, or bundled Paid Listings compatibility. Identify exact contracts that the future staging upgrade must prove.
 
 ---
 
-## 18. Acceptance criteria
+## 11. Required controlled staging-upgrade plan
 
-Final PASS requires all of the following:
+Design the future implementation task, but do not execute it.
 
-- bounded source scope only;
-- runner and guard retained;
-- Hostinger scheduler untouched and still exactly one `*/15` zero-argument runner entry by human/provider context;
-- fixed three-hook allowlist/order unchanged;
-- no arbitrary execution surface;
-- no broad cron/AS path;
-- normal mode staging-only;
-- overlap/timeouts/watchdog/fail-closed preserved;
-- lightweight preflight/final architecture implemented;
-- normal process shape approximately `2 + N` and old repeated deep snapshots removed from natural path;
-- deep diagnostic health capability preserved separately and executes no business hook;
-- source/runtime deployment integrity remains fail-closed without per-fire full-tree traversal, or full-tree traversal retained with documented blocker if no safe replacement exists;
-- fixed ID32733/global AS/protected-business/real-due-zero checks no longer gate the normal 15-minute path;
-- candidate selective-runner continuation mismatch resolved with no continuation scheduler surface;
-- provider JSON remains structured/sanitized and network scope wording is accurate;
-- static/private tests PASS;
-- staging integration/deploy PASS;
-- Stage A guarded T0 PASS;
-- first natural Hostinger fire observed by human/provider and Stage B T0/fire/T1 reconciliation PASS;
-- no real external network/mail/SMTP/payment side effects;
-- Action Scheduler execution `0`;
+The plan must specify:
+
+### Pre-upgrade gates
+
+- exact trusted target package/version and SHA-256;
+- source/staging/deploy baseline clean;
+- database backup requirement because plugin updates may perform option/schema/data migrations;
+- plugin/theme file backup or Git-reconstructable rollback state;
+- sanitized snapshots/fingerprints for relevant plugin options, WPJBP post/status counts, owned alerts/jobs/employers/candidates/packages/orders, cron/Action Scheduler state, and accepted Communications/Commerce contracts;
+- mail/network/payment safety enabled;
+- current Hostinger selective scheduler handled safely during the short deploy window without broad cron execution;
+- no production touch.
+
+### Upgrade execution boundary
+
+- staging only;
+- clean vendor package only;
+- no manual edits to the new vendor tree to “restore” legacy patches;
+- vendor customizations must be normalized, with needed behavior supplied by owned layers;
+- no broad plugin/theme mass update;
+- no broad cron/Action Scheduler execution;
+- one bounded source/deploy path with rollback point.
+
+### Post-upgrade acceptance matrix
+
+At minimum include:
+
+1. plugin loads/activates without fatal or migration error;
+2. installed/runtime version equals exact target;
+3. vendor tree matches trusted package for files not intentionally excluded by deployment mechanics;
+4. registration/security boundary no longer accepts caller-selected privileged role according to source/isolated safe test evidence;
+5. owned alert-management security endpoints remain authoritative and forbidden paths stay forbidden;
+6. candidate→job owned evaluator remains active and vendor sender remains suppressed;
+7. employer→candidate alerts remain retired;
+8. candidate auto-expiry remains disabled;
+9. owned job expiry + employer pre-expiry notification remain exact;
+10. fixed three-hook selective runner callbacks/events remain valid and no new continuation/broad cron surface appears;
+11. SenderPolicy remains intact;
+12. employer/candidate dashboards and alert UI/templates render without fatal/deprecated API breakage;
+13. job search/detail/profile/application core WPJBP flows remain functional;
+14. Paid Listings/package selection/purchase/entitlement integration remains compatible;
+15. canonical 30-day entitlement and listing-duration separation remains unchanged;
+16. Raspitajse Commerce employer/order HPOS behavior remains unchanged;
+17. no unexpected cron/Action Scheduler/vendor heartbeat behavior is introduced;
+18. no real mail/SMTP/payment/external runtime side effects during acceptance;
+19. protected business state changes only where the vendor migration explicitly and correctly requires it;
+20. full staging E2E follow-up remains possible after the upgrade.
+
+### Rollback
+
+Define rollback triggers and order. A file-only rollback is insufficient if the plugin performs DB migrations. Require restoring a consistent database + plugin/source/runtime state when necessary, then re-proving the accepted scheduler/security/communications fingerprints.
+
+Do not execute backups or rollback in this audit unless a strictly read-only inventory of existing backup capability is needed.
+
+---
+
+## 12. Risk matrix
+
+Produce a concise risk matrix covering at least:
+
+- current-version security exposure;
+- clean target artifact availability/provenance;
+- version gap size and changelog uncertainty;
+- vendor customized files overwritten by upgrade;
+- changed hooks/classes/templates/API contracts;
+- Paid Listings companion compatibility;
+- possible DB migration/options changes;
+- alert/security adapter compatibility;
+- cron/scheduler callback drift;
+- frontend/dashboard/template regressions;
+- rollback completeness.
+
+For each: likelihood, impact, evidence, mitigation, and whether it blocks a controlled staging upgrade.
+
+---
+
+## 13. Decision outcome
+
+Finish with exactly one of these outcomes:
+
+### `READY_FOR_CONTROLLED_STAGING_UPGRADE`
+Use only when the current security/version state is understood, a specific target version is justified, a clean trustworthy target artifact is available, material compatibility dependencies are inventoried, and the upgrade/rollback acceptance plan is sufficient.
+
+### `BLOCKED_NEEDS_CLEAN_VENDOR_ARTIFACT`
+Use when the target version/security need is sufficiently established but no clean trustworthy package eligible for upgrade is available. State the exact official package/version the user must obtain and from where.
+
+### `BLOCKED_SECURITY_OR_VERSION_PROVENANCE`
+Use when current vulnerability range, patched version, latest official version, or product/version identity cannot be established with sufficient confidence. State the exact missing authoritative evidence.
+
+### `BLOCKED_COMPATIBILITY_RISK`
+Use when a material Raspitajse dependency cannot yet be safely mapped/tested and must be resolved before upgrade execution. State one bounded follow-up needed.
+
+### `NO_UPGRADE_REQUIRED`
+Use only if fresh evidence proves the currently installed version is already an appropriate supported/security-fixed target and there is no material version/security reason to upgrade. This outcome requires unusually strong evidence; do not use it merely because an official latest version cannot be found.
+
+If multiple blockers exist, choose the blocker that must be resolved first and list secondary blockers separately.
+
+---
+
+## 14. Acceptance criteria
+
+PASS for the **audit** requires all of the following even if the architecture outcome is a BLOCKED state:
+
+- fresh baseline `77d3a1019e0248a2abacd607fd508ed6868da70b` verified;
+- source/runtime/active WPJBP version verified from current evidence;
+- current relevant vulnerability records researched from fresh authoritative sources;
+- product/version/advisory conflicts explicitly resolved or reported;
+- latest official/vendor-supported version established or the exact provenance gap reported;
+- local/candidate artifact provenance classified without trusting contaminated history;
+- material Raspitajse/WPJBP dependencies inventoried;
+- three known vendor-customized files explicitly assessed plus any additional material upgrade-sensitive vendor customizations found;
+- security/communications/package/cron compatibility risks assessed;
+- exact future staging upgrade acceptance and rollback plan produced;
+- one decision outcome selected from section 13;
+- source changes/commits/deploys `0/0/0`;
+- plugin install/update/deactivate/reactivate `0/0/0/0`;
+- database/business mutations `0`;
+- scheduler/manual cron/Action Scheduler executions `0`;
+- exploit/registration/role-change tests `0`;
+- real mail/SMTP/payment `0`;
+- WordPress runtime external HTTP `0` (control-plane public research is separately authorized and must be listed by source);
 - production touched `NO`.
 
-If Stage A is complete but human natural-fire evidence has not yet been supplied, result must be PARTIAL/READY as specified, not PASS.
+A BLOCKED readiness outcome is not an audit failure if the blocker is evidenced precisely. Do not manufacture readiness.
 
 ---
 
-## 19. Final report requirements
+## 15. Final report
 
-Final report must include:
+The report must include:
 
-- result and whether Stage A only or whole task PASS;
-- baseline, feature SHA if used, final staging SHA, deploy marker and source/runtime parity;
-- exact files changed and why;
-- before/after normal runner process/bootstrap model;
-- every-run core retained;
-- deep diagnostic checks moved out of normal path;
-- deploy-integrity mechanism and failure behavior;
-- candidate continuation-policy implementation and tests;
-- output schema/telemetry changes;
-- static/private test matrix and counts;
-- pre-integration protected snapshot summary;
-- Stage A T0 and, on final resume, provider/T1 attribution;
-- current Action Scheduler count/fingerprint and ID32733 status/attempts for evidence only, with AS executions `0`;
-- protected business fingerprint before/after;
-- HTTP/mail/SMTP/payment counters;
-- scheduler mutations `0`;
-- production touched `NO`;
-- cleanup status;
+- result and one decision outcome;
+- exact source/staging/deploy baseline and cleanliness;
+- current WPJBP source/runtime/active version evidence;
+- companion Paid Listings/Superio coupling facts where relevant;
+- advisory table with IDs, affected/patched ranges, severity, dates, sources, current-version applicability, and confidence;
+- explicit analysis of any `1.2.76` / `1.2.85` / `2.x` or other conflicting version wording discovered;
+- latest official version evidence and confidence;
+- artifact inventory with SHA-256/provenance/eligibility;
+- Raspitajse dependency/customization matrix;
+- assessment of the three known customized vendor files;
+- risk matrix;
+- exact controlled staging-upgrade plan and acceptance matrix;
+- rollback plan including DB-migration considerations;
+- public research sources/domains and retrieval timestamps, without secrets;
+- guarded WordPress inspection counters if any bootstrap was used;
+- all mutation/execution counters required by acceptance criteria;
+- production touched NO;
 - exactly one proposed next task, not created or started.
 
-If whole-task PASS is achieved, the proposed next task should leave the cron/scheduler implementation arc and move to the higher-value next area:
+Next-task rule:
 
-**WP Job Board Pro security/upgrade readiness audit with fresh authoritative vulnerability/version verification.**
+- if `READY_FOR_CONTROLLED_STAGING_UPGRADE`: propose **Zadatak 2.14 — Controlled WP Job Board Pro staging upgrade and vendor normalization with pre/post security/compatibility acceptance**;
+- if `BLOCKED_NEEDS_CLEAN_VENDOR_ARTIFACT`: propose one narrow artifact acquisition/provenance-verification task after the user supplies the official package;
+- if `BLOCKED_SECURITY_OR_VERSION_PROVENANCE`: propose one narrow authoritative-version/advisory evidence-resolution task;
+- if `BLOCKED_COMPATIBILITY_RISK`: propose one narrow compatibility-resolution task for the first blocker;
+- if `NO_UPGRADE_REQUIRED`: propose the next higher-value read-only audit of remaining Raspitajse custom Woo/legacy child-theme business code.
 
-Do not implement that upgrade in 2.12.
-
-STOP after publishing the report. Do not begin 2.13.
+STOP after publishing the report. Do not begin 2.14.
