@@ -1,8 +1,8 @@
-# Zadatak 2.14 — Controlled WP Job Board Pro staging upgrade and vendor normalization with pre/post security/compatibility acceptance
+# Zadatak 2.15 — Authorize deterministic Git EOL preservation for pinned vendor packages and resume the controlled WPJBP staging upgrade
 
 Status: READY
 Baseline: 77d3a1019e0248a2abacd607fd508ed6868da70b
-Previous task: 2.13
+Previous task: 2.14
 Target environment: staging
 Production: FORBIDDEN
 
@@ -10,493 +10,478 @@ Production: FORBIDDEN
 
 Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, and `origin/staging`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning, creating a feature branch/worktree, downloading packages, bootstrapping WordPress, taking backups, or changing source. Treat `codex-tasks` as READ-ONLY.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning, creating a worktree, downloading artifacts, changing `.gitattributes`, staging files, bootstrapping WordPress, or touching runtime. Treat `codex-tasks` as READ-ONLY.
 
-Read the final Zadatak 2.13 PASS report in full. Its decision was:
-
-`READY_FOR_CONTROLLED_STAGING_UPGRADE`
+Read the final Zadatak 2.13 PASS report and the final Zadatak 2.14 PARTIAL report in full.
 
 Verify fresh `origin/staging` is exactly:
 
 `77d3a1019e0248a2abacd607fd508ed6868da70b`
 
-If it differs, STOP and report the mismatch. Do not silently rebase, widen scope, or auto-select a newer plugin version.
+Verify the live staging deploy marker is the same commit and the primary staging worktree is clean. If any baseline differs, STOP and report the mismatch. Do not silently rebase or widen scope.
 
-Execute only Zadatak 2.14. Publish all task-state/final reports through the existing `codex-reports` workflow and STOP. Do not begin 2.15 automatically.
-
----
-
-## 1. Goal
-
-Perform one controlled, reversible **staging-only** upgrade transaction that:
-
-1. replaces the current customized WP Job Board Pro `1.2.73` tree with the exact clean official ApusThemes `1.2.86` tree;
-2. upgrades the synchronized companion WP Job Board Pro WC Paid Listings `1.0.16` to exact clean official `1.0.19`;
-3. normalizes WPJBP vendor ownership by removing Raspitajse-specific patches from the vendor tree rather than transplanting them into the new version;
-4. preserves all required Raspitajse business/security behavior through Raspitajse-owned code, configured options, translations, and legitimate overrides;
-5. proves the CVE registration fix, alert/security cutovers, scheduler boundary, communications behavior, package/entitlement behavior, HPOS bridge, and critical frontend/dashboard compatibility on staging;
-6. rolls back completely if any critical gate fails.
-
-This is not a general WPJBP refactor, theme upgrade, WooCommerce upgrade, scheduler redesign, or production change.
+Execute only Zadatak 2.15. Publish the final report through the existing `codex-reports` workflow and STOP. Do not begin 2.16 automatically.
 
 ---
 
-## 2. Pinned official targets and provenance gate
+## 1. Accepted context
 
-The only authorized upgrade targets for this task are:
+Zadatak 2.13 PASS concluded:
 
-### WP Job Board Pro
+`READY_FOR_CONTROLLED_STAGING_UPGRADE`
 
-- target version: `1.2.86`
-- official metadata: `https://www.apusthemes.com/themeplugins/wp-job-board-pro.json`
-- official package: `https://www.apusthemes.com/themeplugins/wp-job-board-pro.zip`
-- required ZIP SHA-256: `692fbf75f36391524e76db51805c4c79200880436bc9446685b4e9cce19a3f63`
-- required archive root: `wp-job-board-pro`
+The accepted exact upgrade targets are:
 
-### WP Job Board Pro WC Paid Listings
+- WP Job Board Pro `1.2.86` from the official unauthenticated ApusThemes package;
+- WP Job Board Pro WC Paid Listings `1.0.19` from the official unauthenticated ApusThemes package.
 
-- target version: `1.0.19`
-- official metadata: `https://www.apusthemes.com/themeplugins/wp-job-board-pro-wc-paid-listings.json`
-- official package: `https://www.apusthemes.com/themeplugins/wp-job-board-pro-wc-paid-listings.zip`
-- required ZIP SHA-256: `26aebee83ec333302f201fa1782346414064004af4cdb8e24732555d5f640467`
+Pinned package SHA-256 values:
 
-Before any source mutation:
+- WPJBP `1.2.86`: `692fbf75f36391524e76db51805c4c79200880436bc9446685b4e9cce19a3f63`;
+- Paid Listings `1.0.19`: `26aebee83ec333302f201fa1782346414064004af4cdb8e24732555d5f640467`.
 
-- re-fetch metadata and packages anonymously over HTTPS into task-private scratch;
-- require metadata to still identify exactly `1.2.86` and `1.0.19`;
-- require both ZIP hashes to match exactly the pinned values above;
-- re-run CRC, path traversal, absolute-path, duplicate-path, symlink, root-layout, header, and version-constant checks;
-- do not use WordPress update APIs, plugin installers, cached update transients, ThemeForest login, license tokens, signed URLs, or reseller packages;
-- if either vendor endpoint now serves a different version or the same version with different bytes, STOP with `BLOCKED_TARGET_PROVENANCE_CHANGED` and do not upgrade.
+The current staging versions remain:
 
-Historical/local packages remain ineligible:
+- WPJBP `1.2.73`;
+- Paid Listings `1.0.16`.
 
-- old `1.2.66` artifact: historical only;
-- contaminated/customized `1.2.73` artifact: never a clean baseline;
-- Superio bundled WPJBP `1.2.72` and Paid Listings `1.0.15`: stale historical packages only.
+The current WPJBP version is affected by `CVE-2024-12213`; the exact clean `1.2.86` target is beyond every relevant published fixed/affected threshold verified in 2.13 and statically contains the corrected registration role/nonce logic.
 
-Do not auto-upgrade to a newer version than the pinned target even if one becomes available during execution.
+Zadatak 2.14 correctly stopped before any runtime mutation with:
+
+`BLOCKED_EXACT_VENDOR_BYTE_PARITY_BY_REPOSITORY_EOL_POLICY`
+
+2.14 proved before stopping:
+
+- both official package hashes still matched;
+- archive safety/root/version/constant validation passed;
+- prepared WPJBP and Paid Listings trees were byte-for-byte identical to the official extracted packages before Git staging;
+- all 1,185 PHP files linted successfully;
+- all changed vendor paths were inside the two authorized plugin roots;
+- Raspitajse/site-specific markers in the clean target vendor trees were zero;
+- staging/source/runtime/business state remained unchanged;
+- no commit, push, DB backup/write, WordPress bootstrap, deploy, scheduler mutation, mail, payment, or production action occurred.
+
+The sole blocker was repository EOL policy. Root `.gitattributes` currently forces LF normalization globally and for common text extensions. The official target packages contain 28 text files whose raw official bytes include CRLF and would be changed by the current Git clean filter.
+
+This task explicitly authorizes the narrow repository policy exception required to preserve the two pinned vendor package trees byte-for-byte and then resumes the controlled staging upgrade from the beginning.
 
 ---
 
-## 3. Hard safety boundaries
+## 2. Goal
 
-Production filesystem/database/runtime/WordPress/scheduler access is forbidden.
+Complete two tightly coupled objectives:
 
-Do not modify or upgrade:
+1. establish a deterministic, path-scoped Git EOL policy that preserves the exact official bytes for only the two pinned vendor plugin trees through `git add -> commit -> fresh checkout -> approved deploy`;
+2. after that gate is proven, resume and complete the controlled staging upgrade to WPJBP `1.2.86` and Paid Listings `1.0.19` with the full security, compatibility, protected-state, and rollback acceptance defined by 2.13/2.14.
 
-- WordPress core;
-- WooCommerce;
-- Superio parent theme;
-- Superio child theme except for a narrowly necessary Raspitajse-owned compatibility override explicitly justified by acceptance failure;
-- any unrelated plugin;
-- Hostinger/hPanel scheduler configuration;
-- broad WP-Cron or Action Scheduler execution paths.
+The EOL exception is not a general repository policy change and must not weaken LF normalization for Raspitajse-owned code or any other vendor/theme/plugin.
+
+---
+
+## 3. Newly authorized `.gitattributes` scope
+
+The only newly authorized non-vendor source change is the root repository file:
+
+`.gitattributes`
+
+Add exactly two path-scoped rules **after the existing generic text/binary rules**:
+
+```gitattributes
+wp-content/plugins/wp-job-board-pro/** -text !eol
+wp-content/plugins/wp-job-board-pro-wc-paid-listings/** -text !eol
+```
+
+Purpose:
+
+- `-text` explicitly disables Git EOL conversion for those two vendor trees;
+- `!eol` removes the inherited repository `eol=lf` attribute for those paths;
+- all other repository paths retain the existing LF policy unchanged.
 
 Do not:
 
-- call `/wp-cron.php`;
-- run `wp cron event run --due-now`, `--all`, or equivalent broad cron;
-- run the Action Scheduler queue;
-- manually execute the three owned scheduler hooks;
-- create or execute a continuation runner;
-- send real mail/SMTP;
-- perform real payments/refunds;
-- allow unexpected WordPress-runtime external HTTP;
-- submit a malicious live registration request or create a privileged test user;
-- deactivate/reactivate either target plugin merely to force migrations.
+- change or remove any existing global `.gitattributes` rule;
+- add exceptions for any other directory;
+- use a global `core.autocrlf`, `core.eol`, or repository-local config workaround as the persistent solution;
+- use `.git/info/attributes` as the committed solution;
+- add a nested `.gitattributes` inside either vendor plugin tree, because that would contaminate exact vendor-tree parity;
+- use `binary`/`-diff` merely to suppress review visibility;
+- use `git add --renormalize` on the vendor trees;
+- manually copy bytes around the approved Git/deploy path.
 
-The existing accepted human-owned Hostinger scheduler must remain exactly one `*/15 * * * *` zero-argument selective runner. Do not edit, delete, disable, recreate, duplicate, or manually trigger it.
+If the exact two rules above do not preserve official bytes under the host Git version, STOP with `BLOCKED_EOL_PRESERVATION_FAILED`. Do not broaden the policy by improvisation.
 
 ---
 
-## 4. Allowed source scope
+## 4. Canonical vendor-byte parity contract
 
-The intended source mutation is the clean replacement of exactly these vendor trees:
+For this task, `OFFICIAL_CLEAN` means the committed and deployed vendor trees are byte-for-byte equivalent to the exact pinned official package trees for every file path and file content, with no Raspitajse-added file inside either vendor root.
 
-- `wp-content/plugins/wp-job-board-pro/`
-- `wp-content/plugins/wp-job-board-pro-wc-paid-listings/`
+Metadata such as ZIP timestamps is not part of the parity contract; repository/runtime file path set and raw file bytes are.
 
-The replacement must come from the exact clean official package trees, including vendor additions and deletions. Do not hand-merge selected hunks.
+The parity contract must be proven at all of these boundaries:
 
-A **minimal Raspitajse-owned compatibility change** is allowed only if post-upgrade acceptance identifies a concrete regression in an already accepted Raspitajse business/security requirement and the fix can be implemented cleanly outside vendor code without changing business semantics. Such a change must be:
+1. official ZIP -> task-private extracted tree;
+2. extracted tree -> feature working tree before Git staging;
+3. Git index after staging;
+4. committed feature tree materialized into a fresh clean checkout/worktree;
+5. deployed staging runtime tree;
+6. final staging source tree after integration.
 
-- narrowly scoped;
-- independently tested;
-- explicitly listed in the report;
-- not a workaround for an unknown vendor failure.
+Use the same deterministic path+content tree-fingerprint method at each boundary. Also verify file counts/path sets.
 
-If compatibility requires broad Communications/Commerce/theme redesign or business-rule changes, rollback and STOP rather than expanding this task.
+For the 28 EOL-sensitive files identified by the fresh package inspection, prove individually that raw file hashes survive Git staging and fresh checkout. Include the previously demonstrated representative path `wp-content/plugins/wp-job-board-pro/assets/admin/functions.js` in the proof, but validate all affected paths rather than only the example.
 
-No manual edits may remain inside either upgraded vendor tree after normalization.
+Use `git check-attr text eol -- <path>` or equivalent to prove the vendor paths resolve to the intended no-conversion state after the new root rules. Verify a representative Raspitajse-owned PHP/JS file still resolves to the existing LF-normalized policy.
 
----
-
-## 5. Feature branch and static preparation
-
-Create one scoped feature branch/worktree from the exact fresh staging baseline, using the repository workflow in `tasks/README.md`.
-
-Before touching live staging runtime:
-
-1. import the exact clean WPJBP `1.2.86` tree and exact clean Paid Listings `1.0.19` tree into the feature branch;
-2. prove source tree contents correspond to the extracted official package trees;
-3. record deterministic target tree fingerprints and file counts;
-4. run `php -l` across all PHP files in both target trees;
-5. inspect the complete source diff for scope, unexpected deletions, generated files, secrets, production-only paths, and non-target changes;
-6. verify the three historically modified WPJBP files now equal the clean target hashes:
-   - `includes/class-job-alert.php` → `c3eeebe04b2b224664de53d3c22ce7dc8a015d8a27cb4f5984fe65dba01fd431`
-   - `includes/email-templates-default/html-job-alert-notice.php` → `e3d31eeedf312ee1a3beffc1402f1edf49347f46d8692a38344ce44ebb7bece4`
-   - `templates/misc/my-jobs-alerts.php` → `1f251234d315e9eb7b25b54e57a37b48279223a565d1b8ee3c9049f1020155cc`
-7. prove no Raspitajse/site-specific marker or patch remains in the target vendor trees except content that is genuinely upstream in the official packages.
-
-Do not deploy until all static/provenance gates pass.
+If Git index or fresh-checkout bytes differ from the official package at any vendor path, STOP before DB backup/runtime mutation.
 
 ---
 
-## 6. Mandatory rollback point before deploy
+## 5. Hard scope boundary
 
-Before the staging runtime is changed, establish a complete reversible rollback point.
+Authorized source changes are only:
 
-Requirements:
+1. root `.gitattributes` with the exact two rules above;
+2. complete replacement of `wp-content/plugins/wp-job-board-pro/` by the pinned official `1.2.86` tree;
+3. complete replacement of `wp-content/plugins/wp-job-board-pro-wc-paid-listings/` by the pinned official `1.0.19` tree;
+4. a **minimal Raspitajse-owned compatibility fix only if post-upgrade acceptance proves one is strictly required** and the business requirement cannot be preserved without it.
 
-- current source/`origin/staging`/deploy marker still exactly baseline `77d3a1019e0248a2abacd607fd508ed6868da70b`;
-- current WPJBP and Paid Listings source/runtime trees still match the accepted pre-upgrade state;
-- create a restricted staging database backup immediately before the change using an existing safe staging backup/export primitive;
-- backup storage must be access-restricted and must not be committed or exposed in reports;
-- report only sanitized backup identity/checksum/size/timestamp, never DB credentials, SQL contents, PII, recipients, messages, queries, or payment data;
-- if a trustworthy complete DB backup cannot be obtained, STOP before any upgrade with `BLOCKED_NO_RESTORABLE_STAGING_BACKUP`;
-- Git baseline is the authoritative file/source rollback point for the old plugin trees.
+A compatibility fix, if required, must live in an existing Raspitajse-owned layer and must never patch either new vendor tree. Before making such a fix, report the exact failing owned contract in task notes and keep the change minimal.
 
-If the upgrade produces any database/options/schema migration, the DB backup must remain available until the task reaches final PASS or a completed rollback. A file-only rollback is not sufficient after migration.
+Do not modify or upgrade:
 
----
+- Superio or Superio Child;
+- WooCommerce;
+- WordPress core;
+- Elementor or unrelated plugins;
+- Hostinger scheduler configuration;
+- production files/database/runtime/scheduler;
+- vendor packages other than the two exact targets.
 
-## 7. Scheduler lock and T0 protected snapshot
-
-Immediately before live staging deploy/first new-plugin bootstrap:
-
-- acquire the existing selective runner's shared/nonblocking lock using its existing lock primitive/path;
-- prove no runner cycle is active;
-- hold the lock through deployment and initial acceptance/reconciliation;
-- do not alter the Hostinger schedule; any natural overlap must fail locked and execute zero owned hooks.
-
-While the lock is held, take a guarded **read-only T0 snapshot** without invoking the zero-argument runner or any owned hook.
-
-T0 must include sanitized fingerprints/counts for at least:
-
-- active plugin versions/state;
-- relevant WPJBP settings/options by key/presence/hash only, not content bodies;
-- role/capability shape relevant to candidate/employer registration;
-- relevant post types/status counts;
-- candidates, employers, jobs, applications, alerts, packages, orders/refunds and canonical entitlement state;
-- WPJBP/Paid Listings meta-state relevant to Commerce integration;
-- owned Communications and Commerce callback contracts;
-- three owned scheduler events/callbacks;
-- continuation-event count;
-- full/non-allowlisted cron fingerprints;
-- Action Scheduler pending count/fingerprint and ID32733 status/attempts;
-- owned claim state;
-- protected business aggregate/component fingerprints;
-- candidate auto-expiry footprint;
-- configured job-alert subject/content/template presence/hash only;
-- mail/network/payment guard counters.
-
-No PII or raw business payload may appear in the report.
+Do not transplant historical Raspitajse/vendor hunks into the clean target trees. The three historically customized WPJBP files must remain the exact clean `1.2.86` vendor files.
 
 ---
 
-## 8. Controlled staging deployment
+## 6. Fresh official artifact gate
 
-Deploy the prepared feature branch only through the approved staging deployment path:
+Re-fetch only the already authorized public ApusThemes metadata/package endpoints for these two products.
 
-`deployment/deploy-staging.sh changed <feature-branch>`
+Before changing source, require again:
 
-Rules:
+- vendor metadata still reports WPJBP `1.2.86` and Paid Listings `1.0.19`;
+- WPJBP ZIP SHA-256 exactly `692fbf75f36391524e76db51805c4c79200880436bc9446685b4e9cce19a3f63`;
+- Paid Listings ZIP SHA-256 exactly `26aebee83ec333302f201fa1782346414064004af4cdb8e24732555d5f640467`;
+- archive CRC PASS;
+- exactly one expected plugin root per package;
+- zero absolute/drive/traversal paths;
+- zero duplicate paths;
+- zero symlinks;
+- exact header and version constant values;
+- no Raspitajse/site-specific marker in the clean package trees.
 
-- staging only;
-- keep both plugins active; do not toggle activation;
-- do not update Superio;
-- do not mass-update plugins;
-- do not run the WordPress plugin installer/upgrader;
-- do not bypass deploy marker/manifest/source parity controls;
-- do not manually copy vendor files around failed deployment guards.
+If a same-version vendor artifact has changed bytes, STOP for provenance reconciliation. Do not accept a new hash automatically.
 
-After file deployment, perform exactly one fully guarded WordPress bootstrap sufficient to load the active plugin set and detect runtime/vendor migration behavior.
+Do not use WordPress update APIs, plugin installers/upgraders, cached update transients, ThemeForest bundled ZIPs, historical local ZIPs, reseller mirrors, authenticated downloads, or license/account credentials.
 
-Instrumentation must fail closed for:
-
-- WordPress HTTP transport;
-- wp_mail/PHPMailer/SMTP;
-- payment/refund paths.
-
-Record any DB/options/schema write attributable to the vendor bootstrap. If an activation-only migration is required, STOP for a new explicit authorization; do not deactivate/reactivate the plugins.
-
-Any unexpected user/order/application/message/listing mutation is an immediate rollback trigger.
+Task-private downloaded/extracted artifacts must be protected and removed after they are no longer required for final parity/rollback evidence.
 
 ---
 
-## 9. Security acceptance — CVE-2024-12213
+## 7. Feature preparation and pre-runtime acceptance
 
-The old `1.2.73` source was confirmed vulnerable to unauthenticated privilege escalation in the registration path. The target must prove the remediation without attacking staging.
+Create one scoped feature branch/worktree from exact fresh `origin/staging`. Keep the primary scheduled worktree on `staging` until bounded integration.
 
-PASS requires both:
+Sequence:
 
-1. static target-source proof that the registration handler:
-   - respects registration enablement;
-   - validates the intended candidate/employer nonce/security path;
-   - maps request intent to only the fixed candidate/employer roles;
-   - does not pass arbitrary caller-selected privileged role input into user creation;
-2. an isolated no-real-user/no-live-request test proving caller-selected privileged roles cannot reach user creation and only the two intended role paths can proceed after the required validation.
+1. add only the two authorized `.gitattributes` rules;
+2. mechanically replace both vendor roots from the exact official extracted packages;
+3. stage `.gitattributes` first so the intended attributes are authoritative, then stage the two vendor trees;
+4. prove index byte parity before commit;
+5. review the entire staged diff and scope;
+6. commit the feature only after all pre-runtime gates pass;
+7. materialize a fresh clean checkout/worktree from the feature commit and re-prove exact vendor byte parity there.
 
-Do not create administrator users, mutate roles, or submit a malicious request to the actual staging registration endpoint.
+Mandatory static checks:
 
-Any failure here requires rollback.
+- shell/PHP syntax for any owned tooling touched;
+- `php -l` for every PHP file in both target vendor trees, using bounded local parallelism if useful;
+- no failed PHP lint;
+- target plugin headers/constants exactly `1.2.86` / `1.0.19`;
+- exact official file counts/path sets/tree fingerprints after Git round-trip;
+- the three historically modified WPJBP files exactly match the clean target hashes established in 2.13;
+- zero Raspitajse marker inside both new vendor roots;
+- no secrets/private keys/production paths introduced;
+- staged path set contains only `.gitattributes`, the two exact vendor roots, and any separately justified minimal owned compatibility fix;
+- any `git diff --check` warning caused solely by unchanged official vendor whitespace is recorded as vendor provenance evidence, not “fixed”; any warning outside the two clean vendor roots is a FAIL.
 
----
+Do not edit official package whitespace or line endings to make lint/diff tools quieter.
 
-## 10. Owned alert/security/communications acceptance
-
-After the clean vendor tree is active, prove the existing Raspitajse-owned boundary still wins over vendor registrations.
-
-Required:
-
-- every intended alert add/remove AJAX/admin-AJAX route has exactly one owned mutation callback and zero vendor mutation callbacks;
-- role/profile/read-capability/nonce/ownership/type/ID/allowlist/frequency/sanitization controls from the owned alert-security adapter remain effective;
-- alert REST management remains disabled where intended;
-- candidate→job owned evaluator/event/callback remains exact;
-- vendor candidate→job sender registration count is zero;
-- employer→candidate sender remains retired;
-- employer→candidate creation surface/widget/new alert creation remains retired;
-- candidate automatic age/time expiry remains disabled;
-- owned job-listing expiry and employer pre-expiry notice callbacks/events/policies remain exact;
-- all retired vendor daily/expiry senders/checkers remain absent;
-- SenderPolicy channel mapping, caller-independent From/Reply-To, staging recipient safety/redirection, and HTML handling remain exact;
-- no unexpected vendor heartbeat/update/telemetry callback is introduced into the accepted scheduler/communications boundary.
-
-Use guarded/isolated fixtures. Real mail/SMTP must remain zero.
+If a deterministic host/tooling limitation appears, use the already proven shell/PHP/unzip/zipinfo/hash primitives. Do not install Python merely because `python3` is absent. Do not repeatedly retry a known namespace-pressure mechanism; use the documented namespace-free path once and fail closed if it cannot proceed.
 
 ---
 
-## 11. Scheduler acceptance
+## 8. Pre-upgrade staging safety gates
 
-The selective scheduler architecture must remain unchanged by the plugin upgrade.
+Only after the committed Git round-trip parity gate passes may the task approach staging runtime.
 
-Prove:
+Before deploy:
 
-- exactly the same three owned hooks exist in the same fixed order:
-  1. `raspitajse_job_listing_expiry_evaluator`
-  2. `raspitajse_employer_job_expiry_notice_evaluator`
-  3. `raspitajse_candidate_job_alert_evaluator`;
-- each has exactly one expected hourly/3600 zero-argument event and exact callback contract;
-- continuation event count remains zero;
-- legacy daily/shared vendor callbacks/events remain retired;
-- no broad cron runner or Action Scheduler runner is introduced;
-- non-allowlisted cron changes are zero unless individually proven to be a necessary, safe vendor migration artifact;
-- Action Scheduler executions remain zero and ID32733 remains unchanged unless a previously documented invariant explicitly permits otherwise.
+1. verify fresh `origin/staging` is still the required baseline and has not advanced;
+2. verify the primary staging source worktree remains clean and on `staging`;
+3. verify staging deploy marker/runtime are still the accepted pre-upgrade state;
+4. verify mail fail-closed safety, WP HTTP pre-transport blocking, SMTP/payment/refund guards, and production boundary;
+5. acquire the existing selective-runner shared lock and prove no runner is active; hold that lock through deploy, guarded bootstrap, T1 acceptance, and final consistent integration/rollback decision;
+6. do not edit, disable, recreate, or manually trigger the Hostinger scheduler; a natural overlap while the lock is held must fail locked and execute no owned hook;
+7. capture sanitized T0 deep/protected state using existing read-only diagnostic primitives, including:
+   - active plugin versions/state;
+   - WPJBP/Paid Listings relevant option/settings fingerprints;
+   - roles/capability shape relevant to employer/candidate registration;
+   - relevant WPJBP post/status counts;
+   - candidate/job/employer/application/alert/package/order/refund protected fingerprints/counts;
+   - package entitlement/30-day-policy state;
+   - cron/full and non-allowlisted cron state;
+   - three owned scheduler callback/event contracts;
+   - Action Scheduler pending count/fingerprint and ID32733 state;
+   - Communications/Commerce callback and security contracts;
+   - zero owned claims/continuation where expected;
+8. take a **restorable, consistent staging database backup immediately before runtime change** using an existing trusted local backup primitive. Do not print DB credentials or data. Record only a sanitized backup identifier/path class, checksum, timestamp, permissions, and integrity check.
 
-Do not manually execute the runner or any owned hook as part of acceptance.
+If a consistent/restorable DB backup cannot be established, STOP before deploy with `BLOCKED_NO_RESTORABLE_STAGING_DB_BACKUP`.
+
+The backup must remain available through the final acceptance/rollback decision. If T0->T1 proves no DB/schema/options migration occurred, it may be securely removed after final PASS. If a vendor-required DB migration is accepted, retain the protected backup and report a sanitized identifier for explicit later cleanup.
 
 ---
 
-## 12. Paid Listings / Commerce / package acceptance
+## 9. Controlled staging deploy
 
-The synchronized Paid Listings upgrade must not alter the accepted Raspitajse entitlement architecture.
+Deploy only through the approved Raspitajse staging deployment path, using the feature branch and existing deployment guards. Do not manually copy plugin files to runtime and do not use the WordPress plugin updater.
 
-Prove compatibility for:
+The `.gitattributes` file is repository policy metadata; it does not need to be copied into WordPress runtime merely to preserve vendor bytes. Do not weaken deploy allowlists to publish unrelated root files.
 
-- paid package listing and selection;
-- standalone dashboard package-purchase transport;
-- native Paid Listings package selection where retained;
-- order processing/cancellation integration;
-- entitlement creation and canonical owner/product/order/quota/duration snapshots;
+Keep both plugins active. Do not deactivate/reactivate them merely to trigger migration.
+
+After files are deployed but before normal application use:
+
+- verify runtime vendor path set/file counts/tree fingerprints exactly equal the official package trees and fresh-checkout feature source;
+- verify runtime versions are exactly WPJBP `1.2.86` and Paid Listings `1.0.19`;
+- verify no extra Raspitajse file/patch exists inside either vendor root;
+- run one fully guarded WordPress bootstrap with mail/network/payment protection and record any bounded vendor-required option/schema migration;
+- if an activation-only migration is required, STOP before activation and report the explicit authorization need rather than toggling plugins blindly;
+- if an unexpected business/user/order/application/message/listing mutation occurs, rollback immediately.
+
+No broad WP-Cron, Action Scheduler queue runner, manual owned-hook execution, continuation runner, or plugin update/heartbeat API is authorized.
+
+---
+
+## 10. Mandatory post-upgrade security and compatibility acceptance
+
+All material gates below must pass before final integration.
+
+### A. Vendor/security state
+
+- WPJBP header/constant/runtime active version = `1.2.86`.
+- Paid Listings header/constant/runtime active version = `1.0.19`.
+- Source, clean-checkout, runtime and official-package vendor tree fingerprints/path sets are exact.
+- The three historical WPJBP custom files are exact clean vendor files; no site patch is reapplied.
+- Static source plus an isolated **no-real-user/no-live-registration** test proves the `process_register` privilege-escalation path cannot accept an arbitrary privileged caller-selected role and requires the intended candidate/employer role/nonce flow.
+- No exploit request, real staging user creation, role escalation, or production test is allowed.
+
+### B. Alert/security boundary
+
+- Every Raspitajse-owned alert-management route remains authoritative with exact role/profile/capability/nonce/ownership/type/ID checks.
+- Vendor/anonymous mutation callbacks that should be replaced remain absent; no newly introduced equivalent bypass route exists.
+- Alert REST management remains disabled where intended.
+- Owned candidate->job evaluator/event/callback remains exact; vendor candidate-job sender registration remains zero.
+- Employer->candidate sender and new candidate-alert creation surfaces remain retired.
+- Candidate automatic time expiry remains disabled.
+- Owned job-listing expiry and employer pre-expiry notification callbacks/events/policies remain exact; retired vendor expiry notice/checker callbacks remain absent.
+- SenderPolicy/transport channel mappings, caller-independent From/Reply-To behavior, staging redirection, and HTML behavior remain exact.
+
+### C. Scheduler boundary
+
+- The selective runner still exposes exactly the accepted three owned hooks in the fixed order.
+- Each owned event remains exactly one hourly/3600 zero-argument event with the exact callback/priority/accepted-args contract.
+- No continuation event, vendor daily sender event, broad cron surface, second scheduler, or Action Scheduler substitute is introduced.
+- Do not manually execute the runner or owned hooks for acceptance.
+
+### D. Paid Listings / Commerce / package policy
+
+Re-prove compatibility of:
+
+- package listing and selection;
+- standalone package purchase transport;
+- order processing/cancellation marker bridge;
+- entitlement creation/activation/revocation;
 - quota consumption;
-- canonical 30-calendar-day package validity beginning at first successful `processing` or `completed` activation;
-- `pending`/`on-hold` not starting the entitlement clock;
-- immutable `valid_until = activated_at + 30 days`;
-- package validity remaining separate from individual job listing duration;
-- expired/exhausted/revoked/available outcomes;
-- Raspitajse Commerce canonical employer lookup;
-- checkout prefill and order company fields;
-- HPOS CRUD behavior;
-- processed/cancelled marker bridge required by vendor Paid Listings behavior;
-- template loader compatibility.
+- canonical immutable 30-calendar-day entitlement validity;
+- separation of package validity from individual job listing duration;
+- availability/exhausted/expired/revoked outcomes;
+- template loader integration;
+- canonical employer lookup;
+- checkout prefill/company fields;
+- HPOS-safe order CRUD and processed/cancelled bridge.
 
-No real payment/refund may occur. Use isolated fixtures/mocks and clean them completely if any staging fixture records are created. Persistent business fingerprints must return to T0 unless an explicitly accepted vendor migration requires otherwise.
+Use existing isolated fixtures/harnesses. No real payment, refund, SMTP, or external HTTP.
 
-Any entitlement/HPOS/package regression requires rollback.
+### E. WPJBP/Superio compatibility
 
----
+The target must remain compatible with the currently active Superio `1.3.17` / child theme boundary for the contracts Raspitajse presently uses.
 
-## 13. Frontend/dashboard compatibility acceptance
+At minimum verify without business mutation:
 
-The target vendor versions have stale published WordPress compatibility headers and the active Superio parent is `1.3.17`, so staging compatibility must be demonstrated rather than assumed.
+- candidate/employer dashboards load through relevant PHP/template contracts without fatal/missing class/method/deprecated API failure;
+- job-alert management views/contracts remain renderable;
+- application views remain compatible;
+- package views remain compatible;
+- job search/filter/detail contracts work;
+- employer/candidate profile contracts work;
+- job submission/edit contracts work;
+- application core contracts work;
+- configured/owned localized content still wins where intended.
 
-At minimum verify, through actual staging-safe runtime/render/query checks and HTTP smoke only where the environment permits:
+If external HTTP/browser access is blocked by the already-known Hostinger/LiteSpeed/hcdn environment-layer 403 before WordPress, do not classify that unchanged infrastructure block as a plugin regression. Use guarded internal runtime/template/API evidence and explicitly report the HTTP limitation. A new WordPress-level fatal/regression is a FAIL.
 
-- candidate dashboard;
-- employer dashboard;
-- job-alert management;
-- application views;
-- package views;
-- job search/filter/detail;
-- employer profile;
-- candidate profile;
-- job submission/edit path;
-- core application flow;
-- relevant localized templates and labels;
-- no missing class/method/function;
-- no fatal error;
-- no new PHP warning/deprecated API failure attributable to the upgrade.
-
-Known Hostinger/LiteSpeed/hcdn environment-layer HTTP 403 must not be misclassified as a WordPress regression. If public HTTP is blocked before WordPress, use WP-native guarded render/query/template smoke as the primary compatibility evidence and report the environment limitation explicitly.
-
-If the upgrade exposes a small Raspitajse-owned localization/override gap caused by removing old vendor patches, a narrow owned fix is allowed under Section 4. Do not re-patch vendor files.
+Do not upgrade Superio in this task.
 
 ---
 
-## 14. Vendor normalization acceptance
+## 11. T1 reconciliation and protected-state acceptance
 
-PASS requires exact clean vendor ownership after upgrade:
+Capture T1 with the same sanitized deep/protected diagnostic basis as T0.
 
-- WPJBP source/runtime header and constant exactly `1.2.86`;
-- Paid Listings source/runtime header and constant exactly `1.0.19`;
-- source and runtime target trees match the clean official package trees byte-for-byte, excluding only explicitly documented non-file deployment metadata outside those trees;
-- no Raspitajse-specific patch remains in either vendor tree;
-- the three previously customized WPJBP files match the pinned clean target hashes;
-- old hard-coded sender/debug/minute/test-mode/staging-URL/malformed-fallback/localization hacks are not reintroduced into vendor code;
-- any required Raspitajse branding/localization/business behavior exists only in owned/configured/translation/legitimate override layers.
+PASS requires:
 
-If exact clean vendor-tree parity cannot be achieved, rollback.
+- no fatal/migration error or unexpected PHP warning attributable to the upgrade;
+- active source/runtime versions and exact clean vendor parity as above;
+- protected business fingerprints unchanged except a specifically identified vendor-required technical migration authorized by this task;
+- no candidate/job/employer/application/message/order/refund/listing business mutation;
+- no real mail/PHPMailer/SMTP/payment/refund effect;
+- every WordPress HTTP attempt preempted/attributed by the staging guard; no unexpected runtime external request;
+- non-allowlisted cron unchanged except a precisely explained vendor-required non-executing registration change, if any;
+- three owned scheduler contracts unchanged;
+- no broad cron, continuation or Action Scheduler execution;
+- Action Scheduler protected state, including ID32733, remains acceptable and attempts remain unchanged unless a vendor-required non-executing metadata change is explicitly proven;
+- package/HPOS/30-day policy fingerprints/fixtures pass;
+- alert/security/communications cutovers remain authoritative.
 
----
-
-## 15. T1 reconciliation
-
-Before releasing the scheduler lock, take a guarded read-only T1 snapshot equivalent to T0.
-
-T0 → T1 must prove:
-
-- expected plugin version/tree changes only;
-- any vendor-required option/schema migration is individually documented and technically correct;
-- no user/order/application/message/listing business mutation;
-- protected business aggregate/component fingerprints unchanged except an explicitly accepted vendor-required migration component;
-- owned callback/security/scheduler contracts unchanged;
-- non-allowlisted cron stable except any individually justified migration row;
-- Action Scheduler execution count remains zero;
-- ID32733 state/attempts remain protected;
-- no continuation event;
-- mail/PHPMailer/SMTP/payment remain zero;
-- every WP HTTP attempt is blocked/preempted and explained, with no unexpected runtime transport;
-- source HEAD, deploy marker, runtime vendor trees, and deployment integrity state are consistent.
-
-Only after T1 PASS may the runner lock be released.
-
-A natural Hostinger fire is **not required** for 2.14 unless the task discovers a scheduler-contract uncertainty that cannot be proven read-only. If such uncertainty exists, stop at a human-observation boundary instead of manufacturing a manual fire.
+Any unexplained protected-state mutation is a rollback trigger.
 
 ---
 
-## 16. Rollback triggers and order
+## 12. Integration and final staging consistency
 
-Rollback immediately on any of the following:
+Only after all post-upgrade acceptance passes:
 
-- package provenance/hash/version mismatch;
-- deployment/source/runtime tree mismatch;
-- fatal/migration error;
-- registration security-fix failure;
-- unexpected vendor route or missing/duplicate owned route;
-- candidate/vendor sender retirement failure;
-- candidate auto-expiry reactivation;
-- job-expiry policy regression;
-- scheduler/cron/Action Scheduler drift outside allowed evidence;
-- unexpected mail/SMTP/network/payment activity;
+1. fast-forward/integrate the accepted feature commit(s) to `staging` according to `tasks/README.md`;
+2. push/update `origin/staging` only through the accepted project workflow;
+3. ensure the primary staging worktree returns to clean `staging` at the accepted final commit;
+4. use the approved deployment path to make deploy marker/manifest/runtime/source consistent with that final staging commit;
+5. re-prove source/runtime/official vendor tree parity after final integration;
+6. re-prove the runner/deploy manifest boundary still passes its lightweight/deep read-only contract as applicable without manually firing business hooks;
+7. release the shared runner lock only after the final consistent state passes.
+
+Do not change the Hostinger `*/15 * * * *` scheduler entry.
+
+A natural provider fire after lock release is not required for PASS unless the actual upgrade changes the accepted scheduler contract. If scheduler contract drift is observed, STOP/rollback rather than inventing a new scheduler acceptance path.
+
+---
+
+## 13. Mandatory rollback triggers
+
+Rollback immediately after any runtime mutation if any of these occur:
+
+- vendor package/version/tree/hash mismatch;
+- EOL byte-parity loss after commit/checkout/deploy;
+- fatal or migration error;
+- unexpected schema/options/business mutation;
+- registration security fix failure;
+- new or surviving unauthorized vendor alert mutation route;
+- owned callback missing/duplicated or priority/args contract drift;
+- candidate->job vendor sender reappears;
+- employer->candidate or candidate auto-expiry retirement regresses;
+- job-expiry ownership regresses;
+- package/entitlement/HPOS/30-day policy regression;
+- cron/Action Scheduler/continuation/broad-runner drift;
+- unexpected runtime network/mail/SMTP/payment/refund effect;
 - protected business mutation;
-- package/entitlement/HPOS/30-day-policy regression;
-- unrecoverable dashboard/frontend compatibility failure;
-- inability to establish a consistent T1.
+- unrecoverable WPJBP/Superio compatibility failure.
 
-Rollback procedure:
+Rollback order:
 
-1. keep the selective runner lock held;
-2. keep staging in the bounded maintenance/change window and prevent normal application bootstrap during restore as far as the approved staging tooling allows;
-3. restore the previous WPJBP and Paid Listings source/runtime state from the accepted Git baseline;
-4. if any DB/options/schema migration occurred or cannot be conclusively excluded, restore the exact pre-upgrade DB backup as part of the same rollback unit;
-5. restore/verify deploy marker and manifest through the approved deployment path, never by bypassing guards;
-6. run one guarded read-only verification proving old versions, source/runtime parity, callback/security/scheduler contracts, cron/AS state, package/HPOS policy fingerprints, and protected business fingerprints are back at the accepted pre-upgrade state;
-7. release the runner lock only after rollback verification passes;
-8. publish a PARTIAL/FAIL report with the exact blocker and STOP.
+1. keep the shared runner lock held;
+2. prevent normal staging application use during restore using only an existing approved staging maintenance/deploy boundary;
+3. restore the previous WPJBP/Paid Listings source/runtime trees and baseline repository state through the approved Git/deploy path;
+4. if any DB/options/schema/data migration/write occurred or cannot be disproven, restore the exact consistent pre-upgrade DB backup before booting old plugin code; file-only rollback is allowed only when guarded evidence proves no DB migration/write occurred;
+5. restore deploy marker/manifest to the matching accepted baseline commit through approved deployment tooling;
+6. run one guarded read-only verification and re-prove baseline active versions, hashes, alert/security graph, scheduler contracts, non-allowlisted cron, Action Scheduler/ID32733, mail/network/payment zeros, package/HPOS/30-day-policy state, and protected business fingerprints;
+7. release the runner lock only after rollback consistency passes.
 
-Never run old code against a partially migrated new database.
+Report rollback as part of 2.15; do not leave a mixed-version or mixed-schema state.
 
 ---
 
-## 17. Integration and final branch state
-
-Only after all source/static/runtime/T1 acceptance gates pass:
-
-- fast-forward/integrate the scoped feature branch to `staging` according to `tasks/README.md`;
-- ensure `origin/staging`, local staging HEAD, deploy marker, and live runtime are aligned to the accepted final SHA;
-- source working tree must be clean;
-- do not leave a feature branch checked out in the shared scheduled worktree;
-- clean task-private package scratch and temporary harnesses;
-- retain or remove the restricted DB backup according to whether a migration occurred and the repository's existing safe operational practice; never expose its contents.
-
-No production deploy.
-
----
-
-## 18. Acceptance result
+## 14. Acceptance criteria
 
 Final PASS requires all of the following:
 
 - exact baseline verified before work;
-- exact official packages/hash provenance re-verified;
-- complete pre-upgrade rollback point created;
-- clean vendor source replacement completed on a scoped feature branch;
-- WPJBP `1.2.86` and Paid Listings `1.0.19` deployed to staging only;
-- both vendor trees exact/clean with no Raspitajse patch residue;
-- CVE registration remediation proved without a live exploit;
-- alert security/communications ownership preserved;
-- candidate/employer sender and expiry retirement rules preserved;
-- fixed three-hook selective scheduler contract preserved;
-- SenderPolicy preserved;
-- Paid Listings / Commerce / HPOS / 30-day entitlement behavior preserved;
-- critical dashboard/search/profile/application/package rendering contracts pass on the actual staging runtime or are proved through WP-native guarded smoke where environment HTTP is externally blocked;
-- T0→T1 protected business state reconciled;
-- no broad cron or Action Scheduler execution;
-- no manual owned-hook execution;
-- no real mail/SMTP/payment;
-- no unexpected WordPress-runtime external HTTP;
-- scheduler mutations `0`;
-- production touched `NO`;
-- final source/runtime/deploy state clean and aligned.
+- exact two-line `.gitattributes` exception only, with no global EOL-policy weakening;
+- official package hashes/versions/provenance revalidated fresh;
+- Git index and fresh-checkout round-trip prove exact official vendor bytes for all files, including all EOL-sensitive paths;
+- official WPJBP `1.2.86` and Paid Listings `1.0.19` trees committed with no site patches;
+- static/lint/scope acceptance passes;
+- consistent restorable staging DB backup established before runtime mutation;
+- shared runner lock held across deploy/acceptance/integration decision;
+- approved deployment path only;
+- guarded bootstrap succeeds;
+- source/runtime/official vendor parity exact;
+- CVE registration fix proven safely without real-user/exploit mutation;
+- alert/security/communications cutovers pass;
+- three-hook scheduler contract passes with no broad execution;
+- Paid Listings/Commerce/HPOS/package/30-day entitlement compatibility passes;
+- WPJBP/Superio 1.3.17 compatibility checks pass at the contract/runtime level;
+- T0->T1 protected state reconciles with no unexplained mutation;
+- mail/SMTP/payment/refund/unexpected external runtime side effects zero;
+- final `staging`, `origin/staging`, source worktree, runtime deploy marker/manifest and accepted commit consistent;
+- scheduler configuration mutations `0`;
+- production touched `NO`.
 
-If a critical acceptance gate fails, rollback rather than accepting a partial vendor upgrade.
+If any mandatory gate cannot be proven, result must be PARTIAL/BLOCKED or rollback-complete FAIL as appropriate. Do not declare PASS based only on plugin version numbers.
 
 ---
 
-## 19. Final report
+## 15. Final report requirements
 
-The final report must include:
+Report at minimum:
 
-- result: PASS / PARTIAL / FAIL;
-- final classification, preferably `CONTROLLED_WPJBP_STAGING_UPGRADE_ACCEPTED` on PASS;
-- original baseline and final staging SHA;
-- package source/version/hash provenance;
-- pre-upgrade backup status without exposing private data;
-- feature/source diff scope and vendor tree fingerprints;
-- version/source/runtime/active-state proof;
-- CVE remediation proof;
+- result and final classification;
+- original/final staging SHA and deploy marker;
+- exact `.gitattributes` diff and proof that non-vendor LF policy remains unchanged;
+- fresh official metadata/package versions and SHA-256 values;
+- ZIP safety results;
+- EOL-sensitive file count and exact Git index/fresh-checkout/runtime parity result;
+- official/source/runtime tree file counts and fingerprints for both plugins;
+- final active plugin versions;
+- PHP lint/static acceptance totals;
+- DB backup status and sanitized identifier/retention decision;
+- shared runner lock/T0/T1 evidence;
+- any bounded vendor migration observed;
+- CVE fix acceptance;
 - alert/security/communications acceptance;
-- scheduler/cron/AS acceptance;
-- Paid Listings/Commerce/HPOS/entitlement acceptance;
-- frontend/dashboard compatibility evidence and any environment-layer limitation;
-- T0/T1 protected-state reconciliation;
-- all safety counters;
-- any bounded owned compatibility change made outside vendor code;
-- rollback status if invoked;
-- production touched NO;
+- scheduler contract acceptance;
+- Paid Listings/Commerce/HPOS/30-day policy acceptance;
+- Superio 1.3.17 compatibility evidence and any unchanged host-layer HTTP limitation;
+- protected-state reconciliation;
+- HTTP/mail/SMTP/payment/refund/cron/AS execution counters;
+- rollback invoked YES/NO and, if yes, full restoration evidence;
+- final source/runtime/deploy cleanliness and production touched NO;
 - exactly one proposed next task, not created or started.
 
-If PASS, the proposed next task should move back to the remaining Raspitajse custom Woo/legacy cleanup rather than extending the WPJBP upgrade arc unless a concrete post-upgrade normalization blocker remains.
+Next-task rule:
 
-STOP after publishing the report.
+- if 2.15 PASS: propose **Zadatak 2.16 — Superio 1.3.17 -> 1.3.37 security/upgrade readiness audit, including bundled WPJBP/Paid Listings provenance and child-theme compatibility**;
+- if 2.15 stops at a human-only UI observation boundary after all technical gates pass: propose one bounded completion/reconciliation task for that boundary instead;
+- if 2.15 is blocked or rolled back: propose only the narrow prerequisite needed to resolve the blocker.
+
+STOP after publishing the report. Do not begin the proposed next task automatically.
