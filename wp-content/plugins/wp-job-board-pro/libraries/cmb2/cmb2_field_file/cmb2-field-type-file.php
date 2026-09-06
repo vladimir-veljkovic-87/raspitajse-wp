@@ -61,7 +61,7 @@ class WP_Job_Board_Pro_CMB2_Field_File {
 		<div class="label-can-drag">
 			<div class="form-group group-upload">
 		        <div class="upload-file-btn">
-	            	<span><?php esc_html_e('Izaberi fajl', 'wp-job-board-pro'); ?></span>
+	            	<span><?php esc_html_e('Browse', 'wp-job-board-pro'); ?></span>
 		        </div>
 		    </div>
 		</div>

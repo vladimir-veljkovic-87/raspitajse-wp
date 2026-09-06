@@ -405,7 +405,7 @@ class WP_Job_Board_Pro_Job_Filter extends WP_Job_Board_Pro_Abstract_Filter {
 
 		if ( ! empty( $params['filter-tag'] ) ) {
 			if ( is_array($params['filter-tag']) ) {
-				$field = is_numeric( $params['filter-tag'] ) ? 'term_id' : 'slug';
+				$field = is_numeric( $params['filter-tag'][0] ) ? 'term_id' : 'slug';
 				$values = array_filter( array_map( 'sanitize_title', wp_unslash( $params['filter-tag'] ) ) );
 
 				$tax_query[] = array(

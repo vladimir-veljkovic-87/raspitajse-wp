@@ -49,14 +49,8 @@ class WP_Job_Board_Pro_Widget_Job_Alert_Form extends WP_Widget {
 	 * @return array
 	 */
 	function update( $new_instance, $old_instance ) {
-		$instance = array();
-		$instance['title']       = sanitize_text_field( $new_instance['title'] );
-		$instance['subtitle']    = sanitize_text_field( $new_instance['subtitle'] );
-		$instance['button_text'] = sanitize_text_field( $new_instance['button_text'] );
-
-		return $instance;
+		return $new_instance;
 	}
-
 
 	/**
 	 * Backend
@@ -79,19 +73,6 @@ class WP_Job_Board_Pro_Widget_Job_Alert_Form extends WP_Widget {
 
 		    <input  class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
-		<!-- SUBTITLE -->
-		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'subtitle' ) ); ?>">
-				<?php echo __( 'Subtitle', 'wp-job-board-pro' ); ?>
-			</label>
-
-			<input  class="widefat"
-					id="<?php echo esc_attr( $this->get_field_id( 'subtitle' ) ); ?>"
-					name="<?php echo esc_attr( $this->get_field_name( 'subtitle' ) ); ?>"
-					type="text"
-					value="<?php echo esc_attr( ! empty( $instance['subtitle'] ) ? $instance['subtitle'] : '' ); ?>">
-		</p>
-
 
 		<!-- BUTTON TEXT -->
 		<p>

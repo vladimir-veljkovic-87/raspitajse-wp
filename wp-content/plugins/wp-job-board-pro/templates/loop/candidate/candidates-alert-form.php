@@ -11,13 +11,13 @@ $email_frequency_default = WP_Job_Board_Pro_Job_Alert::get_email_frequency();
 <div class="candidate-alert-form-wrapper hidden">
 	<form method="get" action="" class="candidate-alert-form">
 		<div class="form-group">
-		    <label for="candidate_alert_title"><?php esc_html_e('Naziv', 'wp-job-board-pro'); ?></label>
+		    <label for="candidate_alert_title"><?php esc_html_e('Title', 'wp-job-board-pro'); ?></label>
 
 		    <input type="text" name="name" class="form-control" id="candidate_alert_title">
 		</div><!-- /.form-group -->
 
 		<div class="form-group">
-		    <label for="candidate_alert_email_frequency"><?php esc_html_e('Učestalost E-pošte', 'wp-job-board-pro'); ?></label>
+		    <label for="candidate_alert_email_frequency"><?php esc_html_e('Email Frequency', 'wp-job-board-pro'); ?></label>
 		    <div class="wrapper-select">
 			    <select name="email_frequency" class="form-control" id="candidate_alert_email_frequency">
 			        <?php if ( !empty($email_frequency_default) ) { ?>
@@ -40,7 +40,7 @@ $email_frequency_default = WP_Job_Board_Pro_Job_Alert::get_email_frequency();
 		?>
 
 		<div class="form-group">
-			<button class="button"><?php esc_html_e('Sačuvaj obaveštenja za kandidate', 'wp-job-board-pro'); ?></button>
+			<button class="button"><?php esc_html_e('Save Candidate Alert', 'wp-job-board-pro'); ?></button>
 		</div><!-- /.form-group -->
 
 	</form>

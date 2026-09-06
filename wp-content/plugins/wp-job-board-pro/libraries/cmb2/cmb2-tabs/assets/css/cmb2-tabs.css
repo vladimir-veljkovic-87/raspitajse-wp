@@ -201,3 +201,6 @@ div.cmb-type-tabs {
     font-size: 13px;
     padding: 0 5px
 }
+.cmb2-metabox .ui-tabs .ui-tabs-nav li {
+    white-space: inherit;
+}

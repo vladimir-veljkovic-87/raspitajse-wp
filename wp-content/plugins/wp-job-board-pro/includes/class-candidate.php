@@ -394,7 +394,7 @@ class WP_Job_Board_Pro_Candidate {
 		} else {
 			$user = wp_get_current_user();
 			$user_id = WP_Job_Board_Pro_User::get_user_id();
-			if ( !WP_Job_Board_Pro_User::is_employer($user_id) && !in_array('administrator', $user->roles) ) {
+			if ( !WP_Job_Board_Pro_User::is_employer($user_id) && !WP_Job_Board_Pro_User::is_employee($user_id) && !in_array('administrator', $user->roles) ) {
 				$check_can_download = false;
 				
 				if( WP_Job_Board_Pro_User::is_candidate($user_id) ) {
@@ -436,7 +436,7 @@ class WP_Job_Board_Pro_Candidate {
 			$check_can_invite = false;
 		} else {
 			$user = wp_get_current_user();
-			if ( !WP_Job_Board_Pro_User::is_employer() && !in_array('administrator', $user->roles) ) {
+			if ( !WP_Job_Board_Pro_User::is_employer() && !WP_Job_Board_Pro_User::is_employee() && !in_array('administrator', $user->roles) ) {
 				$check_can_invite = false;
 			}
 		}
@@ -445,7 +445,7 @@ class WP_Job_Board_Pro_Candidate {
 		$additional_class = $classes;
 		if ( !$check_can_invite ) {
 			$additional_class .= ' cannot-download-cv-btn ';
-			$msg = esc_html__('Please login as "Employer" to download CV.', 'wp-job-board-pro');
+			$msg = esc_html__('Please login as "Employer" to invite Candidate.', 'wp-job-board-pro');
 			$invite_url = 'javascript:void(0);';
 		}
 		$invite_text = apply_filters('wp-job-board-pro-candidate-display-invite-candidate-text', esc_html__('Invite', 'wp-job-board-pro') );
@@ -511,6 +511,18 @@ class WP_Job_Board_Pro_Candidate {
 		   	exit;
 		}
 		
+		$free_apply = self::check_candidate_can_apply();
+		if ( !$free_apply ) {
+			$candidate_package_page_id = wp_job_board_pro_get_option('candidate_package_page_id', true);
+			$package_page_url = $candidate_package_page_id ? get_permalink($candidate_package_page_id) : home_url('/');
+			$return = array(
+				'status' => false,
+				'msg' => sprintf(__('You have no package. <a href="%s" class="text-theme">Click here</a> to subscribe a package.', 'wp-job-board-pro'), $package_page_url)
+			);
+		   	echo wp_json_encode($return);
+		   	exit;
+		}
+		
 		do_action('wp-job-board-pro-process-apply-email', $_POST);
 
 		// cv file
@@ -518,6 +530,10 @@ class WP_Job_Board_Pro_Candidate {
         $files_path = array();
         if ( !empty($_FILES['cv_file']) && !empty($_FILES['cv_file']['name']) ) {
 
+        	global $wp_job_board_pro_upload, $wp_job_board_pro_uploading_file;
+        	$wp_job_board_pro_upload         = true;
+			$wp_job_board_pro_uploading_file = '_candidate_cv_attachment';
+			
 			$files = $_FILES['cv_file'];
 	    	if ( is_array($files['name']) ) {
 	    		$has_file = false;
@@ -625,6 +641,7 @@ class WP_Job_Board_Pro_Candidate {
 
 		$result = WP_Job_Board_Pro_Email::wp_mail( $author_email, $email_subject, $email_content, $headers, $files_path );
 		if ( $result ) {
+			do_action('wp-job-board-pro-after-apply-email-send', $email_content_args, $files_path);
 			// thanks email
 			$email_subject = WP_Job_Board_Pro_Email::render_email_vars( array('job_title' => $post->post_title), 'applied_job_thanks_notice', 'subject');
 			$email_content_args = array(
@@ -742,6 +759,10 @@ class WP_Job_Board_Pro_Candidate {
 		// cv file
         $cv_file_ids = array();
         if ( !empty($_FILES['cv_file']) && !empty($_FILES['cv_file']['name']) ) {
+
+        	global $wp_job_board_pro_upload, $wp_job_board_pro_uploading_file;
+        	$wp_job_board_pro_upload         = true;
+			$wp_job_board_pro_uploading_file = '_candidate_cv_attachment';
 
 			$files = $_FILES['cv_file'];
 	    	if ( is_array($files['name']) ) {
@@ -920,6 +941,8 @@ class WP_Job_Board_Pro_Candidate {
 
 			$result = WP_Job_Board_Pro_Email::wp_mail( $author_email, $email_subject, $email_content, $headers, $files_path );
 			// end send email
+
+			do_action('wp-job-board-pro-after-internal-apply-email-send', $email_content_args, $files_path);
 
 			// thanks email
 			$email_subject = WP_Job_Board_Pro_Email::render_email_vars( array('job_title' => $job->post_title), 'applied_job_thanks_notice', 'subject');

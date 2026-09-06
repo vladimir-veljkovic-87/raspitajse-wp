@@ -54,7 +54,7 @@ class WP_Job_Board_Pro_Post_Type_Employer {
 			'parent_item_colon'     => '',
 			'menu_name'             => $plural,
 		);
-		$has_archive = true;
+		$has_archive = _x( 'employers', 'Employers archive slug - resave permalinks after changing this', 'wp-job-board-pro' );
 		$employer_archive = get_option('wp_job_board_pro_employer_archive_slug');
 		if ( $employer_archive ) {
 			$has_archive = $employer_archive;

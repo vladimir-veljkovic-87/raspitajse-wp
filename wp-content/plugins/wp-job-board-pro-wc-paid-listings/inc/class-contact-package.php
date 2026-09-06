@@ -46,7 +46,7 @@ class WP_Job_Board_Pro_Wc_Paid_Listings_Contact_Package {
 			if ( $view == 'register_employer_contact_with_package' ) {
 				$return = false;
 				if ( is_user_logged_in() ) {
-					$user_id = get_current_user_id();
+					$user_id = WP_Job_Board_Pro_User::get_user_id();
 					if ( class_exists('WP_Job_Board_Pro_User') && WP_Job_Board_Pro_User::is_employer($user_id) ) {
 						
 						$packages = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::get_contact_packages_by_user($user_id, true, $post->ID);
@@ -68,7 +68,7 @@ class WP_Job_Board_Pro_Wc_Paid_Listings_Contact_Package {
 		if ( $restrict_type == 'view_contact_info' ) {
 			$view = wp_job_board_pro_get_option('candidate_restrict_contact_info', 'all');
 			if ( $view == 'register_employer_contact_with_package' && is_user_logged_in() ) {
-				$user_id = get_current_user_id();
+				$user_id = WP_Job_Board_Pro_User::get_user_id();
 				if ( WP_Job_Board_Pro_User::is_employer($user_id) ) {
 					$packages = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::get_contact_packages_by_user($user_id, true, $candidate_id);
 					if ( !empty($packages) && !empty($packages[0]) ) {
@@ -88,7 +88,7 @@ class WP_Job_Board_Pro_Wc_Paid_Listings_Contact_Package {
 			if ( $view == 'register_employer_contact_with_package' ) {
 				$return = false;
 				if ( is_user_logged_in() ) {
-					$user_id = get_current_user_id();
+					$user_id = WP_Job_Board_Pro_User::get_user_id();
 					if ( class_exists('WP_Job_Board_Pro_User') && WP_Job_Board_Pro_User::is_employer($user_id) ) {
 						$packages = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::get_contact_packages_by_user($user_id, true, $post->ID);
 						if ( !empty($packages) ) {

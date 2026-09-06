@@ -807,9 +807,9 @@ Others'
                 'id'                => $prefix . 'socials',
                 'type'              => 'group',
                 'options'           => array(
-                    'group_title'       => __( 'Mreža {#}', 'wp-job-board-pro' ),
-                    'add_button'        => __( 'Dodaj drugu mrežu', 'wp-job-board-pro' ),
-                    'remove_button'     => __( 'Ukloni mrežu', 'wp-job-board-pro' ),
+                    'group_title'       => __( 'Network {#}', 'wp-job-board-pro' ),
+                    'add_button'        => __( 'Add Another Network', 'wp-job-board-pro' ),
+                    'remove_button'     => __( 'Remove Network', 'wp-job-board-pro' ),
                     'sortable'          => false,
                     'closed'         => true,
                 ),
@@ -841,34 +841,34 @@ Others'
                 'field_call_back' => array( 'WP_Job_Board_Pro_Abstract_Filter', 'filter_field_input_location'),
             ),
             array(
-                'name'              => __( 'Istaknuti članovi tima', 'wp-job-board-pro' ),
+                'name'              => __( 'Members', 'wp-job-board-pro' ),
                 'id'                => $prefix . 'team_members',
                 'type'              => 'group',
                 'options'           => array(
-                    'group_title'       => __( 'Član tima {#}', 'wp-job-board-pro' ),
-                    'add_button'        => __( 'Dodaj člana tima', 'wp-job-board-pro' ),
-                    'remove_button'     => __( 'Ukloni člana tima', 'wp-job-board-pro' ),
+                    'group_title'       => __( 'Member {#}', 'wp-job-board-pro' ),
+                    'add_button'        => __( 'Add Another Member', 'wp-job-board-pro' ),
+                    'remove_button'     => __( 'Remove Member', 'wp-job-board-pro' ),
                     'sortable'          => true,
                     'closed'         => true,
                 ),
                 'fields'            => array(
                     array(
-                        'name'      => __( 'Ime', 'wp-job-board-pro' ),
+                        'name'      => __( 'Name', 'wp-job-board-pro' ),
                         'id'        => 'name',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Pozicija u timu', 'wp-job-board-pro' ),
+                        'name'      => __( 'Designation', 'wp-job-board-pro' ),
                         'id'        => 'designation',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Iskustvo', 'wp-job-board-pro' ),
+                        'name'      => __( 'Experience', 'wp-job-board-pro' ),
                         'id'        => 'experience',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Profilna slika', 'wp-job-board-pro' ),
+                        'name'      => __( 'Profile Image', 'wp-job-board-pro' ),
                         'id'        => 'profile_image',
                         'type'      => 'file',
                         'options' => array(
@@ -914,7 +914,7 @@ Others'
                         'type'              => 'text',
                     ),
                     array(
-                        'name'              => __( 'Opis', 'wp-job-board-pro' ),
+                        'name'              => __( 'Description', 'wp-job-board-pro' ),
                         'id'                => 'description',
                         'type'              => 'textarea',
                     ),
@@ -966,8 +966,8 @@ Others'
                 'id'                => $prefix . 'show_profile',
                 'type'              => 'select',
                 'options'           => array(
-                    'show'  => __( 'Prikaži', 'wp-job-board-pro' ),
-                    'hide'  => __( 'Sakrij', 'wp-job-board-pro' ),
+                    'show'  => __( 'Show', 'wp-job-board-pro' ),
+                    'hide'  => __( 'Hide', 'wp-job-board-pro' ),
                 ),
                 'disable_check_register' => true,
             ),
@@ -1108,8 +1108,8 @@ Others'
                 'id'                => $prefix . 'show_profile',
                 'type'              => 'select',
                 'options'           => array(
-                    'show'  => __( 'Prikaži', 'wp-job-board-pro' ),
-                    'hide'  => __( 'Sakrij', 'wp-job-board-pro' ),
+                    'show'  => __( 'Show', 'wp-job-board-pro' ),
+                    'hide'  => __( 'Hide', 'wp-job-board-pro' ),
                 ),
                 'disable_check_register' => true,
             ),
@@ -1127,16 +1127,11 @@ Others'
                     ))
                 ),
             ),
-			array(
-				'name'              => __( 'Phone Number', 'wp-job-board-pro' ),
-				'id'                => $prefix . 'phone',
-				'type'              => 'text',
-				'attributes'        => array(
-					'class' => 'phone-with-flags', // Custom class for JS targeting
-					'placeholder' => __( 'Enter your phone number', 'wp-job-board-pro' ),
-				),
-				'description'       => __( 'Please include your country code.', 'wp-job-board-pro' ),
-			),
+            array(
+                'name'              => __( 'Phone Number', 'wp-job-board-pro' ),
+                'id'                => $prefix . 'phone',
+                'type'              => 'text',
+            ),
             array(
                 'name'              => __( 'Job Title', 'wp-job-board-pro' ),
                 'id'                => $prefix . 'job_title',
@@ -1188,9 +1183,9 @@ Others'
                 'id'                => $prefix . 'socials',
                 'type'              => 'group',
                 'options'           => array(
-                    'group_title'       => __( 'Mreža {#}', 'wp-job-board-pro' ),
-                    'add_button'        => __( 'Dodaj drugu mrežu', 'wp-job-board-pro' ),
-                    'remove_button'     => __( 'Ukloni mrežu', 'wp-job-board-pro' ),
+                    'group_title'       => __( 'Network {#}', 'wp-job-board-pro' ),
+                    'add_button'        => __( 'Add Another Network', 'wp-job-board-pro' ),
+                    'remove_button'     => __( 'Remove Network', 'wp-job-board-pro' ),
                     'sortable'          => false,
                     'closed'         => true,
                     'closed'         => true,
@@ -1223,58 +1218,58 @@ Others'
                 'field_call_back' => array( 'WP_Job_Board_Pro_Abstract_Filter', 'filter_field_input_location'),
             ),
             array(
-                'name'              => __( 'Obrazovanje', 'wp-job-board-pro' ),
+                'name'              => __( 'Education', 'wp-job-board-pro' ),
                 'id'                => $prefix . 'education',
                 'type'              => 'group',
                 'options'           => array(
-                    'group_title'       => __( 'Obrazovanje {#}', 'wp-job-board-pro' ),
-                    'add_button'        => __( 'Dodaj novo obrazovanje', 'wp-job-board-pro' ),
-                    'remove_button'     => __( 'Ukloni obrazovanje', 'wp-job-board-pro' ),
+                    'group_title'       => __( 'Education {#}', 'wp-job-board-pro' ),
+                    'add_button'        => __( 'Add Another Education', 'wp-job-board-pro' ),
+                    'remove_button'     => __( 'Remove Education', 'wp-job-board-pro' ),
                     'sortable'          => false,
                     'closed'         => true,
                 ),
                 'fields'            => array(
                     array(
-                        'name'      => __( 'Naziv', 'wp-job-board-pro' ),
+                        'name'      => __( 'Title', 'wp-job-board-pro' ),
                         'id'        => 'title',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Škola', 'wp-job-board-pro' ),
+                        'name'      => __( 'Academy', 'wp-job-board-pro' ),
                         'id'        => 'academy',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Godina', 'wp-job-board-pro' ),
+                        'name'      => __( 'Year', 'wp-job-board-pro' ),
                         'id'        => 'year',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Opis', 'wp-job-board-pro' ),
+                        'name'      => __( 'Description', 'wp-job-board-pro' ),
                         'id'        => 'description',
                         'type'      => 'textarea',
                     ),
                 )
             ),
             array(
-                'name'              => __( 'Iskustvo', 'wp-job-board-pro' ),
+                'name'              => __( 'Experience', 'wp-job-board-pro' ),
                 'id'                => $prefix . 'experience',
                 'type'              => 'group',
                 'options'           => array(
-                    'group_title'       => __( 'Iskustvo {#}', 'wp-job-board-pro' ),
-                    'add_button'        => __( 'Dodaj radno iskustvo', 'wp-job-board-pro' ),
-                    'remove_button'     => __( 'Ukloni radno iskustvo', 'wp-job-board-pro' ),
+                    'group_title'       => __( 'Experience {#}', 'wp-job-board-pro' ),
+                    'add_button'        => __( 'Add Another Experience', 'wp-job-board-pro' ),
+                    'remove_button'     => __( 'Remove Experience', 'wp-job-board-pro' ),
                     'sortable'          => false,
                     'closed'         => true,
                 ),
                 'fields'            => array(
                     array(
-                        'name'      => __( 'Naziv', 'wp-job-board-pro' ),
+                        'name'      => __( 'Title', 'wp-job-board-pro' ),
                         'id'        => 'title',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Datum početka', 'wp-job-board-pro' ),
+                        'name'      => __( 'Start Date', 'wp-job-board-pro' ),
                         'id'        => 'start_date',
                         'type'      => 'text',
                         'date_format' => get_option('date_format'),
@@ -1285,7 +1280,7 @@ Others'
                         ),
                     ),
                     array(
-                        'name'      => __( 'Datum završetka', 'wp-job-board-pro' ),
+                        'name'      => __( 'End Date', 'wp-job-board-pro' ),
                         'id'        => 'end_date',
                         'type'      => 'text',
                         'date_format' => get_option('date_format'),
@@ -1296,65 +1291,65 @@ Others'
                         ),
                     ),
                     array(
-                        'name'      => __( 'Kompanija', 'wp-job-board-pro' ),
+                        'name'      => __( 'Company', 'wp-job-board-pro' ),
                         'id'        => 'company',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Opis', 'wp-job-board-pro' ),
+                        'name'      => __( 'Description', 'wp-job-board-pro' ),
                         'id'        => 'description',
                         'type'      => 'textarea',
                     ),
                 )
             ),
             array(
-                'name'              => __( 'Nagrada', 'wp-job-board-pro' ),
+                'name'              => __( 'Award', 'wp-job-board-pro' ),
                 'id'                => $prefix . 'award',
                 'type'              => 'group',
                 'options'           => array(
-                    'group_title'       => __( 'Nagrada {#}', 'wp-job-board-pro' ),
-                    'add_button'        => __( 'Dodaj još jednu nagradu', 'wp-job-board-pro' ),
-                    'remove_button'     => __( 'Ukloni nagradu', 'wp-job-board-pro' ),
+                    'group_title'       => __( 'Award {#}', 'wp-job-board-pro' ),
+                    'add_button'        => __( 'Add Another Award', 'wp-job-board-pro' ),
+                    'remove_button'     => __( 'Remove Award', 'wp-job-board-pro' ),
                     'sortable'          => false,
                     'closed'         => true,
                 ),
                 'fields'            => array(
                     array(
-                        'name'      => __( 'Naziv', 'wp-job-board-pro' ),
+                        'name'      => __( 'Title', 'wp-job-board-pro' ),
                         'id'        => 'title',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Godina', 'wp-job-board-pro' ),
+                        'name'      => __( 'Year', 'wp-job-board-pro' ),
                         'id'        => 'year',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Opis', 'wp-job-board-pro' ),
+                        'name'      => __( 'Description', 'wp-job-board-pro' ),
                         'id'        => 'description',
                         'type'      => 'textarea',
                     ),
                 )
             ),
             array(
-                'name'              => __( 'Veština', 'wp-job-board-pro' ),
+                'name'              => __( 'Skill', 'wp-job-board-pro' ),
                 'id'                => $prefix . 'skill',
                 'type'              => 'group',
                 'options'           => array(
-                    'group_title'       => __( 'Veština {#}', 'wp-job-board-pro' ),
-                    'add_button'        => __( 'Dodaj još jednu veštinu', 'wp-job-board-pro' ),
-                    'remove_button'     => __( 'Ukloni veštinu', 'wp-job-board-pro' ),
+                    'group_title'       => __( 'Skill {#}', 'wp-job-board-pro' ),
+                    'add_button'        => __( 'Add Another Skill', 'wp-job-board-pro' ),
+                    'remove_button'     => __( 'Remove Skill', 'wp-job-board-pro' ),
                     'sortable'          => false,
                     'closed'         => true,
                 ),
                 'fields'            => array(
                     array(
-                        'name'      => __( 'Naziv', 'wp-job-board-pro' ),
+                        'name'      => __( 'Title', 'wp-job-board-pro' ),
                         'id'        => 'title',
                         'type'      => 'text',
                     ),
                     array(
-                        'name'      => __( 'Procenat', 'wp-job-board-pro' ),
+                        'name'      => __( 'Percentage', 'wp-job-board-pro' ),
                         'id'        => 'percentage',
                         'type'      => 'text',
                         'attributes'        => array(

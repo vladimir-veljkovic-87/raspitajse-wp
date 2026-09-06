@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="profile-form-wrapper">
-	<h1 class="title"><?php _e( 'Uredi Profil', 'wp-job-board-pro' ) ; ?></h1>
+	<h1 class="title"><?php _e( 'Edit Profile', 'wp-job-board-pro' ) ; ?></h1>
 
 	<?php if ( ! empty( $_SESSION['messages'] ) ) : ?>
 
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php
 		echo cmb2_get_metabox_form( $metaboxes_form, $post_id, array(
 			'form_format' => '<form action="//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '" class="cmb-form" method="post" id="%1$s" enctype="multipart/form-data" encoding="multipart/form-data"><input type="hidden" name="object_id" value="%2$s">%3$s<input type="submit" name="submit-cmb-profile" value="%4$s" class="button-primary"></form>',
-			'save_button' => __( 'Sačuvaj Profil', 'wp-job-board-pro' ),
+			'save_button' => __( 'Save Profile', 'wp-job-board-pro' ),
 		) );
 	?>
 </div>

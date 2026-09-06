@@ -39,7 +39,9 @@ class WP_Job_Board_Pro_Social_Twitter {
 
         if ( $this->is_twitter_login_enabled() || $this->is_twitter_apply_enabled() ) {
             $user_dashboard_page_id = wp_job_board_pro_get_option('user_dashboard_page_id');
-            $this->redirect_url = $user_dashboard_page_id > 0 ? get_permalink($user_dashboard_page_id) : home_url('/');
+            $redirect_url = $user_dashboard_page_id > 0 ? get_permalink($user_dashboard_page_id) : home_url('/');
+
+            $this->redirect_url = apply_filters('wp-job-board-pro-twitter-after-login-redirect-url', $redirect_url);
 
             // Ajax endpoints.
             add_action('wjbp_ajax_wp_job_board_pro_twitter', array($this, 'twitter_connect'));

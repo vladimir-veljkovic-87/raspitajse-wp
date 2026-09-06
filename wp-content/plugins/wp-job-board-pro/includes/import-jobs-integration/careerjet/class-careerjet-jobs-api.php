@@ -28,10 +28,10 @@ class WP_Job_Board_Pro_Careerjet_API {
         
         require_once 'Careerjet_API.php';
         
-        $api = new Careerjet_API('en_GB') ;
+        $api = new Careerjet_API('en_GB', $api_key) ;
         
         $jobs = array();
-        $result = $api->search($args);
+        $result = $api->query($args);
 
         if ( !empty($result->type) && $result->type == 'JOBS' ) {
             $jobs = $result->jobs;

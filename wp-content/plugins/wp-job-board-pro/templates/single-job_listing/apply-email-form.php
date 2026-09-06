@@ -31,7 +31,7 @@ if ( is_user_logged_in() ) {
 	<div id="job-apply-email-form-wrapper-<?php echo esc_attr($post->ID); ?>" class="job-apply-email-form-wrapper mfp-hide">
 		<div class="inner">
 		<h2 class="widget-title">
-			<span><?php echo __('Prijavite se za ovaj posao', 'wp-job-board-pro'); ?></span>
+			<span><?php echo __('Apply for this job', 'wp-job-board-pro'); ?></span>
 		</h2>
 
 	    <form id="job-apply-email-form-<?php echo esc_attr($post->ID); ?>" class="job-apply-email-form" method="post" action="" enctype="multipart/form-data">
@@ -81,7 +81,7 @@ if ( is_user_logged_in() ) {
 
 			            <div class="label-can-drag">
 							<div class="form-group group-upload">
-						        <div class="upload-file-btn" data-text="<?php echo esc_attr(sprintf(esc_html__('Dodaj CV (%s)', 'wp-job-board-pro'), $cv_types_str)); ?>">
+						        <div class="upload-file-btn" data-text="<?php echo esc_attr(sprintf(esc_html__('Upload CV (%s)', 'wp-job-board-pro'), $cv_types_str)); ?>">
 					            	<span class="text"><?php echo sprintf(esc_html__('Upload CV (%s)', 'wp-job-board-pro'), $cv_types_str); ?></span>
 						        </div>
 						    </div>
@@ -122,7 +122,7 @@ if ( is_user_logged_in() ) {
 							<label for="register-terms-and-conditions">
 								<input type="checkbox" name="terms_and_conditions" value="on" id="register-terms-and-conditions" required>
 								<?php
-									echo sprintf(__('Prihvatate naše <a href="%s" target="_blank">Uslove korišćenja i Politiku privatnosti</a>', 'wp-job-board-pro'), esc_url($page_url));
+									echo sprintf(__('You accept our <a href="%s" target="_blank">Terms and Conditions and Privacy Policy</a>', 'wp-job-board-pro'), esc_url($page_url));
 								?>
 							</label>
 						</div>
@@ -139,7 +139,7 @@ if ( is_user_logged_in() ) {
 	      	<?php wp_nonce_field( 'wp-job-board-pro-apply-email', 'wp-job-board-pro-apply-email-nonce' ); ?>
 	      	<input type="hidden" name="action" value="wp_job_board_pro_ajax_apply_email">
 	      	<input type="hidden" name="job_id" value="<?php echo esc_attr($post->ID); ?>">
-	        <button class="button btn btn-theme btn-block" name="apply-email"><?php echo esc_html__( 'Prijavi se na oglas', 'wp-job-board-pro' ); ?></button>
+	        <button class="button btn btn-theme btn-block" name="apply-email"><?php echo esc_html__( 'Apply Job', 'wp-job-board-pro' ); ?></button>
 	    </form>
 	</div>
 	</div>

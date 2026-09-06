@@ -20,16 +20,17 @@ $founded_date = WP_Job_Board_Pro_Employer::get_post_meta($post->ID, 'founded_dat
 
 ?>
 <div class="employer-detail-detail">
-    <h4><?php esc_html_e('Informacije o kompaniji', 'wp-job-board-pro'); ?></h4>
+    <h4><?php esc_html_e('Company Information', 'wp-job-board-pro'); ?></h4>
     <ul class="list">
         
+
         <?php if ( $views ) { ?>
             <li>
                 <div class="icon">
                     <i class="flaticon-eye"></i>
                 </div>
                 <div class="details">
-                    <div class="text"><?php esc_html_e('Pregleda', 'wp-job-board-pro'); ?></div>
+                    <div class="text"><?php esc_html_e('Views', 'wp-job-board-pro'); ?></div>
                     <div class="value"><?php echo wp_kses_post($views); ?></div>
                 </div>
             </li>
@@ -41,7 +42,7 @@ $founded_date = WP_Job_Board_Pro_Employer::get_post_meta($post->ID, 'founded_dat
                     <i class="flaticon-label"></i>
                 </div>
                 <div class="details">
-                    <div class="text"><?php esc_html_e('Objavljenih poslova', 'wp-job-board-pro'); ?></div>
+                    <div class="text"><?php esc_html_e('Post jobs', 'wp-job-board-pro'); ?></div>
                     <div class="value"><?php echo wp_kses_post($count_jobs); ?></div>
                 </div>
             </li>
@@ -53,7 +54,7 @@ $founded_date = WP_Job_Board_Pro_Employer::get_post_meta($post->ID, 'founded_dat
                     <i class="flaticon-paper-plane"></i>
                 </div>
                 <div class="details">
-                    <div class="text"><?php esc_html_e('Lokacija', 'wp-job-board-pro'); ?></div>
+                    <div class="text"><?php esc_html_e('Location', 'wp-job-board-pro'); ?></div>
                     <div class="value"><?php echo wp_kses_post($address); ?></div>
                 </div>
             </li>
@@ -65,7 +66,7 @@ $founded_date = WP_Job_Board_Pro_Employer::get_post_meta($post->ID, 'founded_dat
                     <i class="flaticon-2-squares"></i>
                 </div>
                 <div class="details">
-                    <div class="text"><?php esc_html_e('Kategorije', 'wp-job-board-pro'); ?></div>
+                    <div class="text"><?php esc_html_e('Categories', 'wp-job-board-pro'); ?></div>
                     <div class="value">
                         <?php foreach ($categories as $term) { ?>
                             <a href="<?php echo get_term_link($term); ?>"><?php echo esc_html($term->name); ?></a>
@@ -81,7 +82,7 @@ $founded_date = WP_Job_Board_Pro_Employer::get_post_meta($post->ID, 'founded_dat
                     <i class="flaticon-timeline"></i>
                 </div>
                 <div class="details">
-                    <div class="text"><?php esc_html_e('Osnovano', 'wp-job-board-pro'); ?></div>
+                    <div class="text"><?php esc_html_e('Since', 'wp-job-board-pro'); ?></div>
                     <div class="value"><?php echo wp_kses_post($founded_date); ?></div>
                 </div>
             </li>

@@ -3,7 +3,7 @@
  * Plugin Name: WP Job Board Pro - WooCommerce Paid Listings
  * Plugin URI: http://apusthemes.com/wp-job-board-pro-wc-paid-listings/
  * Description: Add paid listing functionality via WooCommerce
- * Version: 1.0.16
+ * Version: 1.0.19
  * Author: Habq
  * Author URI: http://apusthemes.com
  * Requires at least: 3.8
@@ -28,7 +28,9 @@ if( !class_exists("WP_Job_Board_Pro_Wc_Paid_Listings") ) {
 			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof WP_Job_Board_Pro_Wc_Paid_Listings ) ) {
 				self::$instance = new WP_Job_Board_Pro_Wc_Paid_Listings;
 				self::$instance->setup_constants();
-				self::$instance->load_textdomain();
+				
+				add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
+				
 				self::$instance->plugin_update();
 
 				add_action( 'tgmpa_register', array( self::$instance, 'register_plugins' ) );
@@ -45,7 +47,7 @@ if( !class_exists("WP_Job_Board_Pro_Wc_Paid_Listings") ) {
 		 */
 		public function setup_constants() {
 			
-			define( 'WP_JOB_BOARD_PRO_WC_PAID_LISTINGS_PLUGIN_VERSION', '1.0.16' );
+			define( 'WP_JOB_BOARD_PRO_WC_PAID_LISTINGS_PLUGIN_VERSION', '1.0.19' );
 
 			// Plugin Folder Path
 			if ( ! defined( 'WP_JOB_BOARD_PRO_WC_PAID_LISTINGS_PLUGIN_DIR' ) ) {
@@ -130,7 +132,8 @@ if( !class_exists("WP_Job_Board_Pro_Wc_Paid_Listings") ) {
 		}
 		public function plugin_update() {
 	        require_once WP_JOB_BOARD_PRO_WC_PAID_LISTINGS_PLUGIN_DIR . 'libraries/plugin-update-checker/plugin-update-checker.php';
-	        Puc_v4_Factory::buildUpdateChecker(
+
+			$myUpdateChecker = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
 	            'https://www.apusthemes.com/themeplugins/wp-job-board-pro-wc-paid-listings.json',
 	            __FILE__,
 	            'wp-job-board-pro-wc-paid-listings'

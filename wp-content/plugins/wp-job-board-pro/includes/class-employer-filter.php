@@ -298,6 +298,76 @@ class WP_Job_Board_Pro_Employer_Filter extends WP_Job_Board_Pro_Abstract_Filter 
 		remove_filter( 'posts_search', array( __CLASS__, 'get_employers_keyword_search' ) );
 		return $search;
 	}
+
+	public static function display_filter_value($key, $value, $filters) {
+
+		$meta_obj = WP_Job_Board_Pro_Employer_Meta::get_instance(0);
+
+		$url = urldecode(WP_Job_Board_Pro_Mixes::get_full_current_url());
+		
+		if ( is_array($value) ) {
+			$value = array_filter( array_map( 'sanitize_text_field', wp_unslash( $value ) ) );
+		} else {
+			$value = sanitize_text_field( wp_unslash($value) );
+		}
+		switch ($key) {
+			case 'filter-category':
+				self::render_filter_tax($key, $value, 'employer_category', $url);
+				break;
+			case 'filter-location':
+				self::render_filter_tax($key, $value, 'employer_location', $url);
+				break;
+			case 'filter-date-posted':
+				$options = self::date_posted_options();
+				foreach ($options as $option) {
+					if ( !empty($option['value']) && $option['value'] == $value ) {
+						$title = $option['text'];
+						$rm_url = self::remove_url_var(  $key . '=' . $value, $url);
+						self::render_filter_result_item( $title, $rm_url );
+						break;
+					}
+				}
+				break;
+			case 'filter-distance':
+				if ( !empty($filters['filter-center-location']) ) {
+					$distance_type = apply_filters( 'wp_job_board_pro_filter_distance_type', 'miles' );
+					$title = $value.' '.$distance_type;
+					$rm_url = self::remove_url_var(  $key . '=' . $value, $url);
+					self::render_filter_result_item( $title, $rm_url );
+				}
+				break;
+			case 'filter-orderby':
+				$orderby_options = apply_filters( 'wp-job-board-pro-jobs-orderby', array(
+					'menu_order' => esc_html__('Default', 'wp-job-board-pro'),
+					'newest' => esc_html__('Newest', 'wp-job-board-pro'),
+					'oldest' => esc_html__('Oldest', 'wp-job-board-pro'),
+					'random' => esc_html__('Random', 'wp-job-board-pro'),
+				));
+				$title = $value;
+				if ( !empty($orderby_options[$value]) ) {
+					$title = $orderby_options[$value];
+				}
+				$rm_url = self::remove_url_var(  $key . '=' . $value, $url);
+				self::render_filter_result_item( $title, $rm_url );
+				break;
+			case 'filter-featured':
+				$title = esc_html__('Featured', 'wp-job-board-pro');
+				$rm_url = self::remove_url_var(  $key . '=' . $value, $url);
+				self::render_filter_result_item( $title, $rm_url );
+				break;
+			default:
+				if ( is_array($value) ) {
+					foreach ($value as $val) {
+						$rm_url = self::remove_url_var( $key . '[]=' . $val, $url);
+						self::render_filter_result_item( $val, $rm_url);
+					}
+				} else {
+					$rm_url = self::remove_url_var( $key . '=' . $value, $url);
+					self::render_filter_result_item( $value, $rm_url);
+				}
+				break;
+		}
+	}
 }
 
 WP_Job_Board_Pro_Employer_Filter::init();

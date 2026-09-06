@@ -49,7 +49,7 @@ class WP_Job_Board_Pro_Custom_Fields {
 	
 	public static function admin_job_listing_custom_fields() {
 		$prefix = WP_JOB_BOARD_PRO_JOB_LISTING_PREFIX;
-		$init_fields = self::get_custom_fields(array(), true, 0, $prefix);
+		$init_fields = self::get_custom_fields(array(), 'admin', 0, $prefix);
 		$fields = array();
 		$key_tab = 'tab-heading-start'.rand(100,1000);
 		$tab_data = array(
@@ -148,7 +148,7 @@ class WP_Job_Board_Pro_Custom_Fields {
 
 	public static function front_job_listing_custom_fields($old_fields, $post_id) {
 		$prefix = WP_JOB_BOARD_PRO_JOB_LISTING_PREFIX;
-		$fields = self::get_custom_fields($old_fields, false, $post_id, $prefix);
+		$fields = self::get_custom_fields($old_fields, 'front', $post_id, $prefix);
 
 		return apply_filters( 'wp-job-board-pro-job_listing-types-submit_form_fields', $fields, $old_fields, $post_id);
 	}
@@ -178,7 +178,7 @@ class WP_Job_Board_Pro_Custom_Fields {
 
 	public static function admin_employer_custom_fields() {
 		$prefix = WP_JOB_BOARD_PRO_EMPLOYER_PREFIX;
-		$init_fields = self::get_custom_fields(array(), true, 0, $prefix);
+		$init_fields = self::get_custom_fields(array(), 'admin', 0, $prefix);
 		$fields = array();
 		$key_tab = 'tab-heading-start'.rand(100,1000);
 		$tab_data = array(
@@ -232,7 +232,7 @@ class WP_Job_Board_Pro_Custom_Fields {
 
 	public static function front_employer_custom_fields($old_fields, $post_id) {
 		$prefix = WP_JOB_BOARD_PRO_EMPLOYER_PREFIX;
-		$fields = self::get_custom_fields($old_fields, false, $post_id, $prefix);
+		$fields = self::get_custom_fields($old_fields, 'front', $post_id, $prefix);
 		
 		return apply_filters( 'wp-job-board-pro-employer-types-submit_form_fields', $fields, $old_fields, $post_id);
 	}
@@ -257,7 +257,7 @@ class WP_Job_Board_Pro_Custom_Fields {
 	// Candidate
 	public static function admin_candidate_custom_fields() {
 		$prefix = WP_JOB_BOARD_PRO_CANDIDATE_PREFIX;
-		$init_fields = self::get_custom_fields(array(), true, 0, $prefix);
+		$init_fields = self::get_custom_fields(array(), 'admin', 0, $prefix);
 		$fields = array();
 		$key_tab = 'tab-heading-start'.rand(100,1000);
 		$tab_data = array(
@@ -310,14 +310,14 @@ class WP_Job_Board_Pro_Custom_Fields {
 
 	public static function front_candidate_profile_custom_fields($old_fields, $post_id) {
 		$prefix = WP_JOB_BOARD_PRO_CANDIDATE_PREFIX;
-		$fields = self::get_custom_fields($old_fields, false, $post_id, $prefix, 'profile');
+		$fields = self::get_custom_fields($old_fields, 'front', $post_id, $prefix, 'profile');
 
 		return apply_filters( 'wp-job-board-pro-candidate-profile-types-submit_form_fields', $fields, $old_fields, $post_id, 'profile');
 	}
 
 	public static function front_candidate_resume_custom_fields($old_fields, $post_id) {
 		$prefix = WP_JOB_BOARD_PRO_CANDIDATE_PREFIX;
-		$fields = self::get_custom_fields($old_fields, false, $post_id, $prefix, 'resume');
+		$fields = self::get_custom_fields($old_fields, 'front', $post_id, $prefix, 'resume');
 		
 		return apply_filters( 'wp-job-board-pro-candidate-resume-types-submit_form_fields', $fields, $old_fields, $post_id, 'resume');
 	}
@@ -469,7 +469,7 @@ class WP_Job_Board_Pro_Custom_Fields {
 		return $fields;
 	}
 
-	public static function get_custom_fields($old_fields, $admin_field = true, $post_id = 0, $prefix = WP_JOB_BOARD_PRO_JOB_LISTING_PREFIX, $form_type = 'all') {
+	public static function get_custom_fields($old_fields, $admin_field = 'admin', $post_id = 0, $prefix = WP_JOB_BOARD_PRO_JOB_LISTING_PREFIX, $form_type = 'all') {
 		
 		$fields = array();
 
@@ -484,7 +484,7 @@ class WP_Job_Board_Pro_Custom_Fields {
 	            $available_types = WP_Job_Board_Pro_Fields_Manager::get_all_types_job_listing_fields_available();
 	        	$required_types = WP_Job_Board_Pro_Fields_Manager::get_all_types_job_listing_fields_required();
 
-	        	if ( !$admin_field ) {
+	        	if ( $admin_field == 'front' ) {
 					$package_id = self::get_package_id($post_id);
 				}
 	        } elseif ( $prefix == WP_JOB_BOARD_PRO_EMPLOYER_PREFIX ) {
@@ -498,7 +498,7 @@ class WP_Job_Board_Pro_Custom_Fields {
 			$i = 1;
 			foreach ($custom_all_fields as $key => $custom_field) {
 				$check_package_field = true;
-				if ( $prefix == WP_JOB_BOARD_PRO_JOB_LISTING_PREFIX && !$admin_field ) {
+				if ( $prefix == WP_JOB_BOARD_PRO_JOB_LISTING_PREFIX && $admin_field == 'front' ) {
 					$check_package_field = self::check_package_field($custom_field, $package_id);
 				}
 				$check_package_field = apply_filters('wp-job-board-pro-check-package-field', $check_package_field, $old_fields, $admin_field, $post_id, $prefix, $form_type, $custom_field, $package_id);
@@ -520,15 +520,17 @@ class WP_Job_Board_Pro_Custom_Fields {
 						$field_data = $custom_field;
 					}
 					
-					if ( !$admin_field && (!empty($field_data['show_in_submit_form']) || $fieldtype == 'heading') && $fieldkey !== $prefix.'featured' ) {
+					if ( $admin_field == 'front' && (!empty($field_data['show_in_submit_form']) || $fieldtype == 'heading') && $fieldkey !== $prefix.'featured' ) {
 						if ( $prefix == WP_JOB_BOARD_PRO_CANDIDATE_PREFIX && $form_type == 'profile' && $field_data['show_in_submit_form_candidate'] !== 'profile' ) {
 							continue;
 						} elseif ( $prefix == WP_JOB_BOARD_PRO_CANDIDATE_PREFIX && $form_type == 'resume' && $field_data['show_in_submit_form_candidate'] !== 'resume' ) {
 							continue;
 						}
 						$fields[] = self::render_field($field_data, $fieldkey, $fieldtype, $i, false, '', $prefix);
-					} elseif( $admin_field && (!empty($field_data['show_in_admin_edit']) || $fieldtype == 'heading') && !in_array($fieldkey, apply_filters( 'wp-job-board-exclude-fields-admin', array( $prefix.'title', $prefix.'description', $prefix.'category', $prefix.'type', $prefix.'tag', $prefix.'location', $prefix.'featured_image' )))) {
+					} elseif( $admin_field == 'admin' && (!empty($field_data['show_in_admin_edit']) || $fieldtype == 'heading') && !in_array($fieldkey, apply_filters( 'wp-job-board-exclude-fields-admin', array( $prefix.'title', $prefix.'description', $prefix.'category', $prefix.'type', $prefix.'tag', $prefix.'location', $prefix.'featured_image' )))) {
 
+						$fields[] = self::render_field($field_data, $fieldkey, $fieldtype, $i, $admin_field, '', $prefix);
+					} elseif( $admin_field == 'all' ) {
 						$fields[] = self::render_field($field_data, $fieldkey, $fieldtype, $i, $admin_field, '', $prefix);
 					}
 				}

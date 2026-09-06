@@ -98,14 +98,14 @@ class WP_Job_Board_Pro_Scripts {
 			$page_id = WP_Job_Board_Pro_Mixes::get_lang_post_id($page_id, 'page');
 			$after_login_page_url = get_permalink($page_id);
 		} else {
-			$after_login_page_url = get_permalink( wp_job_board_pro_get_option('user_dashboard_page_id') );
+			$after_login_page_url = get_permalink( wp_job_board_pro_get_option('user_dashboard_employer_page_id') );
 		}
 		if ( wp_job_board_pro_get_option('after_login_page_id_candidate') ) {
 			$page_id = wp_job_board_pro_get_option('after_login_page_id_candidate');
 			$page_id = WP_Job_Board_Pro_Mixes::get_lang_post_id($page_id, 'page');
 			$after_login_page_candidate_url = get_permalink($page_id);
 		} else {
-			$after_login_page_candidate_url = $after_login_page_url;
+			$after_login_page_candidate_url = get_permalink( wp_job_board_pro_get_option('user_dashboard_page_id') );
 		}
 
 		if ( wp_job_board_pro_get_option('after_register_page_id') ) {
@@ -113,7 +113,7 @@ class WP_Job_Board_Pro_Scripts {
 			$page_id = WP_Job_Board_Pro_Mixes::get_lang_post_id($page_id, 'page');
 			$after_register_page_url = get_permalink($page_id);
 		} else {
-			$page_id = wp_job_board_pro_get_option('user_dashboard_page_id');
+			$page_id = wp_job_board_pro_get_option('user_dashboard_employer_page_id');
 			$page_id = WP_Job_Board_Pro_Mixes::get_lang_post_id($page_id, 'page');
 			$after_register_page_url = get_permalink($page_id);
 		}
@@ -122,13 +122,17 @@ class WP_Job_Board_Pro_Scripts {
 			$page_id = WP_Job_Board_Pro_Mixes::get_lang_post_id($page_id, 'page');
 			$after_register_page_candidate_url = get_permalink($page_id);
 		} else {
-			$after_register_page_candidate_url = $after_register_page_url;
+			$after_register_page_candidate_url = get_permalink( wp_job_board_pro_get_option('user_dashboard_page_id') );
 		}
 
 		$page_id = wp_job_board_pro_get_option('user_dashboard_page_id');
 		$page_id = WP_Job_Board_Pro_Mixes::get_lang_post_id($page_id, 'page');
 		$dashboard_page_url = get_permalink($page_id);
 		
+		$page_id = wp_job_board_pro_get_option('user_dashboard_employer_page_id');
+		$page_id = WP_Job_Board_Pro_Mixes::get_lang_post_id($page_id, 'page');
+		$dashboard_employer_url = get_permalink($page_id);
+
 		$page_id = wp_job_board_pro_get_option('login_register_page_id');
 		$page_id = WP_Job_Board_Pro_Mixes::get_lang_post_id($page_id, 'page');
 		$login_register_url = get_permalink($page_id);
@@ -161,10 +165,11 @@ class WP_Job_Board_Pro_Scripts {
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'ajaxurl_endpoint' => WP_Job_Board_Pro_Ajax::get_endpoint(),
 			'dashboard_url' => esc_url( $dashboard_page_url ),
-			'after_login_page_url' => esc_url( $after_login_page_url ),
-			'after_login_page_candidate_url' => esc_url( $after_login_page_candidate_url ),
-			'after_register_page_url' => esc_url( $after_register_page_url ),
-			'after_register_page_candidate_url' => esc_url( $after_register_page_candidate_url ),
+			'dashboard_employer_url' => esc_url( $dashboard_employer_url ),
+			'after_login_page_url' => esc_url( apply_filters('wp_job_board_pro_after_login_page_url', $after_login_page_url ) ),
+			'after_login_page_candidate_url' => esc_url( apply_filters('wp_job_board_pro_after_login_page_candidate_url', $after_login_page_candidate_url ) ),
+			'after_register_page_url' => esc_url( apply_filters('wp_job_board_pro_after_register_page_url', $after_register_page_url ) ),
+			'after_register_page_candidate_url' => esc_url( apply_filters('wp_job_board_pro_after_register_page_candidate_url', $after_register_page_candidate_url ) ),
 			'login_register_url' => esc_url( $login_register_url ),
 			'home_url' => esc_url( home_url( '/' ) ),
 
@@ -213,7 +218,6 @@ class WP_Job_Board_Pro_Scripts {
 			wp_enqueue_script( 'google-maps' );
 			wp_register_script( 'leaflet-GoogleMutant', WP_JOB_BOARD_PRO_PLUGIN_URL . 'assets/js/leaflet/Leaflet.GoogleMutant.js', array( 'jquery' ), '1.5.1', true );
 		}
-
 
 		wp_register_style( 'leaflet', WP_JOB_BOARD_PRO_PLUGIN_URL . 'assets/js/leaflet/leaflet.css', array(), '1.5.1' );
 		wp_register_script( 'jquery-highlight', WP_JOB_BOARD_PRO_PLUGIN_URL . 'assets/js/jquery.highlight.js', array( 'jquery' ), '5', true );

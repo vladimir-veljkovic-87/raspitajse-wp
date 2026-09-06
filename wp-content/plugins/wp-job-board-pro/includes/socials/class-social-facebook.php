@@ -102,7 +102,8 @@ class WP_Job_Board_Pro_Social_Facebook {
 
         if ( empty($this->redirect_url) ) {
         	$user_dashboard_page_id = wp_job_board_pro_get_option('user_dashboard_page_id');
-        	$this->redirect_url = $user_dashboard_page_id > 0 ? get_permalink($user_dashboard_page_id) : home_url('/');
+        	$redirect_url = $user_dashboard_page_id > 0 ? get_permalink($user_dashboard_page_id) : home_url('/');
+            $this->redirect_url = apply_filters('wp-job-board-pro-facebook-after-login-redirect-url', $redirect_url);
         }
 
         // Redirect the user

@@ -54,26 +54,6 @@ class WP_Job_Board_Pro_Candidate_Register_Apply_Form extends WP_Job_Board_Pro_Ab
                 	'placeholder' => esc_html__('Email', 'wp-job-board-pro')
                 )
             ),
-			array(
-				'name'              => __( 'Lozinka', 'wp-job-board-pro' ),
-				'id'                => $this->prefix . 'password',
-				'type'              => 'text',
-				'priority'          => 1,
-				'label_cb'          => array( 'WP_Job_Board_Pro_Mixes', 'required_add_label' ),
-				'attributes' => array(
-					'placeholder' => esc_html__('Lozinka', 'wp-job-board-pro')
-				)
-			),
-			array(
-				'name'              => __( 'Potvrdite Lozinku', 'wp-job-board-pro' ),
-				'id'                => $this->prefix . 'confirmpassword',
-				'type'              => 'text',
-				'priority'          => 2,
-				'label_cb'          => array( 'WP_Job_Board_Pro_Mixes', 'required_add_label' ),
-				'attributes' => array(
-					'placeholder' => esc_html__('Potvrdite Lozinku', 'wp-job-board-pro')
-				)
-			),
 		), $this->post_type, $this->prefix );
 
 
@@ -218,7 +198,7 @@ class WP_Job_Board_Pro_Candidate_Register_Apply_Form extends WP_Job_Board_Pro_Ab
 			'job_id' => $post->ID,
 			'metaboxes_form' => $metaboxes_form,
 			'form_obj'       => $this,
-			'submit_button_text' => apply_filters( 'wp_job_board_pro_register_apply_'.$this->post_type.'_form_submit_button_text', __( 'Prijavi se za posao', 'wp-job-board-pro' ) ),
+			'submit_button_text' => apply_filters( 'wp_job_board_pro_register_apply_'.$this->post_type.'_form_submit_button_text', __( 'Apply now', 'wp-job-board-pro' ) ),
 		) );
 	}
 }

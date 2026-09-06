@@ -399,13 +399,22 @@ class WP_Job_Board_Pro_Shortcodes {
 				return WP_Job_Board_Pro_Template_Loader::get_template_part( 'misc/not-allowed', array('need_role' => 'employer') );
 			}
 
+			if ( get_query_var( 'paged' ) ) {
+			    $paged = get_query_var( 'paged' );
+			} elseif ( get_query_var( 'page' ) ) {
+			    $paged = get_query_var( 'page' );
+			} else {
+			    $paged = 1;
+			}
+
 			$jobs_loop = new WP_Query( array(
 				'post_type' => 'job_listing',
 				'fields' => 'ids',
+				'paged'  => $paged,
 				'author' => $user_id,
 				'orderby' => 'date',
 				'order' => 'DESC',
-				'posts_per_page' => -1,
+				'posts_per_page' => get_option('posts_per_page', 10),
 			));
 
 			$job_ids = array();
@@ -413,7 +422,7 @@ class WP_Job_Board_Pro_Shortcodes {
 				$job_ids = $jobs_loop->posts;
 			}
 
-			return WP_Job_Board_Pro_Template_Loader::get_template_part( 'misc/job-applicants', array( 'job_ids' => $job_ids ) );
+			return WP_Job_Board_Pro_Template_Loader::get_template_part( 'misc/job-applicants', array( 'job_ids' => $job_ids, 'jobs_loop' => $jobs_loop ) );
 
 	    }
 	    return WP_Job_Board_Pro_Template_Loader::get_template_part( 'misc/not-allowed', array('need_role' => 'employer') );

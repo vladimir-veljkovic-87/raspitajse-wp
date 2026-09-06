@@ -33,10 +33,8 @@ class WP_Job_Board_Pro_Candidate_Register_Form extends WP_Job_Board_Pro_Abstract
 		add_filter( 'cmb2_meta_boxes', array( $this, 'fields_front' ) );
 
 		add_action('wp_job_board_pro_candidate_signup_custom_fields_save', array($this, 'submit_process'));
-		
-		add_action('wp_enqueue_scripts', array($this, 'enqueue_validation_script'));
 	}
-	
+
 	public function process_register_new() {
 		
 	}

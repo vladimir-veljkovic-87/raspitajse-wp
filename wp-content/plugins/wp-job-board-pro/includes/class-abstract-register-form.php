@@ -55,24 +55,24 @@ class WP_Job_Board_Pro_Abstract_Register_Form {
                 )
             ),
             array(
-                'name'              => __( 'Lozinka', 'wp-job-board-pro' ),
+                'name'              => __( 'Password', 'wp-job-board-pro' ),
                 'id'                => $this->prefix . 'password',
                 'type'              => 'hide_show_password',
                 'priority'          => 0,
                 'label_cb'			=> array( 'WP_Job_Board_Pro_Mixes', 'required_add_label' ),
                 'attributes' => array(
-                	'placeholder' => esc_html__('Lozinka', 'wp-job-board-pro'),
+                	'placeholder' => esc_html__('Password', 'wp-job-board-pro'),
                 	'required' => true
                 )
             ),
             array(
-                'name'              => __( 'Potvrdite Lozinku', 'wp-job-board-pro' ),
+                'name'              => __( 'Confirm Password', 'wp-job-board-pro' ),
                 'id'                => $this->prefix . 'confirmpassword',
                 'type'              => 'hide_show_password',
                 'priority'          => 0,
                 'label_cb'			=> array( 'WP_Job_Board_Pro_Mixes', 'required_add_label' ),
                 'attributes' => array(
-                	'placeholder' => esc_html__('Potvrdite Lozinku', 'wp-job-board-pro'),
+                	'placeholder' => esc_html__('Confirm Password', 'wp-job-board-pro'),
                 	'required' => true
                 )
             ),
@@ -106,7 +106,7 @@ class WP_Job_Board_Pro_Abstract_Register_Form {
 			'post_id' => WP_Job_Board_Pro_Mixes::random_key(),
 			'metaboxes_form' => $metaboxes_form,
 			'form_obj'       => $this,
-			'submit_button_text' => apply_filters( 'wp_job_board_pro_register_'.$this->post_type.'_form_submit_button_text', __( 'Registruj se sada', 'wp-job-board-pro' ) ),
+			'submit_button_text' => apply_filters( 'wp_job_board_pro_register_'.$this->post_type.'_form_submit_button_text', __( 'Register now', 'wp-job-board-pro' ) ),
 		) );
 	}
 }

@@ -144,9 +144,7 @@ class WP_Job_Board_Pro_Careerjet_Jobs_Hooks {
         $posted_by_type = !empty($_POST['careerjet_job_import_posted_by_type']) ? sanitize_text_field($_POST['careerjet_job_import_posted_by_type']) : '';
 
 
-        $limit = $limit ? $limit : 10;
-        $limit =  $limit > 25 ? 25 :  $limit;
-        $start = $start ? ($start - 1) : 0;
+        
         $api_args = array(
             'keywords' => $search_keywords,
             'location' => $search_location,

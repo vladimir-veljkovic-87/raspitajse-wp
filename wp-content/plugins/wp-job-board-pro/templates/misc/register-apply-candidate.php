@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="form-group">
 					<label for="register-terms-and-conditions">
 						<input type="checkbox" name="terms_and_conditions" value="on" id="register-terms-and-conditions" required>
-						'.sprintf(__('Prihvatate naše <a href="%s">Uslove korišćenja i Politiku privatnosti</a>', 'wp-job-board-pro'), esc_url($page_url)).'
+						'.sprintf(__('You accept our <a href="%s">Terms and Conditions and Privacy Policy</a>', 'wp-job-board-pro'), esc_url($page_url)).'
 					</label>
 				</div>';
 			}

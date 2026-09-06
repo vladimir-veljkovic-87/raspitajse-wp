@@ -69,7 +69,6 @@
 
             self.loadExtension();
         },
-
         loadExtension: function() {
             var self = this;
             

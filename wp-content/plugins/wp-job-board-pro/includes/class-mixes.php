@@ -123,11 +123,11 @@ class WP_Job_Board_Pro_Mixes {
 
 	public static function get_default_salary_types() {
 		return apply_filters( 'wp-job-board-pro-get-default-salary-types', array(
-			'monthly' => __( 'Mesečno', 'wp-job-board-pro' ),
-			'weekly' => __( 'Nedeljno', 'wp-job-board-pro' ),
-			'daily' => __( 'Dnevno', 'wp-job-board-pro' ),
-			'hourly' => __( 'Po satu', 'wp-job-board-pro' ),
-			'yearly' => __( 'Godišnje', 'wp-job-board-pro' ),
+			'monthly' => __( 'Monthly', 'wp-job-board-pro' ),
+			'weekly' => __( 'Weekly', 'wp-job-board-pro' ),
+			'daily' => __( 'Daily', 'wp-job-board-pro' ),
+			'hourly' => __( 'Hourly', 'wp-job-board-pro' ),
+			'yearly' => __( 'Yearly', 'wp-job-board-pro' ),
 		));
 	}
 
@@ -171,7 +171,7 @@ class WP_Job_Board_Pro_Mixes {
 				'icon' => 'fab fa-facebook-f',
 			),
 			'twitter' => array(
-				'title' => esc_html__('Twitter', 'wp-job-board-pro'),
+				'title' => esc_html__('X', 'wp-job-board-pro'),
 				'icon' => 'fab fa-x-twitter',
 			),
 			'linkedin' => array(

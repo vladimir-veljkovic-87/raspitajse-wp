@@ -1,6 +1,6 @@
 <?php
 /**
- * Candidate Alert
+ * Job Alert
  *
  * @package    wp-job-board-pro
  * @author     Habq 
@@ -27,41 +27,8 @@ class WP_Job_Board_Pro_Candidate_Alert {
 		add_action( 'wp_ajax_nopriv_wp_job_board_pro_ajax_remove_candidate_alert',  array(__CLASS__,'process_remove_candidate_alert') );
 	}
 
-	public static function get_email_frequency() {
-		$email_frequency = apply_filters( 'wp-job-board-pro-candidate-alert-email-frequency', array(
-			'daily' => array(
-				'label' => __('Dnevno', 'wp-job-board-pro'),
-				'days' => '1',
-			),
-			'weekly' => array(
-				'label' => __('Nedeljno', 'wp-job-board-pro'),
-				'days' => '7',
-			),
-			'fortnightly' => array(
-				'label' => __('Dvonedeljno', 'wp-job-board-pro'),
-				'days' => '15',
-			),
-			'monthly' => array(
-				'label' => __('Mesečno', 'wp-job-board-pro'),
-				'days' => '30',
-			),
-			'biannually' => array(
-				'label' => __('Polugodišnje', 'wp-job-board-pro'),
-				'days' => '182',
-			),
-			'annually' => array(
-				'label' => __('Godišnje', 'wp-job-board-pro'),
-				'days' => '365',
-			),
-		));
-		return $email_frequency;
-	}
-
 	public static function send_candidate_alert_notice() {
-
-		$email_frequency_default = self::get_email_frequency();
-		$only_one_ever = false;
-
+		$email_frequency_default = WP_Job_Board_Pro_Job_Alert::get_email_frequency();
 		if ( $email_frequency_default ) {
 			foreach ($email_frequency_default as $key => $value) {
 				if ( !empty($value['days']) ) {
@@ -72,7 +39,6 @@ class WP_Job_Board_Pro_Candidate_Alert {
 							'compare' => 'NOT EXISTS',
 						)
 					);
-
 					$current_time = apply_filters( 'wp-job-board-pro-candidate-alert-current-'.$key.'-time', date( 'Y-m-d', strtotime( '-'.intval($value['days']).' days', current_time( 'timestamp' ) ) ) );
 					$meta_query[] = array(
 						'relation' => 'AND',
@@ -87,7 +53,7 @@ class WP_Job_Board_Pro_Candidate_Alert {
 							'compare' => '=',
 						),
 					);
-                 
+
 					$query_args = apply_filters( 'wp-job-board-pro-candidate-alert-query-args', array(
 						'post_type' => 'candidate_alert',
 						'post_per_page' => -1,
@@ -97,15 +63,9 @@ class WP_Job_Board_Pro_Candidate_Alert {
 					));
 
 					$candidate_alerts = new WP_Query($query_args);
-                    $duplicate = false;
-					// doing it all once foreach $job_alerts in posts - $job_alerts->posts as $post_id) {  
-					$only_one_pass = false;
-
 					if ( !empty($candidate_alerts->posts) ) {
 						foreach ($candidate_alerts->posts as $post_id) {
-                            $post = get_post($post_id);
-
-                           	$author_id = get_post_field('post_author', $post_id);
+							$author_id = get_post_field('post_author', $post_id);
 							$alert_query = get_post_meta($post_id, WP_JOB_BOARD_PRO_CANDIDATE_ALERT_PREFIX . 'alert_query', true);
 							
 							$params = $alert_query;
@@ -120,20 +80,18 @@ class WP_Job_Board_Pro_Candidate_Alert {
 							    'fields' => 'ids',
 							    'view_user_id' => $author_id
 							);
-                            
 							$candidates = WP_Job_Board_Pro_Query::get_posts($query_args, $params);
-
 							$count_candidates = $candidates->found_posts;
 							$candidate_alert_title = get_the_title($post_id);
-
-							// SENDER (for candidates)
-							$headers  = "From: Raspitajse.com - Vaš pouzdan AI model <noreply-employers@stage.raspitajse.com>\r\n";
-							$headers .= "Reply-To: no-reply@stage.raspitajse.com\r\n";
-							$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-
+							// send email action
+							$email_from = get_option( 'admin_email', false );
+							
+							$headers = sprintf( "From: %s <%s>\r\n Content-type: text/html", get_bloginfo('name'), $email_from );
 							
 							$author_id = get_post_field( 'post_author', $post_id );
-							$email_to = get_the_author_meta('user_email', $author_id);					
+							$email_to = get_the_author_meta('user_email', $author_id);
+
+							$subject = WP_Job_Board_Pro_Email::render_email_vars(array('alert_title' => $candidate_alert_title), 'candidate_alert_notice', 'subject');
 
 							$email_frequency = get_post_meta($post_id, WP_JOB_BOARD_PRO_CANDIDATE_ALERT_PREFIX.'email_frequency', true);
 							if ( !empty($email_frequency_default[$email_frequency]['label']) ) {
@@ -152,185 +110,12 @@ class WP_Job_Board_Pro_Candidate_Alert {
 									}
 								}
 							}
-
-							// Initialize $candidate_id here
-							$candidate_id = ''; 
-
-							// geting posts from $jobs object
-							$candidate_ids = $candidates->posts;
-
-							$candidate_ids = $candidates->posts;
-							$candidate_title = $candidate_url = $candidate_publish_date = $candidate_expiry_date = $location = $salary = $employer_name = $candidate_apply_email = '';
-							
-							$candidate_listings = [];
-							
-							if (!$only_one_pass) {
-								foreach ($candidate_ids as $candidate_id) {
-									$candidate_title = get_the_title($candidate_id);
-									$candidate_url = get_permalink($candidate_id);
-									$candidate_publish_date = get_the_date('Y-m-d', $candidate_id);
-									// candidate name is obsolute
-									$candidate_name = get_post_meta($candidate_id, '_candidate_display_name', true);
-									$candidate_job_title = get_post_meta($candidate_id, '_candidate_job_title', true);
-									$candidate_qualification = get_post_meta($candidate_id, '_candidate_qualification', true);
-									$candidate_experience_time = get_post_meta($candidate_id, '_candidate_experience_time', true);
-
-									$candidate_birth_date = get_post_meta($candidate_id, '_candidate_founded_date', true);
-									$candidate_email = get_post_meta($candidate_id, '_candidate_email', true);
-									
-									// Retrieve the serialized data
-									$map_location_data = get_post_meta($candidate_id, '_candidate_map_location', true);
-									// Unserialize the data to convert it into an array
-									$map_location = maybe_unserialize($map_location_data);
-									// Access the address field
-									$location = isset($map_location['address']) ? $map_location['address'] : null;
-
-									$salary = get_post_meta($candidate_id, '_candidate_salary', true);
-									$salary_type = get_post_meta($candidate_id, '_candidate_salary_type', true);
-							
-									$duplicate = false;
-									foreach ($candidate_listings as $candidate) {
-										if ($candidate['candidate_id'] === $candidate_id && $candidate['alert_title'] === $candidate_alert_title) {
-											$duplicate = true;
-											break;
-										}
-									}
-							
-									if (!$duplicate) {
-										$candidate_listings[] = [
-											'candidate_id' => $candidate_id,
-											'candidate_title' => $candidate_title,
-											'candidate_url' => $candidate_url,
-											'candidate_publish_date' => $candidate_publish_date,
-											'candidate_name' => $candidate_name,
-											'candidate_job_title' => $candidate_job_title,
-											'candidate_qualification' => $candidate_qualification,
-											'candidate_experience_time' => $candidate_experience_time,
-											
-											'candidate_birth_date' => $candidate_birth_date,
-											'candidate_email' => $candidate_email,
-											'location' => $location,
-											'salary' => $salary,
-											'salary_type' => $salary_type,
-											
-											'alert_title' => $candidate_alert_title,
-											'candidates_alert_url' => $candidates_alert_url,
-										];
-									}
-									
-								}
-								$candidate_listings = array_slice($candidate_listings, 0, 5);
-
-								$best_match_candidate = []; // Initialize $best_match_candidate
-								$lowest_salary = PHP_INT_MAX; // Start with the maximum possible value
-								$highest_experience = -1; // Start with the minimum possible value
-								$best_match_candidate_key = null;
-
-								// Iterate through each candidate listing to find best match
-								foreach ($candidate_listings as $key => $candidate) {
-																	
-									if (empty($candidate['salary']) || empty($candidate['candidate_experience_time'])) {
-										continue; 
-									}
-
-									// Normalize candidate salary based on salary type (monthly, yearly, hourly, daily)
-									$candidate_salary = isset($candidate['salary']) ? (int) $candidate['salary'] : PHP_INT_MAX;
-									$candidate_salary_type = isset($candidate['salary_type']) ? $candidate['salary_type'] : 'monthly'; // Default to monthly if not specified
-									
-									// Normalize salary based on type (convert to monthly salary)
-									if ($candidate_salary_type === 'yearly') {
-										$candidate_salary = $candidate_salary / 12;  // Convert yearly to monthly
-									} elseif ($candidate_salary_type === 'hourly') {
-										$candidate_salary = $candidate_salary * 168; // Assuming 168 working hours per month for hourly rates
-									} elseif ($candidate_salary_type === 'daily') {
-										$candidate_salary = $candidate_salary * 21; // Assuming 21 days in a month for daily rates
-									}
-									
-									// Normalize experience to years if it's not already in years
-									$candidate_experience = isset($candidate['candidate_experience_time']) ? $candidate['candidate_experience_time'] : '';
-									$normalized_experience = 0;  // Default experience in years
-									
-									if (strpos($candidate_experience, 'Year') !== false) {
-										$normalized_experience = (int) preg_replace('/\D/', '', $candidate_experience); // Extract experience in years
-									} elseif (strpos($candidate_experience, 'Month') !== false) {
-										$normalized_experience = (int) preg_replace('/\D/', '', $candidate_experience) / 12; // Convert months to years
-									}
-
-									if (
-										$candidate_salary < $lowest_salary || 
-										($candidate_salary === $lowest_salary && $normalized_experience > $highest_experience)
-									) {
-										$lowest_salary = $candidate_salary;
-										$highest_experience = $normalized_experience;
-										$best_match_candidate = $candidate;
-										$best_match_candidate_key = $key;
-
-									} else {
-									}
-								}
-
-								// Exclude the best match candidate
-								if ($best_match_candidate_key !== null) {
-									$candidate_listings = array_diff_key($candidate_listings, [$best_match_candidate_key => $candidate_listings[$best_match_candidate_key]]);
-								}
-								
- 								$candidate_entry_template = get_option('candidate_entry_template');
-								$candidate_content = '';
-
-								if (!empty($candidate_listings) && is_array($candidate_listings)) {
-									foreach ($candidate_listings as $candidate) {
-										// Create a copy of the candidate entry template to replace placeholders
-										$candidate_entry = $candidate_entry_template;
-										
-										// Replace placeholders with actual candidate data
-										$candidate_entry = str_replace('{{candidate_title}}', esc_html($candidate['candidate_title']), $candidate_entry);
-										$candidate_entry = str_replace('{{candidate_url}}', esc_url($candidate['candidate_url']), $candidate_entry);
-										$candidate_entry = str_replace('{{candidate_job_title}}', esc_html($candidate['candidate_job_title']), $candidate_entry);
-										$candidate_entry = str_replace('{{candidate_qualification}}', esc_html($candidate['candidate_qualification']), $candidate_entry);
-										$candidate_entry = str_replace('{{candidate_experience_time}}', esc_html($candidate['candidate_experience_time']), $candidate_entry);
-										$candidate_entry = str_replace('{{candidate_birth_date}}', esc_html($candidate['candidate_birth_date']), $candidate_entry);
-
-										$candidate_entry = str_replace('{{candidate_email}}', esc_html($candidate['candidate_email']), $candidate_entry);
-										$candidate_entry = str_replace('{{location}}', esc_html($candidate['location']), $candidate_entry);
-										$candidate_entry = str_replace('{{salary}}', esc_html($candidate['salary']), $candidate_entry);
-										$candidate_entry = str_replace('{{salary_type}}', esc_html($candidate['salary_type']), $candidate_entry);
-																			
-										$candidate_content .= $candidate_entry . "\n";
-									}
-								}
-
-								$only_one_ever = true; 
-
-								// Prepare content arguments
-								$content_args = apply_filters('wp-job-board-pro-candidate-alert-email-content-args', array(
-									'candidate_data' => $candidate_content, // Add all candidate listings data here
-									// best match candidate data
-									'best_candidate_title' => $best_match_candidate['candidate_title'],
-									'best_candidate_url' => $best_match_candidate['candidate_url'],
-									'best_candidate_job_title' => $best_match_candidate['candidate_job_title'],
-									'best_candidate_qualification' => $best_match_candidate['candidate_qualification'],
-									'best_candidate_experience_time' => $best_match_candidate['candidate_experience_time'],
-									'best_candidate_birth_date' => $best_match_candidate['candidate_birth_date'],
-									'best_location' => $best_match_candidate['location'],
-									'best_alert_title' => $best_match_candidate['candidates_alert_url'],
-									'candidates_found' => $count_candidates,
-								));
-								
-								$only_one_pass = true; // Set flag to true to avoid repeating
-									
-
-							}
-							
-                            $subject = WP_Job_Board_Pro_Email::render_email_vars(
-                                array(
-                                    'alert_title' => $candidate_alert_title,
-                                    'location' => $location, // Add the location data here
-									'candidate_title' => $candidate_title    // Add the candidate title data here
-                                ), 
-                                'candidate_alert_notice', 
-                                'subject'
-                            );
-
+							$content_args = apply_filters( 'wp-job-board-pro-candidate-alert-email-content-args', array(
+								'alert_title' => $candidate_alert_title,
+								'candidates_found' => $count_candidates,
+								'email_frequency_type' => $email_frequency,
+								'candidates_alert_url' => $candidates_alert_url
+							));
 							$content = WP_Job_Board_Pro_Email::render_email_vars($content_args, 'candidate_alert_notice', 'content');
 										
 							WP_Job_Board_Pro_Email::wp_mail( $email_to, $subject, $content, $headers );
@@ -349,31 +134,12 @@ class WP_Job_Board_Pro_Candidate_Alert {
 		$return = array();
 		
 		if ( !is_user_logged_in() || !WP_Job_Board_Pro_User::is_employer() ) {
-			$return = array( 'status' => false, 'msg' => esc_html__('Prijavite se kao "Poslodavac" da biste dodali obaveštenje o kandidatima.', 'wp-job-board-pro') );
+			$return = array( 'status' => false, 'msg' => esc_html__('Please login as "Employer" to add candidate alert.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		}
 		$user_id = WP_Job_Board_Pro_User::get_user_id();
 		$candidate_id = WP_Job_Board_Pro_User::get_candidate_by_user_id($user_id);
-
-		// Added check if the user already has two candidate alerts
-		$existing_alerts = new WP_Query(array(
-			'post_type' => 'candidate_alert',
-			'meta_query' => array(
-				array(
-					'key' => WP_JOB_BOARD_PRO_CANDIDATE_ALERT_PREFIX . 'candidate_id',
-					'value' => $candidate_id,
-					'compare' => '='
-				)
-			),
-			'posts_per_page' => 1
-		));
-
-		if ( $existing_alerts->found_posts >= 1 ) {
-			$return = array( 'status' => false, 'msg' => esc_html__('Možete imati jedno sačuvano obaveštenje o kandidatima.', 'wp-job-board-pro') );
-			echo wp_json_encode($return);
-			exit;
-		}		
 
 		$errors = self::validate_add_candidate_alert();
 		if ( !empty($errors) && sizeof($errors) > 0 ) {
@@ -416,24 +182,25 @@ class WP_Job_Board_Pro_Candidate_Alert {
 	        
 	        do_action('wp-job-board-pro-after-add-candidate-alert', $alert_id);
 
-	        $return = array( 'status' => true, 'msg' => esc_html__('Uspešno ste dodali obaveštenje o kandidatima.', 'wp-job-board-pro') );
+	        $return = array( 'status' => true, 'msg' => esc_html__('Add candidate alert successfully.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 	    } else {
-			$return = array( 'status' => false, 'msg' => esc_html__('Došlo je do greške prilikom dodavanja obaveštenja o kandidatima.', 'wp-job-board-pro') );
+			$return = array( 'status' => false, 'msg' => esc_html__('Add candidate alert error.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		}
 	}
 
 	public static function validate_add_candidate_alert() {
+		$return = array();
 		$name = !empty($_POST['name']) ? $_POST['name'] : '';
 		if ( empty($name) ) {
-			$return[] = esc_html__('Naziv je obavezan.', 'wp-job-board-pro');
+			$return[] = esc_html__('Name is required.', 'wp-job-board-pro');
 		}
 		$email_frequency = !empty($_POST['email_frequency']) ? $_POST['email_frequency'] : '';
 		if ( empty($email_frequency) ) {
-			$return[] = esc_html__('Učestalost e-pošte je obavezna.', 'wp-job-board-pro');
+			$return[] = esc_html__('Email frequency is required.', 'wp-job-board-pro');
 		}
 		return $return;
 	}
@@ -442,14 +209,14 @@ class WP_Job_Board_Pro_Candidate_Alert {
 		$return = array();
 
 		if ( !is_user_logged_in() ) {
-			$return = array( 'status' => false, 'msg' => esc_html__('Prijavite se da biste uklonili obaveštenje o kandidatima.', 'wp-job-board-pro') );
+			$return = array( 'status' => false, 'msg' => esc_html__('Please login to remove candidate alert.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		}
 		$alert_id = !empty($_POST['alert_id']) ? $_POST['alert_id'] : '';
 
 		if ( empty($alert_id) ) {
-			$return = array( 'status' => false, 'msg' => esc_html__('Kandidati ne postoje prema kriterijumima koje ste zadali.', 'wp-job-board-pro') );
+			$return = array( 'status' => false, 'msg' => esc_html__('Candidate did not exists.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		}
@@ -457,17 +224,17 @@ class WP_Job_Board_Pro_Candidate_Alert {
 		$is_allowed = WP_Job_Board_Pro_Mixes::is_allowed_to_remove( $user_id, $alert_id );
 
 		if ( ! $is_allowed ) {
-	        $return = array( 'status' => false, 'msg' => esc_html__('Ne možete ukloniti ovo obaveštenje o kandidatu.', 'wp-job-board-pro') );
+	        $return = array( 'status' => false, 'msg' => esc_html__('You can not remove this candidate alert.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		}
 
 		if ( wp_delete_post( $alert_id ) ) {
-	        $return = array( 'status' => true, 'msg' => esc_html__('Uspešno ste uklonili obaveštenje o kandidatima.', 'wp-job-board-pro') );
+	        $return = array( 'status' => true, 'msg' => esc_html__('Remove candidate alert successfully.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 	    } else {
-			$return = array( 'status' => false, 'msg' => esc_html__('Došlo je do greške prilikom uklanjanja obaveštenja o kandidatima.', 'wp-job-board-pro') );
+			$return = array( 'status' => false, 'msg' => esc_html__('Remove candidate alert error.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		}

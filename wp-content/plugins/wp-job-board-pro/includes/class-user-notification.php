@@ -55,7 +55,7 @@ class WP_Job_Board_Pro_User_Notification {
 	public static function process_remove_notification() {
 		$return = array();
 		if (  !isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'wp-job-board-pro-remove-notify-nonce' )  ) {
-			$return = array( 'status' => false, 'msg' => esc_html__('Vaša bezbednosna potvrda nije verifikovana.', 'wp-job-board-pro') );
+			$return = array( 'status' => false, 'msg' => esc_html__('Your nonce did not verify.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		}
@@ -72,7 +72,7 @@ class WP_Job_Board_Pro_User_Notification {
 			$post_type = 'candidate';
 			$prefix = WP_JOB_BOARD_PRO_CANDIDATE_PREFIX;
 		} else {
-			$return = array( 'status' => false, 'msg' => esc_html__('Ne možete obrisati ovo obaveštenje', 'wp-job-board-pro') );
+			$return = array( 'status' => false, 'msg' => esc_html__('You can not remove the notification', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		}
@@ -83,11 +83,11 @@ class WP_Job_Board_Pro_User_Notification {
 			unset($notifications[$unique_id]);
 			update_post_meta($user_post_id, $prefix . 'notifications', $notifications);
 
-			$return = array( 'status' => true, 'msg' => esc_html__('Obaveštenje je uspešno obrisano', 'wp-job-board-pro') );
+			$return = array( 'status' => true, 'msg' => esc_html__('The notification was successfully removed', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		} else {
-			$return = array( 'status' => false, 'msg' => esc_html__('Obaveštenje ne postoji', 'wp-job-board-pro') );
+			$return = array( 'status' => false, 'msg' => esc_html__('The notification dosen\'t exist', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
 		}
@@ -171,24 +171,24 @@ class WP_Job_Board_Pro_User_Notification {
 		switch ($type) {
 			case 'email_apply':
 				$job_id = !empty($args['job_id']) ? $args['job_id'] : '';
-				$html = sprintf(__('Nova prijava je poslata na vaš oglas <a href="%s">%s</a>', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id));
+				$html = sprintf(__('A new application is submitted on your job <a href="%s">%s</a>', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id));
 				break;
 			case 'internal_apply':
 				$job_id = !empty($args['job_id']) ? $args['job_id'] : '';
 				$candidate_id = !empty($args['candidate_id']) ? $args['candidate_id'] : '';
-				$html = sprintf(__('Nova prijava je poslata na vaš oglas <a href="%s">%s</a> od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($candidate_id), get_the_title($candidate_id) );
+				$html = sprintf(__('A new application is submitted on your job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($candidate_id), get_the_title($candidate_id) );
 				break;
 			case 'remove_apply':
 				$employer_id = !empty($args['employer_id']) ? $args['employer_id'] : '';
 				$job_id = !empty($args['job_id']) ? $args['job_id'] : '';
 
-				$html = sprintf(__('Prijava je uklonjena sa vašeg oglasa job <a href="%s">%s</a> od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
+				$html = sprintf(__('The application is removed on your job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
 				break;
 			case 'create_meeting':
 				$employer_id = !empty($args['employer_id']) ? $args['employer_id'] : '';
 				$job_id = !empty($args['job_id']) ? $args['job_id'] : '';
 
-				$html = sprintf(__('Novi sastanak je zakazan za oglas <a href="%s">%s</a> od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
+				$html = sprintf(__('A new meeting is created on the job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
 				break;
 			case 'reschedule_meeting':
 				$reschedule_user_id = !empty($args['reschedule_user_id']) ? $args['reschedule_user_id'] : '';
@@ -196,45 +196,45 @@ class WP_Job_Board_Pro_User_Notification {
 				$application_id = WP_Job_Board_Pro_Meeting::get_post_meta($meeting_id, 'application_id');
 				$job_id = WP_Job_Board_Pro_Applicant::get_post_meta($application_id, 'job_id');
 
-				$html = sprintf(__('Sastanak je ponovo zakazan za oglas <a href="%s">%s</a> od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
+				$html = sprintf(__('A meeting is re-schedule on the job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
 				break;
 			case 'remove_meeting':
 				$application_id = !empty($args['application_id']) ? $args['application_id'] : '';
 				$employer_id = !empty($args['employer_id']) ? $args['employer_id'] : '';
 				$job_id = WP_Job_Board_Pro_Applicant::get_post_meta($application_id, 'job_id');
 
-				$html = sprintf(__('Sastanak je uklonjen za oglas <a href="%s">%s</a> od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
+				$html = sprintf(__('A meeting is removed on the job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
 				break;
 			case 'cancel_meeting':
 				$application_id = !empty($args['application_id']) ? $args['application_id'] : '';
 				$candidate_id = !empty($args['candidate_id']) ? $args['candidate_id'] : '';
 				$job_id = WP_Job_Board_Pro_Applicant::get_post_meta($application_id, 'job_id');
 
-				$html = sprintf(__('Sastanak za vaš oglas <a href="%s">%s</a> je otkazan od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($candidate_id), get_the_title($candidate_id) );
+				$html = sprintf(__('A meeting is canceled on your job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($candidate_id), get_the_title($candidate_id) );
 				break;
 			case 'reject_applied':
 				$employer_id = !empty($args['employer_id']) ? $args['employer_id'] : '';
 				$job_id = !empty($args['job_id']) ? $args['job_id'] : '';
 
-				$html = sprintf(__('Vaša prijava je odbijena na oglasu <a href="%s">%s</a> od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
+				$html = sprintf(__('The application is rejected on your job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
 				break;
 			case 'undo_reject_applied':
 				$employer_id = !empty($args['employer_id']) ? $args['employer_id'] : '';
 				$job_id = !empty($args['job_id']) ? $args['job_id'] : '';
 
-				$html = sprintf(__('Odbijanje vaše prijave je poništeno na oglasu <a href="%s">%s</a> od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
+				$html = sprintf(__('The application is undo rejected on your job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
 				break;
 			case 'approve_applied':
 				$employer_id = !empty($args['employer_id']) ? $args['employer_id'] : '';
 				$job_id = !empty($args['job_id']) ? $args['job_id'] : '';
 
-				$html = sprintf(__('Vaša prijava je odobrena na oglasu <a href="%s">%s</a> od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
+				$html = sprintf(__('The application is approved on your job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
 				break;
 			case 'undo_approve_applied':
 				$employer_id = !empty($args['employer_id']) ? $args['employer_id'] : '';
 				$job_id = !empty($args['job_id']) ? $args['job_id'] : '';
 
-				$html = sprintf(__('Odobrenje vaše prijave je poništeno na oglasu <a href="%s">%s</a> od strane <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
+				$html = sprintf(__('The application is undo approved on your job <a href="%s">%s</a> by <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_id), get_the_title($job_id), get_permalink($employer_id), get_the_title($employer_id) );
 				break;
 			case 'new_private_message':
 				$user_id = !empty($args['user_id']) ? $args['user_id'] : '';
@@ -245,11 +245,11 @@ class WP_Job_Board_Pro_User_Notification {
 				}
 				$message_id = !empty($args['message_id']) ? $args['message_id'] : '';
 				if ( !empty($user_post_id) ) {
-					$html = sprintf(__('Nova privatna poruka od <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($user_post_id), get_the_title($user_post_id) );
+					$html = sprintf(__('A new private message from <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($user_post_id), get_the_title($user_post_id) );
 				} else {
 					$user = get_userdata( $user_id );
 					if ( is_object($user) ) {
-						$html = sprintf(__('Nova privatna poruka od korisnika %s.', 'wp-job-board-pro'), $user->display_name );
+						$html = sprintf(__('A new private message from %s.', 'wp-job-board-pro'), $user->display_name );
 					}
 				}
 				break;
@@ -259,7 +259,7 @@ class WP_Job_Board_Pro_User_Notification {
 				$job_ids = !empty($args['job_ids']) ? $args['job_ids'] : '';
 				
 				if ( !empty($job_ids) && count($job_ids) == 1 ) {
-					$html = sprintf(__('Pozvani ste da se prijavite na oglas <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_ids[0]), get_the_title($job_ids[0]) );
+					$html = sprintf(__('You are invited to apply job <a href="%s">%s</a>.', 'wp-job-board-pro'), get_permalink($job_ids[0]), get_the_title($job_ids[0]) );
 				} elseif( !empty($job_ids) ) {
 					$jobs_html = '';
 					$count = 1;
@@ -267,7 +267,7 @@ class WP_Job_Board_Pro_User_Notification {
 						$jobs_html .= '<a href="'.get_permalink($job_id).'">'.get_the_title($job_id).'</a>'.($count < count($job_ids) ? ', ' : '');
 						$count++;
 					}
-					$html = sprintf(__('Pozvani ste da se prijavite na sledeće oglase: %s.', 'wp-job-board-pro'), $jobs_html );
+					$html = sprintf(__('You are invited to apply jobs %s.', 'wp-job-board-pro'), $jobs_html );
 				}
 				break;
 			default:

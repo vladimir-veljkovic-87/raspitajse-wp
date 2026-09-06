@@ -33,7 +33,7 @@ class WP_Job_Board_Pro_Candidate_Meta {
 
 	public function get_post_metas() {
 		$return = array();
-		$fields = WP_Job_Board_Pro_Custom_Fields::get_custom_fields(array(), false, 0, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX);
+		$fields = WP_Job_Board_Pro_Custom_Fields::get_custom_fields(array(), 'all', 0, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX);
 		if ( !empty($fields) ) {
 			foreach ($fields as $field) {
 				if ( !empty($field['id']) ) {
@@ -44,6 +44,10 @@ class WP_Job_Board_Pro_Candidate_Meta {
 		return apply_filters('wp-job-board-pro-get-candidate-post-metas', $return);
 	}
 
+	public function get_metas() {
+		return $this->metas;
+	}
+	
 	public function check_post_meta_exist($key) {
 		if ( isset($this->metas[WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.$key]) ) {
 			return true;

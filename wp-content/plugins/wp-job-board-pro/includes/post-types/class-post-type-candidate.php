@@ -71,7 +71,7 @@ class WP_Job_Board_Pro_Post_Type_Candidate {
 			'parent_item_colon'     => '',
 			'menu_name'             => $plural,
 		);
-		$has_archive = true;
+		$has_archive = _x( 'candidates', 'Candidates archive slug - resave permalinks after changing this', 'wp-job-board-pro' );
 		$candidate_archive = get_option('wp_job_board_pro_candidate_archive_slug');
 		if ( $candidate_archive ) {
 			$has_archive = $candidate_archive;
@@ -158,13 +158,27 @@ class WP_Job_Board_Pro_Post_Type_Candidate {
 	public static function save_post($post_id, $post) {
 		if ( $post->post_type === 'candidate' ) {
 			$post_args = array( 'ID' => $post_id );
-			
-			if ( !empty($_POST[self::$prefix . 'urgent']) ) {
-				$post_args['menu_order'] = -2;
-			} elseif ( !empty($_POST[self::$prefix . 'featured']) ) {
-				$post_args['menu_order'] = -1;
+
+			if ( isset($_POST[self::$prefix . 'urgent']) || isset($_POST[self::$prefix . 'featured']) ) {
+				if ( !empty($_POST[self::$prefix . 'urgent']) ) {
+					$post_args['menu_order'] = -2;
+				} elseif ( !empty($_POST[self::$prefix . 'featured']) ) {
+					$post_args['menu_order'] = -1;
+				} else {
+					$post_args['menu_order'] = 0;
+				}
 			} else {
-				$post_args['menu_order'] = 0;
+
+				$urgent = get_post_meta( $post_id, self::$prefix. 'urgent', true );
+				$featured = get_post_meta( $post_id, self::$prefix. 'featured', true );
+				
+				if ( $urgent == 'on' ) {
+					$post_args['menu_order'] = -2;
+				} elseif ( $featured == 'on' ) {
+					$post_args['menu_order'] = -1;
+				} else {
+					$post_args['menu_order'] = 0;
+				}
 			}
 
 			$expiry_date = get_post_meta( $post_id, self::$prefix.'expiry_date', true );

@@ -748,9 +748,17 @@ class WP_Job_Board_Pro_Settings {
 						'page-type' => 'page'
 					),
 					array(
-						'name'    => __( 'User Dashboard Page', 'wp-job-board-pro' ),
+						'name'    => __( 'User Dashboard Page (Candidate)', 'wp-job-board-pro' ),
 						'desc'    => __( 'This lets the plugin know the location of the user dashboard. The <code>[wp_job_board_pro_user_dashboard]</code> shortcode should be on this page.', 'wp-job-board-pro' ),
 						'id'      => 'user_dashboard_page_id',
+						'type'    => 'select',
+						'options' => $pages,
+						'page-type' => 'page'
+					),
+					array(
+						'name'    => __( 'User Dashboard Page (Employer)', 'wp-job-board-pro' ),
+						'desc'    => __( 'This lets the plugin know the location of the user dashboard. The <code>[wp_job_board_pro_user_dashboard]</code> shortcode should be on this page.', 'wp-job-board-pro' ),
+						'id'      => 'user_dashboard_employer_page_id',
 						'type'    => 'select',
 						'options' => $pages,
 						'page-type' => 'page'

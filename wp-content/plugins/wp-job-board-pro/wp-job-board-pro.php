@@ -3,7 +3,7 @@
  * Plugin Name: WP Job Board Pro
  * Plugin URI: http://apusthemes.com/wp-job-board-pro/
  * Description: Powerful plugin to create a Job Board on your website.
- * Version: 1.2.73
+ * Version: 1.2.86
  * Author: Habq
  * Author URI: http://apusthemes.com/
  * Requires at least: 3.8
@@ -31,7 +31,8 @@ if ( !class_exists("WP_Job_Board_Pro") ) {
 				self::$instance = new WP_Job_Board_Pro;
 				self::$instance->setup_constants();
 
-				self::$instance->load_textdomain();
+				add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
+				
 				self::$instance->plugin_update();
 
 
@@ -50,7 +51,7 @@ if ( !class_exists("WP_Job_Board_Pro") ) {
 		 *
 		 */
 		public function setup_constants(){
-			define( 'WP_JOB_BOARD_PRO_PLUGIN_VERSION', '1.2.73' );
+			define( 'WP_JOB_BOARD_PRO_PLUGIN_VERSION', '1.2.86' );
 
 			define( 'WP_JOB_BOARD_PRO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 			define( 'WP_JOB_BOARD_PRO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -195,7 +196,8 @@ if ( !class_exists("WP_Job_Board_Pro") ) {
 
 		public function plugin_update() {
 	        require_once WP_JOB_BOARD_PRO_PLUGIN_DIR . 'libraries/plugin-update-checker/plugin-update-checker.php';
-	        Puc_v4_Factory::buildUpdateChecker(
+
+			$myUpdateChecker = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
 	            'https://www.apusthemes.com/themeplugins/wp-job-board-pro.json',
 	            __FILE__,
 	            'wp-job-board-pro'

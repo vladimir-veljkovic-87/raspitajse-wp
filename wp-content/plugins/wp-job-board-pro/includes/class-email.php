@@ -64,74 +64,60 @@ class WP_Job_Board_Pro_Email {
 			$author_email = get_post_meta( $_POST['post_id'], WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'email', true );
 		}
 		
-		if ($is_form_filled && !empty($author_email)) {
+		if ( $is_form_filled && !empty($author_email) ) {
 			$post = get_post($_POST['post_id']);
-			if ($post->post_type == 'candidate' && !WP_Job_Board_Pro_Candidate::check_restrict_view_contact_info($post)) {
+			if ( $post->post_type == 'candidate' && !WP_Job_Board_Pro_Candidate::check_restrict_view_contact_info($post) ) {
 				$return = array(
 					'status' => false,
 					'msg' => esc_html__('You have no package.', 'wp-job-board-pro')
 				);
 				echo wp_json_encode($return);
-				exit;
+	   			exit;
 			}
-			// Contact email check
+			// contact email check
 			do_action('wp-job-board-pro-before-process-send-contact', $post_type, $_POST);
-		
-			// Sanitize input fields
-			$email = sanitize_text_field($_POST['email']);
-			$phone = sanitize_text_field($_POST['phone']);
-			$t_subject = sanitize_text_field($_POST['subject']);
-			$message = sanitize_textarea_field($_POST['message']);
-		
-			// Prepare email subject and content
-			$subject = str_replace('{{subject}}', $t_subject, wp_job_board_pro_get_option('contact_form_notice_subject'));
-			
-			$content = wp_job_board_pro_get_option('contact_form_notice_content');
-			// Replace placeholders with actual data
-			$content = str_replace('{{subject}}', $t_subject, $content);
-			$content = str_replace('{{website_url}}', home_url(), $content);
-			$content = str_replace('{{website_name}}', get_bloginfo('name'), $content);
-			$content = str_replace('{{email}}', $email, $content);
-			$content = str_replace('{{phone}}', $phone, $content);
-			$content = str_replace('{{message}}', $message, $content);
-		
-			// Additional job data placeholders
-			$job_title = $job_url = $job_publish_date = $job_expiry_date = $location = $salary = $employer_name = $job_data = '';
-		
-			if (!empty($_POST['job_id'])) {
-				$job_id = $_POST['job_id'];
-				$job_title = get_the_title($job_id);
-				$job_url = get_permalink($job_id);
-		
-				// Fetch additional meta data
-				$job_publish_date = get_the_date('Y-m-d', $job_id); // Publish date from post date
-				$job_expiry_date = get_post_meta($job_id, '_job_expiry_date', true);
-				$location = get_post_meta($job_id, '_job_address', true);
-				$salary = get_post_meta($job_id, '_job_salary', true);
-		
-				// Fetch employer name using employer ID from meta
-				$employer_id = get_post_meta($job_id, '_job_employer_posted_by', true);
-				$employer_name = get_the_author_meta('display_name', $employer_id);
-			}
-		
-			// Set headers and send email
-			$headers = sprintf("From: %s <%s>\r\nContent-type: text/html", $email, $email);
-			
-			$result = self::wp_mail($author_email, $subject, $content, $headers);
-			if ($result) {
-				$return = array('status' => true, 'msg' => esc_html__('Your message has been successfully sent.', 'wp-job-board-pro'));
-		
-				do_action('wp-job-board-pro-after-process-send-contact', $post_type, $_POST);
-			} else {
-				$return = array('status' => false, 'msg' => esc_html__('An error occurred when sending an email.', 'wp-job-board-pro'));
-			}
-		} else {
-			$return = array('status' => false, 'msg' => esc_html__('Form has not been filled correctly.', 'wp-job-board-pro'));
-		}
-		
-		echo wp_json_encode($return);
-		exit;
-		
+
+	        $email = sanitize_text_field( $_POST['email'] );
+	        $phone = sanitize_text_field( $_POST['phone'] );
+	        $t_subject = sanitize_text_field( $_POST['subject'] );
+	        $message = sanitize_textarea_field( $_POST['message'] );
+
+	        $subject = str_replace('{{subject}}', $t_subject, wp_job_board_pro_get_option('contact_form_notice_subject'));
+
+	        $content = wp_job_board_pro_get_option('contact_form_notice_content');
+	        $content = str_replace('{{subject}}', $t_subject, $content);
+	        $content = str_replace('{{website_url}}', home_url(), $content);
+	        $content = str_replace('{{website_name}}', get_bloginfo( 'name' ), $content);
+	        $content = str_replace('{{email}}', $email, $content);
+	        $content = str_replace('{{phone}}', $phone, $content);
+	        $content = str_replace('{{message}}', $message, $content);
+	        
+	        $job_title = $job_url = '';
+	        if ( ! empty( $_POST['job_id'] ) ) {
+	        	$job_id = $_POST['job_id'];
+	        	$job_title = get_the_title($job_id);
+	        	$job_url = get_permalink($job_id);
+	        }
+
+	        $content = str_replace('{{job_title}}', $job_title, $content);
+        	$content = str_replace('{{job_url}}', $job_url, $content);
+
+	        $headers = sprintf( "From: %s <%s>\r\n Content-type: text/html", $email, $email );
+	        
+	        $result = false;
+			$result = self::wp_mail( $author_email, $subject, $content, $headers );
+	        if ( $result ) {
+	        	$return = array( 'status' => true, 'msg' => esc_html__('Your message has been successfully sent.', 'wp-job-board-pro') );
+
+	        	do_action('wp-job-board-pro-after-process-send-contact', $post_type, $_POST);
+	        } else {
+	        	$return = array( 'status' => false, 'msg' => esc_html__('An error occurred when sending an email.', 'wp-job-board-pro') );
+	        }
+	    } else {
+	    	$return = array( 'status' => false, 'msg' => esc_html__('Form has been not filled correctly.', 'wp-job-board-pro') );
+	    }
+	    echo wp_json_encode($return);
+	   	exit;
 	}
 
 	public static function emails_vars() {
@@ -150,7 +136,7 @@ class WP_Job_Board_Pro_Email {
 			),
 			'employer_notice_expiring_listing' => array(
 				'subject' => array( 'job_title' ),
-				'content' => array( 'job_title', 'job_type', 'job_category', 'job_publish_date', 'job_expiry_date', 'job_featured', 'job_status', 'job_url', 'website_url', 'website_name', 'dashboard_url', 'my_jobs' )
+				'content' => array( 'job_title', 'job_type', 'job_category', 'job_publish_date', 'job_expiry_date', 'job_featured', 'job_status', 'job_url', 'website_url', 'website_name', 'dashboard_url', 'dashboard_employer_url', 'my_jobs' )
 			),
 			'email_apply_job_notice' => array(
 				'subject' => array( 'job_title' ),
@@ -164,19 +150,14 @@ class WP_Job_Board_Pro_Email {
 				'subject' => array( 'job_title' ),
 				'content' => array( 'job_title', 'job_url', 'candidate_name', 'website_name', 'website_url' )
 			),
+
 			'job_alert_notice' => array(
-				'subject' => array( 'alert_title', 'location', 'job_title'),
-				'content' => array(
-				'job_data',				
-				'alert_title', 'website_url', 'website_name', 'email_frequency_type', 'jobs_alert_url',  
-				'newest_employer_name', 'newest_job_title', 'newest_job_url', 'newest_job_publish_date', 'newest_job_expiry_date', 'newest_job_apply_email', 'newest_location', 'newest_salary', 'newest_alert_title'  )
+				'subject' => array( 'alert_title' ),
+				'content' => array( 'alert_title', 'jobs_found', 'website_url', 'website_name', 'email_frequency_type', 'jobs_alert_url' )
 			),
 			'candidate_alert_notice' => array(
-				'subject' => array( 'alert_title', 'location', 'candidate_title' ),
-				'content' => array( 
-					'candidate_data',
-					'alert_title', 'candidates_found', 'website_url', 'website_name', 'email_frequency_type',
-					'best_candidate_title', 'best_candidate_url', 'best_candidate_job_title', 'best_candidate_qualification', 'best_candidate_experience_time', 'best_candidate_birth_date', 'best_location', 'best_alert_title' )
+				'subject' => array( 'alert_title' ),
+				'content' => array( 'alert_title', 'candidates_found', 'website_url', 'website_name', 'email_frequency_type', 'candidates_alert_url' )
 			),
 			'contact_form_notice' => array(
 				'subject' => array( 'subject' ),
@@ -421,7 +402,29 @@ class WP_Job_Board_Pro_Email {
 
 	public static function dashboard_url($args) {
 		$output = '';
+		if ($args['user_obj']) {
+			$user_id = $args['user_obj']->ID;
+			if ( WP_Job_Board_Pro_User::is_employer($user_id) ) {
+				$dashboard_page_id = wp_job_board_pro_get_option('user_dashboard_employer_page_id');
+				$output = get_permalink($dashboard_page_id);
+			} else {
+				$dashboard_page_id = wp_job_board_pro_get_option('user_dashboard_page_id');
+				$output = get_permalink($dashboard_page_id);
+			}
+		}
+		return $output;
+	}
+
+	public static function dashboard_candidate_url($args) {
+		$output = '';
 		$dashboard_page_id = wp_job_board_pro_get_option('user_dashboard_page_id');
+		$output = get_permalink($dashboard_page_id);
+		return $output;
+	}
+
+	public static function dashboard_employer_url($args) {
+		$output = '';
+		$dashboard_page_id = wp_job_board_pro_get_option('user_dashboard_employer_page_id');
 		$output = get_permalink($dashboard_page_id);
 		return $output;
 	}
@@ -441,7 +444,7 @@ class WP_Job_Board_Pro_Email {
 		return $output;
 	}
 
-	public static function author($job) {
+	public static function author($args) {
 		$output = '';
 		if ( !empty($args['job']) && !empty($args['job']->ID) ) {
 			$author_id = WP_Job_Board_Pro_Job_Listing::get_author_id($args['job']->ID);
@@ -455,7 +458,7 @@ class WP_Job_Board_Pro_Email {
 		return $output;
 	}
 
-	public static function candidate_name($job) {
+	public static function candidate_name($args) {
 		$output = '';
 		if ( isset($args['candidate']) && !empty($args['candidate']->post_title) ) {
 			$output = $args['candidate']->post_title;
@@ -463,7 +466,7 @@ class WP_Job_Board_Pro_Email {
 		return $output;
 	}
 
-	public static function employer_name($job) {
+	public static function employer_name($args) {
 		$output = '';
 		if ( isset($args['employer']) && !empty($args['employer']->post_title) ) {
 			$output = $args['employer']->post_title;

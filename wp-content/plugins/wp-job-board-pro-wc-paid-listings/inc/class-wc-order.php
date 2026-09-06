@@ -89,6 +89,19 @@ class WP_Job_Board_Pro_Wc_Paid_Listings_Order {
 
 					if ( in_array( $listing->post_status, array( 'pending_payment', 'expired' ) ) ) {
 						WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::approve_job_with_package( $listing->ID, $order->get_customer_id(), $user_package_id );
+
+						// send email
+						if ( class_exists('WP_Job_Board_Pro_Email') && wp_job_board_pro_get_option('admin_notice_add_new_listing') ) {
+							$job = $listing;
+							$email_from = get_option( 'admin_email', false );
+							
+							$headers = sprintf( "From: %s <%s>\r\n Content-type: text/html", get_bloginfo('name'), $email_from );
+							$email_to = get_option( 'admin_email', false );
+							$subject = WP_Job_Board_Pro_Email::render_email_vars(array('job' => $job), 'admin_notice_add_new_listing', 'subject');
+							$content = WP_Job_Board_Pro_Email::render_email_vars(array('job' => $job), 'admin_notice_add_new_listing', 'content');
+							
+							WP_Job_Board_Pro_Email::wp_mail( $email_to, $subject, $content, $headers );
+						}
 					}
 				}
 			}

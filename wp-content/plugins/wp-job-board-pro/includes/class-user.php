@@ -194,6 +194,7 @@ class WP_Job_Board_Pro_User {
 			}
 	        $user_id = get_current_user_id();
 	    }
+	    $return = false;
 	    $employer_id = get_user_meta($user_id, 'employer_id', true);
 	    $employer_id = $employer_id > 0 ? $employer_id : 0;
 	    if ($employer_id > 0) {
@@ -201,10 +202,11 @@ class WP_Job_Board_Pro_User {
 
 	        $post = get_post($employer_id);
 	        if ( !empty($post->ID) ) {
-	            return true;
+	            $return = true;
 	        }
 	    }
-	    return false;
+	    
+	    return apply_filters('wp-job-board-pro-is-employer', $return, $user_id);
 	}
 
 	public static function is_candidate($user_id = 0) {
@@ -214,6 +216,7 @@ class WP_Job_Board_Pro_User {
 			}
 	        $user_id = get_current_user_id();
 	    }
+	    $return = false;
 	    $candidate_id = get_user_meta($user_id, 'candidate_id', true);
 	    $candidate_id = $candidate_id > 0 ? $candidate_id : 0;
 	    if ($candidate_id > 0) {
@@ -221,10 +224,11 @@ class WP_Job_Board_Pro_User {
 
 	        $post = get_post($candidate_id);
 	        if ( !empty($post->ID) ) {
-	            return true;
+	            $return = true;
 	        }
 	    }
-	    return false;
+	    
+	    return apply_filters('wp-job-board-pro-is-candidate', $return, $user_id);
 	}
 
 	public static function is_employee($user_id = 0) {
@@ -388,7 +392,7 @@ class WP_Job_Board_Pro_User {
 		if ( empty($info['user_login']) || empty($info['user_password']) ) {
             echo json_encode(array(
             	'status' => false,
-            	'msg' => __('Molim vas popunite sva polja.', 'wp-job-board-pro')
+            	'msg' => __('Please fill all form fields', 'wp-job-board-pro')
             ));
             die();
         }
@@ -409,21 +413,21 @@ class WP_Job_Board_Pro_User {
         } elseif ( $user_login_auth == 'denied' && isset($user_obj->ID) ) {
         	echo json_encode(array(
             	'status' => false,
-            	'msg' => __('Vaš profil je odbijen.', 'wp-job-board-pro')
+            	'msg' => __('Your account is denied', 'wp-job-board-pro')
             ));
             die();
         }
 
 		$user_signon = wp_signon( $info, is_ssl() );
 	    if ( is_wp_error($user_signon) ){
-			$result = json_encode(array('status' => false, 'msg' => esc_html__('Pogrešno korisničko ime ili lozinka. Molimo pokušajte ponovo!!!', 'wp-job-board-pro')));
+			$result = json_encode(array('status' => false, 'msg' => esc_html__('Wrong username or password. Please try again!!!', 'wp-job-board-pro')));
 	    } else {
 			wp_set_current_user($user_signon->ID); 
 			$role = 'wp_job_board_pro_candidate';
 			if ( self::is_employer($user_signon->ID) ) {
 				$role = 'wp_job_board_pro_employer';
 			}
-	        $result = json_encode( array('status' => true, 'msg' => esc_html__('Uspešno prijavljivanje, preusmeravanje…', 'wp-job-board-pro'), 'role' => $role) );
+	        $result = json_encode( array('status' => true, 'msg' => esc_html__('Signin successful, redirecting...', 'wp-job-board-pro'), 'role' => $role) );
 	    }
 
    		echo trim($result);
@@ -438,7 +442,7 @@ class WP_Job_Board_Pro_User {
 		if ( WP_Job_Board_Pro_Recaptcha::is_recaptcha_enabled() ) {
 			$is_recaptcha_valid = array_key_exists( 'g-recaptcha-response', $_POST ) ? WP_Job_Board_Pro_Recaptcha::is_recaptcha_valid( sanitize_text_field( $_POST['g-recaptcha-response'] ) ) : false;
 			if ( !$is_recaptcha_valid ) {
-				$error = esc_html__( 'Captcha nije ispravna', 'wp-job-board-pro' );
+				$error = esc_html__( 'Captcha is not valid', 'wp-job-board-pro' );
 
 				echo json_encode(array('status' => false, 'msg' => $error));
 				wp_die();
@@ -449,22 +453,22 @@ class WP_Job_Board_Pro_User {
 		$account = isset($_POST['user_login']) ? $_POST['user_login'] : '';
 		
 		if ( empty( $account ) ) {
-			$error = esc_html__( 'Unesite korisničko ime ili e-mail adresu.', 'wp-job-board-pro' );
+			$error = esc_html__( 'Enter an username or e-mail address.', 'wp-job-board-pro' );
 		} else {
 			if(is_email( $account )) {
 				if( email_exists($account) ) {
 					$get_by = 'email';
 				} else {
-					$error = esc_html__( 'Nijedan korisnik nije registrovan sa tom e-mail adresom.', 'wp-job-board-pro' );			
+					$error = esc_html__( 'There is no user registered with that email address.', 'wp-job-board-pro' );			
 				}
 			} else if (validate_username( $account )) {
 				if( username_exists($account) ) {
 					$get_by = 'login';
 				} else {
-					$error = esc_html__( 'Nijedan korisnik nije registrovan sa tim korisničkim imenom.', 'wp-job-board-pro' );				
+					$error = esc_html__( 'There is no user registered with that username.', 'wp-job-board-pro' );				
 				}
 			} else {
-				$error = esc_html__(  'Neispravno korisničko ime ili e-mail adresa.', 'wp-job-board-pro' );		
+				$error = esc_html__(  'Invalid username or e-mail address.', 'wp-job-board-pro' );		
 			}
 		}	
 		
@@ -487,7 +491,7 @@ class WP_Job_Board_Pro_User {
 	        } elseif ( $user_login_auth == 'denied' && isset($user_obj->ID) ) {
 	            echo json_encode(array(
 	            	'status' => false,
-	            	'msg' => __('Vaš nalog je odbijen.', 'wp-job-board-pro')
+	            	'msg' => __('Your account is denied.', 'wp-job-board-pro')
 	            ));
 	            die();
 	        }
@@ -521,12 +525,12 @@ class WP_Job_Board_Pro_User {
 				$mail = WP_Job_Board_Pro_Email::wp_mail( $email_to, $subject, $content, $headers );
 				
 				if( $mail ) {
-					$success = esc_html__( 'Proverite svoju e-mail adresu za novu lozinku.', 'wp-job-board-pro' );
+					$success = esc_html__( 'Check your email address for you new password.', 'wp-job-board-pro' );
 				} else {
-					$error = esc_html__( 'Sistem nije uspeo da vam pošalje e-mail sa novom lozinkom.', 'wp-job-board-pro' );						
+					$error = esc_html__( 'System is unable to send you mail containg your new password.', 'wp-job-board-pro' );						
 				}
 			} else {
-				$error =  esc_html__( 'Ups! Došlo je do greške prilikom ažuriranja vašeg naloga.', 'wp-job-board-pro' );
+				$error =  esc_html__( 'Oops! Something went wrong while updating your account.', 'wp-job-board-pro' );
 			}
 		}
 	
@@ -542,13 +546,31 @@ class WP_Job_Board_Pro_User {
 
 	public static function process_register_new() {
 		global $reg_errors;
-		// check_ajax_referer( 'ajax-register-nonce', 'security_register' );
+
+		if ( !get_option('users_can_register') ) {
+			$return = array( 'status' => false, 'msg' => esc_html__('The website does not allow account registration.', 'wp-job-board-pro') );
+            wp_send_json( $return );
+		}
+
 		if ( !empty($_POST['post_type'] == 'employer') ) {
-			$prefix = WP_JOB_BOARD_PRO_EMPLOYER_PREFIX;
+	        $prefix = WP_JOB_BOARD_PRO_EMPLOYER_PREFIX;
 			$role = 'wp_job_board_pro_employer';
+
+			$cmb = cmb2_get_metabox( $prefix . 'register_fields', 0 );
+			if ( ! isset( $_POST[ $cmb->nonce() ] ) || ! wp_verify_nonce( $_POST[ $cmb->nonce() ], $cmb->nonce() ) ) {
+				$return = array( 'status' => false, 'msg' => esc_html__('Security check failed, this could be because of your browser cache. Please clear the cache and check it again.', 'wp-job-board-pro') );
+	            wp_send_json( $return );
+			}
 		} else {
-			$prefix = WP_JOB_BOARD_PRO_CANDIDATE_PREFIX;
+			
+	        $prefix = WP_JOB_BOARD_PRO_CANDIDATE_PREFIX;
 			$role = 'wp_job_board_pro_candidate';
+
+			$cmb = cmb2_get_metabox( $prefix . 'register_fields', 0 );
+			if ( ! isset( $_POST[ $cmb->nonce() ] ) || ! wp_verify_nonce( $_POST[ $cmb->nonce() ], $cmb->nonce() ) ) {
+				$return = array( 'status' => false, 'msg' => esc_html__('Security check failed, this could be because of your browser cache. Please clear the cache and check it again.', 'wp-job-board-pro') );
+	            wp_send_json( $return );
+			}
 		}
 
 
@@ -616,11 +638,36 @@ class WP_Job_Board_Pro_User {
 
 	public static function process_register() {
 		global $reg_errors;
-		// if ( isset($_POST['role']) && $_POST['role'] == 'wp_job_board_pro_employer' ) {
-        // 	check_ajax_referer( 'ajax-register-employer-nonce', 'security_register_employer' );
-        // } elseif ( isset($_POST['role']) && $_POST['role'] == 'wp_job_board_pro_candidate' ) {
-        // 	check_ajax_referer( 'ajax-register-candidate-nonce', 'security_register_candidate' );
-        // }
+		if ( !get_option('users_can_register') ) {
+			$return = array( 'status' => false, 'msg' => esc_html__('The website does not allow account registration.', 'wp-job-board-pro') );
+            wp_send_json( $return );
+		}
+
+		if ( isset($_POST['role']) && $_POST['role'] == 'wp_job_board_pro_employer' ) {
+        	$do_check = check_ajax_referer( 'ajax-register-employer-nonce', 'security_register_employer', false );
+			if ( $do_check == false ) {
+	            $return = array( 'status' => false, 'msg' => esc_html__('Security check failed, this could be because of your browser cache. Please clear the cache and check it again.', 'wp-job-board-pro') );
+	            wp_send_json( $return );
+	        }
+
+	        $role = 'wp_job_board_pro_employer';
+        } elseif ( isset($_POST['role']) && $_POST['role'] == 'wp_job_board_pro_candidate' ) {
+        	$do_check = check_ajax_referer( 'ajax-register-candidate-nonce', 'security_register_candidate', false );
+			if ( $do_check == false ) {
+	            $return = array( 'status' => false, 'msg' => esc_html__('Security check failed, this could be because of your browser cache. Please clear the cache and check it again.', 'wp-job-board-pro') );
+	            wp_send_json( $return );
+	        }
+
+	        $role = 'wp_job_board_pro_candidate';
+        } else {
+        	$do_check = check_ajax_referer( 'ajax-register-candidate-nonce', 'security_register_candidate', false );
+			if ( $do_check == false ) {
+	            $return = array( 'status' => false, 'msg' => esc_html__('Security check failed, this could be because of your browser cache. Please clear the cache and check it again.', 'wp-job-board-pro') );
+	            wp_send_json( $return );
+	        }
+
+	        $role = 'wp_job_board_pro_candidate';
+        }
 		
         self::registration_validation( $_POST['email'], $_POST['password'], $_POST['confirmpassword'] );
         if ( 1 > count( $reg_errors->get_error_messages() ) ) {
@@ -637,16 +684,14 @@ class WP_Job_Board_Pro_User {
 		            $username .= '_' . rand(10000, 99999);
 		        }
 	        }
-	        
+	        $_POST['role'] = $role;
 	 		$userdata = array(
 		        'user_login' => sanitize_user( $username ),
 		        'user_email' => sanitize_email( $email ),
 		        'user_pass' => $_POST['password'],
+		        'role' => $role,
 	        );
-
-	        if ( isset($_POST['role']) ) {
-	        	$userdata['role'] = $_POST['role'];
-	        }
+	 		
 	        $user_id = wp_insert_user( $userdata );
 	        if ( ! is_wp_error( $user_id ) ) {
 	        	if ( (self::is_employer($user_id) && wp_job_board_pro_get_option('employers_requires_approval', 'auto') != 'auto') ) {
@@ -735,7 +780,6 @@ class WP_Job_Board_Pro_User {
 		if ( email_exists( $email ) ) {
 		    $reg_errors->add( 'email', esc_html__( 'Email is already in use. Please use a different email to register', 'wp-job-board-pro' ) );
 		}
-	
 	}
 
 	public static function auto_generate_user( $post_id, $post, $updated ) {
@@ -1227,8 +1271,27 @@ class WP_Job_Board_Pro_User {
 			die();
 		}
 
-		if ( $new_password != $retype_password ) {
-			echo json_encode(array('status' => false, 'msg'=> __( 'New and retyped password are not same.', 'wp-job-board-pro' ) ));
+		$reg_errors = [];
+		if ( strlen( $new_password ) < 8 ) {
+	        $reg_errors[] = esc_html__( 'Password length must be greater than 8 characters', 'wp-job-board-pro' );
+	    }
+
+	    if ( ! preg_match( '/[0-9]/', $new_password ) ) {
+            $reg_errors[] = esc_html__( 'Password must have at least 1 numeric character', 'wp-job-board-pro' );
+        }
+        if ( ! preg_match( '/[a-z]/', $new_password ) ) {
+            $reg_errors[] = esc_html__( 'Password must have at least 1 lower case character', 'wp-job-board-pro' );
+        }
+        if ( ! preg_match( '/[A-Z]/', $new_password ) ) {
+            $reg_errors[] = esc_html__( 'Password must have at least 1 upper case character', 'wp-job-board-pro' );
+        }
+
+	    if ( $new_password != $retype_password ) {
+	        $reg_errors[] = esc_html__( 'New and retyped password are not same.', 'wp-job-board-pro' );
+	    }
+
+	    if ( !empty($reg_errors) ) {
+			echo json_encode(array('status' => false, 'msg'=> implode(', ', $reg_errors) ));
 			die();
 		}
 
@@ -1334,10 +1397,10 @@ class WP_Job_Board_Pro_User {
 
 			do_action( 'wp-job-board-pro-process-profile-after-change', $post_id, $prefix );
 
-			$_SESSION['messages'][] = array( 'success', __( 'Profil je uspešno ažuriran.', 'wp-job-board-pro' ) );
+			$_SESSION['messages'][] = array( 'success', __( 'Profile has been successfully updated.', 'wp-job-board-pro' ) );
 
 		} else {
-			$_SESSION['messages'][] = array( 'danger', __( 'Nije moguće ažurirati profil.', 'wp-job-board-pro' ) );
+			$_SESSION['messages'][] = array( 'danger', __( 'Can not update profile', 'wp-job-board-pro' ) );
 		}
 	}
 
@@ -2002,11 +2065,11 @@ class WP_Job_Board_Pro_User {
 		}
 
 		if ( $requires_approval == 'email_approve' ) {
-			$return = __('Registracija je završena. Pre nego što se prijavite, morate aktivirati svoj nalog putem linka poslatog na vašu e-mail adresu.', 'wp-job-board-pro');
+			$return = __('Registration complete. Before you can login, you must activate your account sent to your email address.', 'wp-job-board-pro');
 		} elseif ( $requires_approval == 'admin_approve' ) {
-			$return = __('Registracija je završena. Vaš nalog mora biti potvrđen od strane administratora pre nego što se možete prijaviti.', 'wp-job-board-pro');
+			$return = __('Registration complete. Your account has to be confirmed by an administrator before you can login', 'wp-job-board-pro');
 		} else {
-			$return = __('Vaš nalog još uvek nije potvrđen.', 'wp-job-board-pro');
+			$return = __('Your account has to be confirmed yet.', 'wp-job-board-pro');
 		}
 
 		return apply_filters('wp-job-board-pro-get-register-msg', $return, $requires_approval);
@@ -2021,11 +2084,11 @@ class WP_Job_Board_Pro_User {
 		}
 		
 		if ( $requires_approval == 'email_approve' ) {
-			$return = sprintf(__('Nalog još uvek nije potvrđen, morate ga aktivirati putem linka poslatog na vašu e-mail adresu. Ako niste primili ovu poruku, proverite svoj „junk/spam“ folder. <a href="javascript:void(0);" class="wp-job-board-pro-resend-approve-account-btn" data-login="%s">Kliknite ovde</a> da ponovo pošaljete e-mail za aktivaciju.', 'wp-job-board-pro'), $user->user_login );
+			$return = sprintf(__('The account has not confirmed yet, you must activate your account with the link sent to your email address. If you did not receive this email, please check your junk/spam folder. <a href="javascript:void(0);" class="wp-job-board-pro-resend-approve-account-btn" data-login="%s">Click here</a> to resend the activation email.', 'wp-job-board-pro'), $user->user_login );
 		} elseif ( $requires_approval == 'admin_approve' ) {
-			$return = __('Vaš nalog mora biti potvrđen od strane administratora pre nego što se možete prijaviti.', 'wp-job-board-pro');
+			$return = __('Your account has to be confirmed by an administrator before you can login.', 'wp-job-board-pro');
 		} else {
-			$return = __('Vaš nalog još uvek nije potvrđen.', 'wp-job-board-pro');
+			$return = __('Your account has to be confirmed yet.', 'wp-job-board-pro');
 		}
 
 		return apply_filters('wp-job-board-pro-get-login-msg', $return, $requires_approval);

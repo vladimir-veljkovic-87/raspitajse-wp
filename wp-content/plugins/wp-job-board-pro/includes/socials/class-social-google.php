@@ -41,7 +41,8 @@ class WP_Job_Board_Pro_Social_Google {
         if ( $this->is_google_login_enabled() || $this->is_google_apply_enabled() ) {
             $user_dashboard_page_id = wp_job_board_pro_get_option('user_dashboard_page_id');
             $this->redirect_url = home_url('/');
-            $this->after_login_redirect_url = $user_dashboard_page_id > 0 ? get_permalink($user_dashboard_page_id) : home_url('/');
+            $after_login_redirect_url = $user_dashboard_page_id > 0 ? get_permalink($user_dashboard_page_id) : home_url('/');
+            $this->after_login_redirect_url = apply_filters('wp-job-board-pro-google-after-login-redirect-url', $after_login_redirect_url);
 
             $this->set_access_tokes();
             // Ajax endpoints.

@@ -125,8 +125,8 @@ class WP_Job_Board_Pro_Post_Type_Candidate_Alert {
 			unset($columns['date']);
 		}
 		$fields = array_merge($columns, array(
-			'title' 			=> __( 'Naziv', 'wp-job-board-pro' ),
-			'email_frequency' 	=> __( 'Učestalost E-pošte', 'wp-job-board-pro' ),
+			'title' 			=> __( 'Title', 'wp-job-board-pro' ),
+			'email_frequency' 	=> __( 'Email Frequency', 'wp-job-board-pro' ),
 			'date' 				=> esc_html__( 'Date', 'wp-job-board-pro' ),
 			'auhtor' 			=> esc_html__( 'Auhtor', 'wp-job-board-pro' ),
 		));

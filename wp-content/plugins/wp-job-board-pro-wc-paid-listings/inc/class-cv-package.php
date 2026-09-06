@@ -39,7 +39,7 @@ class WP_Job_Board_Pro_Wc_Paid_Listings_CV_Package {
 			if ( $view == 'register_employer_with_package' ) {
 				$return = false;
 				if ( is_user_logged_in() ) {
-					$user_id = get_current_user_id();
+					$user_id = WP_Job_Board_Pro_User::get_user_id();
 					$author_id = WP_Job_Board_Pro_User::get_user_by_candidate_id($post->ID);
 					if ( $user_id == $author_id ) {
 						$return = true;
@@ -96,7 +96,7 @@ class WP_Job_Board_Pro_Wc_Paid_Listings_CV_Package {
 
 	public static function process_viewed_candidate($candidate_id) {
 		if ( is_user_logged_in() ) {
-			$user_id = get_current_user_id();
+			$user_id = WP_Job_Board_Pro_User::get_user_id();
 			if ( WP_Job_Board_Pro_User::is_employer($user_id) ) {
 				$packages = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::get_cv_packages_by_user($user_id, true, $candidate_id);
 				if ( !empty($packages) && !empty($packages[0]) ) {
@@ -127,7 +127,7 @@ class WP_Job_Board_Pro_Wc_Paid_Listings_CV_Package {
 		if ( $view == 'register_employer_with_package' ) {
 			$return = false;
 			if ( is_user_logged_in() ) {
-				$user_id = get_current_user_id();
+				$user_id = WP_Job_Board_Pro_User::get_user_id();
 				if ( class_exists('WP_Job_Board_Pro_User') && WP_Job_Board_Pro_User::is_employer($user_id) ) {
 					$packages = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::get_cv_packages_by_user($user_id);
 					if ( !empty($packages) ) {

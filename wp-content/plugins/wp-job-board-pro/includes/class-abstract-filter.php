@@ -473,9 +473,9 @@ class WP_Job_Board_Pro_Abstract_Filter {
 		$options = array();
 
 		if ( !empty($field['options']) ) {
-			foreach ($field['options'] as $key => $value) {
+			foreach ($field['options'] as $k => $value) {
 				$options[] = array(
-					'value' => $key,
+					'value' => $k,
 					'text' => $value,
 				);
 			}
@@ -491,9 +491,9 @@ class WP_Job_Board_Pro_Abstract_Filter {
 		$options = array();
 
 		if ( !empty($field['options']) ) {
-			foreach ($field['options'] as $key => $value) {
+			foreach ($field['options'] as $k => $value) {
 				$options[] = array(
-					'value' => $key,
+					'value' => $k,
 					'text' => $value,
 				);
 			}
@@ -509,9 +509,9 @@ class WP_Job_Board_Pro_Abstract_Filter {
 		$options = array();
 
 		if ( !empty($field['options']) ) {
-			foreach ($field['options'] as $key => $value) {
+			foreach ($field['options'] as $k => $value) {
 				$options[] = array(
-					'value' => $key,
+					'value' => $k,
 					'text' => $value,
 				);
 			}
@@ -527,9 +527,9 @@ class WP_Job_Board_Pro_Abstract_Filter {
 		$options = array();
 
 		if ( !empty($field['options']) ) {
-			foreach ($field['options'] as $key => $value) {
+			foreach ($field['options'] as $k => $value) {
 				$options[] = array(
-					'value' => $key,
+					'value' => $k,
 					'text' => $value,
 				);
 			}
@@ -762,6 +762,34 @@ class WP_Job_Board_Pro_Abstract_Filter {
 			}
 		}
 		include WP_Job_Board_Pro_Template_Loader::locate( 'widgets/filter-fields/check_list' );
+	}
+	
+	public static function filter_field_rating_select($instance, $args, $key, $field) {
+		$name = self::filter_get_name($key, $field);
+		$selected = !empty( $_GET[$name] ) ? $_GET[$name] : '';
+
+		include WP_Job_Board_Pro_Template_Loader::locate( 'widgets/filter-fields/rating_select' );
+	}
+	
+	public static function filter_field_rating_multiselect($instance, $args, $key, $field) {
+		$name = self::filter_get_name($key, $field);
+		$selected = !empty( $_GET[$name] ) ? $_GET[$name] : '';
+
+		include WP_Job_Board_Pro_Template_Loader::locate( 'widgets/filter-fields/rating_multiselect' );
+	}
+
+	public static function filter_field_rating_checkbox($instance, $args, $key, $field) {
+		$name = self::filter_get_name($key, $field);
+		$selected = !empty( $_GET[$name] ) ? $_GET[$name] : '';
+		
+		include WP_Job_Board_Pro_Template_Loader::locate( 'widgets/filter-fields/rating_checkbox' );
+	}
+
+	public static function filter_field_rating_radio($instance, $args, $key, $field) {
+		$name = self::filter_get_name($key, $field);
+		$selected = !empty( $_GET[$name] ) ? $_GET[$name] : '';
+		
+		include WP_Job_Board_Pro_Template_Loader::locate( 'widgets/filter-fields/rating_radio' );
 	}
 	
 	public static function filter_custom_field_meta($meta_query, $params, $filter_fields) {

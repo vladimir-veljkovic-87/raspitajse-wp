@@ -24,7 +24,7 @@ class WP_Job_Board_Pro_Wc_Paid_Listings_Candidate_Package {
 		if ( $free_apply == 'off' ) {
 			$return = false;
 			if ( is_user_logged_in() ) {
-				$user_id = get_current_user_id();
+				$user_id = WP_Job_Board_Pro_User::get_user_id();
 				if ( class_exists('WP_Job_Board_Pro_User') && WP_Job_Board_Pro_User::is_candidate($user_id) ) {
 					$packages = WP_Job_Board_Pro_Wc_Paid_Listings_Mixes::get_candidate_packages_by_user($user_id);
 					if ( !empty($packages) ) {

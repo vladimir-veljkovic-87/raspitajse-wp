@@ -235,11 +235,7 @@ class WP_Job_Board_Pro_Applicant {
 		$subject = WP_Job_Board_Pro_Email::render_email_vars(array('job' => $job, 'candidate_name' => $candidate_name, 'employer_name' => $employer_name), 'reject_interview_notice', 'subject');
 		$content = WP_Job_Board_Pro_Email::render_email_vars(array('job' => $job, 'candidate_name' => $candidate_name, 'employer_name' => $employer_name), 'reject_interview_notice', 'content');
 
-		try {
-            WP_Job_Board_Pro_Email::wp_mail($email_to, $subject, $content, $headers);
-        } catch (Exception $e) {
-            error_log('Failed to send email: ' . $e->getMessage());
-        }
+		WP_Job_Board_Pro_Email::wp_mail( $email_to, $subject, $content, $headers );
 
 
 		$notify_args = array(

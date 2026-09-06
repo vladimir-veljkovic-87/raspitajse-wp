@@ -84,7 +84,7 @@ $cv_attachments = $meta_obj->get_post_meta('cv_attachment');
 			            <div class="label-can-drag">
 							<div class="form-group group-upload">
 						        <div class="upload-file-btn" data-text="<?php echo esc_attr(sprintf(esc_html__('Upload CV (%s)', 'wp-job-board-pro'), $cv_types_str)); ?>">
-					            	<span class="text"><?php echo sprintf(esc_html__('Dodaj CV (%s)', 'wp-job-board-pro'), $cv_types_str); ?></span>
+					            	<span class="text"><?php echo sprintf(esc_html__('Upload CV (%s)', 'wp-job-board-pro'), $cv_types_str); ?></span>
 						        </div>
 						    </div>
 						</div>
@@ -108,7 +108,7 @@ $cv_attachments = $meta_obj->get_post_meta('cv_attachment');
 							<label for="register-terms-and-conditions">
 								<input type="checkbox" name="terms_and_conditions" value="on" id="register-terms-and-conditions" required>
 								<?php
-									echo sprintf(__('Prihvatate naše <a href="%s" target="_blank">Uslove korišćenja i Politiku privatnosti</a>', 'wp-job-board-pro'), esc_url($page_url));
+									echo sprintf(__('You accept our <a href="%s" target="_blank">Terms and Conditions and Privacy Policy</a>', 'wp-job-board-pro'), esc_url($page_url));
 								?>
 							</label>
 						</div>
@@ -126,7 +126,7 @@ $cv_attachments = $meta_obj->get_post_meta('cv_attachment');
 	      	<?php wp_nonce_field( 'wp-job-board-pro-apply-internal-nonce', 'nonce' ); ?>
 	      	<input type="hidden" name="action" value="wp_job_board_pro_ajax_apply_internal">
 	      	<input type="hidden" name="job_id" value="<?php echo esc_attr($post->ID); ?>">
-	        <button class="button btn btn-theme btn-block" name="apply-email"><?php echo esc_html__( 'Prijavi se na oglas', 'wp-job-board-pro' ); ?></button>
+	        <button class="button btn btn-theme btn-block" name="apply-email"><?php echo esc_html__( 'Apply Job', 'wp-job-board-pro' ); ?></button>
 	    </form>
 	</div>
 </div>

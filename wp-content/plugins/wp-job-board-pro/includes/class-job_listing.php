@@ -552,11 +552,11 @@ class WP_Job_Board_Pro_Job_Listing {
 					$apply_without_login = wp_job_board_pro_get_option('candidate_apply_job_without_login', 'off');
 					if ( is_user_logged_in() || $apply_without_login == 'on' ) {
 						?>
-						<a href="<?php echo esc_url($apply_url); ?>" target="_blank" rel="nofollow, noindex" class="btn btn-apply btn-apply-job-external <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Prijavi se odmah', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
+						<a href="<?php echo esc_url($apply_url); ?>" target="_blank" rel="nofollow, noindex" class="btn btn-apply btn-apply-job-external <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Apply Now', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
 						<?php
 					} else {
 						?>
-						<a href="javascript:void(0);" class="btn btn-apply btn-apply-job-internal-required <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Prijavi se odmah', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
+						<a href="javascript:void(0);" class="btn btn-apply btn-apply-job-internal-required <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Apply Now', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
 						<?php
 						echo WP_Job_Board_Pro_Template_Loader::get_template_part('single-job_listing/apply-internal-required');
 					}
@@ -565,13 +565,13 @@ class WP_Job_Board_Pro_Job_Listing {
 				$apply_without_login = wp_job_board_pro_get_option('candidate_apply_job_without_login', 'off');
 				if ( is_user_logged_in() || $apply_without_login == 'on' ) {
 				?>
-					<a href="#job-apply-email-form-wrapper-<?php echo esc_attr($post_id); ?>" class="btn btn-apply btn-apply-job-email <?php echo esc_attr($filled_class); ?>" data-job_id="<?php echo esc_attr($post_id); ?>"><?php esc_html_e('Prijavi se odmah', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
+					<a href="#job-apply-email-form-wrapper-<?php echo esc_attr($post_id); ?>" class="btn btn-apply btn-apply-job-email <?php echo esc_attr($filled_class); ?>" data-job_id="<?php echo esc_attr($post_id); ?>"><?php esc_html_e('Apply Now', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
 					<!-- email apply form here -->
 					<?php
 					echo WP_Job_Board_Pro_Template_Loader::get_template_part('single-job_listing/apply-email-form');
 				} else {
 					?>
-					<a href="javascript:void(0);" class="btn btn-apply btn-apply-job-internal-required <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Prijavi se odmah', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
+					<a href="javascript:void(0);" class="btn btn-apply btn-apply-job-internal-required <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Apply Now', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
 					<?php
 					echo WP_Job_Board_Pro_Template_Loader::get_template_part('single-job_listing/apply-internal-required');
 				}
@@ -579,13 +579,13 @@ class WP_Job_Board_Pro_Job_Listing {
 				$apply_without_login = wp_job_board_pro_get_option('candidate_apply_job_without_login', 'off');
 				if ( is_user_logged_in() || $apply_without_login == 'on' ) {
 				?>
-					<a href="#job-apply-call-form-wrapper-<?php echo esc_attr($post_id); ?>" class="btn btn-apply btn-apply-job-call <?php echo esc_attr($filled_class); ?>" data-job_id="<?php echo esc_attr($post_id); ?>"><?php esc_html_e('Prijavi se odmah', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
+					<a href="#job-apply-call-form-wrapper-<?php echo esc_attr($post_id); ?>" class="btn btn-apply btn-apply-job-call <?php echo esc_attr($filled_class); ?>" data-job_id="<?php echo esc_attr($post_id); ?>"><?php esc_html_e('Apply Now', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
 					<!-- email apply form here -->
 					<?php
 					echo WP_Job_Board_Pro_Template_Loader::get_template_part('single-job_listing/apply-call-form');
 				} else {
 					?>
-					<a href="javascript:void(0);" class="btn btn-apply btn-apply-job-internal-required <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Prijavi se odmah', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
+					<a href="javascript:void(0);" class="btn btn-apply btn-apply-job-internal-required <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Apply Now', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
 					<?php
 					echo WP_Job_Board_Pro_Template_Loader::get_template_part('single-job_listing/apply-internal-required');
 				}
@@ -594,19 +594,19 @@ class WP_Job_Board_Pro_Job_Listing {
 					$apply_without_login = wp_job_board_pro_get_option('candidate_apply_job_without_login', 'off');
 					if ( $apply_without_login == 'on' ) {
 						?>
-						<a href="#job-apply-internal-without-login-form-wrapper-<?php echo esc_attr($post_id); ?>" class="btn btn-apply btn-apply-job-internal-without-login <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Prijavi se odmah', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
+						<a href="#job-apply-internal-without-login-form-wrapper-<?php echo esc_attr($post_id); ?>" class="btn btn-apply btn-apply-job-internal-without-login <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Apply Now', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
 						<?php
 						echo WP_Job_Board_Pro_Template_Loader::get_template_part('single-job_listing/apply-internal-without-login');
 					} else {
 						?>
-						<a href="javascript:void(0);" class="btn btn-apply btn-apply-job-internal-required <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Prijavi se odmah', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
+						<a href="javascript:void(0);" class="btn btn-apply btn-apply-job-internal-required <?php echo esc_attr($filled_class); ?>"><?php esc_html_e('Apply Now', 'wp-job-board-pro'); ?><i class="next flaticon-right-arrow"></i></a>
 						<?php
 						echo WP_Job_Board_Pro_Template_Loader::get_template_part('single-job_listing/apply-internal-required');
 					}
 				} else {
 					$rand = WP_Job_Board_Pro_Mixes::random_key();
 					$class = 'btn-apply-job-internal';
-					$text = esc_html__('Prijavi se odmah', 'wp-job-board-pro').'<i class="next flaticon-right-arrow"></i>';
+					$text = esc_html__('Apply Now', 'wp-job-board-pro').'<i class="next flaticon-right-arrow"></i>';
 					$url = '#job-apply-internal-form-wrapper-'.esc_attr($rand);
 
 					$user_id = WP_Job_Board_Pro_User::get_user_id();

@@ -240,7 +240,7 @@ class WP_Job_Board_Pro_Employer {
 		   	echo wp_json_encode($return);
 		   	exit;
 		}
-		if ( !is_user_logged_in() || !WP_Job_Board_Pro_User::is_employer() ) {
+		if ( !is_user_logged_in() || (!WP_Job_Board_Pro_User::is_employer() && !WP_Job_Board_Pro_User::is_employee()) ) {
 			$return = array( 'status' => false, 'msg' => esc_html__('Please login as "Employer" to add shortlist.', 'wp-job-board-pro') );
 		   	echo wp_json_encode($return);
 		   	exit;
@@ -712,7 +712,7 @@ class WP_Job_Board_Pro_Employer {
 	}
 
 	public static function check_added_shortlist($candidate_id) {
-		if ( empty($candidate_id) || !is_user_logged_in() || !WP_Job_Board_Pro_User::is_employer() ) {
+		if ( empty($candidate_id) || !is_user_logged_in() || (!WP_Job_Board_Pro_User::is_employer() && !WP_Job_Board_Pro_User::is_employee()) ) {
 			return false;
 		}
 

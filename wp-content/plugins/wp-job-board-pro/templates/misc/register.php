@@ -58,7 +58,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<label for="register-terms-and-conditions">
 						<input type="checkbox" name="terms_and_conditions" value="on" id="register-terms-and-conditions" required>
 						<?php
-							echo sprintf(__('Prihvatate naše <a href="%s">Uslove korišćenja i Politiku privatnosti</a>', 'wp-job-board-pro'), esc_url($page_url));
+							echo sprintf(__('You accept our <a href="%s">Terms and Conditions and Privacy Policy</a>', 'wp-job-board-pro'), esc_url($page_url));
 						?>
 					</label>
 				</div>
@@ -66,7 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<div class="form-group">
 				<button type="submit" class="btn btn-second btn-block" name="submitRegister">
-					<?php echo esc_html__('Registruj se sada', 'wp-job-board-pro'); ?>
+					<?php echo esc_html__('Register now', 'wp-job-board-pro'); ?>
 				</button>
 			</div>
 
@@ -118,7 +118,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<label for="register-terms-and-conditions">
 						<input type="checkbox" name="terms_and_conditions" value="on" id="register-terms-and-conditions" required>
 						<?php
-							echo sprintf(__('Prihvatate naše <a href="%s">Uslove korišćenja i Politiku privatnosti</a>', 'wp-job-board-pro'), esc_url($page_url));
+							echo sprintf(__('You accept our <a href="%s">Terms and Conditions and Privacy Policy</a>', 'wp-job-board-pro'), esc_url($page_url));
 						?>
 					</label>
 				</div>
@@ -126,7 +126,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<div class="form-group">
 				<button type="submit" class="btn btn-second btn-block" name="submitRegister">
-					<?php echo esc_html__('Registruj se sada', 'wp-job-board-pro'); ?>
+					<?php echo esc_html__('Register now', 'wp-job-board-pro'); ?>
 				</button>
 			</div>
 

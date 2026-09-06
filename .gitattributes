@@ -21,3 +21,6 @@
 *.ttf  binary
 *.pdf  binary
 *.zip  binary
+
+wp-content/plugins/wp-job-board-pro/** -text !eol
+wp-content/plugins/wp-job-board-pro-wc-paid-listings/** -text !eol

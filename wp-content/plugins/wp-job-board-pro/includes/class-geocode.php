@@ -41,12 +41,12 @@ class WP_Job_Board_Geocode {
 			if ( $address_data['formatted_address'] ) {
 				$maps_address['address'] = $address_data['formatted_address'];
 			}
-			WP_Job_Board_Pro_Job_Listing::update_post_meta( $post->ID, 'map_location_latitude', $maps_address['latitude'] );
-			WP_Job_Board_Pro_Job_Listing::update_post_meta( $post->ID, 'map_location_longitude', $maps_address['longitude'] );
-			WP_Job_Board_Pro_Job_Listing::update_post_meta( $post->ID, 'map_location_address', $maps_address['address'] );
-			WP_Job_Board_Pro_Job_Listing::update_post_meta( $post->ID, 'map_location', $maps_address );
+			update_post_meta( $post->ID, '_job_map_location_latitude', $maps_address['latitude'] );
+			update_post_meta( $post->ID, '_job_map_location_longitude', $maps_address['longitude'] );
+			update_post_meta( $post->ID, '_job_map_location_address', $maps_address['address'] );
+			update_post_meta( $post->ID, '_job_map_location', $maps_address );
 
-			WP_Job_Board_Pro_Job_Listing::update_post_meta( $post->ID, 'map_location_properties', $address_data );
+			update_post_meta( $post->ID, '_job_map_location_properties', $address_data );
 		}
 	}
 

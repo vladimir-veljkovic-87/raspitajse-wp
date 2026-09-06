@@ -101,6 +101,12 @@
                     maxZoom: 18,
                 });
 
+            } else if ( wp_job_board_pro_maps_opts.map_service == 'openstreetmap' ) {
+                
+                var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                });
+
             } else {
                 if ( wp_job_board_pro_maps_opts.custom_style != '' ) {
                     try {
