@@ -1680,6 +1680,12 @@ final class Raspitajse_Communications_Alert_Security {
         }
 
         $frequency = sanitize_key( wp_unslash( (string) $request['email_frequency'] ) );
+        if ( 'candidate_alert' === $post_type ) {
+            return self::failure(
+                __( 'Obaveštenja o kandidatima više nisu aktivna.', 'raspitajse-communications' )
+            );
+        }
+
         if ( 'job_alert' === $post_type ) {
             $frequency = Raspitajse_Communications_Candidate_Job_Alert_Schedule_Policy::normalize_frequency(
                 $frequency,
@@ -1710,12 +1716,6 @@ final class Raspitajse_Communications_Alert_Security {
             if ( '' !== $sanitized_value && array() !== $sanitized_value ) {
                 $alert_query[ $filter_key ] = $sanitized_value;
             }
-        }
-
-        if ( 'candidate_alert' === $post_type ) {
-            return self::failure(
-                __( 'Obaveštenja o kandidatima više nisu aktivna.', 'raspitajse-communications' )
-            );
         }
 
         $user_id = get_current_user_id();
