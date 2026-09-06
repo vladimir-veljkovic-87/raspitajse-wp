@@ -1,439 +1,460 @@
-# Zadatak 2.16 — Establish a verified restorable staging DB backup primitive and resume the controlled WPJBP upgrade
+# Zadatak 2.17 — Superio 1.3.17 → current official release security/upgrade readiness audit with bundled-plugin and child-theme compatibility mapping
 
 Status: READY
-Baseline: 77d3a1019e0248a2abacd607fd508ed6868da70b
-Previous task: 2.15
+Baseline: 5416eb4d327fe44f503591d86577e210560339c1
+Previous task: 2.16
 Target environment: staging
 Production: FORBIDDEN
 
 ## Mandatory execution preamble
 
-Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, `origin/staging`, and the existing remote feature branch `origin/feature/z2-15-wpjbp-upgrade`.
+Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, and `origin/staging`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning, running database tooling, creating task-private files, bootstrapping WordPress, deploying, or changing any source/runtime state. Treat `codex-tasks` as READ-ONLY.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before doing any inspection, WordPress bootstrap, public research, artifact handling, or source analysis. Treat `codex-tasks` as READ-ONLY.
 
-Read the final Zadatak 2.13 PASS report, Zadatak 2.14 PARTIAL report, and Zadatak 2.15 PARTIAL report in full.
+Read the final Zadatak 2.16 PASS report in full. Read the final 2.13 report where it materially helps with Superio/WPJBP bundle provenance.
 
-Require all of these facts before proceeding:
+Verify fresh `origin/staging` is exactly:
 
-- fresh `origin/staging` is exactly `77d3a1019e0248a2abacd607fd508ed6868da70b`;
-- live staging deploy marker is the same commit;
-- primary staging worktree is clean and on `staging`;
-- `origin/feature/z2-15-wpjbp-upgrade` exists and is exactly `92f151b6f4024fe8f241ffd2d076e1f6544886a5`;
-- that feature commit has parent exactly `77d3a1019e0248a2abacd607fd508ed6868da70b`.
+`5416eb4d327fe44f503591d86577e210560339c1`
 
-If any of those facts differ, STOP and report the mismatch. Do not silently rebuild, rebase, amend, force-push, or widen the feature.
+Verify the live staging deploy marker is the same commit and the primary staging worktree is clean/on `staging`. If any baseline differs, STOP and report the mismatch. Do not silently rebase or widen this task.
 
-Execute only Zadatak 2.16. Publish the final report through the existing `codex-reports` workflow and STOP. Do not begin 2.17 automatically.
+Execute only Zadatak 2.17. This is a **read-only security/upgrade-readiness audit**. Expected application source changes: `0`. Expected staging deploys: `0`. Do not begin 2.18 automatically.
 
 ---
 
-## 1. Accepted context
+## 1. Accepted current state
 
-Zadatak 2.15 proved all source/provenance work needed for the upgrade and then stopped at the database-backup boundary.
+Zadatak 2.16 PASS established the new accepted staging baseline:
 
-Accepted and already-proven feature state:
+- staging/source/deploy commit: `5416eb4d327fe44f503591d86577e210560339c1`;
+- WP Job Board Pro active target: `1.2.86`;
+- WP Job Board Pro WC Paid Listings active target: `1.0.19`;
+- both active vendor trees are normalized to the pinned clean vendor packages and source/runtime parity passed;
+- Raspitajse alert/security/communications/package/HPOS acceptance passed;
+- Superio parent remained `1.3.17`;
+- Superio child remained `1.0.0`;
+- WordPress remained `6.6.7`;
+- WooCommerce remained `9.5.4`;
+- Hostinger scheduler remained unchanged;
+- production was not touched.
 
-- feature branch: `feature/z2-15-wpjbp-upgrade`;
-- feature SHA: `92f151b6f4024fe8f241ffd2d076e1f6544886a5`;
-- exact vendor targets:
-  - WP Job Board Pro `1.2.86`;
-  - WP Job Board Pro WC Paid Listings `1.0.19`;
-- pinned official ZIP SHA-256 values:
-  - WPJBP: `692fbf75f36391524e76db51805c4c79200880436bc9446685b4e9cce19a3f63`;
-  - Paid Listings: `26aebee83ec333302f201fa1782346414064004af4cdb8e24732555d5f640467`;
-- exact two-path EOL preservation was implemented in root `.gitattributes` only for:
-  - `wp-content/plugins/wp-job-board-pro/** -text !eol`;
-  - `wp-content/plugins/wp-job-board-pro-wc-paid-listings/** -text !eol`;
-- full ZIP extraction -> worktree -> Git index -> committed clean checkout parity passed;
-- WPJBP target tree: 1,413 files, fingerprint `23c55f5bba87fc2fc58dbb858c3543a0b45d4e1f5b0fa90d74e569eff034668e`;
-- Paid Listings target tree: 179 files, fingerprint `d936377ea8d818ede21cd384568ad93c4092f37e09e83df2be2ed92683a9a6a3`;
-- 28 EOL-sensitive official files survived the Git round trip byte-for-byte;
-- PHP lint passed for 1,185 target PHP files with zero failures;
-- no Raspitajse/site marker was present in the clean target vendor trees;
-- no Raspitajse-owned compatibility change was needed at source/static stage.
+Prior read-only evidence also found that the current parent-Superio source/runtime trees are not trivially identical: runtime contains additional bundled plugin ZIPs that are absent from the repository tree, and parent Superio is outside the normal staging deploy allowlist. Re-verify the current facts rather than relying on historical counts alone.
 
-Do not redo or alter that accepted source work unless a fresh verification demonstrates it is no longer identical to the accepted feature commit.
-
-The only blocker from 2.15 was:
-
-`BLOCKED_NO_RESTORABLE_STAGING_DB_BACKUP`
-
-The prior trusted `wp db export` path returned exit 255 and produced no SQL file or useful stderr under both the documented consistency flags and a minimal invocation. No runtime deploy or mutation occurred.
-
-This task first establishes a safe, verified staging database backup primitive. Only after that gate passes may it resume the remaining controlled upgrade acceptance from 2.15.
+A public ThemeForest/AI-overview observation suggested Superio `1.3.37` as the latest release and public changelog entries between `1.3.17` and that version include security/vulnerability/register/application/WooCommerce-related changes. **Treat that as a lead only. Re-verify the current official version and changelog from fresh authoritative sources.**
 
 ---
 
 ## 2. Goal
 
-Complete two bounded phases in one task:
+Produce a decision-grade answer to whether and how Raspitajse should upgrade the Superio parent theme from the currently active `1.3.17` to the current official release.
 
-### Phase A — backup prerequisite
+The audit must answer:
 
-Establish a consistent, non-empty, integrity-checked, restorable staging database backup using a safe local primitive that does not expose credentials or PII and does not depend on the broken `wp db export` wrapper path.
+1. What exact Superio parent and child-theme versions are present in source, runtime, and active WordPress state?
+2. What is the current official/latest Superio release today, with authoritative version/date/changelog evidence?
+3. Are there known Superio theme vulnerabilities or security fixes affecting `1.3.17`, and is the prospective target outside the affected ranges?
+4. What exact bundled plugin versions/packages ship with the target Superio release, especially WP Job Board Pro and Paid Listings?
+5. Could a Superio theme upgrade accidentally downgrade, overwrite, re-register, or otherwise interfere with the now-accepted WPJBP `1.2.86` / Paid Listings `1.0.19` runtime?
+6. Which child-theme overrides and Raspitajse custom dependencies are sensitive to parent-theme changes?
+7. Which parent-theme files or behaviors have site-specific/runtime divergence today, and what is the correct post-upgrade ownership model?
+8. What WordPress/WooCommerce/Elementor/WPJBP compatibility requirements must be proven on staging?
+9. Is a clean trustworthy target Superio artifact available? If not, what exact user-provided official artifact is required?
+10. What exact controlled staging upgrade, backup, acceptance, rollback, and deployment-boundary plan should the next implementation task use?
 
-### Phase B — resume the controlled staging upgrade
+Final decision must be one of:
 
-If and only if Phase A passes, resume the already-prepared feature `92f151...`, deploy the exact clean WPJBP `1.2.86` and Paid Listings `1.0.19` trees to staging through the approved deploy path, run the security/compatibility acceptance inherited from 2.15, integrate only after acceptance, or rollback completely on any critical failure.
+- `READY_FOR_CONTROLLED_STAGING_SUPERIO_UPGRADE`;
+- `BLOCKED_MISSING_TRUSTED_SUPERIO_ARTIFACT`;
+- `BLOCKED_UNRESOLVED_SECURITY_OR_VERSION_PROVENANCE`;
+- `BLOCKED_HIGH_RISK_CHILD_THEME_OR_BUNDLED_PLUGIN_CONFLICT`;
+- or another precise fail-closed blocker if evidence requires it.
 
-PASS requires both phases to pass.
+Do not perform the theme upgrade in 2.17.
 
 ---
 
-## 3. Hard safety boundaries
+## 3. Hard no-mutation boundary
 
-Production is forbidden. Do not access or mutate production filesystem, database, WordPress runtime, scheduler, or external services.
+Do not modify, install, update, downgrade, activate, deactivate, replace, delete, or restore:
 
-Do not change or upgrade:
-
-- Superio parent or child theme;
+- Superio parent theme;
+- Superio child theme;
+- WP Job Board Pro;
+- Paid Listings;
 - WooCommerce;
 - WordPress core;
-- Elementor or unrelated plugins;
-- Hostinger scheduler configuration;
-- Raspitajse business rules unless a narrowly proven compatibility fix is required by the target vendor version and remains inside the authorization inherited from 2.15.
+- Elementor or other plugins;
+- Raspitajse Communications/Commerce;
+- cron/Action Scheduler state;
+- deployment manifests/markers;
+- database/business data;
+- Hostinger scheduler configuration.
 
-Do not use:
+Do not create an implementation feature branch or staging deployment.
 
-- WordPress plugin updater/installer;
-- plugin deactivate/reactivate as a migration shortcut;
+Do not run:
+
+- WordPress theme/plugin updater;
+- theme activation/switching;
+- activation/migration hooks;
 - broad WP-Cron;
-- `wp cron event run --due-now` or `--all`;
 - Action Scheduler queue runner;
-- manual execution of the three owned business hooks;
-- continuation runner;
-- live exploit attempts;
-- live privileged registration attempts;
-- real mail, SMTP, payment, refund, or external WordPress HTTP transport.
+- owned business hooks;
+- real mail/SMTP/payment/refund;
+- live exploit/security PoCs against staging.
 
-The existing human-owned Hostinger `*/15 * * * *` selective runner must remain unchanged. Use its existing shared lock during the runtime-critical boundary as required by 2.15.
+Production filesystem/database/runtime/WordPress/scheduler access is forbidden.
 
----
-
-## 4. Phase A — diagnose the broken wrapper without credential exposure
-
-Do not blindly loop or repeatedly retry the already-failed `wp db export` commands.
-
-Perform a bounded diagnostic sufficient to establish why the wrapper path is unusable or whether the underlying dump client itself is still usable.
-
-Inspect, without exposing secrets:
-
-- WP-CLI version and `wp db export` implementation/help relevant to client selection;
-- availability and versions of `mariadb-dump`, `mysqldump`, `mariadb`, and `mysql` binaries;
-- whether WP-CLI resolves a dump binary/path incorrectly;
-- staging `DB_HOST` shape only as a sanitized classification such as socket / hostname / hostname+port — do not report the actual hostname if it is sensitive;
-- whether the prior exit 255 occurs before or after invoking a dump client, using sanitized process/exit evidence only.
-
-Do not print, log, echo, shell-trace, commit, upload, or report:
-
-- DB password;
-- DB username if it is identifying/private;
-- database name if it is private;
-- raw `wp-config.php` secrets;
-- SQL rows/content;
-- customer/user/order/application/message data.
-
-If a diagnostic mode might print connection arguments or secrets, do not use it.
+If a WordPress bootstrap is needed for active-state/callback/template inspection, use a fully guarded read-only invocation with WP HTTP/mail/payment protections and report sanitized counters.
 
 ---
 
-## 5. Authorized secure backup primitive
+## 4. Fresh official version/changelog research
 
-If `wp db export` remains unusable, this task explicitly authorizes a **task-private direct local database-client dump** using `mariadb-dump` or `mysqldump`, provided all requirements below are met.
+Fresh public read-only control-plane research is authorized.
 
-### Credential handling
+Preferred evidence hierarchy:
 
-Preferred mechanism:
+1. official ThemeForest/Envato Superio item metadata/changelog;
+2. official ApusThemes Superio documentation/release/update metadata;
+3. official package metadata already legitimately available locally;
+4. CVE/CNA/NVD/Wordfence/Patchstack/WPScan or comparable reputable security indexes;
+5. secondary sources only as corroboration.
 
-1. obtain the already-configured staging DB connection values from the staging WordPress configuration in-process without printing them;
-2. write a task-private temporary client option file such as a MySQL `[client]` defaults file with mode `0600` inside a mode `0700` task-private directory;
-3. pass it only via `--defaults-extra-file=<task-private-path>` or an equally non-observable local mechanism;
-4. never place the password directly in command-line arguments, shell history, report text, environment dumps, or Git;
-5. delete the credentials file immediately after the dump/validation steps that require it.
+Rules:
 
-Do not use a workaround that copies credentials into repository files or permanent user config.
+- no account login, purchase, token, cookie, license-key, signed-URL or credential use;
+- do not scrape private/authenticated package endpoints;
+- do not contact vendor;
+- do not trigger WordPress runtime update checks/heartbeats;
+- record retrieval date/time, source role and exact claim supported;
+- explicitly report disagreements between sources;
+- if ThemeForest anti-bot blocks direct retrieval, use other authoritative/publicly available evidence and report the limitation rather than inventing facts.
 
-### Dump properties
+Re-verify rather than assume:
 
-Use a local client invocation appropriate to the detected server/client flavor. The dump must be logically consistent and suitable for rollback. Prefer, where supported:
+- current latest Superio version;
+- release/update date;
+- public compatibility claims for WordPress/WooCommerce/Elementor if stated;
+- all changelog entries from `1.3.18` through the current target, highlighting security/vulnerability/register/user-role/application/job submission/WooCommerce/Elementor/WPJBP-related entries.
 
-- `--single-transaction`;
-- `--quick`;
-- `--skip-lock-tables`;
-- `--add-drop-table`;
-- `--hex-blob`;
-- an explicit safe character set compatible with the live DB;
-- `--no-tablespaces` when needed to avoid unrelated privilege requirements;
-- triggers where normally included by the client.
-
-Do not request routines/events unless the site demonstrably uses them or the required privilege exists; lack of unrelated global privileges must not invalidate an otherwise complete WordPress data/schema dump.
-
-Do not use `--force` to hide dump errors.
-
-### Backup file handling
-
-The backup must:
-
-- live only in a task-private, non-web-accessible host directory;
-- directory mode `0700`, SQL file mode `0600`;
-- never be committed, uploaded to GitHub, attached to reports, copied into the public web root, or exposed to browser access;
-- have a recorded SHA-256 in the report;
-- be retained only for the duration of the controlled upgrade/rollback window in this task, then securely removed after final PASS or after a completed rollback.
-
-The report may contain backup timestamp, byte size, SHA-256, structural counts, and sanitized tool versions. It must not contain SQL content or PII.
+Do not infer bundled plugin versions from the theme version number alone.
 
 ---
 
-## 6. Mandatory backup integrity gate
+## 5. Current source/runtime/active-state verification
 
-A zero-byte or merely successful exit code is not enough.
+Establish from fresh evidence:
 
-Before any new vendor code is deployed, prove all of the following:
+- parent theme path and source `style.css` version;
+- deployed runtime parent `style.css` version/hash;
+- child theme path, source/runtime version/hash;
+- active WordPress `template` and `stylesheet` values;
+- current parent-theme source file count/tree fingerprint;
+- current parent-theme runtime file count/tree fingerprint;
+- exact bounded inventory of source/runtime-only files relevant to upgrade provenance, especially `inc/plugins/*.zip`, updater/TGMPA/bundled-plugin metadata and generated/cache-like artifacts;
+- whether current parent runtime divergence is intentional packaging residue, host-generated data, manual/vendor artifact residue, or an unresolved mutation.
 
-- dump command exit status `0`;
-- backup file exists and is non-empty;
-- SHA-256 computed successfully;
-- SQL file has no obvious truncation indicator;
-- expected schema-definition and data sections are present;
-- live staging table count can be compared to dumped table-definition count or an equally strong structural completeness measure without reporting private row data;
-- every live WordPress table expected from the selected staging database is represented in the dump, using a sanitized count/hash comparison rather than printing sensitive table content;
-- no dump error/warning indicates skipped tables or failed reads;
-- a compatible local restore client is available;
-- dump can be parsed/read to completion by standard local tooling without syntax/truncation failure.
+Do not crawl unrelated home directories. Restrict inventory to the repository, deployed Superio parent/child roots, reasonable theme package/artifact locations, and known vendor-artifacts locations.
 
-If the DB account safely permits creating and dropping a **separate isolated temporary database** on the same server, an actual restore rehearsal is authorized and preferred:
+Classify each material runtime/source divergence as:
 
-- use a random task-private database name unrelated to production;
-- restore the dump into that isolated database;
-- compare schema/table counts and selected aggregate counts only;
-- do not expose data;
-- drop the temporary database immediately;
-- never point WordPress at it.
-
-However, do **not** require CREATE DATABASE privilege if it is not available. Do not weaken safety by restoring into or overwriting the real staging database merely to rehearse restoration. In the absence of isolated-DB privilege, successful standard dump + complete structural/integrity validation is sufficient for this task's rollback gate.
-
-If no safe complete backup can be produced, STOP with `BLOCKED_NO_RESTORABLE_STAGING_DB_BACKUP`, leave staging unchanged, keep the feature unintegrated, and report the exact bounded blocker/human prerequisite.
+- `KEEP_RUNTIME_ONLY_ARTIFACT`;
+- `NORMALIZE_ON_THEME_UPGRADE`;
+- `OWNED_OVERRIDE_REQUIRED`;
+- `UNKNOWN_BLOCKER`.
 
 ---
 
-## 7. Re-verify the accepted feature before runtime work
+## 6. Security audit for current Superio 1.3.17
 
-After the backup gate passes and before deploy:
+Search current authoritative/reputable vulnerability sources for Superio-specific vulnerabilities and relevant bundled-component advisories.
 
-- verify `origin/feature/z2-15-wpjbp-upgrade` still equals `92f151b6f4024fe8f241ffd2d076e1f6544886a5`;
-- verify its parent is the exact live staging baseline;
-- verify changed paths remain restricted to root `.gitattributes` plus the two exact plugin trees;
-- verify the two `.gitattributes` exceptions are exact and no broader EOL rule exists;
-- verify target headers/constants remain WPJBP `1.2.86` and Paid Listings `1.0.19`;
-- verify target tree fingerprints remain the accepted 2.15 fingerprints;
-- verify the required three historical WPJBP files still have the clean vendor hashes from 2.15;
-- verify no Raspitajse/site markers exist in either target vendor tree.
+For every relevant advisory record report:
 
-Do not fetch or substitute a newer package/version inside this task. If official package bytes/version have changed from the pinned accepted target and fresh provenance revalidation is required, STOP rather than silently upgrade to a different vendor release.
+- CVE/advisory ID;
+- affected product exactly as published;
+- vulnerability class;
+- affected version range;
+- fixed/patched version if proven;
+- CVSS/severity;
+- authentication requirement;
+- publication/latest-modification date;
+- whether current `1.3.17` is affected;
+- whether the prospective target is affected;
+- confidence: CONFIRMED / CORROBORATED / CONFLICTING / UNVERIFIED.
 
----
+Pay special attention to public Superio changelog entries labelled or implying:
 
-## 8. Runtime-critical boundary and T0
+- `Security`;
+- `Vulnerability`;
+- `Fixed Vulnerability`;
+- `register user` / registration changes;
+- any authentication/authorization/role handling changes.
 
-Before deployment:
+Do not assume a changelog line itself maps to a CVE. Correlate only when authoritative evidence supports it.
 
-- acquire the existing selective-runner shared lock nonblocking and keep it through deploy and initial post-deploy acceptance;
-- if the lock cannot be acquired because a natural provider cycle is running, wait only a bounded reasonable interval or STOP; do not kill the scheduler process;
-- do not edit the Hostinger scheduler;
-- capture one guarded sanitized T0 snapshot using the existing deep diagnostic capability;
-- require mail safety, WP HTTP preemption, payment guards, staging identity, `DISABLE_WP_CRON=true`, exact three owned scheduler contracts, continuation absence, and protected Action Scheduler state;
-- capture the protected business/options/security/Commerce fingerprints previously used in 2.15, without raw IDs, recipients, queries, message bodies, or PII.
+Also distinguish clearly between:
 
-T0 runtime versions must still be WPJBP `1.2.73` and Paid Listings `1.0.16`.
+- a Superio parent-theme vulnerability;
+- a bundled WPJBP vulnerability;
+- a bundled Paid Listings vulnerability;
+- another bundled plugin issue.
 
-If T0 differs materially from the accepted 2.15 stop state in a way not explained by legitimate user activity, STOP and reconcile before deployment.
-
----
-
-## 9. Controlled deploy
-
-Deploy only the already-proven feature through the approved Raspitajse staging deployment path, consistent with `tasks/README.md` and the 2.15 contract.
-
-Requirements:
-
-- no manual copy around deploy guards;
-- no WordPress updater;
-- no Superio update in the same transaction;
-- no unrelated source files;
-- keep WPJBP and Paid Listings active; do not toggle activation merely to force migrations;
-- source/runtime/deploy marker/manifest must remain coherent according to the approved deployment process;
-- deployed vendor trees must remain byte-for-byte equal to the committed/pinned target trees.
-
-If deployment requires an activation-only migration, STOP for explicit authorization instead of deactivating/reactivating.
+The recently fixed WPJBP CVE must not be double-counted as a theme vulnerability merely because Superio bundles WPJBP.
 
 ---
 
-## 10. First guarded bootstrap and migration accounting
+## 7. Target artifact and bundled-plugin provenance
 
-After deploy, run one guarded bootstrap with all staging side-effect protections active.
+Determine whether a trustworthy official target Superio package can be inspected today.
 
-Prove:
+Inspect, in order:
 
-- no fatal error;
-- no unexpected PHP warning/notice attributable to the new vendor versions in the bounded acceptance path;
-- target plugins remain active;
-- source/runtime header and constants are exactly `1.2.86` / `1.0.19`;
-- any vendor-required option/schema migration is individually identified and technically justified;
-- no user/order/application/message/job/candidate/employer/package business state changes merely from bootstrap;
-- WP HTTP/mail/SMTP/payment/refund transport remains blocked/zero as applicable.
+1. reasonable known local official ThemeForest/Envato/Superio package locations;
+2. repository/runtime Superio bundled package locations;
+3. public unauthenticated official vendor package endpoints only if provenance is unambiguous and access is allowed without login/license bypass.
 
-If a migration is unexpected, broad, destructive, or cannot be reconciled to the target version, rollback.
+For every candidate package:
 
----
+- path/source;
+- SHA-256;
+- archive root/layout;
+- version markers;
+- ZIP safety/path traversal/duplicate/symlink result;
+- provenance classification: `OFFICIAL_CLEAN`, `HISTORICAL_ONLY`, `CUSTOMIZED_CONTAMINATED`, `UNKNOWN`;
+- eligibility for a future controlled upgrade.
 
-## 11. Mandatory security and integration acceptance
+If the current official target package requires a user-owned ThemeForest download and no clean package is already available, **do not bypass authentication**. Conclude `BLOCKED_MISSING_TRUSTED_SUPERIO_ARTIFACT` and state exactly what file/version the user must provide.
 
-Re-run the material acceptance inherited from 2.13/2.15. At minimum prove:
+If a clean target package is available, inspect it text-only/read-only and determine exact bundled plugin archives/versions, especially:
 
-1. deployed WPJBP and Paid Listings vendor trees match the pinned official target trees exactly;
-2. no Raspitajse patch remains inside either vendor tree;
-3. the CVE-2024-12213 registration fix is present in target source and an isolated no-real-user harness proves caller-selected privileged roles cannot become arbitrary WordPress roles; do not create a live staging user;
-4. every owned alert-management route remains authoritative with exact nonce/role/profile/capability/ownership behavior and zero vendor mutation callback where owned replacement is expected;
-5. alert REST remains disabled where intended;
-6. owned candidate→job evaluator remains authoritative; vendor job-alert sender registration remains zero;
-7. employer→candidate alert sender and creation surfaces remain retired;
-8. candidate automatic time expiry remains disabled;
-9. owned job listing expiry and employer pre-expiry notification remain authoritative; retired vendor expiry callbacks remain absent;
-10. selective runner still exposes exactly the same three owned hourly zero-arg hooks; no continuation or broad vendor cron surface appears;
-11. SenderPolicy/Transport mapping remains exact and caller-provided From/Reply-To does not regain authority;
-12. candidate/employer dashboard and alert/application/package template dependencies load without missing class/method/fatal errors under active Superio `1.3.17`;
-13. job search/filter/detail, employer/candidate profile, submission/edit and application contracts required by current Raspitajse code remain compatible in guarded non-destructive tests;
-14. Paid Listings package listing/selection/standalone purchase transport and template loader contracts remain compatible without making a real payment;
-15. canonical package entitlement remains quota + immutable 30-calendar-day validity, separate from listing duration;
-16. Raspitajse Commerce employer lookup, checkout/order company fields, HPOS CRUD and processed/cancelled bridge contracts remain exact;
-17. no unexpected vendor heartbeat/update-check behavior is introduced into runtime acceptance.
+- WP Job Board Pro;
+- WP Job Board Pro WC Paid Listings;
+- Elementor-related companions if bundled/required;
+- other TGMPA-required/recommended plugins that could be changed by theme upgrade.
 
-Use fixtures, isolated mocks, static/runtime callback inspection, and existing safe test harnesses. Do not send real mail/payment/network traffic and do not mutate protected real business records merely to prove compatibility.
+For each bundled plugin compare target-bundle version to the currently active staging version and classify:
+
+- SAME;
+- NEWER;
+- OLDER — downgrade hazard;
+- NOT BUNDLED;
+- UNKNOWN.
+
+**Critical gate:** a future Superio upgrade must never downgrade the accepted active WPJBP `1.2.86` or Paid Listings `1.0.19`, nor reintroduce contaminated vendor copies. The audit must identify exactly how the theme's TGMPA/bundled-plugin logic behaves when a bundled ZIP is older than an already-active plugin.
 
 ---
 
-## 12. T1 reconciliation
+## 8. Parent-theme diff and upgrade-risk map
 
-Capture a guarded T1 and compare it to T0.
+If a clean target package is available, compare current parent `1.3.17` to the target package at a decision-grade level.
 
-PASS requires:
+Do not reverse-engineer every vendor file. Focus on material surfaces:
 
-- target runtime versions exact;
-- source/runtime/deploy state coherent;
-- no unexpected protected business mutation;
-- no unexpected options/schema mutation beyond individually documented target migration;
-- non-allowlisted cron unchanged except a specifically explained vendor-required migration if any;
-- exact three owned scheduler event/callback contracts retained;
-- continuation rows zero;
-- Action Scheduler protected state unchanged unless a target-required migration is both expected and non-executing;
-- ID32733 remains protected and unexecuted;
-- no broad cron, Action Scheduler, owned manual hook, mail, SMTP, payment, refund, or external WordPress HTTP execution;
-- backup file still exists and checksum still matches until acceptance is complete.
+- `functions.php` / bootstrap;
+- theme setup and constants;
+- TGMPA/bundled-plugin registration;
+- update-checker/updater behavior;
+- WPJBP integration/template loader;
+- WooCommerce templates/hooks;
+- Elementor widgets/templates;
+- authentication/register/login flows;
+- job/candidate/employer dashboards;
+- job submission/edit/application flows;
+- package purchase views;
+- email/template helpers only where theme-owned;
+- AJAX/REST registration where theme participates;
+- assets/markup/classes depended upon by child theme/custom CSS/JS.
 
----
+Report meaningful additions/removals/renames/signature/markup changes and migration risk LOW/MEDIUM/HIGH/CRITICAL.
 
-## 13. Integration and rollback decision
-
-### If every acceptance gate passes
-
-- integrate the exact accepted feature to `staging` only according to the repository workflow, fast-forward/no history rewrite;
-- ensure runtime deploy marker and source match the final accepted staging SHA;
-- re-prove clean staging worktree and exact target plugin versions/tree fingerprints;
-- release the runner lock;
-- remove the task-private DB backup and credential artifacts only after final acceptance is recorded and no rollback is pending;
-- publish PASS.
-
-### Rollback triggers
-
-Immediately rollback on any fatal/migration error, target version/hash/tree mismatch, CVE-fix failure, unexpected vendor route/sender, missing or duplicate owned callback, candidate-expiry regression, package/HPOS/30-day-policy regression, cron/Action Scheduler drift, unexpected mail/network/payment effect, protected business mutation, or unrecoverable frontend/API contract failure.
-
-### Rollback order
-
-- keep the runner lock;
-- prevent application requests as required by the existing maintenance/deploy boundary;
-- restore both previous plugin/source/runtime state and the exact pre-upgrade database backup if any DB/options/schema/data migration occurred;
-- file-only rollback is permitted only if guarded evidence proves no DB/options/schema/data mutation occurred;
-- restore deploy marker/manifest coherently through the approved path;
-- run one guarded read-only bootstrap and re-prove old versions, owned security/communications/scheduler contracts, Commerce/package fingerprints, Action Scheduler/ID32733, and side-effect zeros;
-- release the lock only after rollback consistency passes;
-- remove task-private backup/credential artifacts after rollback verification.
-
-Never run old plugin code against a partially migrated new database state.
+If no clean target package is available, report exactly which parts of the diff cannot be proven and do not fabricate them from changelog wording.
 
 ---
 
-## 14. Source-change boundary
+## 9. Child-theme and Raspitajse dependency inventory
 
-The expected application source for this task is the already-existing feature commit `92f151...`.
+Inventory all current child-theme and Raspitajse-owned dependencies on Superio parent behavior.
 
-Do not add new application/business code merely to work around the backup problem.
+At minimum inspect:
 
-A task-private backup helper/script outside Git is allowed.
+- child-theme template overrides and whether corresponding parent files changed/vanished in target;
+- child `functions.php` hooks/filters;
+- child CSS/JS selectors tightly coupled to parent markup;
+- WooCommerce template overrides in child theme;
+- WPJBP template overrides under parent/child theme;
+- login/register/dashboard/navigation overrides;
+- job/candidate/employer/profile/listing/application/package templates;
+- direct `superio_*`, Apus framework, Elementor widget, Redux/theme-option or parent helper calls from owned/custom code;
+- any current business logic still incorrectly living in child theme instead of owned plugin layers.
 
-If a persistent Raspitajse-owned backup tool is clearly necessary for future operations, do **not** add it opportunistically inside this upgrade transaction. Complete or block this task first and propose a separate tooling task unless the absence of such a persistent tool makes safe completion impossible.
+For every material dependency classify:
 
-No changes to Superio, WooCommerce, WordPress core, or unrelated plugins are authorized.
+- KEEP compatibility contract;
+- REDESIGN into Raspitajse-owned plugin/layer;
+- UPDATE CHILD OVERRIDE;
+- DROP obsolete override;
+- TEST ONLY.
 
----
+Include target file/function/template counterpart if known and risk level.
 
-## 15. Acceptance criteria
+Flag stale child overrides where the parent target materially changed the same template since `1.3.17`.
 
-PASS requires all of the following:
-
-- baseline and feature refs exact;
-- secure staging DB backup created before runtime change;
-- backup non-empty, checksum/integrity/structural completeness verified;
-- no secrets or SQL/PII exposed;
-- accepted vendor feature unchanged and byte-parity preserved;
-- T0 captured under shared lock;
-- controlled staging deploy completed through approved path;
-- WPJBP runtime `1.2.86` and Paid Listings runtime `1.0.19`;
-- exact official vendor tree parity at runtime;
-- CVE fix and owned security boundary accepted;
-- communications/scheduler retirement and exact three-hook contract accepted;
-- Commerce/HPOS/package/30-day entitlement compatibility accepted;
-- Superio `1.3.17` compatibility checks required by this upgrade accepted without upgrading Superio;
-- T1 reconciled with no unexplained protected mutation;
-- source/runtime/deploy/staging integration coherent and clean;
-- mail/SMTP/payment/refund/external WordPress HTTP real side effects zero;
-- broad cron/Action Scheduler/manual owned-hook execution zero;
-- Hostinger scheduler mutation zero;
-- production touched NO;
-- task-private DB credential and backup artifacts removed after successful final acceptance or completed rollback.
-
-If any hard criterion cannot be proved, do not report PASS.
+Do not move code in this task.
 
 ---
 
-## 16. Final report
+## 10. Compatibility matrix after WPJBP 1.2.86 normalization
 
-Report at minimum:
+The future Superio upgrade must preserve the accepted state from 2.16.
 
-- result and classification;
-- exact refs/baseline/feature/final staging SHA;
-- backup primitive selected and why `wp db export` was not used if still broken;
-- sanitized dump/restore client versions;
-- backup byte size and SHA-256, integrity/table-count evidence, and whether isolated restore rehearsal was possible;
-- confirmation that no credential/SQL/PII was exposed;
-- T0 summary;
-- deploy/version/vendor-tree parity evidence;
-- any bounded vendor migration;
-- CVE/security acceptance;
-- communications/alerts/expiry/scheduler acceptance;
-- Commerce/HPOS/package/entitlement acceptance;
-- Superio 1.3.17 compatibility result;
-- T1 reconciliation;
-- rollback status;
-- cleanup of backup/credential scratch;
-- scheduler/manual runner/broad cron/Action Scheduler/mail/network/payment counters;
-- production touched NO;
-- exactly one proposed next task, not created or started.
+Audit exact risk and required acceptance for:
 
-If PASS, propose exactly one next task:
+- WPJBP `1.2.86` remaining active and vendor-clean;
+- Paid Listings `1.0.19` remaining active and vendor-clean;
+- all 12 owned alert-management AJAX route variants remaining authoritative;
+- alert REST staying disabled as intended;
+- candidate→job owned evaluator remaining authoritative and vendor sender zero;
+- employer→candidate surfaces remaining retired;
+- candidate auto-expiry remaining disabled;
+- owned job expiry and employer pre-expiry hooks remaining authoritative;
+- fixed three-hook selective scheduler contract remaining unchanged;
+- SenderPolicy/mail safety remaining authoritative;
+- Commerce HPOS employer/order bridge remaining exact;
+- canonical quota + immutable 30-day entitlement policy remaining separate from job-listing duration;
+- current candidate/employer/job/application/package frontend flows continuing to render under target parent theme;
+- WooCommerce `9.5.4` compatibility;
+- WordPress `6.6.7` compatibility;
+- current Elementor version/runtime compatibility and any target minimum/recommended version if official metadata publishes one.
 
-**Zadatak 2.17 — Superio 1.3.17 → 1.3.37 security/upgrade readiness audit with bundled-plugin and child-theme compatibility mapping.**
+Do not accept “theme says compatible” as sufficient. Define runtime acceptance that proves each material contract.
 
-If blocked before upgrade completion, propose only the smallest prerequisite needed to close the actual blocker.
+---
 
-STOP after publishing the report. Do not begin the next task.
+## 11. Deployment/source-of-truth architecture for the future upgrade
+
+Because the current parent theme is outside the normal staging deploy allowlist and current source/runtime trees are not identical, the audit must design the correct reproducible deployment path before implementation.
+
+Answer explicitly:
+
+- should the clean parent Superio tree become Git-tracked source-of-truth at upgrade time?;
+- which runtime-only bundled ZIPs, if any, should be tracked, ignored, or normalized away?;
+- does the current deploy script need a narrowly scoped Superio allowlist extension for the future task?;
+- how will source/runtime exact parity be proved after upgrade?;
+- what EOL policy, if any, is required for official theme bytes? Do not assume the WPJBP vendor exception automatically applies to Superio;
+- how will target package SHA/fingerprint be pinned and verified through Git round-trip and deployment?;
+- how will the existing child theme remain untouched except for separately justified compatibility fixes?
+
+Do not implement deploy-script or `.gitattributes` changes in this audit.
+
+---
+
+## 12. Required future controlled staging-upgrade plan
+
+Produce an executable next-task plan with explicit gates.
+
+### Pre-upgrade
+
+Require at minimum:
+
+- exact official target Superio version and clean package SHA;
+- fresh staging/source/deploy baseline;
+- secure restorable staging DB backup using the now-proven `mariadb-dump` primitive from 2.16;
+- Git/file rollback point for parent/child theme;
+- sanitized T0 business/options/roles/cron/AS/Communications/Commerce fingerprints;
+- target package ZIP safety and Git EOL/round-trip proof;
+- exact child-override compatibility map;
+- bundled-plugin downgrade protection;
+- runner shared-lock acquisition for runtime-critical window;
+- mail/network/payment safeguards;
+- production forbidden.
+
+### Execution
+
+- staging only;
+- replace only the parent Superio tree from the clean pinned package plus separately reviewed minimal owned/child compatibility fixes if required;
+- do not overwrite the child theme with vendor defaults;
+- do not install/downgrade bundled WPJBP/Paid Listings automatically;
+- do not use WordPress theme updater as the implementation mechanism unless a future task explicitly proves it preserves source/deploy parity; prefer the approved Git/deploy path;
+- no theme switch/activation cycle merely to force migrations;
+- no broad cron/Action Scheduler;
+- no real mail/payment/external WordPress HTTP.
+
+### Post-upgrade acceptance
+
+Define at least:
+
+1. source/runtime parent version and exact target tree parity;
+2. child theme remains active and byte-stable except explicitly approved fixes;
+3. no fatal/new attributable PHP warning during guarded bootstrap;
+4. no unexpected DB/options/business migration;
+5. WPJBP `1.2.86` and Paid Listings `1.0.19` remain exact, active and vendor-clean;
+6. TGMPA/bundled-plugin logic does not downgrade or overwrite active newer plugins;
+7. owned alert/security/expiry/scheduler/SenderPolicy contracts remain exact;
+8. Commerce/HPOS/30-day policy remains exact;
+9. candidate/employer dashboards and job/application/package views render correctly;
+10. register/login/reset/account flows remain secure and functional;
+11. job search/filter/detail, employer/candidate profiles, submission/edit/application flows remain functional;
+12. WooCommerce cart/checkout/account/package screens relevant to Raspitajse render without theme-template regressions;
+13. Elementor-powered critical pages/widgets render without missing classes/widgets/deprecations attributable to target;
+14. responsive/mobile critical layouts have no blocking regression;
+15. cron/non-allowlisted cron/Action Scheduler protected state reconciles exactly except individually documented expected migration;
+16. no mail/SMTP/payment/external WP HTTP side effects during acceptance;
+17. protected business fingerprints unchanged except specifically authorized migrations;
+18. rollback is triggered by any critical compatibility/security/source-parity failure.
+
+### Rollback
+
+Plan must restore as one consistent unit when necessary:
+
+- pre-upgrade parent theme source/runtime;
+- matching deploy marker/manifest state;
+- staging DB snapshot if any theme/plugin option/schema/data migration occurred;
+- child theme state;
+- active plugin/version state.
+
+Never restore old parent files over partially migrated DB state without proving file-only rollback is sufficient.
+
+---
+
+## 13. Report requirements
+
+Final report must contain, without PII/secrets:
+
+- PASS/PARTIAL and exact readiness classification;
+- verified current parent/child/runtime versions;
+- verified current official target version/date;
+- authoritative source ledger;
+- current security/advisory matrix;
+- target artifact/provenance result;
+- bundled-plugin exact version matrix;
+- current active-versus-bundled downgrade/conflict analysis;
+- parent source/runtime divergence inventory;
+- child-theme override/dependency matrix;
+- Raspitajse-owned dependency matrix;
+- deployment/source-of-truth recommendation;
+- exact pre-upgrade/acceptance/rollback plan;
+- all evidence gaps and blockers;
+- confirmation that source/deploy/runtime/business state was not mutated;
+- production touched: NO.
+
+Do not publish raw credentials, SQL, user/order/application/message data, email addresses, saved queries, tokens, cookies, or authenticated URLs.
+
+---
+
+## 14. Exactly one proposed next task
+
+If readiness is proven, propose exactly one next task similar to:
+
+**Zadatak 2.18 — Controlled Superio staging upgrade to the pinned verified target with child-theme/bundled-plugin compatibility acceptance and rollback protection.**
+
+If blocked, propose exactly one prerequisite task that resolves the blocker instead.
+
+Do not create or execute the next task.
+
+## Stop
+
+Publish the final Zadatak 2.17 report through `codex-reports` and STOP.
