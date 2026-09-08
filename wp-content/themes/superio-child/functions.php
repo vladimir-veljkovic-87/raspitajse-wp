@@ -259,9 +259,9 @@ function enqueue_phone_field_scripts() {
     // Enqueue custom phone field JS (external file) with dynamic versioning to prevent caching
     wp_enqueue_script(
         'phone-field-js',
-        get_template_directory_uri() . '/js/phone-field.js', // Path to your JS file
+        get_stylesheet_directory_uri() . '/assets/js/phone-field.js', // Path to your JS file
         array('intl-tel-input-js'), // Make sure intl-tel-input.js is loaded first
-        time(), // Dynamic version using file modification time
+        'a9a53425350b', // Deterministic version tied to the canonical asset bytes
         true // Load in footer
     );
 }
