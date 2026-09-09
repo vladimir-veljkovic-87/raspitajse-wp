@@ -12,6 +12,9 @@ MANIFEST_FILE="/home/u601262303/deploy-state/raspitajse-staging-communications.m
 
 ALLOWLIST=(
   "wp-content/themes/superio-child"
+  "wp-content/themes/superio"
+  "wp-content/plugins/apus-framework"
+  "wp-content/plugins/revslider"
   "wp-content/plugins/wp-job-board-pro"
   "wp-content/plugins/wp-job-board-pro-wc-paid-listings"
   "wp-content/plugins/raspitajse-communications"
@@ -111,7 +114,7 @@ is_allowed_path() {
   [[ "${path}" != *".."* ]] || return 1
 
   case "${path}" in
-    wp-content/themes/superio-child/*|wp-content/plugins/wp-job-board-pro/*|wp-content/plugins/wp-job-board-pro-wc-paid-listings/*|wp-content/plugins/raspitajse-communications/*|wp-content/plugins/raspitajse-commerce/*|wp-content/mu-plugins/*)
+    wp-content/themes/superio-child/*|wp-content/themes/superio/*|wp-content/plugins/apus-framework/*|wp-content/plugins/revslider/*|wp-content/plugins/wp-job-board-pro/*|wp-content/plugins/wp-job-board-pro-wc-paid-listings/*|wp-content/plugins/raspitajse-communications/*|wp-content/plugins/raspitajse-commerce/*|wp-content/mu-plugins/*)
       return 0
       ;;
     *)
