@@ -1,581 +1,635 @@
-# Zadatak 2.21 — Controlled Superio 1.3.37 + Apus Framework 2.5 + Slider Revolution 6.7.41 staging upgrade with pinned provenance, downgrade prevention, secure backup, rollback, and full compatibility acceptance
+# Zadatak 2.22 — Resume the blocked Superio vendor-stack upgrade from a credential-neutral DB-backup gate and complete exact Commit B acceptance
 
 Status: READY
-Baseline: 9df2850034117cacdc8dd45078da5c3d1d3c034c
-Previous task: 2.20
+Baseline: 6d2e78ad6f866b486c303bfda050a4afec5f90e8
+Previous task: 2.21
 Target environment: staging
 Production: FORBIDDEN
 
 ## Mandatory execution preamble
 
-Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, and `origin/staging`.
+Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, `origin/staging`, and `origin/feature/z2-21-superio-upgrade`.
 
-Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before planning, extracting vendor artifacts, creating branches, changing source, taking backups, bootstrapping WordPress, or deploying. Treat `codex-tasks` as READ-ONLY.
+Read `tasks/current.md` and `tasks/README.md` **from `origin/codex-tasks` in full** before any backup discovery, WordPress bootstrap, runtime snapshot, deploy, restore test, or integration action. Treat `codex-tasks` as READ-ONLY.
 
-Read the final Zadatak 2.20 PASS report and final Zadatak 2.18 PASS report in full. Read Zadatak 2.16 PASS only where needed for the accepted secure staging DB-backup primitive and rollback/safety boundary.
+Read the latest Zadatak 2.21 PARTIAL report in full. Read the final Zadatak 2.20 PASS and Zadatak 2.18 PASS reports where needed for child-theme compatibility and pinned vendor provenance. Read Zadatak 2.16 PASS only for the previously accepted staging backup-validation/rollback evidence model; do **not** copy its credential-staging mechanism.
 
 Verify fresh `origin/staging` is exactly:
 
-`9df2850034117cacdc8dd45078da5c3d1d3c034c`
+`6d2e78ad6f866b486c303bfda050a4afec5f90e8`
 
-Verify the live staging deploy marker is the same commit and the primary staging worktree is clean/on `staging`. If any baseline differs, STOP and report the mismatch. Do not silently rebase, rebuild against another SHA, or widen scope.
+Verify the live staging deploy marker is the same commit and the primary worktree is clean/on `staging`.
 
-Execute only Zadatak 2.21. Publish the final report through the existing `codex-reports` workflow and STOP. Do not begin 2.22 automatically.
+Verify fresh `origin/feature/z2-21-superio-upgrade` is exactly:
+
+`bb34d768d4edec8050975405874197dd1269d28f`
+
+and that its single parent is exactly the staging baseline above.
+
+If any SHA, parent, deploy marker, branch identity, or clean-worktree condition differs, STOP and report the mismatch. Do not rebase, amend, rebuild, cherry-pick, merge unrelated work, or manufacture a replacement vendor commit.
+
+Execute only Zadatak 2.22. Publish the final report through the existing `codex-reports` workflow and STOP. Do not begin the post-upgrade Woo/legacy cleanup automatically.
 
 ---
 
-## 1. Accepted authoritative facts
+## 1. Accepted state from Zadatak 2.21
 
-Treat these as accepted unless a fresh bounded verification contradicts them.
+Treat the following as already accepted unless a fresh bounded check contradicts them.
 
-### Current accepted staging state
+### Safe integrated control commit
 
-- application/source/deploy baseline: `9df2850034117cacdc8dd45078da5c3d1d3c034c`;
-- active template / stylesheet: `superio` / `superio-child`;
-- Superio parent: `1.3.17`;
-- Superio child: `1.0.0`;
-- Apus Framework: `2.3`;
-- Slider Revolution: `6.7.18`;
-- WP Job Board Pro: `1.2.86`;
-- WP Job Board Pro WC Paid Listings: `1.0.19`;
-- WP Private Message: `1.0.7`;
-- WooCommerce: `9.5.4`;
-- Elementor: `3.25.11`;
-- WordPress: `6.6.7`.
+`origin/staging` intentionally contains only Commit A from 2.21:
 
-Zadatak 2.20 PASS established that the child no longer depends on the parent `js/phone-field.js` path:
+`6d2e78ad6f866b486c303bfda050a4afec5f90e8`
 
-- owned child asset: `wp-content/themes/superio-child/assets/js/phone-field.js`;
-- canonical SHA-256: `a9a53425350b8f33ee2a91fe4cc0ce83f66fae626984e0db4371af04622add22`;
-- enqueue handle remains `phone-field-js`;
-- source resolves through `get_stylesheet_directory_uri()`;
-- deterministic version: `a9a53425350b`;
-- no active parent `/superio/js/phone-field.js` enqueue remains.
+Commit A:
 
-### Pinned official Superio target
+- parent: `9df2850034117cacdc8dd45078da5c3d1d3c034c`;
+- changed path exactly `deployment/deploy-staging.sh`;
+- only adds these three roots to the existing staging deploy allowlist/path validator:
+  - `wp-content/themes/superio`
+  - `wp-content/plugins/apus-framework`
+  - `wp-content/plugins/revslider`;
+- control deploy passed with zero WordPress runtime file changes;
+- this control commit remains accepted even if the vendor upgrade is not completed.
 
-User-provided artifact:
+### Exact vendor Commit B
+
+The already-published, statically accepted vendor commit is:
+
+`bb34d768d4edec8050975405874197dd1269d28f`
+
+on:
+
+`origin/feature/z2-21-superio-upgrade`
+
+Its parent must remain Commit A exactly.
+
+Commit B changes only these three roots:
+
+- `wp-content/themes/superio`
+- `wp-content/plugins/apus-framework`
+- `wp-content/plugins/revslider`
+
+It contains the pinned target stack:
+
+- Superio `1.3.37`;
+- Apus Framework `2.5`;
+- Slider Revolution `6.7.41`.
+
+No source rebuilding or content editing is authorized in 2.22. The exact existing Commit B is the only acceptable vendor payload.
+
+### Pinned provenance
+
+User-provided Superio installable artifact:
 
 `/home/u601262303/repo/themeforest-NNoRVYjo-superio-job-board-wordpress-theme-wordpress-theme.zip`
 
-Accepted identity:
+Pinned SHA-256:
 
-- artifact SHA-256: `0d172d4151faddef101a2ff9a6b1c1a8a1c41653018283afbdd0dd6d038cf5b6`;
-- target Superio version: `1.3.37`;
-- target parent: 615 regular files;
-- target parent PHP lint previously passed 367/367;
-- official package-byte tree SHA-256: `019ba653e5c27dbdc0c98f2651ee41daeb32014ce6275c44b278f63904a5619f`;
-- accepted Git/LF-canonical parent tree SHA-256: `b597e629d86c602e4246ac812a8b615ffeac81617b2835eea752c4a228d5881e`;
-- current repository EOL policy is retained; **do not add a Superio `-text !eol` exception**.
+`0d172d4151faddef101a2ff9a6b1c1a8a1c41653018283afbdd0dd6d038cf5b6`
 
-Pinned target bundled plugin archives:
+Accepted canonical target trees:
 
-- Apus Framework `2.5` — `inc/plugins/apus-framework.zip`
-  - SHA-256 `a0506a74d80c6e8af553d9bead31f528208eed0485755d8890e36f64aa7792f4`;
-- Slider Revolution `6.7.41` — `inc/plugins/revslider.zip`
-  - SHA-256 `f0ff13e70cac3c0ffcecfbea1a78be483ed0d00de9db90ee60e0252b23a5b175`;
-- WP Job Board Pro `1.2.86`
-  - SHA-256 `692fbf75f36391524e76db51805c4c79200880436bc9446685b4e9cce19a3f63`;
-- Paid Listings `1.0.19`
-  - SHA-256 `26aebee83ec333302f201fa1782346414064004af4cdb8e24732555d5f640467`;
-- WP Private Message `1.0.7`
-  - SHA-256 `fcb1a3f39f447f63fe420be6d89297634ffd8052b4af332c88a9720734b1a5bc`.
+- Superio official tree: `019ba653e5c27dbdc0c98f2651ee41daeb32014ce6275c44b278f63904a5619f`;
+- Superio Git/LF-canonical tree: `b597e629d86c602e4246ac812a8b615ffeac81617b2835eea752c4a228d5881e`;
+- Apus bundled ZIP: `a0506a74d80c6e8af553d9bead31f528208eed0485755d8890e36f64aa7792f4`;
+- Apus Git-canonical tree: `e436bc2237fda3cf6938a1cdb715e7de5d2c0a7a942ca0acf832735efc4c1491`;
+- RevSlider bundled ZIP: `f0ff13e70cac3c0ffcecfbea1a78be483ed0d00de9db90ee60e0252b23a5b175`;
+- RevSlider Git-canonical tree: `0102ac80aba0f36f9cec7ff3a8f794a0a22c430072fcaadd416901f5a70fb8c9`.
 
-Accepted active clean plugin tree fingerprints that must remain unchanged:
+Previously accepted lint/provenance gates:
 
-- WPJBP `1.2.86`: `23c55f5bba87fc2fc58dbb858c3543a0b45d4e1f5b0fa90d74e569eff034668e`;
-- Paid Listings `1.0.19`: `d936377ea8d818ede21cd384568ad93c4092f37e09e83df2be2ed92683a9a6a3`.
+- Superio PHP: 367/367 PASS;
+- Apus PHP: 497/497 PASS;
+- RevSlider PHP: 148/148 PASS;
+- no material official-to-Git difference after accepted LF canonicalization;
+- six accidental executable Superio asset modes normalized to regular `100644` in Commit B;
+- exact bundled WPJBP/Paid/WP Private Message archive identities were revalidated but those installed plugin trees are **not** part of the deployment.
 
-Zadatak 2.18 established that target TGMPA does not automatically downgrade installed WPJBP/Paid Listings and ordinary theme bootstrap does not run plugin replacement. Nevertheless **no TGMPA install/update/bulk action is authorized**.
+### Pre-upgrade runtime remains old
 
----
+Because 2.21 stopped before Commit B deploy, runtime must still be:
 
-## 2. Goal and upgrade transaction
+- Superio `1.3.17`;
+- Apus Framework `2.3`;
+- Slider Revolution `6.7.18`;
+- WP Job Board Pro `1.2.86`;
+- Paid Listings `1.0.19`;
+- WP Private Message `1.0.7`;
+- WooCommerce `9.5.4`;
+- Elementor `3.25.11`;
+- WordPress `6.6.7`;
+- active stylesheet/template: `superio-child` / `superio`.
 
-Perform one controlled staging security/compatibility upgrade transaction:
+The child-owned phone asset from 2.20 must remain exact:
 
-1. normalize the Superio parent source to the exact pinned `1.3.37` target;
-2. replace the active Apus Framework whole tree with the exact pinned `2.5` bundle;
-3. replace the active Slider Revolution whole tree with the exact pinned `6.7.41` bundle;
-4. keep the active Superio child unchanged;
-5. keep WPJBP `1.2.86`, Paid Listings `1.0.19`, and WP Private Message `1.0.7` active directories untouched;
-6. explicitly prevent TGMPA/updater reinstall/downgrade paths;
-7. prove the Raspitajse security, package, communications, dashboard, registration, submission, application, WooCommerce, and scheduler contracts still work;
-8. rollback completely if any critical acceptance fails.
+`wp-content/themes/superio-child/assets/js/phone-field.js`
 
-This is a vendor infrastructure upgrade, not a Raspitajse business-logic refactor.
+SHA-256:
 
----
+`a9a53425350b8f33ee2a91fe4cc0ce83f66fae626984e0db4371af04622add22`
 
-## 3. Hard safety boundaries
+### Pre-upgrade rollback fingerprints from 2.21
 
-Production is forbidden. Do not access or mutate production filesystem, database, scheduler, mail, payment, or network state.
+Before any new deploy, recreate fresh snapshots and verify the live old runtime still matches these accepted byte-tree fingerprints:
 
-Do not change or upgrade:
+- Superio old runtime: `1ba110601d29609ad8403bb96e89d882290e9cd44917153234c72fad3ff61b51`;
+- Apus old runtime: `a2ec130283ec47b077d2c6e7cb2034688cc06dea01fe7cf12102f1beb488518b`;
+- RevSlider old runtime: `22e3157ded5cd0dd337b0d598f0a1f434edd1e3447b4d11399652ee3801e33dc`.
 
-- `wp-content/themes/superio-child/**`;
-- WP Job Board Pro active plugin tree;
-- Paid Listings active plugin tree;
-- WP Private Message active plugin tree;
-- WooCommerce;
-- WordPress core;
-- Elementor;
-- Raspitajse Communications business logic;
-- Raspitajse Commerce business logic;
-- Hostinger scheduler configuration.
+Accepted old runtime mode-tree fingerprints:
 
-Do not use:
+- Superio: `ccce288f2a3be3cdef14625752536fe234317d01dda1083322c80e7b3304aa93`;
+- Apus: `0feb7f8b2cf16faed36a3c3bbf0328c59e0fd9b26cf6687d0bd0063c0a539a67`;
+- RevSlider: `1e1589e1063a9729298cb983fc9aca3f80e454a3f07af6d62e8ab998b2b949fc`.
 
-- WordPress theme/plugin updater or installer;
-- theme switch;
-- plugin deactivate/reactivate cycle;
-- TGMPA single/bulk install/update actions;
-- broad WP-Cron;
-- `wp cron event run --due-now` / `--all`;
-- Action Scheduler runner or arbitrary due-action execution;
-- continuation runner;
-- real SMTP/mail transport;
-- real payment/refund execution;
-- external/vendor HTTP merely to prove behavior;
-- live exploit attempts or live privileged registrations.
-
-Keep existing mail, external WordPress HTTP, payment/refund, and scheduler protections active during runtime acceptance.
-
-Known `HOST_NAMESPACE_PRESSURE` / `bwrap ENOSPC` guidance remains binding: once the known signature is confirmed, do not loop on sandbox-dependent helpers; use the already proven namespace-free/direct Git/filesystem workflow or STOP precisely.
+If a fresh runtime fingerprint differs, STOP before deploy and identify the drift. Do not overwrite unexplained runtime changes.
 
 ---
 
-## 4. Exact authorized source scope
+## 2. Goal and scope
 
-This task authorizes changes only inside:
+Resume the exact already-prepared 2.21 transaction without rebuilding it:
 
-1. `deployment/deploy-staging.sh` — exact narrow staging deploy-scope extension only;
-2. `wp-content/themes/superio/**` — whole clean target parent replacement;
-3. `wp-content/plugins/apus-framework/**` — whole clean target bundle replacement;
-4. `wp-content/plugins/revslider/**` — whole clean target bundle replacement.
+1. satisfy the hard pre-deploy database-backup gate **without reading, copying, printing, exporting, persisting, or restaging database credentials**;
+2. recreate exact pre-upgrade filesystem rollback snapshots;
+3. capture guarded T0 protected state;
+4. deploy exact Commit B through the approved staging deploy script;
+5. account for any vendor bootstrap/schema/option migration;
+6. run full compatibility, security, package, communications, child-theme and downgrade-prevention acceptance;
+7. either:
+   - fast-forward `staging` from Commit A to exact Commit B after PASS, or
+   - restore the exact old runtime/database state and keep `origin/staging` at Commit A after a critical failure.
 
-No other application path may change.
-
-Do **not** modify `.gitattributes` or `.gitignore`.
-
-Because global `*.zip` ignore rules exist, this task explicitly authorizes `git add -f` **only** for the ten official ZIP files that belong inside the pinned Superio 1.3.37 parent tree:
-
-- `wp-content/themes/superio/inc/plugins/apus-framework.zip`;
-- `wp-content/themes/superio/inc/plugins/revslider.zip`;
-- `wp-content/themes/superio/inc/plugins/wp-job-board-pro.zip`;
-- `wp-content/themes/superio/inc/plugins/wp-job-board-pro-wc-paid-listings.zip`;
-- `wp-content/themes/superio/inc/plugins/wp-private-message.zip`;
-- the exact five official demo slider ZIPs under `wp-content/themes/superio/inc/vendors/one-click-demo-import/default/` proven by 2.18 (`slider-1.zip`, `slider-5.zip`, `slider-6.zip`, `slider-11.zip`, `slider-20.zip`).
-
-No other ignored archive may be force-added.
+This task authorizes **no new application/source commit**. If source changes are required to make the upgrade work, STOP and report the exact incompatibility for a separate task.
 
 ---
 
-## 5. Two-commit feature structure and explicit publication authorization
+## 3. Credential-neutral database backup contract
 
-Use one scoped feature branch:
+The previous 2.21 blocker came from attempting to populate a private MariaDB defaults file with credentials. That mechanism is explicitly **not authorized** here.
 
-`feature/z2-21-superio-upgrade`
+### Absolute prohibitions
 
-Create it from exact baseline `9df2850034117cacdc8dd45078da5c3d1d3c034c`.
+Do not:
 
-The feature must contain exactly two ordered commits:
+- read or print DB password values from `wp-config.php`, environment files, process environment, shell history, or any secret store;
+- `cat`, `grep`, parse, regex-extract, copy, echo, printf, serialize, encode, or otherwise restage DB credentials;
+- place a DB password in command-line arguments, an environment variable such as `MYSQL_PWD`, stdin, a temporary file, a here-doc, process substitution, shell variable, report, log, or patch;
+- create a task-private `[client]` defaults file containing copied credentials;
+- weaken or circumvent the security reviewer/policy that blocked 2.21;
+- use production credentials or production DB backup paths.
 
-### Commit A — deploy-scope control commit
+Database name/table names may be obtained through an already-authenticated WordPress bootstrap when needed, but do not include sensitive identifiers in the final report; report counts/fingerprints instead.
 
-Change only `deployment/deploy-staging.sh`.
+### Allowed credential-neutral backup primitives
 
-Add exactly these roots to both the `ALLOWLIST` and `is_allowed_path()` contract:
+Try only the following bounded mechanisms, in this order.
 
-- `wp-content/themes/superio`;
-- `wp-content/plugins/apus-framework`;
-- `wp-content/plugins/revslider`.
+#### A. WP-CLI managed export — one bounded attempt
 
-Do not change any other deploy behavior, target path, production scope, branch policy, state-marker behavior, removed-plugin rules, rsync semantics, manifest behavior, or existing allowlist entry.
+A single attempt with the installed WP-CLI is allowed because Codex does not manually extract or restage credentials.
 
-### Commit B — pinned vendor replacement
+Use a private destination outside the repository and outside the web root, under a task-owned `0700` directory, with resulting dump mode forced to `0600`.
 
-Parent must be Commit A.
+Use a timeout and capture only sanitized exit/status diagnostics. Do not print command internals that could expose configuration.
 
-Change only the three vendor roots:
+If `wp db export` fails with the already-known disabled-process/`exec()`/exit-255 signature, classify it once and **do not retry**.
 
-- `wp-content/themes/superio/**`;
-- `wp-content/plugins/apus-framework/**`;
-- `wp-content/plugins/revslider/**`.
+#### B. Existing client-authentication path — no secret inspection
 
-No deployment script change in Commit B.
+If A is unavailable, one credential-neutral direct-client attempt is allowed **only if the server account already has a usable MariaDB client authentication profile or socket-based authentication that works without supplying credentials in this task**.
 
-**This READY task is explicit human authorization to publish the exact scoped feature branch to `origin/feature/z2-21-superio-upgrade` after all static gates below pass. No additional publication approval is required if the branch parent/commit structure, exact changed-path scope, and pinned hashes all match this contract.**
+Rules:
 
-Push once normally. No force push, amend-after-publication, rebase, or history rewrite.
+- do not open or print any client option file that may contain credentials;
+- do not copy an option file;
+- do not use `--password`, `-p...`, `MYSQL_PWD`, or generated defaults files;
+- a bounded `SELECT 1` connectivity test using the existing client authentication context is allowed;
+- if that connectivity succeeds, `/usr/bin/mariadb-dump` may use that same existing authentication context to create the private dump;
+- if it fails, do not probe passwords or alternate credentials.
 
-After publication and before any vendor runtime deploy, this task also explicitly authorizes a fast-forward of `origin/staging` from the original baseline to **Commit A only**, followed by `deployment/deploy-staging.sh changed staging`. That control step must change no WordPress runtime file because the only baseline→A source diff is the deploy script outside the runtime allowlisted WordPress paths; it exists solely to make the rollback/deploy mechanism authoritative for the three newly allowed roots.
+If neither A nor B works without credential manipulation, STOP with:
 
-If the baseline→A staging fast-forward or control deploy does anything else, STOP.
+`BLOCKED_CREDENTIAL_NEUTRAL_DB_BACKUP_UNAVAILABLE`
 
----
-
-## 6. Re-verify and prepare the pinned vendor source before publication
-
-Do all artifact extraction in a mode-0700 task-private non-web directory. Never edit the user-provided outer artifact.
-
-Reverify:
-
-- outer artifact exists as regular non-symlink file;
-- SHA-256 is exactly `0d172d4151faddef101a2ff9a6b1c1a8a1c41653018283afbdd0dd6d038cf5b6`;
-- ZIP CRC/path/traversal/duplicate/symlink/encryption safety still passes;
-- target `style.css` and `SUPERIO_THEME_VERSION` are exactly `1.3.37`;
-- exact embedded Apus and RevSlider archive hashes equal the pinned values above;
-- embedded WPJBP/Paid archives still equal the already accepted pinned clean packages;
-- no Raspitajse/staging/host contamination marker exists in extracted target vendor trees.
-
-Do not fetch or substitute a newer Superio/plugin package in this task. If the supplied artifact differs, STOP.
-
-### Parent canonicalization
-
-Build the target parent from the supplied official ZIP, then prove:
-
-- official package-byte tree remains `019ba653e5c27dbdc0c98f2651ee41daeb32014ce6275c44b278f63904a5619f`;
-- after the repository's existing Git EOL round trip, the 615-file source tree is exactly the accepted canonical tree `b597e629d86c602e4246ac812a8b615ffeac81617b2835eea752c4a228d5881e`;
-- all ZIP/binary payload bytes remain exact;
-- any text changes caused by Git are EOL-only;
-- the six package assets previously identified with accidental executable mode are normalized to regular non-executable Git mode; no content byte is changed for that normalization.
-
-Do not preserve the removed parent `js/phone-field.js`; 2.20 already made the child independent.
-
-### Apus / Slider canonicalization
-
-For each pinned embedded archive independently:
-
-1. safely extract its single plugin root;
-2. compute and report a deterministic official-extraction path+byte tree SHA-256 using the same sorted `relative_path + NUL + sha256(bytes) + LF` algorithm accepted in 2.18;
-3. pass the extracted tree through the repository's current Git attributes in a disposable index/checkout;
-4. compute and report a deterministic Git-canonical tree SHA-256;
-5. prove any official→Git content differences are EOL-only, with binary bytes unchanged;
-6. use the Git-canonical tree as the source/runtime parity target;
-7. record exact file counts and target versions.
-
-Do not invent or predeclare these two tree fingerprints; derive them from the already pinned archive bytes and report them.
-
-If Git changes non-EOL content or any archive fails safety/provenance, STOP.
-
-### Static quality gates
-
-Before branch publication:
-
-- `php -l` every PHP file in target Superio, target Apus, and target RevSlider; zero failures required;
-- target headers/constants exactly Superio `1.3.37`, Apus `2.5`, RevSlider `6.7.41`;
-- child source remains byte-stable from 2.20;
-- static scan finds no new missing parent class/function/method required by the active child or owned Raspitajse integration;
-- no active source change exists in WPJBP/Paid/WP Private Message;
-- `git diff --check` is clean for task-authored textual changes; do not "fix" immutable vendor whitespace if doing so would break the pinned canonical tree;
-- Commit A path set is exactly one file; Commit B path set is exactly the three vendor roots.
+Do not deploy Commit B. Do not invent a PHP SQL-dumper, custom backup format, weak copy, or partial-table substitute merely to make progress.
 
 ---
 
-## 7. Pre-runtime control step, secure backup, and exact rollback material
+## 4. Backup acceptance gate
 
-After feature publication and static acceptance:
+A backup is accepted only when all applicable checks pass.
 
-1. fast-forward `staging` to Commit A only;
-2. run `deployment/deploy-staging.sh changed staging` using Commit A;
-3. verify source HEAD / `origin/staging` / deploy marker are Commit A and WordPress runtime versions/files are still the pre-upgrade state;
-4. verify protected business/scheduler/mail/payment state did not change.
+Required properties:
 
-Then, before Commit B is deployed, acquire the existing selective-runner shared lock nonblocking. If a natural run owns it, wait only a bounded reasonable interval or STOP; do not kill the scheduler.
+- created from the staging database only;
+- regular non-symlink file;
+- stored outside repository and web root in task-private `0700` directory;
+- file permission `0600`;
+- non-empty and plausibly complete logical dump;
+- SHA-256 and byte size recorded in sanitized evidence;
+- exact current staging table-set fingerprint captured through an authenticated WordPress/bootstrap query;
+- dump structural table-set equals the fresh current table-set exactly;
+- no truncation/error footer/signature detected;
+- logical export is consistent for InnoDB (`--single-transaction`/equivalent where supported), quick/streamed rather than table-locking where supported;
+- triggers/events/routines included where the selected primitive supports them; if none exist, record the zero count rather than inventing content;
+- no backup content, row values, PII, credentials, user emails, orders, jobs, applications, messages or mail bodies printed to the report.
 
-While the lock is held, create both rollback layers below.
+Fresh table count is expected to be close to the previously validated 84-table state, but do not hard-code 84 as truth. Compare the dump against the fresh live table-set fingerprint.
 
-### A. Fresh staging DB backup
+### Restore capability gate
 
-Reuse the proven Zadatak 2.16 direct `/usr/bin/mariadb-dump` primitive, not the broken `wp db export` wrapper.
+Before deploy, also prove the corresponding restore path exists **without credential restaging**:
+
+- if WP-CLI produced the dump, verify the installed WP-CLI import command is available in the same staging context;
+- if existing MariaDB client authentication produced the dump, verify `/usr/bin/mariadb` can perform a bounded read-only `SELECT 1` using the same existing authentication context.
+
+A destructive restore rehearsal against the live DB is forbidden. A temporary-database restore rehearsal is optional only if an already-available isolated database can be created without broad privileges or credential handling. Lack of `CREATE DATABASE` permission is not itself a blocker if the structural/integrity gate and restore client path are otherwise sound, matching the accepted 2.16 evidence model.
+
+If a dump exists but no credential-neutral restore path is available, classify:
+
+`BLOCKED_DB_BACKUP_NOT_RESTORABLE_BY_ALLOWED_PATH`
+
+and STOP before vendor deploy.
+
+---
+
+## 5. Recreate exact filesystem rollback snapshots
+
+After the database backup gate passes, acquire the existing selective-runner shared lock nonblocking. If a natural scheduler run owns it, wait only a bounded interval or STOP; do not kill the scheduler.
+
+Create task-private, non-web-accessible snapshots of the exact live pre-upgrade runtime roots:
+
+- `wp-content/themes/superio`
+- `wp-content/plugins/apus-framework`
+- `wp-content/plugins/revslider`
 
 Requirements:
 
-- task-private 0700 directory;
-- task-private 0600 `[client]` defaults file populated in-process without printing credentials;
-- password never in command arguments, report, shell trace, Git, or permanent config;
-- logically consistent dump (`--single-transaction`, `--quick`, `--skip-lock-tables`, drop statements, hex blobs, safe charset, no tablespaces where needed, triggers as supported);
-- exit status 0;
-- non-empty SQL file mode 0600;
-- SHA-256 recorded;
-- structural completeness checked against the current live staging table set/count without printing row contents;
-- no truncation/skipped-table/read error;
-- compatible restore client available.
+- preserve regular-file bytes, directory structure and relevant modes;
+- do not follow symlinks;
+- verify snapshot byte-tree and mode-tree equal the live pre-upgrade root before continuing;
+- verify the live pre-upgrade fingerprints equal the accepted 2.21 values in Section 1;
+- snapshots are rollback material only and must never be committed or published.
 
-The staging DB account previously lacked CREATE DATABASE privilege. Do not waste time retrying an isolated restore rehearsal unless a fresh privilege check safely proves that changed; the accepted structural/integrity gate is sufficient.
+Also reconfirm before deploy:
 
-Retain the SQL backup only through the acceptance/rollback window, then remove it after final PASS or completed rollback.
+- child theme runtime is unchanged from 2.20;
+- WPJBP runtime tree remains accepted `23c55f5bba87fc2fc58dbb858c3543a0b45d4e1f5b0fa90d74e569eff034668e`;
+- Paid Listings runtime tree remains accepted `d936377ea8d818ede21cd384568ad93c4092f37e09e83df2be2ed92683a9a6a3`;
+- WP Private Message remains byte/path-stable from the 2.21 pre-deploy capture;
+- no updater/TGMPA action has run between 2.21 and this resume.
 
-### B. Exact pre-upgrade runtime snapshots
-
-Create task-private non-web exact filesystem snapshots of these three deployed runtime roots only:
-
-- `wp-content/themes/superio/`;
-- `wp-content/plugins/apus-framework/`;
-- `wp-content/plugins/revslider/`.
-
-Preserve file bytes, relative paths, and executable-mode metadata sufficiently to restore the exact pre-upgrade runtime trees, including the known historical parent CRLF/runtime-only archive divergence. Record deterministic path+byte fingerprints and file counts, not file contents.
-
-These snapshots are **rollback-only**. They must never be committed, uploaded, or served publicly.
-
-This task explicitly authorizes exact `rsync`/filesystem restoration from these private snapshots **only after a critical failure** and only under the shared lock. Normal deployment must still use the approved deploy script.
-
-Capture a guarded sanitized T0 after backup/snapshots and immediately before vendor deploy. Reverify T0 after backup creation if necessary so it is the authoritative pre-deploy state.
+Any unexplained drift: STOP before deploy.
 
 ---
 
-## 8. T0 protected-state requirements
+## 6. Guarded T0 state
 
-At T0 prove at minimum:
+With the shared lock held, capture sanitized T0 evidence sufficient to prove that the vendor replacement does not alter unrelated Raspitajse state.
 
-- environment is staging;
+At minimum capture/fingerprint:
+
+- environment identity is staging;
 - `DISABLE_WP_CRON=true`;
 - mail safety loaded;
-- external WordPress HTTP is preempted;
-- payment/refund execution guards remain active;
-- active template/stylesheet and all current versions match the accepted pre-upgrade state;
-- child phone-field asset/enqueue from 2.20 is intact;
-- protected business fingerprint captured without PII;
-- exact owned cron hook/callback contract captured;
-- non-allowlisted cron fingerprint captured;
-- continuation remains absent;
-- Action Scheduler summary captured and protected ID `32733` remains `pending` with attempts `0`;
-- WPJBP/Paid clean tree fingerprints match their accepted values;
-- current WP Private Message active-tree fingerprint captured;
-- source/runtime fingerprints of the three upgrade roots captured;
-- sanitized vendor-owned DB surfaces for Apus/RevSlider are inventoried sufficiently to account for legitimate upgrade bookkeeping/schema changes later.
+- external WordPress HTTP preemption available;
+- business-state fingerprint covering candidates, employers, jobs, applications, packages/entitlements, Woo orders needed by recent accepted tasks, and message state without dumping PII;
+- owned cron/event/callback fingerprint and timestamps;
+- non-allowlisted cron fingerprint;
+- continuation/claim state;
+- Action Scheduler state and protected ID `32733` status/attempts;
+- active theme/plugin versions;
+- selected schema/table-set fingerprint;
+- selected option-name/value fingerprints for vendor namespaces sufficient to account for migrations without reporting sensitive values.
 
-Do not manually execute scheduler/business hooks to create evidence.
+Do not manually run owned cron hooks, broad WP-Cron, the selective runner, continuation runner, or Action Scheduler.
+
+Do not send mail, invoke PHPMailer/SMTP transport, execute payments/refunds, or make application external HTTP calls.
 
 ---
 
-## 9. Controlled Commit B deploy
+## 7. Exact Commit B pre-deploy verification
 
-With the lock still held, deploy the published feature tip (Commit B) only through:
+Immediately before deploy, reverify the remote feature branch still points to exact Commit B:
+
+`bb34d768d4edec8050975405874197dd1269d28f`
+
+and parent remains exact Commit A.
+
+Reverify the Commit A → Commit B diff changes only the three authorized vendor roots and contains no child-theme, WPJBP, Paid Listings, WP Private Message installed-tree, Raspitajse-owned, WooCommerce, Elementor, WordPress core, scheduler or deployment-script change.
+
+Do not amend Commit B.
+
+Do not run WordPress theme/plugin updater APIs.
+
+Do not invoke TGMPA install/update/bulk.
+
+Do not switch the theme.
+
+Do not deactivate/reactivate plugins.
+
+The READY task is explicit human authorization to deploy this exact already-published Commit B once all backup/snapshot/T0 gates pass. No additional feature-branch publication is required or authorized.
+
+---
+
+## 8. Vendor deploy
+
+Deploy only with the existing approved script and exact remote feature branch:
 
 `deployment/deploy-staging.sh changed feature/z2-21-superio-upgrade`
 
-Requirements:
+No manual vendor copying during the forward deployment.
 
-- primary worktree must use the reviewed feature version of `deployment/deploy-staging.sh` whose allowlist contains only the exact three new roots plus all existing accepted entries;
-- no manual copy around a successful normal deploy;
-- no updater/TGMPA/theme switch/plugin activation shortcut;
-- target parent/APUS/RevSlider source trees must be exactly the reviewed Commit B canonical trees;
-- deleted target paths must be deleted by the bounded deploy diff, including parent `js/phone-field.js`;
-- source/runtime target parity must be rechecked immediately after deploy and before ordinary acceptance;
-- child theme and protected plugin trees must not be touched by the Commit B source diff.
+After deploy, require source/runtime path-byte parity against Commit B for the three roots, using the accepted Git/LF-canonical trees and expected regular modes.
 
-If deploy fails part-way, STOP normal acceptance and enter the rollback contract immediately.
+Expected active vendor versions after first guarded bootstrap:
+
+- Superio parent `1.3.37`;
+- Apus Framework `2.5`;
+- Slider Revolution `6.7.41`.
+
+Expected invariants:
+
+- stylesheet remains `superio-child`;
+- template remains `superio`;
+- child theme was not replaced or modified;
+- old parent `superio/js/phone-field.js` is absent after clean 1.3.37 replacement;
+- active `phone-field-js` still resolves exclusively to the child-owned asset;
+- WPJBP remains `1.2.86` and byte-stable;
+- Paid Listings remains `1.0.19` and byte-stable;
+- WP Private Message remains `1.0.7` and byte-stable;
+- no bundled archive caused downgrade/reinstall of an already-accepted installed plugin.
+
+If file parity or version identity fails, do not continue into broad testing. Enter rollback.
 
 ---
 
-## 10. First guarded bootstrap and migration accounting
+## 9. Guarded first bootstrap and migration accounting
 
-After successful file deploy, run one guarded WordPress bootstrap with all side-effect protections active and the shared scheduler lock still held.
+Bootstrap WordPress only under staging identity with mail and external-HTTP protections active.
+
+Allow normal initialization of the already-active replaced theme/plugins, but never call updater/installer/activation APIs.
+
+Capture migration/accounting evidence around the first and second guarded bootstrap.
+
+Allowed task-caused DB changes are only vendor-version/schema/option changes that can be attributed to the Superio 1.3.37 / Apus 2.5 / RevSlider 6.7.41 replacement.
+
+Examples of namespaces that may legitimately move if vendor code requires it include:
+
+- RevSlider-owned tables/options/transients;
+- Apus Framework-owned options/cache/schema metadata;
+- Superio/theme-owned options/transients/version metadata.
+
+Do not assume a namespace change is valid merely because its name looks vendor-like; inspect purpose at a sanitized structural level.
+
+Hard rollback triggers include any unexplained task-caused mutation to:
+
+- WordPress users/roles/capabilities outside a documented security migration;
+- candidate/employer/job/application/message business data;
+- package/entitlement ownership/quota/activation/expiry data;
+- WooCommerce orders/payments/refunds/customer state;
+- alert ledgers/claims/sends;
+- cron or Action Scheduler execution state caused by manually executing jobs;
+- mail queue/transport state;
+- external network side effects.
+
+Second guarded bootstrap should be idempotent with respect to required vendor migrations. Unbounded repeated migration/update behavior is a failure.
+
+---
+
+## 10. Mandatory compatibility and security acceptance
+
+Run bounded non-destructive acceptance after the vendor stack reaches a stable guarded bootstrap.
+
+### A. Theme/child compatibility
 
 Prove:
 
-- no fatal error;
-- no unexpected PHP warning/notice attributable to target versions in the bounded acceptance path;
-- template remains `superio`, stylesheet remains `superio-child`;
-- runtime versions are exactly Superio `1.3.37`, Apus `2.5`, RevSlider `6.7.41`;
-- WPJBP remains `1.2.86`; Paid remains `1.0.19`; WP Private Message remains `1.0.7`;
-- WooCommerce, Elementor, and WordPress core remain unchanged;
-- no theme/plugin activation/deactivation occurred;
-- no TGMPA install/update/bulk action occurred;
-- no real mail/network/payment transport occurred.
+- child remains active;
+- child `functions.php` remains byte-stable from 2.20;
+- child phone asset remains exact SHA `a9a53425350b8f33ee2a91fe4cc0ce83f66fae626984e0db4371af04622add22`;
+- `phone-field-js` registry source is the child path, dependency remains `intl-tel-input-js`, deterministic version remains `a9a53425350b`, footer group remains unchanged;
+- no active reference to removed parent `/superio/js/phone-field.js` exists;
+- child Paid Listings overrides load without fatal and still call accepted Raspitajse Commerce view-model/package flows;
+- child custom package UI template and Elementor paid-listings widget load without missing method/class/template fatal;
+- high-risk child CSS/template intersections identified in 2.18 at least render/initialize at the strongest safe internal level available.
 
-### Allowed vendor migration boundary
+### B. Candidate/employer registration and dashboard surfaces
 
-A version update may legitimately create/update **vendor-owned Apus/RevSlider bookkeeping/options/schema** on bootstrap. Such changes are allowed only if all of the following are true:
+Using internal guarded rendering/registry inspection rather than real account creation, prove:
 
-- exact changed table/option/schema surfaces are identified without reporting private values;
-- each changed surface is attributable to Apus Framework or Slider Revolution update logic;
-- no Raspitajse business/user/order/job/candidate/employer/application/message/package/communications data changes;
-- no unrelated WordPress/WooCommerce/plugin state changes;
-- the migration is consistent with the target version and covered by the fresh DB backup.
+- candidate registration renders current phone field contract;
+- employer registration renders current phone field contract;
+- candidate dashboard field registry resolves;
+- employer dashboard field registry resolves;
+- representative phone field resolves;
+- no new PHP fatal, missing class/method, or missing parent asset error appears.
 
-Do not manually write DB version/options to manufacture acceptance.
+Do not create real users or submit real registration forms.
 
-Any unexplained, broad, destructive, or cross-domain DB mutation is a critical failure and requires rollback.
+### C. Paid Listings / package entitlement regression
 
----
+Re-run the accepted bounded package/entitlement compatibility harnesses sufficient to prove:
 
-## 11. Mandatory provenance, security, downgrade-prevention acceptance
+- canonical entitlement ownership/meta contract remains intact;
+- activation/30-day validity rules remain intact;
+- quota/duration rules remain intact;
+- standalone dashboard purchase entry still uses owned `package-purchase.js` behavior;
+- no vendor target/bundle downgrade or reinstall changes WPJBP/Paid Listings active byte trees;
+- no order/payment execution is performed.
 
-All must pass.
+### D. Communications and scheduler regression
 
-### Vendor provenance/parity
+Prove without sending:
 
-1. Superio source/runtime version exactly `1.3.37`.
-2. Superio source/runtime canonical 615-file tree equals `b597e629d86c602e4246ac812a8b615ffeac81617b2835eea752c4a228d5881e` under the accepted path+byte algorithm.
-3. Outer ZIP and official package tree hashes remain the pinned provenance anchors.
-4. Apus source/runtime exactly `2.5` and equal the newly derived Git-canonical target tree fingerprint.
-5. RevSlider source/runtime exactly `6.7.41` and equal its newly derived Git-canonical target tree fingerprint.
-6. WPJBP active source/runtime tree remains exactly `23c55f5bba87fc2fc58dbb858c3543a0b45d4e1f5b0fa90d74e569eff034668e`.
-7. Paid active source/runtime tree remains exactly `d936377ea8d818ede21cd384568ad93c4092f37e09e83df2be2ed92683a9a6a3`.
-8. WP Private Message active directory is byte/path-stable from T0; its same-version target bundle inside the parent is **not installed**.
+- candidate→job owned alert security/management contract remains intact;
+- candidate→job evaluator/scheduler callback registration remains intact;
+- employer→candidate alerts remain retired;
+- job listing expiry evaluator and one-day employer notice callback contracts remain intact;
+- SenderPolicy remains loaded;
+- communications source/runtime/manifest parity remains coherent;
+- owned scheduler events remain exactly one each as accepted;
+- protected AS ID `32733` remains `pending`, attempts `0` unless legitimate unrelated natural state change is explicitly reconciled;
+- no broad cron/AS runner invoked.
 
-### Downgrade/lifecycle prevention
+### E. Apus security gate
 
-9. No TGMPA updater/install action executed.
-10. No WordPress updater executed.
-11. No active WPJBP/Paid/WP Private Message file was overwritten from a parent bundle.
-12. No plugin/theme deactivate/reactivate cycle occurred.
+Prove target Apus Framework is `2.5` and retains the static/runtime boundary already identified in 2.21 for the formerly vulnerable import AJAX path:
 
-### Security target checks
+- nonce check present;
+- `manage_options` capability requirement present;
+- request values sanitized/validated as target code intends.
 
-13. Apus `2.5` is beyond the accepted CVE-2024-12296 affected `<=2.4` range; statically inspect the target code path relevant to the prior arbitrary option update/privilege-escalation advisory and confirm the remediation boundary is present. Use an isolated no-real-user harness only if it can be done without creating privileged users or side effects.
-14. RevSlider `6.7.41` is beyond the accepted affected ranges through `6.7.37` for the previously identified file-read/authorization issues and beyond `6.7.18` for the SVG stored-XSS issue; verify exact target version/provenance and no older active copy is loaded.
-15. Re-run the bounded WPJBP registration privilege-escalation regression harness from 2.16/2.18 because theme registration surfaces changed; do not create a real staging user.
-16. Owned alert management routes remain authoritative and alert REST remains disabled where intended.
-17. SenderPolicy/Transport authority remains unchanged.
+Do not run a live exploit, create privileged users, or weaken capabilities to test it.
 
----
+### F. Slider Revolution security/version gate
 
-## 12. Mandatory Raspitajse compatibility acceptance
+Prove active Slider Revolution is `6.7.41`, which is beyond the previously cited affected ranges through `6.7.37`.
 
-Use guarded, non-destructive internal/template/runtime tests. Do not make real submissions, payments, emails, or external browser requests merely to prove rendering.
+Do not perform external update/license calls merely to prove version state.
 
-At minimum prove:
+### G. Downgrade prevention / TGMPA
 
-1. child theme remains active and all child PHP files lint/load without missing parent class/function/method fatal;
-2. owned child `phone-field-js` remains registered/enqueued exactly once from `/superio-child/assets/js/phone-field.js`, hash `a9a534...add22`, version `a9a53425350b`, and no parent phone-field URL exists;
-3. candidate registration and employer registration render/load at the strongest safe internal level and their phone-field contracts remain available;
-4. candidate dashboard and employer dashboard template/field registries load, including representative phone field;
-5. the three high-risk package child overrides remain loadable against the target parent and accepted WPJBP/Paid APIs:
-   - `template-paid-listings/choose-package-form.php`;
-   - `template-paid-listings/user-packages.php`;
-   - `inc/vendors/elementor/wc-paid-listings-widgets/user_packages.php`;
-6. canonical package entitlement still means quota + immutable 30-calendar-day validity and remains separate from individual listing duration; run the accepted non-payment package policy harness;
-7. standalone package purchase UI/transport contract remains compatible without a real payment;
-8. job search/filter/detail template and query contracts load;
-9. candidate/employer profile templates load;
-10. job submit/edit template contracts load without creating/editing a real listing;
-11. application template/handler contracts load without submitting an application;
-12. owned job expiry and employer pre-expiry notification callbacks remain authoritative;
-13. candidate automatic age expiry remains disabled;
-14. employer→candidate alert creation/sender remains retired;
-15. candidate→job owned evaluator remains authoritative and vendor sender remains absent;
-16. selective runner still exposes exactly the same three owned zero-argument hourly hooks; continuation remains absent;
-17. Raspitajse Commerce employer lookup/HPOS declarations remain compatible;
-18. WooCommerce checkout/package template loading relevant to current Raspitajse flows has no missing template/class/method fatal under Woo `9.5.4`;
-19. changed Superio WooCommerce override surfaces do not introduce a fatal/outdated-contract break detectable by the installed Woo template loader/status APIs;
-20. custom mobile-scroll JS / child style dependencies are statically mapped to target markup/assets sufficiently to detect missing file/selector dependencies; record any browser-only visual risk separately rather than silently editing child code.
+Prove during guarded bootstrap/acceptance:
 
-If external HTTP to the site is blocked by the known Hostinger/LiteSpeed environment layer before WordPress, do not loop and do not classify that as a product regression. Use internal rendering/template/registry acceptance and record the limitation.
+- no TGMPA installer/upgrader/bulk action executed;
+- WPJBP `1.2.86` was not replaced by bundled copy;
+- Paid Listings `1.0.19` was not replaced by bundled copy;
+- WP Private Message installed tree was not reinstalled;
+- no activation/deactivation/theme-switch lifecycle action occurred;
+- no vendor updater made an external request.
+
+### H. General bootstrap integrity
+
+Run bounded symbol/class/template/bootstrap checks sufficient to detect missing required PHP symbols caused by the version change.
+
+A host-layer HTTP 403 before WordPress is not a product regression and must not trigger repeated HTTP retries. Use internal bootstrap/render evidence where host HTTP remains blocked.
 
 ---
 
-## 13. Scheduler, business-state, and side-effect acceptance
+## 11. T1/final reconciliation
 
-Capture T1 and final projections under the same guard/lock contract.
+After compatibility acceptance, capture T1 and final protected evidence.
 
-Require:
+Reconcile against T0:
 
-- protected Raspitajse business fingerprint unchanged from T0;
-- candidate/employer/job/package/application/message/communications business state unchanged;
-- exact owned cron event/callback contract unchanged;
-- non-allowlisted cron fingerprint unchanged;
-- no continuation event/callback appears;
-- protected AS ID `32733` remains pending with attempts `0`;
-- no task invocation of runner/owned cron/broad cron/AS;
-- mail/PHPMailer/SMTP sends: zero;
-- payment/refund execution: zero;
-- actual external WordPress network: zero.
+- business fingerprint unchanged;
+- package/entitlement business state unchanged;
+- jobs/candidates/employers/applications/messages unchanged;
+- Woo order/payment/refund state unchanged;
+- owned cron/AS state unchanged except explicitly justified natural time passage with no task execution;
+- protected AS `32733` attempts remain `0`;
+- mail/PHPMailer/SMTP counters remain zero;
+- payment/refund counters remain zero;
+- actual external WordPress network remains zero;
+- only explicitly accounted vendor schema/options/version changes are allowed in DB.
 
-Guard-intercepted plugin update/license-check HTTP attempts may be non-zero after a vendor upgrade. If they occur, inventory sanitized destination class/purpose/count and prove all were blocked before transport. Any unguarded/direct external transport is a critical failure.
-
-No production operation is allowed.
+If an unexplained critical delta exists, rollback.
 
 ---
 
-## 14. Rollback contract
+## 12. Rollback contract
 
-Do not integrate Commit B into `staging` until all critical acceptance passes.
+### Failure before Commit B deploy
 
-If any critical deploy/bootstrap/security/compatibility/business-state gate fails:
+No runtime rollback is required. Keep `origin/staging` and deploy marker on Commit A. Delete temporary backup/snapshot material after the blocker report if no longer needed.
 
-1. keep `origin/staging` at Commit A;
-2. if the deploy marker advanced to Commit B, run `deployment/deploy-staging.sh changed staging` from Commit A to return the normal tracked diff toward the pre-upgrade source state;
-3. regardless of whether the feature deploy completed or failed part-way, restore the three exact pre-upgrade runtime snapshots for Superio/Apus/RevSlider under the shared lock using the explicitly authorized rollback-only filesystem restore;
-4. verify their runtime fingerprints equal the pre-T0 snapshot fingerprints exactly, including the historical Superio CRLF/runtime-only archive state;
-5. if and only if task-caused vendor DB migration/state changed, restore the fresh DB backup using the proven direct `mariadb` client/defaults-file mechanism; never restore production and never restore an unrelated backup;
-6. guarded-bootstrap the restored old runtime and prove Superio `1.3.17`, Apus `2.3`, RevSlider `6.7.18`, WPJBP/Paid/child state, scheduler contracts, business fingerprint, and transport guards are restored;
-7. deploy marker and Communications manifest must end coherent with Commit A;
-8. remove task-private backup/snapshots only after rollback acceptance completes;
-9. report PARTIAL/FAIL with the exact blocker and STOP.
+### Failure after Commit B deploy but before integration
 
-Do not force-push staging back to the original baseline. Commit A is an intentional safe staging deploy-control improvement and may remain if the vendor transaction is rolled back.
+`origin/staging` must remain Commit A.
 
----
+Under the shared lock:
 
-## 15. PASS integration and cleanup
+1. determine whether vendor bootstrap caused any DB mutation relative to T0;
+2. if DB mutation occurred, restore the accepted logical backup using the same credential-neutral restore path that passed the pre-deploy gate;
+3. restore the exact three old vendor runtime roots from the verified pre-upgrade snapshots, including historical runtime bytes/modes and runtime-only payloads;
+4. prove all three restored byte-tree and mode-tree fingerprints equal the accepted pre-upgrade values;
+5. prove old versions again read Superio `1.3.17`, Apus `2.3`, RevSlider `6.7.18`;
+6. prove child/WPJBP/Paid/WP Private Message/business/scheduler state equals T0;
+7. restore the staging deploy marker/communications manifest coherently to Commit A only after exact rollback parity is proven.
 
-Only after every required acceptance passes:
+Manual filesystem restoration is authorized **only as rollback from a failed Commit B runtime deployment**, only for the three snapshotted vendor roots, and only from the task-created verified snapshots. It is not an authorized forward-deploy method.
 
-1. fast-forward `origin/staging` from Commit A to Commit B only;
-2. run `deployment/deploy-staging.sh changed staging` so final source HEAD, `origin/staging`, deploy marker and Communications manifest are coherent;
-3. re-run final provenance/version/runtime parity and protected-state checks;
-4. require primary staging worktree clean/on `staging`;
-5. remove task-private extracted copies, DB credential file, DB backup, and runtime rollback snapshots;
-6. leave the user-provided original Superio artifact unchanged at its supplied path;
-7. leave feature history intact; no force push/history rewrite.
+If rollback itself cannot be proven exact, STOP immediately with a critical inconsistent-staging classification; do not continue testing or integrate.
 
-Final PASS classification:
+### PASS integration
 
-`CONTROLLED_SUPERIO_SECURITY_UPGRADE_ACCEPTED`
+If and only if all acceptance passes:
 
-PASS requires at minimum:
+- fast-forward `staging` from exact Commit A to exact Commit B only;
+- push `staging` once normally, no force/history rewrite;
+- run final `deployment/deploy-staging.sh changed staging` for marker/manifest coherence; a no-op file sync is acceptable if runtime already equals Commit B;
+- require final `origin/staging`, source HEAD, deploy marker and all three runtime vendor trees to identify exact Commit B/canonical target state;
+- primary staging worktree ends clean/on `staging`.
 
-- Superio `1.3.37` active parent with child still active;
-- Apus `2.5` active/exact;
-- RevSlider `6.7.41` active/exact;
-- WPJBP/Paid active clean trees unchanged;
-- WP Private Message active tree unchanged;
-- no TGMPA/updater lifecycle action;
-- all mandatory Raspitajse compatibility/security gates pass;
-- no unauthorized business/scheduler/mail/payment/network side effect;
-- final staging/source/deploy state coherent and clean;
-- production untouched.
+After final PASS evidence is captured, securely remove the temporary DB dump and rollback snapshots. Retain only sanitized hashes/counts in the report.
 
 ---
 
-## 16. Exactly one proposed next task
+## 13. PASS criteria
+
+PASS requires all of the following:
+
+1. exact baseline Commit A verified on `origin/staging` and deploy marker;
+2. exact existing Commit B verified on the feature branch with exact parent Commit A;
+3. no new application/source commit created;
+4. a credential-neutral, private, structurally complete and restore-capable staging DB backup passes the hard gate;
+5. exact pre-upgrade filesystem snapshots pass old-runtime byte/mode fingerprints;
+6. Commit B deploys only through the approved staging deploy script;
+7. runtime target versions are Superio `1.3.37`, Apus `2.5`, RevSlider `6.7.41`;
+8. all three runtime trees match exact accepted Commit B canonical content/modes;
+9. child theme remains active and byte-stable;
+10. owned phone-field asset/enqueue remains correct after parent replacement;
+11. WPJBP `1.2.86`, Paid Listings `1.0.19`, and WP Private Message `1.0.7` installed trees are not downgraded/reinstalled;
+12. package/entitlement regression acceptance passes;
+13. candidate/employer registration/dashboard bounded compatibility passes;
+14. communications/job-expiry/scheduler contracts pass without sends/execution;
+15. Apus security gate passes;
+16. RevSlider target-version security gate passes;
+17. no TGMPA/updater/switch/deactivate/reactivate lifecycle action occurs;
+18. vendor DB migration changes are bounded, attributable and idempotent;
+19. unrelated business/DB/cron/AS state remains unchanged;
+20. mail/network/payment/refund side effects remain zero;
+21. Hostinger scheduler unchanged;
+22. production untouched;
+23. final `origin/staging`, source HEAD, deploy marker and runtime identify exact Commit B;
+24. temporary sensitive backup/snapshot artifacts are removed only after final acceptance.
+
+Final PASS decision string:
+
+`SUPERIO_VENDOR_STACK_CONTROLLED_UPGRADE_ACCEPTED`
+
+Credential-neutral backup unavailable before deploy:
+
+`BLOCKED_CREDENTIAL_NEUTRAL_DB_BACKUP_UNAVAILABLE`
+
+Backup present but no allowed restore path:
+
+`BLOCKED_DB_BACKUP_NOT_RESTORABLE_BY_ALLOWED_PATH`
+
+Use a narrower truthful classification for any other failure.
+
+---
+
+## 14. Next task rule
 
 If PASS, propose exactly one next task:
 
-**Zadatak 2.22 — Re-baseline the remaining Raspitajse custom WooCommerce/legacy child-theme findings after the vendor upgrades and select the next bounded KEEP/REDESIGN/DROP implementation slice.**
+**Zadatak 2.23 — Re-baseline the remaining Raspitajse custom WooCommerce and legacy child-theme findings after the completed vendor upgrades, classify KEEP / REDESIGN / DROP, and select the next bounded implementation slice.**
 
-This proposed follow-up should be read-only discovery/reconciliation first. Do not create or execute it automatically.
+If this task is BLOCKED/PARTIAL, do **not** propose the business-cleanup task as executable next work. Propose only the narrow corrective prerequisite needed to complete this exact vendor transaction.
+
+Do not create or execute the next task automatically.
 
 ---
 
-## 17. Report and STOP
+## 15. Report and STOP
 
-Publish the final report through `codex-reports`.
+Publish through `codex-reports` using the established workflow.
 
-The report must include, sanitized and without secrets/PII:
+Report must include, without secrets/PII:
 
-- initial baseline, Commit A, Commit B, final source/staging/deploy-marker SHAs;
-- exact feature branch and two-commit parent chain;
-- exact changed-path/root scope for each commit;
-- user-provided artifact/hash revalidation;
-- parent official and Git-canonical tree hashes;
-- newly derived Apus/Rev official-extraction and Git-canonical tree hashes/file counts;
-- exact target/current versions;
-- backup size/SHA/structural validation and deletion status;
-- runtime snapshot fingerprints and deletion status;
+- task result and decision classification;
+- initial/final `origin/staging` SHA;
+- exact feature Commit B SHA and parent;
+- backup primitive classification (`WP_CLI_MANAGED`, `EXISTING_CLIENT_AUTH`, or blocked), dump size/hash, table-set counts/fingerprint and restore-path proof without credentials;
+- pre-upgrade snapshot byte/mode fingerprints;
+- deploy/integration/rollback status;
+- exact runtime vendor versions/tree fingerprints;
+- exact installed WPJBP/Paid/WP Private Message preservation evidence;
+- child-theme/phone-field evidence;
+- migration accounting summary using only sanitized names/counts/fingerprints;
+- package/registration/communications/security acceptance outcomes;
 - T0/T1/final protected-state reconciliation;
-- vendor-owned DB migration accounting, if any;
-- TGMPA/updater lifecycle evidence;
-- security acceptance evidence;
-- child/package/job/profile/submission/application/Woo compatibility evidence and environmental limitations;
-- WPJBP/Paid/WP Private Message preservation evidence;
-- mail/network/payment counters;
-- rollback status;
-- production touched: YES/NO;
-- exactly one proposed next task.
+- mail/network/payment/refund counters;
+- scheduler touched YES/NO;
+- production touched YES/NO;
+- temporary backup/snapshot cleanup status;
+- exactly one proposed next task according to Section 14.
+
+Never report credentials, secret option values, DB dump contents, raw business rows, user emails, candidate PII, order/customer details, saved-query plaintext, mail bodies, or private recipient data.
 
 Then STOP.
