@@ -217,5 +217,16 @@ superio_load_select2();
 		} else { ?>
 			<div class="no-found"><?php esc_html_e('No applicants found.', 'superio'); ?></div>
 		<?php } ?>
+
+		<?php
+		if ( !empty($jobs_loop) ) {
+			WP_Job_Board_Pro_Mixes::custom_pagination( array(
+				'wp_query' => $jobs_loop,
+				'max_num_pages' => $jobs_loop->max_num_pages,
+				'prev_text'     => '<i class="ti-arrow-left"></i>',
+				'next_text'     => '<i class="ti-arrow-right"></i>',
+			));
+		}
+		?>
 		</div>
 </div>

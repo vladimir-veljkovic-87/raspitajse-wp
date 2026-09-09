@@ -257,8 +257,11 @@ class RevSliderAdmin extends RevSliderFunctionsAdmin {
 	 * Load the plugin text domain for translation.
 	 */
 	public function load_plugin_textdomain(){
-		load_plugin_textdomain('revslider', false, dirname(RS_PLUGIN_SLUG_PATH) . '/languages/');
-		load_plugin_textdomain('revsliderhelp', false, dirname(RS_PLUGIN_SLUG_PATH) . '/languages/');
+		$desired_locale = $this->get_val($this->global_settings, 'lang', 'default');
+		$desired_locale = (!$desired_locale || $desired_locale === 'default') ? get_locale() : $desired_locale;
+		
+		if(file_exists(RS_PLUGIN_PATH . 'languages/revslider-'.$desired_locale.'.mo')) load_textdomain('revslider', RS_PLUGIN_PATH . 'languages/revslider-'.$desired_locale.'.mo');
+		if(file_exists(RS_PLUGIN_PATH . 'languages/revsliderhelp-'.$desired_locale.'.mo')) load_textdomain('revsliderhelp', dirname(RS_PLUGIN_SLUG_PATH) . '/languages/revsliderhelp-'.$desired_locale.'.mo');
 	}
 
 	/**
@@ -338,7 +341,7 @@ class RevSliderAdmin extends RevSliderFunctionsAdmin {
 
 		switch($page){
 			case 'revslider-buy-license':
-				wp_redirect('https://account.sliderrevolution.com/portal/pricing/?utm_source=admin&utm_medium=menu&utm_campaign=srusers&utm_content=buykey');
+				wp_redirect('https://account.sliderrevolution.com/portal/premium-slider-revolution/?utm_source=admin&utm_medium=menu&utm_campaign=srusers&utm_content=gopremium');
 				exit;
 			break;
 			case 'revslider-documentation':
@@ -457,8 +460,15 @@ class RevSliderAdmin extends RevSliderFunctionsAdmin {
 		$slide_template = $f->get_post_var('slide_template');
 		if(in_array($slide_template, array('', 'default'))){
 			delete_post_meta($post_id, 'slide_template');
+			delete_post_meta($post_id, 'slide_template_v7');
 		}else{
 			update_post_meta($post_id, 'slide_template', $slide_template);
+			$slide_template_v7 = $f->get_v7_slide_map($slide_template);
+			if($slide_template_v7 !== false){
+				update_post_meta($post_id, 'slide_template_v7', $slide_template_v7);
+			}else{
+				delete_post_meta($post_id, 'slide_template_v7');
+			}
 		}
 
 		// Blank Page Template Background Color
@@ -530,7 +540,7 @@ class RevSliderAdmin extends RevSliderFunctionsAdmin {
 		
 		$cache = RevSliderGlobals::instance()->get('RevSliderCache');
 		
-		add_action('plugins_loaded', array($this, 'load_plugin_textdomain'));
+		add_action('plugins_loaded', array($this, 'load_plugin_textdomain'), 1);
 		add_action('admin_head', array($this, 'hide_notices'), 1);
 		add_action('admin_menu', array($this, 'add_admin_pages'));
 		add_action('admin_init', array($this, 'display_external_redirects'));
@@ -568,15 +578,6 @@ class RevSliderAdmin extends RevSliderFunctionsAdmin {
 	 **/
 	public function add_filters(){
 		add_filter('admin_body_class', array($this, 'modify_admin_body_class'));
-		add_filter('plugin_locale', array($this, 'change_lang'), 10, 2);
-	}
-	
-	/**
-	 * Change the language of the Slider Backend even if WordPress is set to be a different language
-	 * @since: 6.1.6
-	 **/
-	public function change_lang($locale, $domain = ''){
-		return (in_array($domain, array('revslider', 'revsliderhelp'), true)) ? $this->get_val($this->global_settings, 'lang', 'default') : $locale;
 	}
 
 	/**
@@ -764,7 +765,6 @@ class RevSliderAdmin extends RevSliderFunctionsAdmin {
 			'success' => $success,
 			'message' => $message,
 		);
-
 		if(!empty($data)){
 			if(gettype($data) == 'string') $data = array('data' => $data);
 			$response = array_merge($response, $data);
@@ -856,70 +856,36 @@ class RevSliderAdmin extends RevSliderFunctionsAdmin {
 	 * @since: 6.0
 	 **/
 	public function create_fake_post($content, $title = 'Slider Revolution'){
-		$post				 = new stdClass();
-		$post->ID			 = -1;
-		$post->post_author	 = get_current_user_id();
-		$post->post_date	 = current_time('mysql');
-		$post->post_date_gmt = current_time('mysql', 1);
-		$post->post_title	 = $title;
-		$post->post_content	 = $content;
-		$post->post_status	 = 'publish';
-		$post->comment_status = 'closed';
-		$post->ping_status	 = 'closed';
-		$post->post_name	 = 'rs-fake-page-' . rand(1, 99999); //append random number to avoid clash
-		$post->post_type	 = 'page';
-		$post->filter		 = 'raw'; //important
-		
-		//$post->post_meta		= new stdClass();
-		//$post->post_meta->_wp_page_template= '../public/views/revslider-page-template.php';
-		
-		//Convert to WP_Post object
-		$wp_post = new WP_Post($post);
-		//Add the fake post to the cache
-		wp_cache_add(-1, $wp_post, 'posts');
-		
-		global $wp, $wp_query;
+		$post_obj					= new stdClass();
+		$post_obj->ID				= -1;
+		$post_obj->post_author		= get_current_user_id();
+		$post_obj->post_date		= current_time('mysql');
+		$post_obj->post_date_gmt	= current_time('mysql', 1);
+		$post_obj->post_title		= $title;
+		$post_obj->post_content		= $content;
+		$post_obj->post_status		= 'publish';
+		$post_obj->comment_status	= 'closed';
+		$post_obj->ping_status		= 'closed';
+		$post_obj->post_name		= 'rs-fake-page-' . rand(1, 99999);
+		$post_obj->post_type		= 'page';
+		$post_obj->filter			= 'raw';
 
-		// Update the main query
-		$wp_query->queried_object_id = -1;
-		$wp_query->post				 = $wp_post;
-		$wp_query->posts			 = array($wp_post);
-		$wp_query->queried_object	 = $wp_post;
-		$wp_query->found_posts		 = 1;
-		$wp_query->post_count		 = 1;
-		$wp_query->max_num_pages	 = 1;
-		$wp_query->is_page			 = true;
-		$wp_query->is_singular		 = true;
-		$wp_query->is_single		 = false;
-		$wp_query->is_attachment	 = false;
-		$wp_query->is_archive		 = false;
-		$wp_query->is_category		 = false;
-		$wp_query->is_tag			 = false;
-		$wp_query->is_tax			 = false;
-		$wp_query->is_author		 = false;
-		$wp_query->is_date			 = false;
-		$wp_query->is_year			 = false;
-		$wp_query->is_month			 = false;
-		$wp_query->is_day			 = false;
-		$wp_query->is_time			 = false;
-		$wp_query->is_search		 = false;
-		$wp_query->is_feed			 = false;
-		$wp_query->is_comment_feed	 = false;
-		$wp_query->is_trackback		 = false;
-		$wp_query->is_home			 = false;
-		$wp_query->is_embed			 = false;
-		$wp_query->is_404			 = false;
-		$wp_query->is_paged			 = false;
-		$wp_query->is_admin			 = false;
-		$wp_query->is_preview		 = false;
-		$wp_query->is_robots		 = false; 
-		$wp_query->is_posts_page	 = false;
-		$wp_query->is_post_type_archive	= false;
-		
-		//Update globals
-		$GLOBALS['wp_query'] = $wp_query;
-		$wp->register_globals();
-		
+		$wp_post = new WP_Post($post_obj);
+
+		//cache
+		wp_cache_add(-1, $wp_post, 'posts');
+
+		//expose for the template
+		global $SR_GLOBALS;
+		$SR_GLOBALS['preview_mode']	= true;
+		$SR_GLOBALS['preview_post']	= $wp_post;
+		//$SR_GLOBALS['preview_content'] = $content;
+
+		//Set global $post so body_class(), etc. have something
+		global $post;
+		$post = $wp_post;
+		setup_postdata($post);
+
 		return $wp_post;
 	}
 	

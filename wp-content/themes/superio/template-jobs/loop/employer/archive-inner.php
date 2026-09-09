@@ -53,7 +53,7 @@ $bcol = $columns ? 12/$columns : 4;
 	?>
 
 	<?php } else { ?>
-		<div class="not-found"><?php esc_html_e('Nema pronađenih poslodavaca.', 'superio'); ?></div>
+		<div class="not-found"><?php esc_html_e('No employer found.', 'superio'); ?></div>
 	<?php } ?>
 
 	<?php

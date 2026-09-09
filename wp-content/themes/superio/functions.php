@@ -22,10 +22,10 @@
  *
  * @package WordPress
  * @subpackage Superio
- * @since Superio 1.3.17
+ * @since Superio 1.3.37
  */
 
-define( 'SUPERIO_THEME_VERSION', '1.3.17' );
+define( 'SUPERIO_THEME_VERSION', '1.3.37' );
 define( 'SUPERIO_DEMO_MODE', false );
 
 if ( ! isset( $content_width ) ) {
@@ -128,8 +128,6 @@ function superio_setup() {
 
 	// Enqueue editor styles.
 	add_editor_style( array( 'css/style-editor.css' ) );
-
-	superio_get_load_plugins();
 }
 endif; // superio_setup
 add_action( 'after_setup_theme', 'superio_setup' );
@@ -269,11 +267,14 @@ function superio_enqueue_scripts() {
 	wp_enqueue_script( 'perfect-scrollbar', get_template_directory_uri() . '/js/perfect-scrollbar.jquery.min.js', array( 'jquery' ), '0.6.12', true );
 	
 	if ( superio_get_config('keep_header') ) {
-		wp_enqueue_script( 'sticky', get_template_directory_uri() . '/js/sticky.min.js', array( 'jquery', 'elementor-waypoints' ), '4.0.1', true );
+		wp_enqueue_script( 'jquery-waypoint', get_template_directory_uri() . '/js/jquery.waypoints.min.js', array( 'jquery' ), '4.0.1', true );
+	
+		wp_enqueue_script( 'jquery-sticky', get_template_directory_uri() . '/js/sticky.min.js', array( 'jquery', 'jquery-waypoint' ), '4.0.1', true );
 	}
 
 	// mobile menu script
 	wp_enqueue_script( 'sliding-menu', get_template_directory_uri() . '/js/sliding-menu.js', array( 'jquery' ), '0.3.0', true );
+	
 	
 	// main script
 	wp_register_script( 'superio-functions', get_template_directory_uri() . '/js/functions.js', array( 'jquery' ), '20150330', true );
@@ -403,7 +404,7 @@ function superio_widgets_init() {
 		'after_title'   => '</span></h2>',
 	) );
 
-	/* register_sidebar( array(
+	register_sidebar( array(
 		'name'          => esc_html__( 'Jobs filter top sidebar', 'superio' ),
 		'id'            => 'jobs-filter-top-sidebar',
 		'description'   => esc_html__( 'Add widgets here to appear in your sidebar.', 'superio' ),
@@ -411,7 +412,7 @@ function superio_widgets_init() {
 		'after_widget'  => '</aside>',
 		'before_title'  => '<h2 class="widget-title"><span>',
 		'after_title'   => '</span></h2>',
-	) ); */
+	) );
 
 	register_sidebar( array(
 		'name'          => esc_html__( 'Jobs filter top 2 sidebar', 'superio' ),
@@ -442,7 +443,6 @@ function superio_widgets_init() {
 		'before_title'  => '<h2 class="widget-title"><span>',
 		'after_title'   => '</span></h2>',
 	) );
-	
 
 	register_sidebar( array(
 		'name'          => esc_html__( 'Jobs filter top maps sidebar', 'superio' ),
@@ -454,7 +454,7 @@ function superio_widgets_init() {
 		'after_title'   => '</span></h2>',
 	) );
 
-	/* register_sidebar( array(
+	register_sidebar( array(
 		'name'          => esc_html__( 'Jobs filter Half Job Detail  sidebar', 'superio' ),
 		'id'            => 'jobs-filter-topbar-sidebar',
 		'description'   => esc_html__( 'Add widgets here to appear in your sidebar.', 'superio' ),
@@ -462,7 +462,7 @@ function superio_widgets_init() {
 		'after_widget'  => '</aside>',
 		'before_title'  => '<h2 class="widget-title"><span>',
 		'after_title'   => '</span></h2>',
-	) ); */
+	) );
 
 	register_sidebar( array(
 		'name'          => esc_html__( 'Job single sidebar', 'superio' ),
@@ -752,8 +752,23 @@ function superio_get_load_plugins() {
         'force_deactivation'    => false,
     );
 
-	tgmpa( $plugins );
+	$config = array(
+        'id'           => 'superio', 
+        'default_path' => '', 
+        'menu'         => 'tgmpa-install-plugins', 
+        'has_notices'  => true, 
+        'dismissable'  => true, 
+        'dismiss_msg'  => '',  
+        'is_automatic' => false, 
+        'message'      => '', 
+        'strings'      => array(
+            'bulk_install' => esc_html__( 'Install Selected Plugins', 'superio' ),
+        ),
+    );
+
+	tgmpa( $plugins, $config );
 }
+add_action( 'tgmpa_register', 'superio_get_load_plugins' );
 
 get_template_part( '/inc/plugins/class-tgm-plugin-activation' );
 get_template_part( '/inc/functions-helper' );
@@ -877,5 +892,3 @@ get_template_part( '/inc/customizer' );
  *
  */
 get_template_part( '/inc/custom-styles' );
-
-

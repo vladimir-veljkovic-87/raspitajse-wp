@@ -38,7 +38,7 @@ $expires = $meta_obj->get_post_meta( 'expiry_date' );
                 <i class="flaticon-calendar"></i>
             </div>
             <div class="details">
-                <div class="text"><?php esc_html_e('Datum objave', 'superio'); ?></div>
+                <div class="text"><?php esc_html_e('Date Posted', 'superio'); ?></div>
                 <div class="value"><?php the_time(get_option('date_format')); ?></div>
             </div>
         </li>
@@ -61,7 +61,7 @@ $expires = $meta_obj->get_post_meta( 'expiry_date' );
                     <i class="flaticon-money-1"></i>
                 </div>
                 <div class="details">
-                    <div class="text"><?php esc_html_e('Ponuđena plata:', 'superio'); ?></div>
+                    <div class="text"><?php esc_html_e('Offered Salary:', 'superio'); ?></div>
                     <div class="value"><?php echo trim($salary); ?></div>
                 </div>
             </li>
@@ -72,7 +72,7 @@ $expires = $meta_obj->get_post_meta( 'expiry_date' );
                 <i class="flaticon-waiting"></i>
             </div>
             <div class="details">
-                <div class="text"><?php esc_html_e('Datum isteka', 'superio'); ?></div>
+                <div class="text"><?php esc_html_e('Expiration date', 'superio'); ?></div>
                 <div class="value">
                     <?php
                     if ( $expires ) {

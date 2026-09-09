@@ -29,18 +29,22 @@ $page_bg = ($page_bg == '' || $page_bg == 'transparent') ? 'transparent' : $page
 		<?php do_action('rs_page_template_pre_content'); ?>
 		<div>
 			<?php
-			// Start the loop.
-			while(have_posts()) : the_post();
+			if(isset($SR_GLOBALS['preview_mode']) && $SR_GLOBALS['preview_mode'] !== false && !empty($SR_GLOBALS['preview_post'])){
+				$post = $SR_GLOBALS['preview_post'];
+				setup_postdata($post);
 
-				// Include the page content template.
-				if(!isset($SR_GLOBALS['preview_mode']) || $SR_GLOBALS['preview_mode'] === false){
-					the_content();
-				}else{
-					echo do_shortcode(get_the_content());
-				}
-
-			// End the loop.
-			endwhile;
+				echo do_shortcode($post->post_content);
+			}else{
+				// Start the loop.
+				while(have_posts()) : the_post();
+					if(!isset($SR_GLOBALS['preview_mode']) || $SR_GLOBALS['preview_mode'] === false){
+						the_content();
+					}else{
+						echo do_shortcode(get_the_content());
+					}
+					// End the loop.
+				endwhile;
+			}
 			?>
 		</div>
 		<?php do_action('rs_page_template_post_content'); ?>

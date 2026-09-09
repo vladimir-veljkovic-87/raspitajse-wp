@@ -6,9 +6,9 @@ wp_enqueue_style( 'dashicons' );
 ?>
 <div class="job-submission-form-wrapper box-dashboard-wrapper">
 	<?php if ( $form_obj->get_form_name() == 'wp_job_board_pro_job_edit_form' ) { ?>
-		<h3 class="title"><?php esc_html_e('Izmeni oglas','superio') ?></h3>
+		<h3 class="title"><?php esc_html_e('Edit Job','superio') ?></h3>
 	<?php } else { ?>
-		<h3 class="title"><?php esc_html_e('Objavi novi oglas','superio') ?></h3>
+		<h3 class="title"><?php esc_html_e('Post a New Job','superio') ?></h3>
 	<?php } ?>
 	<div class="inner-list">
 		<?php if ( sizeof($form_obj->errors) ) : ?>
@@ -40,14 +40,18 @@ wp_enqueue_style( 'dashicons' );
 		<?php endif; ?>
 
 		<?php
-			echo cmb2_get_metabox_form( $metaboxes_form, $post_id, array(
-				'form_format' => '<form action="' . $form_obj->get_form_action() . '" class="cmb-form" method="post" id="%1$s" enctype="multipart/form-data" encoding="multipart/form-data"><input type="hidden" name="job_id" value="'.$job_id.'"><input type="hidden" name="'.$form_obj->get_form_name().'" value="'.$form_obj->get_form_name().'"><input type="hidden" name="submit_step" value="'.$step.'"><input type="hidden" name="object_id" value="%2$s">%3$s
+			$form_html = cmb2_get_metabox_form( $metaboxes_form, $post_id, array(
+				'form_format' => '<form action="form_url_replace_html" class="cmb-form" method="post" id="%1$s" enctype="multipart/form-data" encoding="multipart/form-data"><input type="hidden" name="job_id" value="'.$job_id.'"><input type="hidden" name="'.$form_obj->get_form_name().'" value="'.$form_obj->get_form_name().'"><input type="hidden" name="submit_step" value="'.$step.'"><input type="hidden" name="object_id" value="%2$s">%3$s
 				<div class="submit-button-wrapper">
 						<button type="submit" name="submit-cmb-job_listing" value="%4$s" class="btn btn-theme btn-inverse border-2">%4$s</button>
 					</div>
 				</form>',
 				'save_button' => $submit_button_text,
 			) );
+
+			$current_url = $form_obj->get_form_action();
+
+			echo str_replace('form_url_replace_html', $current_url, $form_html);
 		?>
 	</div>
 </div>

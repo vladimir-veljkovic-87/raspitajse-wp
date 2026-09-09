@@ -4,10 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $orderby_options = apply_filters( 'wp-job-board-pro-jobs-orderby', array(
-	'menu_order' => esc_html__('Sortiraj (Podrazumevano)', 'superio'),
-	'newest' => esc_html__('Najnoviji', 'superio'),
-	'oldest' => esc_html__('Najstariji', 'superio'),
-	'random' => esc_html__('Nasumično', 'superio'),
+	'menu_order' => esc_html__('Sort by (Default)', 'superio'),
+	'newest' => esc_html__('Newest', 'superio'),
+	'oldest' => esc_html__('Oldest', 'superio'),
+	'random' => esc_html__('Random', 'superio'),
 ));
 $orderby = isset( $_GET['filter-orderby'] ) ? wp_unslash( $_GET['filter-orderby'] ) : 'menu_order';
 if ( !WP_Job_Board_Pro_Mixes::is_ajax_request() ) {

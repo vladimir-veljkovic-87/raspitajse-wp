@@ -4,8 +4,8 @@ class Superio_Widget_Job_Maps extends WP_Widget {
     public function __construct() {
         parent::__construct(
             'apus_job_maps',
-            esc_html__('Detalji Posla:: Mapa', 'superio'),
-            array( 'description' => esc_html__( 'Prikaži mapu posla', 'superio' ), )
+            esc_html__('Job Detail::  Maps', 'superio'),
+            array( 'description' => esc_html__( 'Show job maps', 'superio' ), )
         );
         $this->widgetName = 'job_maps';
     }
@@ -16,7 +16,7 @@ class Superio_Widget_Job_Maps extends WP_Widget {
     
     public function form( $instance ) {
         $defaults = array(
-            'title' => 'Lokacija posla',
+            'title' => 'Job Location',
         );
         $instance = wp_parse_args((array) $instance, $defaults);
         // Widget admin form

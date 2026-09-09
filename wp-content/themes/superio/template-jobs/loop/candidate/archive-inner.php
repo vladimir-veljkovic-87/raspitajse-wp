@@ -69,7 +69,7 @@ $inner_style = superio_get_candidates_inner_style();
 	?>
 
 	<?php } else { ?>
-		<div class="not-found"><?php esc_html_e('Nijedan kandidat nije pronađen.', 'superio'); ?></div>
+		<div class="not-found"><?php esc_html_e('No candidate found.', 'superio'); ?></div>
 	<?php } ?>
 
 	<?php

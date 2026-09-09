@@ -14,14 +14,11 @@
 *Template Name: Dashboard Template
 */
 get_header();
-// Call the function to log purchased products
-get_user_purchased_products();
-
 $sidebar_configs = superio_get_page_layout_configs();
 superio_render_breadcrumbs();
 global $post;
 ?>
-<section id="main-container" class="inner-dashboard <?php echo apply_filters('superio_page_content_class', 'container');?> <?php echo esc_attr(get_post_meta( $post->ID, 'apus_page_layout', true )); ?> ">
+<section id="main-container-dashboard" class="inner-dashboard <?php echo apply_filters('superio_page_content_class', 'container');?> <?php echo esc_attr(get_post_meta( $post->ID, 'apus_page_layout', true )); ?> ">
 	<?php superio_before_content( $sidebar_configs ); ?>
 	<div class="row">
 		<?php superio_display_sidebar_left( $sidebar_configs ); ?>
@@ -34,7 +31,7 @@ global $post;
 					
 					// Include the page content template.
 					the_content();
-				
+
 					// If comments are open or we have at least one comment, load up the comment template.
 					if ( comments_open() || get_comments_number() ) :
 						comments_template();

@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 superio_load_select2();
 ?>
 <div class="box-dashboard-wrapper">
-	<h3 class="widget-title"><?php echo esc_html__('Obaveštenja o poslovima','superio') ?></h3>
+	<h3 class="widget-title"><?php echo esc_html__('Job Alerts','superio') ?></h3>
 	<div class="inner-list">		
 		<div class="search-orderby-wrapper flex-middle-sm">
 			<div class="search-jobs-alert-form search-applicants-form">
@@ -14,7 +14,7 @@ superio_load_select2();
 						<button class="search-submit btn btn-sm btn-search" name="submit">
 							<i class="flaticon-magnifiying-glass"></i>
 						</button>
-						<input type="text" placeholder="<?php esc_attr_e( 'Pretraga ...', 'superio' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
+						<input type="text" placeholder="<?php esc_attr_e( 'Search ...', 'superio' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
 					</div>
 					<input type="hidden" name="paged" value="1" />
 				</form>
@@ -22,9 +22,9 @@ superio_load_select2();
 			<div class="sort-jobs-alert-form sortby-form">
 				<?php
 					$orderby_options = apply_filters( 'wp_job_board_pro_my_jobs_orderby', array(
-						'menu_order'	=> esc_html__( 'Podrazumevano', 'superio' ),
-						'newest' 		=> esc_html__( 'Najnovije', 'superio' ),
-						'oldest'     	=> esc_html__( 'Najstarije', 'superio' ),
+						'menu_order'	=> esc_html__( 'Default', 'superio' ),
+						'newest' 		=> esc_html__( 'Newest', 'superio' ),
+						'oldest'     	=> esc_html__( 'Oldest', 'superio' ),
 					) );
 
 					$orderby = isset( $_GET['orderby'] ) ? wp_unslash( $_GET['orderby'] ) : 'newest'; 
@@ -32,7 +32,7 @@ superio_load_select2();
 
 				<div class="orderby-wrapper flex-middle">
 					<span class="text-sort">
-						<?php echo esc_html__('Sortiraj po: ','superio'); ?>
+						<?php echo esc_html__('Sort by: ','superio'); ?>
 					</span>
 					<form class="my-jobs-ordering" method="get">
 						<select name="orderby" class="orderby">
@@ -52,11 +52,11 @@ superio_load_select2();
 				<table class="job-table">
 					<thead>
 						<tr>
-							<th class="job-title"><?php esc_html_e('Naslov', 'superio'); ?></th>
-							<th class="alert-query"><?php esc_html_e('Kriterijum:', 'superio'); ?></th>
-							<th class="job-number"><?php esc_html_e('Broj poslova', 'superio'); ?></th>
-							<th class="job-times"><?php esc_html_e('Učestalost', 'superio'); ?></th>
-							<th class="job-actions"><?php esc_html_e('Akcije', 'superio'); ?></th>
+							<th class="job-title"><?php esc_html_e('Title', 'superio'); ?></th>
+							<th class="alert-query"><?php esc_html_e('Alert Query', 'superio'); ?></th>
+							<th class="job-number"><?php esc_html_e('Number Jobs', 'superio'); ?></th>
+							<th class="job-times"><?php esc_html_e('Times', 'superio'); ?></th>
+							<th class="job-actions"><?php esc_html_e('Actions', 'superio'); ?></th>
 						</tr>
 					</thead>
 					<?php foreach ($alerts->posts as $alert_id) {
@@ -119,7 +119,7 @@ superio_load_select2();
 							</td>
 							<td>
 								<div class="job-found">
-						            <?php echo sprintf(esc_html__('Pronađeno poslova %d', 'superio'), intval($count_jobs) ); ?>
+						            <?php echo sprintf(esc_html__('Jobs found %d', 'superio'), intval($count_jobs) ); ?>
 						        </div>
 							</td>
 							<td>
@@ -128,7 +128,7 @@ superio_load_select2();
 						        </div>
 							</td>
 							<td>
-								<a href="javascript:void(0)" class="btn-remove-job-alert btn-action-icon deleted" data-alert_id="<?php echo esc_attr($alert_id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-job-alert-nonce' )); ?>" data-toggle="tooltip" title="<?php esc_attr_e('Ukloni', 'superio'); ?>"><i class="ti-close"></i></a>
+								<a href="javascript:void(0)" class="btn-remove-job-alert btn-action-icon deleted" data-alert_id="<?php echo esc_attr($alert_id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-job-alert-nonce' )); ?>" data-toggle="tooltip" title="<?php esc_attr_e('Remove', 'superio'); ?>"><i class="ti-close"></i></a>
 							</td>
 						</tr>
 						
@@ -147,7 +147,7 @@ superio_load_select2();
 		?>
 
 		<?php } else { ?>
-			<div class="not-found"><?php esc_html_e('Nije pronađeno nijedno obaveštenje o poslu.', 'superio'); ?></div>
+			<div class="not-found"><?php esc_html_e('No job alert found.', 'superio'); ?></div>
 		<?php } ?>
 		</div>
 </div>

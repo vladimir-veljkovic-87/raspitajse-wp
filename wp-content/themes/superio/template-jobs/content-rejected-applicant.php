@@ -46,11 +46,11 @@ $classes = $viewed ? 'viewed' : '';
                         <?php
                             $app_status = WP_Job_Board_Pro_Applicant::get_post_meta($post->ID, 'app_status', true);
                             if ( $app_status == 'approved' ) {
-                                echo '<span class="label label-success approved">'.esc_html__('Prihvaćen', 'superio').'</span>';
+                                echo '<span class="label label-success approved">'.esc_html__('Approved', 'superio').'</span>';
                             } elseif ( $app_status == 'rejected' ) {
-                                echo '<span class="label label-default rejected">'.esc_html__('Odbijen', 'superio').'</span>';
+                                echo '<span class="label label-default rejected">'.esc_html__('Rejected', 'superio').'</span>';
                             } else {
-                                echo '<span class="label label-info pending">'.esc_html__('U obradi', 'superio').'</span>';
+                                echo '<span class="label label-info pending">'.esc_html__('Pending', 'superio').'</span>';
                             }
                         ?>
                     </div>
@@ -61,7 +61,7 @@ $classes = $viewed ? 'viewed' : '';
                         <?php superio_candidate_display_short_location($candidate, 'icon'); ?>
                         <?php superio_candidate_display_salary($candidate, 'icon'); ?>
                         <div class="date">
-                            <?php esc_html_e('Datum prijave : ', 'superio'); ?>
+                            <?php esc_html_e('Applied date : ', 'superio'); ?>
                             <?php the_time( get_option('date_format', 'd M, Y') ); ?>
                         </div>
                     </div>
@@ -70,9 +70,9 @@ $classes = $viewed ? 'viewed' : '';
         </div>
         <div class="ali-right">
             <div class="applicant-action-button action-button">
-                <a data-toggle="tooltip" href="javascript:void(0);" class="btn-undo-reject-job-applied btn-action-icon reject" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-undo-reject-applied-nonce' )); ?>" title="<?php esc_attr_e('Vrati odbijenu prijavu', 'superio'); ?>"><i class="fa fa-undo"></i></a>
+                <a data-toggle="tooltip" href="javascript:void(0);" class="btn-undo-reject-job-applied btn-action-icon reject" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-undo-reject-applied-nonce' )); ?>" title="<?php esc_attr_e('Undo Rejected', 'superio'); ?>"><i class="fa fa-undo"></i></a>
 
-                <a data-toggle="tooltip" title="<?php esc_attr_e('Ukloni', 'superio'); ?>" href="javascript:void(0);" class="btn-action-icon btn-remove-job-applied remove" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-applied-nonce' )); ?>"><i class="ti-close"></i></a>
+                <a data-toggle="tooltip" title="<?php esc_attr_e('Remove', 'superio'); ?>" href="javascript:void(0);" class="btn-action-icon btn-remove-job-applied remove" data-applicant_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-applied-nonce' )); ?>"><i class="ti-close"></i></a>
             </div>
         </div> 
     </div>

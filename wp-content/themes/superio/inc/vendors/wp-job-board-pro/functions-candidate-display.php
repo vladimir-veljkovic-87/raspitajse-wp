@@ -63,7 +63,7 @@ function superio_candidate_display_short_location($post, $display_type = 'no-ico
             <?php
         } elseif ( $display_type == 'title' ) {
             ?>
-            <div class="candidate-location with-title"><strong><?php esc_html_e('Lokacija:', 'superio'); ?></strong>
+            <div class="candidate-location with-title"><strong><?php esc_html_e('Location:', 'superio'); ?></strong>
             <?php
         } else {
             ?>
@@ -139,9 +139,9 @@ function superio_candidate_display_featured_icon($post,$display_type = 'text') {
 	if ( $featured ) { ?>
         
         <?php if($display_type == 'icon') { ?>
-            <span class="featured" data-toggle="tooltip" title="<?php esc_attr_e('Istaknuto', 'superio'); ?>"><i class="ti-crown"></i></span>
+            <span class="featured" data-toggle="tooltip" title="<?php esc_attr_e('featured', 'superio'); ?>"><i class="ti-crown"></i></span>
         <?php }else{ ?>
-            <span class="featured-text"><?php esc_html_e('Preporučeni kandidat', 'superio'); ?></span>
+            <span class="featured-text"><?php esc_html_e('Featured', 'superio'); ?></span>
         <?php } ?>
 
     <?php }
@@ -152,7 +152,7 @@ function superio_candidate_display_urgent_icon($post) {
 
     $urgent = $obj_candidate_meta->get_post_meta( 'urgent' );
 	if ( $urgent ) { ?>
-        <span class="urgent"><?php esc_html_e('Urgentno', 'superio'); ?></span>
+        <span class="urgent"><?php esc_html_e('Urgent', 'superio'); ?></span>
     <?php }
 }
 
@@ -255,11 +255,11 @@ function superio_candidate_display_shortlist_btn($html, $post_id) {
 	if ( WP_Job_Board_Pro_Employer::check_added_shortlist($post_id) ) {
         $classes = 'btn-action-job added btn-added-candidate-shortlist btn-follow';
         $nonce = wp_create_nonce( 'wp-job-board-pro-remove-candidate-shortlist-nonce' );
-        $text = esc_html__('Uži Izbor', 'superio');
+        $text = esc_html__('Shortlisted', 'superio');
     } else {
         $classes = 'btn-action-job btn-add-candidate-shortlist btn-follow';
         $nonce = wp_create_nonce( 'wp-job-board-pro-add-candidate-shortlist-nonce' );
-        $text = esc_html__('Uži Izbor', 'superio');
+        $text = esc_html__('Shortlist', 'superio');
     }
     ob_start();
     ?>
@@ -279,7 +279,7 @@ function superio_candidate_display_tags($post, $display_type = 'no-title', $echo
             if ( $display_type == 'title' ) {
                 ?>
                 <div class="candidate-tags">
-                <strong><?php esc_html_e('Označeno kao:', 'superio'); ?></strong>
+                <strong><?php esc_html_e('Tagged as:', 'superio'); ?></strong>
                 <?php
             } else {
                 ?>
@@ -314,7 +314,7 @@ function superio_candidate_display_tags_version2($post, $display_type = 'no-titl
             if ( $display_type == 'title' ) {
                 ?>
                 <div class="candidate-tags">
-                <strong><?php esc_html_e('Označeno Kao:', 'superio'); ?></strong>
+                <strong><?php esc_html_e('Tagged as:', 'superio'); ?></strong>
                 <?php
             } else {
                 ?>
@@ -486,9 +486,9 @@ function superio_candidate_display_per_page_form($wp_query) {
                 <option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $per_page ); ?>>
                 	<?php
                 		if ( $value == -1 ) {
-                			esc_html_e( 'Sve', 'superio' );
+                			esc_html_e( 'All', 'superio' );
                 		} else {
-                			echo sprintf( esc_html__( '%s Po Stranici', 'superio' ), $value );
+                			echo sprintf( esc_html__( '%s Per Page', 'superio' ), $value );
                 		}
                 	?>
                 </option>

@@ -122,7 +122,6 @@ if ( !function_exists( 'superio_page_metaboxes' ) ) {
                     'jobs-filter-top2-sidebar' => esc_html__('Jobs Filter Top 2 Sidebar', 'superio'),
                     'jobs-filter-top3-sidebar' => esc_html__('Jobs Filter Top 3 Sidebar', 'superio'),
                     'jobs-filter-top4-sidebar' => esc_html__('Jobs Filter Top 4 Sidebar', 'superio'),
-					'jobs-filter-half-job-detail' => esc_html__('Half Job Detail Sidebar', 'superio'),
                 ),
                 'default' => ''
             ),

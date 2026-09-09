@@ -17,8 +17,8 @@ $rand = superio_random_key();
 
 	<?php if ( $show_candidate && $show_employer ) { ?>
 	    <ul class="role-tabs nav nav-tabs">
-	        <li class="active"><a data-toggle="tab" href="#apus_register_form_candidate_<?php echo esc_attr($rand); ?>"><i class="flaticon-user"></i><?php esc_html_e('Kandidati', 'superio'); ?></a></li>
-	        <li><a data-toggle="tab" href="#apus_register_form_employer_<?php echo esc_attr($rand); ?>"><i class="flaticon-briefcase"></i><?php esc_html_e('Poslodavci', 'superio'); ?></a></li>
+	        <li class="active"><a data-toggle="tab" href="#apus_register_form_candidate_<?php echo esc_attr($rand); ?>"><i class="flaticon-user"></i><?php esc_html_e('Candidate', 'superio'); ?></a></li>
+	        <li><a data-toggle="tab" href="#apus_register_form_employer_<?php echo esc_attr($rand); ?>"><i class="flaticon-briefcase"></i><?php esc_html_e('Employer', 'superio'); ?></a></li>
 	    </ul>
 	<?php } ?>
 
@@ -71,7 +71,7 @@ $rand = superio_random_key();
 								<input type="checkbox" name="terms_and_conditions" value="on" id="candidate-register-terms-and-conditions" required>
 								<?php
 									$allowed_html_array = array( 'a' => array('href' => array(), 'target' => array()) );
-									echo sprintf(wp_kses(__('Prihvatate naše <a href="%s" target="_blank">Uslove korišćenja i Politiku privatnosti</a>', 'superio'), $allowed_html_array), esc_url($page_url));
+									echo sprintf(wp_kses(__('You accept our <a href="%s" target="_blank">Terms and Conditions and Privacy Policy</a>', 'superio'), $allowed_html_array), esc_url($page_url));
 								?>
 							</label>
 						</div>
@@ -79,7 +79,7 @@ $rand = superio_random_key();
 
 					<div class="form-group text-center">
 						<button type="submit" class="btn btn-theme btn-block" name="submitRegister">
-							<?php echo esc_html__('Registruj se sada', 'superio'); ?>
+							<?php echo esc_html__('Register now', 'superio'); ?>
 						</button>
 					</div>
 
@@ -103,14 +103,14 @@ $rand = superio_random_key();
 						<label><?php esc_attr_e('Password *','superio'); ?></label>
 						<span class="show_hide_password">
 							<input type="password" class="form-control" name="password" placeholder="<?php esc_attr_e('Password *','superio'); ?>" required>
-							<a class="toggle-password" title="<?php esc_attr_e('Prikaži', 'superio'); ?>"><span class="dashicons dashicons-hidden"></span></a>
+							<a class="toggle-password" title="<?php esc_attr_e('Show', 'superio'); ?>"><span class="dashicons dashicons-hidden"></span></a>
 						</span>
 					</div>
 					<div class="form-group">
 						<label><?php esc_attr_e('Confirm Password *','superio'); ?></label>
 						<span class="show_hide_password">
 							<input type="password" class="form-control" name="confirmpassword" placeholder="<?php esc_attr_e('Confirm Password *','superio'); ?>" required>
-							<a class="toggle-password" title="<?php esc_attr_e('Prikaži', 'superio'); ?>"><span class="dashicons dashicons-hidden"></span></a>
+							<a class="toggle-password" title="<?php esc_attr_e('Show', 'superio'); ?>"><span class="dashicons dashicons-hidden"></span></a>
 						</span>
 					</div>
 
@@ -133,7 +133,7 @@ $rand = superio_random_key();
 								<input type="checkbox" name="terms_and_conditions" value="on" id="employer-register-terms-and-conditions" required>
 								<?php
 									$allowed_html_array = array( 'a' => array('href' => array(), 'target' => array()) );
-									echo sprintf(wp_kses(__('Prihvatate naše <a href="%s" target="_blank">Uslove korišćenja i Politiku privatnosti</a>', 'superio'), $allowed_html_array), esc_url($page_url));
+									echo sprintf(wp_kses(__('You accept our <a href="%s" target="_blank">Terms and Conditions and Privacy Policy</a>', 'superio'), $allowed_html_array), esc_url($page_url));
 								?>
 							</label>
 						</div>
@@ -141,7 +141,7 @@ $rand = superio_random_key();
 
 					<div class="form-group text-center">
 						<button type="submit" class="btn btn-theme btn-block" name="submitRegister">
-							<?php echo esc_html__('Registruj se sada', 'superio'); ?>
+							<?php echo esc_html__('Register now', 'superio'); ?>
 						</button>
 					</div>
 
@@ -154,7 +154,7 @@ $rand = superio_random_key();
 			<div class="login-info">
 				<?php esc_html_e('Already have an account?', 'superio'); ?>
 				<a class="apus-user-login" href="#apus_login_forgot_form">
-	                <?php esc_html_e('Uloguj se', 'superio'); ?>
+	                <?php esc_html_e('Login', 'superio'); ?>
 	            </a>
 	        </div>
 	    <?php } ?>

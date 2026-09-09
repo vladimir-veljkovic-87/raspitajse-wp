@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 superio_load_select2();
 ?>
 <div class="box-dashboard-wrapper">
-	<h3 class="widget-title"><?php echo esc_html__('Lista sačuvanih poslova','superio') ?></h3>
+	<h3 class="widget-title"><?php echo esc_html__('Jobs Shortlist','superio') ?></h3>
 	<div class="inner-list">
 		<div class="search-orderby-wrapper flex-middle-sm">
 			<div class="search-jobs-shortlist-form search-applicants-form">
@@ -14,7 +14,7 @@ superio_load_select2();
 						<button class="search-submit btn btn-sm btn-search" name="submit">
 							<i class="flaticon-magnifiying-glass"></i>
 						</button>
-						<input type="text" placeholder="<?php esc_attr_e( 'Pretraga ...', 'superio' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
+						<input type="text" placeholder="<?php esc_attr_e( 'Search ...', 'superio' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
 					</div>
 					<input type="hidden" name="paged" value="1" />
 				</form>
@@ -22,9 +22,9 @@ superio_load_select2();
 			<div class="sort-jobs-shortlist-form sortby-form">
 				<?php
 					$orderby_options = apply_filters( 'wp_job_board_pro_my_jobs_orderby', array(
-						'menu_order'	=> esc_html__( 'Podrazumevano', 'superio' ),
-						'newest' 		=> esc_html__( 'Najnoviji', 'superio' ),
-						'oldest'     	=> esc_html__( 'Najstariji', 'superio' ),
+						'menu_order'	=> esc_html__( 'Default', 'superio' ),
+						'newest' 		=> esc_html__( 'Newest', 'superio' ),
+						'oldest'     	=> esc_html__( 'Oldest', 'superio' ),
 					) );
 
 					$orderby = isset( $_GET['orderby'] ) ? wp_unslash( $_GET['orderby'] ) : 'newest'; 
@@ -32,7 +32,7 @@ superio_load_select2();
 
 				<div class="orderby-wrapper flex-middle">
 					<span class="text-sort">
-						<?php echo esc_html__('Sortiraj po: ','superio'); ?>
+						<?php echo esc_html__('Sort by: ','superio'); ?>
 					</span>
 					<form class="my-jobs-ordering" method="get">
 						<select name="orderby" class="orderby">
@@ -93,9 +93,9 @@ superio_load_select2();
 				<table class="job-table">
 					<thead>
 						<tr>
-							<th class="job-title"><?php esc_html_e('Naziv posla', 'superio'); ?></th>
-							<th class="job-date"><?php esc_html_e('Datum objave', 'superio'); ?></th>
-							<th class="job-actions"><?php esc_html_e('Akcije', 'superio'); ?></th>
+							<th class="job-title"><?php esc_html_e('Job Title', 'superio'); ?></th>
+							<th class="job-date"><?php esc_html_e('Posted Date', 'superio'); ?></th>
+							<th class="job-actions"><?php esc_html_e('Actions', 'superio'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -114,7 +114,7 @@ superio_load_select2();
 							?>
 
 							<?php do_action( 'wp_job_board_pro_before_job_content', $post->ID ); ?>
-							<tr class="job-applied-wrapper">
+							<tr class="job-shortlist-wrapper">
 								<td>
 									<div class="job-applied">
 								        <div class="employer-logo">
@@ -155,8 +155,8 @@ superio_load_select2();
 								</td>
 								<td>
 									<div class="action-button">
-										<a href="javascript:void(0)" class="btn-remove-job-shortlist btn-action-icon deleted" data-job_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-job-shortlist-nonce' )); ?>" data-toggle="tooltip" title="<?php esc_attr_e('Ukloni', 'superio'); ?>"><i class="ti-close"></i></a>
-										<a class="btn-action-icon" href="<?php echo esc_url(get_permalink($job_id)); ?>" data-toggle="tooltip" title="<?php esc_attr_e('Pogledaj oglas', 'superio'); ?>"><i class="ti-eye"></i></a>
+										<a href="javascript:void(0)" class="btn-remove-job-shortlist btn-action-icon deleted" data-job_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-remove-job-shortlist-nonce' )); ?>" data-toggle="tooltip" title="<?php esc_attr_e('Remove', 'superio'); ?>"><i class="ti-close"></i></a>
+										<a class="btn-action-icon" href="<?php echo esc_url(get_permalink($job_id)); ?>" data-toggle="tooltip" title="<?php esc_attr_e('View Job', 'superio'); ?>"><i class="ti-eye"></i></a>
 									</div>
 								</td>
 							</tr>
@@ -179,7 +179,7 @@ superio_load_select2();
 		?>
 
 		<?php } else { ?>
-			<div class="not-found"><?php esc_html_e('Nema pronađenih poslova.', 'superio'); ?></div>
+			<div class="not-found"><?php esc_html_e('No jobs found.', 'superio'); ?></div>
 		<?php } ?>
 	</div>
 </div>

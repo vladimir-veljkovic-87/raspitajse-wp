@@ -8,7 +8,7 @@ if ( has_post_thumbnail($post->ID) ) {
 }
 ?>
 <div class="apus-social-share share-blog">
-		<h3 class="title"><?php echo esc_html__('Podeli ovu objavu','superio'); ?> </h3>
+		<h3 class="title"><?php echo esc_html__('Share this post','superio'); ?> </h3>
 		
 		<?php if ( superio_get_config('facebook_share', 1) ): ?>
  

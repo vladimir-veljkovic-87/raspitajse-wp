@@ -96,7 +96,7 @@ if ( WP_Job_Board_Pro_User::is_employer($user_id) ) {
 
         <?php if ( $post->post_status == 'publish' ) { ?>
             <div class="view-profile">
-                <a href="<?php echo esc_url(get_permalink($post)); ?>" class="btn btn-theme btn-xs" target="_blank"><?php esc_html_e('Pregledaj profil', 'superio'); ?></a>
+                <a href="<?php echo esc_url(get_permalink($post)); ?>" class="btn btn-theme btn-xs"><?php esc_html_e('View Profile', 'superio'); ?></a>
             </div>
         <?php } ?>
     </div>
@@ -119,7 +119,7 @@ if ( WP_Job_Board_Pro_User::is_employer($user_id) ) {
 
 <?php if ( !empty($profile_percents) ) { ?>
     <div class="skill-percents">
-        <h4><?php esc_html_e('Procenat tvojih veština:', 'superio'); ?> <span><?php echo esc_html($profile_percents['percent']*100).'%'; ?></span></h4>
+        <h4><?php esc_html_e('Skills Percentage:', 'superio'); ?> <span><?php echo esc_html($profile_percents['percent']*100).'%'; ?></span></h4>
         <div class="skill-process">
             <span style="width:<?php echo esc_html($profile_percents['percent']*100); ?>%;"></span>
         </div>
@@ -129,9 +129,9 @@ if ( WP_Job_Board_Pro_User::is_employer($user_id) ) {
                     $allowed_html_array = array( 'strong' => array('class' => array()) );
 
                     if ( count($profile_percents['empty_fields']) < 4 ) {
-                        echo sprintf(wp_kses(__('Popunite polja %s da biste unapredili svoj profil za: <strong class="text-info btn-blue">"%s"</strong>', 'superio'), $allowed_html_array), '<span class="text-theme">"'.implode('"</span>, <span class="text-theme">"', $profile_percents['empty_fields']).'"</span>', ((1 - $profile_percents['percent'])*100).'%' );
+                        echo sprintf(wp_kses(__('Put value for %s field to increase your skill up to <strong class="text-info">"%s"</strong>', 'superio'), $allowed_html_array), '<span class="text-theme">"'.implode('"</span>, <span class="text-theme">"', $profile_percents['empty_fields']).'"</span>', ((1 - $profile_percents['percent'])*100).'%' );
                     } else {
-                        echo sprintf(wp_kses(__('Unesite vaš CV, popunite polja da bi ste povećali vaše veštine za<strong class="text-info">"%s"</strong>', 'superio'), $allowed_html_array), ((1 - $profile_percents['percent'])*100).'%' );
+                        echo sprintf(wp_kses(__('Put value for resume, profile fields to increase your skill up to <strong class="text-info">"%s"</strong>', 'superio'), $allowed_html_array), ((1 - $profile_percents['percent'])*100).'%' );
                     }
                 ?>
             </div>

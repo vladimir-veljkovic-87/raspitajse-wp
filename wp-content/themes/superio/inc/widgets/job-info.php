@@ -4,7 +4,7 @@ class Superio_Widget_Job_Information extends WP_Widget {
     public function __construct() {
         parent::__construct(
             'apus_job_info',
-            esc_html__('Detalji Posla:: Informacije', 'superio'),
+            esc_html__('Job Detail:: Information', 'superio'),
             array( 'description' => esc_html__( 'Show job information', 'superio' ), )
         );
         $this->widgetName = 'job_info';
@@ -22,7 +22,7 @@ class Superio_Widget_Job_Information extends WP_Widget {
         // Widget admin form
         ?>
         <p>
-            <label for="<?php echo esc_attr($this->get_field_id( 'title' )); ?>"><?php esc_html_e( 'Naslov:', 'superio' ); ?></label>
+            <label for="<?php echo esc_attr($this->get_field_id( 'title' )); ?>"><?php esc_html_e( 'Title:', 'superio' ); ?></label>
             <input class="widefat" id="<?php echo esc_attr($this->get_field_id( 'title' )); ?>" name="<?php echo esc_attr($this->get_field_name( 'title' )); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
         </p>
         <?php

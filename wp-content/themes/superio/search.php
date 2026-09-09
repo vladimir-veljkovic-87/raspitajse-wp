@@ -14,7 +14,7 @@ superio_render_breadcrumbs();
 ?>
 <section id="main-container" class="main-content  <?php echo apply_filters('superio_blog_content_class', 'container');?> inner">
 		
-	<a href="javascript:void(0)" class="mobile-sidebar-btn hidden-lg hidden-md"> <i class="fa fa-bars scrollto"></i> <?php echo esc_html__('Otvori Obaveštenja', 'superio'); ?></a>
+	<a href="javascript:void(0)" class="mobile-sidebar-btn hidden-lg hidden-md"> <i class="fa fa-bars"></i> <?php echo esc_html__('Show Sidebar', 'superio'); ?></a>
 	<div class="mobile-sidebar-panel-overlay"></div>
 	<div class="row">
 		<div id="main-content" class="<?php echo esc_attr($sidebar_configs['main']['class']); ?>">

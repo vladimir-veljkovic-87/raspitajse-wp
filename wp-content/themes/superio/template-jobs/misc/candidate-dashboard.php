@@ -39,7 +39,7 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 ?>
 
 <div class="box-dashboard-wrapper">
-	<h3 class="title"><?php esc_html_e('Statistika prijava', 'superio'); ?></h3>
+	<h3 class="title"><?php esc_html_e('Applications statistics', 'superio'); ?></h3>
 	<div class="inner-list bg-transparent no-padding">
 		<div class="statistics row">
 			<div class="col-xs-12 col-lg-3 col-sm-6">
@@ -52,7 +52,7 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 					</div>
 					<div class="inner">
 						<div class="number-count"><?php echo esc_html( $count_applicants ? WP_Job_Board_Pro_Mixes::format_number($count_applicants) : 0); ?></div>
-						<span><?php esc_html_e('Moje prijave', 'superio'); ?></span>
+						<span><?php esc_html_e('Applied Jobs', 'superio'); ?></span>
 					</div>
 				</div>
 				</div>
@@ -68,7 +68,7 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 					</div>
 					<div class="inner">
 						<div class="number-count"><?php echo esc_html( $total_reviews ? WP_Job_Board_Pro_Mixes::format_number($total_reviews) : 0 ); ?></div>
-						<span><?php esc_html_e('Recenzije', 'superio'); ?></span>
+						<span><?php esc_html_e('Review', 'superio'); ?></span>
 					</div>
 				</div>
 				</div>
@@ -83,7 +83,7 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 					</div>
 					<div class="inner">
 						<div class="number-count"><?php echo esc_html( $views ? WP_Job_Board_Pro_Mixes::format_number($views) : 0 ); ?></div>
-						<span><?php esc_html_e('Pregledi', 'superio'); ?></span>
+						<span><?php esc_html_e('Views', 'superio'); ?></span>
 					</div>
 				</div>
 				</div>
@@ -98,7 +98,7 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 					</div>
 					<div class="inner">
 						<div class="number-count"><?php echo esc_html( $shortlist ? WP_Job_Board_Pro_Mixes::format_number($shortlist) : 0 ); ?></div>
-						<span><?php esc_html_e('Uži izbor', 'superio'); ?></span>
+						<span><?php esc_html_e('Shortlisted', 'superio'); ?></span>
 					</div>
 				</div>
 				</div>
@@ -111,7 +111,7 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="inner-list">
-					<h3 class="title-small"><?php echo esc_html__( 'Pregledi Vašeg profila', 'superio' ); ?></h3>
+					<h3 class="title-small"><?php echo esc_html__( 'Your Profile Views', 'superio' ); ?></h3>
 					<div class="page_views-wrapper">
 						<?php
 						$number_days = 14;
@@ -151,7 +151,7 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 			</div>
 			<div class="col-sm-4">
 				<div class="inner-list dashboard-notifications">
-				<h3 class="title-small"><?php echo esc_html__( 'Obaveštenja', 'superio' ); ?></h3>
+				<h3 class="title-small"><?php echo esc_html__( 'Notifications', 'superio' ); ?></h3>
 				<?php
 				$notifications = WP_Job_Board_Pro_User_Notification::get_notifications($candidate_id, 'candidate');
 				if ( !empty($notifications) ) { ?>
@@ -223,7 +223,7 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 	    </div>
 	<?php } ?>
 	<div class="inner-list">
-		<h3 class="title-small"><?php esc_html_e('Nedavne prijave na poslove', 'superio'); ?></h3>
+		<h3 class="title-small"><?php esc_html_e('Jobs Applied Recently', 'superio'); ?></h3>
 		<div class="applicants">
 			<?php
 				$job_ids = array();
@@ -252,23 +252,23 @@ $views = get_post_meta($candidate_id, WP_JOB_BOARD_PRO_CANDIDATE_PREFIX.'views_c
 	                        $status_label = '';
 	                        $app_status = WP_Job_Board_Pro_Applicant::get_post_meta($applicant_id, 'app_status', true);
 	                        if ( $app_status == 'rejected' ) {
-								$status_label = '<span class="label label-default rejected">'.esc_html__('Odbijeno', 'superio').'</span>';
+								$status_label = '<span class="label label-default rejected">'.esc_html__('Rejected', 'superio').'</span>';
 							} elseif ( $app_status == 'approved' ) {
-								$status_label = '<span class="label label-success approved">'.esc_html__('Prihvaćeno', 'superio').'</span>';
+								$status_label = '<span class="label label-success approved">'.esc_html__('Approved', 'superio').'</span>';
 							} else {
-								$status_label = '<span class="label label-info pending">'.esc_html__('U obradi', 'superio').'</span>';
+								$status_label = '<span class="label label-info pending">'.esc_html__('Pending', 'superio').'</span>';
 							}
 							echo WP_Job_Board_Pro_Template_Loader::get_template_part( 'jobs-styles/inner-list', array('status_label' => $status_label) );
 						endwhile;
 						wp_reset_postdata();
 					} else {
 						?>
-						<div class=""><?php esc_html_e('Nema pronađenih prijava.', 'superio'); ?></div>
+						<div class=""><?php esc_html_e('No Applicants found.', 'superio'); ?></div>
 						<?php
 					}
 				} else {
 					?>
-					<div class=""><?php esc_html_e('Nema pronađenih prijava.', 'superio'); ?></div>
+					<div class=""><?php esc_html_e('No Applicants found.', 'superio'); ?></div>
 					<?php
 				}
 			?>

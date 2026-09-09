@@ -10,7 +10,7 @@ $meta_obj = WP_Job_Board_Pro_Job_Listing_Meta::get_instance($post->ID);
 if ( $meta_obj->check_post_meta_exist('photos') && ($photos = $meta_obj->get_post_meta( 'photos' )) ) {
 ?>
     <div id="job-job-portfolio" class="job-detail-portfolio portfolio">
-    	<h4 class="title"><?php esc_html_e('Fotografije', 'superio'); ?></h4>
+    	<h4 class="title"><?php esc_html_e('Photos', 'superio'); ?></h4>
     	<div class="content-bottom">
             <div class="row row-responsive row-portfolio">
                 <?php $i=1; foreach ($photos as $attach_id => $img_url) {

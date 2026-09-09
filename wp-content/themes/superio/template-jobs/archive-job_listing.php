@@ -122,7 +122,7 @@ if ( isset( $_REQUEST['load_type'] ) && WP_Job_Board_Pro_Mixes::is_ajax_request(
 				<?php if ( is_active_sidebar( $filter_sidebar ) ): ?>
 			   		<div class="filter-sidebar sidebar-wrapper <?php echo esc_attr($layout_sidebar); ?>">
 					  	<aside class="sidebar sidebar-left" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
-					  		<div class="close-sidebar-btn hidden-lg hidden-md"> <i class="ti-close"></i> <span><?php esc_html_e('Zatvori', 'superio'); ?></span></div>
+					  		<div class="close-sidebar-btn hidden-lg hidden-md"> <i class="ti-close"></i> <span><?php esc_html_e('Close', 'superio'); ?></span></div>
 					   		<?php dynamic_sidebar( $filter_sidebar ); ?>
 					  	</aside>
 					</div>

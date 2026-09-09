@@ -6,7 +6,7 @@ wp_enqueue_style( 'dashicons' );
 
 ?>
 <div class="profile-form-wrapper box-dashboard-wrapper dashboard-wrapper-v2">
-	<h1 class="title"><?php esc_html_e( 'Uredi Profil', 'superio' ) ; ?></h1>
+	<h1 class="title"><?php esc_html_e( 'Edit Profile', 'superio' ) ; ?></h1>
 	<div class="inner-list">
 		<?php if ( ! empty( $_SESSION['messages'] ) ) : ?>
 
@@ -31,7 +31,7 @@ wp_enqueue_style( 'dashicons' );
 		<?php
 		$form_html = cmb2_get_metabox_form( $metaboxes_form, $post_id, array(
 			'form_format' => '<form action="form_url_replace_html" class="cmb-form" method="post" id="%1$s" enctype="multipart/form-data" encoding="multipart/form-data"><input type="hidden" name="object_id" value="%2$s">%3$s<input type="submit" name="submit-cmb-profile" value="%4$s" class="button-primary"></form>',
-			'save_button' => esc_html__( 'Sačuvaj Profil', 'superio' ),
+			'save_button' => esc_html__( 'Save Profile', 'superio' ),
 		) );
 
 		$current_url = WP_Job_Board_Pro_Mixes::get_full_current_url();

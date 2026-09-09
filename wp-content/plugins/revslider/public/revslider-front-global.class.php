@@ -112,7 +112,7 @@ class RevSliderFrontGlobal extends RevSliderFunctions {
 			  slide_order int not NULL,
 			  params LONGTEXT NOT NULL,
 			  layers LONGTEXT NOT NULL,
-			  settings text NOT NULL DEFAULT '',
+			  settings text NULL,
 			  INDEX `slider_id_index` (`slider_id`)
 			);";
 			dbDelta($sql);
@@ -211,8 +211,8 @@ class RevSliderFrontGlobal extends RevSliderFunctions {
 			}
 			
 			require_once(RS_PLUGIN_PATH . 'admin/includes/shortcode_generator/shortcode_generator.class.php');
-			add_action('enqueue_block_assets', array('RevSliderShortcodeWizard', 'sr_theme_block_editor_assets'));
-
+			add_action('enqueue_block_editor_assets', array('RevSliderShortcodeWizard', 'sr_theme_block_editor_assets'));
+			
 			//Shortcode Wizard Includes
 			//WPB Functionality
 			require_once(RS_PLUGIN_PATH . 'admin/includes/shortcode_generator/wpbakery/wpbakery.class.php');

@@ -228,6 +228,8 @@ class Superio_Elementor_Job_Board_Pro_Candidate_Category_Banner extends Elemento
             <?php
             $term = get_term_by( 'slug', $slug, 'candidate_category' );
             $link = $custom_url;
+
+            $number_candidates = $count = 0;
             if ($term) {
                 if ( empty($link) ) {
                     $link = get_term_link( $term, 'candidate_category' );
@@ -235,6 +237,7 @@ class Superio_Elementor_Job_Board_Pro_Candidate_Category_Banner extends Elemento
                 if ( empty($title) ) {
                     $title = $term->name;
                 }
+                $number_candidates = $count = $term->count;
             }
             ?>
 
@@ -251,13 +254,6 @@ class Superio_Elementor_Job_Board_Pro_Candidate_Category_Banner extends Elemento
                         <?php } ?>
 
                         <?php if ( $show_nb_candidates ) {
-                                $args = array(
-                                    'fields' => 'ids',
-                                    'categories' => array($slug),
-                                    'limit' => 1
-                                );
-                                $query = superio_get_candidates($args);
-                                $number_candidates = $count = $query->found_posts;
                                 $number_candidates = $number_candidates ? WP_Job_Board_Pro_Mixes::format_number($number_candidates) : 0;
                         ?>
                             <div class="number"><?php echo sprintf(_n('<span>%d</span> Candidate', '<span>%d</span> Candidates', $count, 'superio'), $number_candidates); ?></div>

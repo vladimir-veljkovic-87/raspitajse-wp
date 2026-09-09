@@ -77,8 +77,8 @@ if ( isset( $_REQUEST['load_type'] ) && WP_Job_Board_Pro_Mixes::is_ajax_request(
 						<?php if ( is_active_sidebar( $filter_sidebar ) ): ?>
 							<div class="filter-sidebar offcanvas-filter-sidebar">
 								<div class="mobile-groups-button hidden-lg hidden-md clearfix text-center">
-									<div class="close-filter-sidebar"> <i class="ti-close"></i> <span><?php esc_html_e('Zatvori', 'superio'); ?></span></div>
-									<button class=" btn btn-sm btn-theme btn-view-map" type="button"><i class="fa fa-map-o" aria-hidden="true"></i> <?php esc_html_e( 'Prikaz na mapi', 'superio' ); ?></button>
+									<div class="close-filter-sidebar"> <i class="ti-close"></i> <span><?php esc_html_e('Close', 'superio'); ?></span></div>
+									<button class=" btn btn-sm btn-theme btn-view-map" type="button"><i class="fa fa-map-o" aria-hidden="true"></i> <?php esc_html_e( 'Map View', 'superio' ); ?></button>
 									<button class=" btn btn-sm btn-theme  btn-view-listing hidden-sm hidden-xs" type="button"><i class="fa fa-list" aria-hidden="true"></i> <?php esc_html_e( 'Listing View', 'superio' ); ?></button>
 								</div>
 								<div class="filter-scroll">
@@ -154,7 +154,7 @@ if ( isset( $_REQUEST['load_type'] ) && WP_Job_Board_Pro_Mixes::is_ajax_request(
 				<?php if ( is_active_sidebar( $filter_sidebar ) ): ?>
 			   		<div class="filter-sidebar sidebar-wrapper <?php echo esc_attr($layout_sidebar); ?>">
 					  	<aside class="sidebar sidebar-left" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
-					  		<div class="close-sidebar-btn hidden-lg hidden-md"> <i class="ti-close"></i> <span><?php esc_html_e('Zatvori', 'superio'); ?></span></div>
+					  		<div class="close-sidebar-btn hidden-lg hidden-md"> <i class="ti-close"></i> <span><?php esc_html_e('Close', 'superio'); ?></span></div>
 					   		<?php dynamic_sidebar( $filter_sidebar ); ?>
 					  	</aside>
 					</div>

@@ -124,7 +124,7 @@ superio_job_display_topbar_sidebar();
 		?>
 
 	<?php else : ?>
-		<div class="not-found"><?php esc_html_e('Nema pronađenih oglasa za posao.', 'superio'); ?></div>
+		<div class="not-found"><?php esc_html_e('No job found.', 'superio'); ?></div>
 	<?php endif; ?>
 
 	<?php

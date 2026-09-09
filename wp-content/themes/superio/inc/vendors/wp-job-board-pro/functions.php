@@ -227,14 +227,15 @@ function superio_get_jobs_show_filter_top() {
 	global $post;
 	if ( is_page() && is_object($post) ) {
 		$show_filter_top = get_post_meta( $post->ID, 'apus_page_jobs_show_filter_top', true );
+		if ( $show_filter_top == 'yes' ) {
+			$show_filter_top = true;
+		} else {
+			$show_filter_top = false;
+		}
 	}
+
 	if ( empty($show_filter_top) ) {
 		$show_filter_top = superio_get_config('jobs_show_filter_top');
-	}
-	if ( $show_filter_top == 'yes' ) {
-		$show_filter_top = true;
-	} else {
-		$show_filter_top = false;
 	}
 
 	return apply_filters( 'superio_get_jobs_show_filter_top', $show_filter_top );
@@ -244,15 +245,17 @@ function superio_get_jobs_show_offcanvas_filter() {
 	global $post;
 	if ( is_page() && is_object($post) ) {
 		$show_offcanvas_filter = get_post_meta( $post->ID, 'apus_page_jobs_show_offcanvas_filter', true );
+
+		if ( $show_offcanvas_filter == 'yes' ) {
+			$show_offcanvas_filter = true;
+		} else {
+			$show_offcanvas_filter = false;
+		}
 	}
 	if ( empty($show_offcanvas_filter) ) {
 		$show_offcanvas_filter = superio_get_config('jobs_show_offcanvas_filter');
 	}
-	if ( $show_offcanvas_filter == 'yes' ) {
-		$show_offcanvas_filter = true;
-	} else {
-		$show_offcanvas_filter = false;
-	}
+	
 		
 	return apply_filters( 'superio_get_jobs_show_offcanvas_filter', $show_offcanvas_filter );
 }

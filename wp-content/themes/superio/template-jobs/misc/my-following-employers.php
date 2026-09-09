@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 superio_load_select2();
 ?>
 <div class="widget-following-employers box-dashboard-wrapper">
-	<h3 class="widget-title"><?php echo esc_html__('Poslodavci koje pratim','superio') ?></h3>
+	<h3 class="widget-title"><?php echo esc_html__('Following Employers','superio') ?></h3>
 	<div class="inner-list">
 		<div class="search-orderby-wrapper flex-middle-sm">
 			<div class="search-following-employer-form search-applicants-form">
@@ -14,7 +14,7 @@ superio_load_select2();
 						<button class="search-submit btn btn-sm btn-search" name="submit">
 							<i class="flaticon-magnifiying-glass"></i>
 						</button>
-						<input type="text" placeholder="<?php esc_attr_e( 'Pretraga ...', 'superio' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
+						<input type="text" placeholder="<?php esc_attr_e( 'Search ...', 'superio' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
 					</div>
 					<input type="hidden" name="paged" value="1" />
 				</form>
@@ -22,9 +22,9 @@ superio_load_select2();
 			<div class="sort-following-employer-form sortby-form">
 				<?php
 					$orderby_options = apply_filters( 'wp_job_board_pro_my_jobs_orderby', array(
-						'menu_order'	=> esc_html__( 'Podrazumevano', 'superio' ),
-						'newest' 		=> esc_html__( 'Najnovije', 'superio' ),
-						'oldest'     	=> esc_html__( 'Najstarije', 'superio' ),
+						'menu_order'	=> esc_html__( 'Default', 'superio' ),
+						'newest' 		=> esc_html__( 'Newest', 'superio' ),
+						'oldest'     	=> esc_html__( 'Oldest', 'superio' ),
 					) );
 
 					$orderby = isset( $_GET['orderby'] ) ? wp_unslash( $_GET['orderby'] ) : 'newest'; 
@@ -64,7 +64,7 @@ superio_load_select2();
 		?>
 
 		<?php } else { ?>
-			<div class="not-found"><?php esc_html_e('Nije pronađen nijedan poslodavac kojeg pratite.', 'superio'); ?></div>
+			<div class="not-found"><?php esc_html_e('No following employer found.', 'superio'); ?></div>
 		<?php } ?>
 	</div>
 </div>

@@ -39,7 +39,7 @@ if ( $selected_post ) {
           <div class="message-title"><?php echo esc_html($selected_post->post_title); ?></div>
         </div>
     </div>
-    <a href="javascript:void(0);" class="delete-message-btn pull-right" data-id="<?php echo esc_attr($selected_post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-private-message-delete-message-nonce' )); ?>"><span class="hidden-xs"><?php esc_html_e('Obriši konverzaciju', 'superio'); ?></span> <i class="ti-close visible-xs"></i> </a>
+    <a href="javascript:void(0);" class="delete-message-btn pull-right" data-id="<?php echo esc_attr($selected_post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-private-message-delete-message-nonce' )); ?>"><span class="hidden-xs"><?php esc_html_e('Delete Conversation', 'superio'); ?></span> <i class="ti-close visible-xs"></i> </a>
   </div>
   <div class="content-box-white">
     <div class="list-replies-inner">
@@ -47,7 +47,7 @@ if ( $selected_post ) {
       $next_page = $paged + 1;
       if ( $next_page <= $reply_messages->max_num_pages ) { ?>
         <div class="loadmore-action">
-          <a href="javascript:void(0);" class="loadmore-replied-btn" data-paged="<?php echo esc_attr($next_page); ?>" data-parent="<?php echo esc_attr($selected_post->ID); ?>"><?php esc_html_e( 'Učitaj još', 'superio' ); ?></a>
+          <a href="javascript:void(0);" class="loadmore-replied-btn" data-paged="<?php echo esc_attr($next_page); ?>" data-parent="<?php echo esc_attr($selected_post->ID); ?>"><?php esc_html_e( 'Load more', 'superio' ); ?></a>
         </div>
       <?php } ?>
       <ul class="list-replies">

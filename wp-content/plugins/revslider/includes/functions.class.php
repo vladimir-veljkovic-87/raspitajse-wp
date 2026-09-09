@@ -327,6 +327,8 @@ class RevSliderFunctions extends RevSliderData {
 	 * before: RevSliderFunctionsWP::getUrlAttachmentImage();
 	 */
 	public function get_url_attachment_image($id, $size = 'full'){
+		require_once(ABSPATH . 'wp-load.php');
+		require_once(ABSPATH . 'wp-includes/pluggable.php');
 		$image	= wp_get_attachment_image_src($id, $size);
 		$url	= (empty($image)) ? false : $this->get_val($image, 0);
 		if($url === false) $url = wp_get_attachment_url($id);
@@ -344,7 +346,7 @@ class RevSliderFunctions extends RevSliderData {
 			if(@is_dir($temp) && wp_is_writable($temp)){
 				$dir = trailingslashit($temp).$path.'/';
 				if(!is_dir($dir)) @mkdir($dir, 0777, true);
-				return $dir;
+				if(is_dir($dir) && wp_is_writable($dir)) return $dir;
 			}
 		}
 	
@@ -352,18 +354,19 @@ class RevSliderFunctions extends RevSliderData {
 		if(@is_dir($temp) && wp_is_writable($temp)){
 			$dir = trailingslashit($temp).$path.'/';
 			if(!is_dir($dir)) @mkdir($dir, 0777, true);
-			return trailingslashit($temp).$path.'/';
+			if(is_dir($dir) && wp_is_writable($dir)) return $dir;
 		}
 
 		$temp_dir = get_temp_dir();
 		if(wp_is_writable($temp_dir)){
-			$dir		= trailingslashit($temp_dir).$path.'/';
+			$dir = trailingslashit($temp_dir).$path.'/';
 			if(!is_dir($dir)) @mkdir($dir, 0777, true);
-		}else{
-			$upload_dir = wp_upload_dir();
-			$dir		= $upload_dir['basedir'].'/'.$path.'/';
-			if(!is_dir($dir)) @mkdir($dir, 0777, true);
+			if(is_dir($dir) && wp_is_writable($dir)) return $dir;
 		}
+		
+		$upload_dir = wp_upload_dir();
+		$dir		= $upload_dir['basedir'].'/'.$path.'/';
+		if(!is_dir($dir)) @mkdir($dir, 0777, true);
 
 		return $dir;
 	}
@@ -412,10 +415,9 @@ class RevSliderFunctions extends RevSliderData {
 	public function check_valid_image($url){
 		if(empty($url)) return false;
 
-		$ext		= strtolower(pathinfo($url, PATHINFO_EXTENSION));
-		$img_exts	= array('gif', 'jpg', 'jpeg', 'png');
-
-		return (in_array($ext, $img_exts)) ? $url : false;
+		$ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
+		
+		return (in_array($ext, ['gif', 'jpg', 'jpeg', 'png', 'webp'])) ? $url : false;
 	}
 	
 	/**
@@ -431,6 +433,8 @@ class RevSliderFunctions extends RevSliderData {
 	 * before: RevSliderBase::stripslashes_deep()
 	 */
 	public static function stripslashes_deep($value){
+		if(empty($value)) return $value;
+		
 		$value = is_array($value) ? array_map(array('RevSliderFunctions', 'stripslashes_deep'), $value) : stripslashes($value);
 		
 		return $value;
@@ -938,6 +942,8 @@ class RevSliderFunctions extends RevSliderData {
 		}
 
 		if(!empty($SR_GLOBALS['fonts']['queue'])){
+			$this->remove_wordpress_global_fonts();
+			
 			$font_types = array('normal', 'italic');
 			
 			foreach($SR_GLOBALS['fonts']['queue'] as $f_n => $f_s){
@@ -971,6 +977,7 @@ class RevSliderFunctions extends RevSliderData {
 							$weights = array();
 							foreach($font_types as $ft){
 								if(!isset($f_s['variants'][$ft])) continue;
+								if(empty($f_s['variants'][$ft])) continue;
 								$weights[$ft] = array();
 								foreach($f_s['variants'][$ft] as $variant){
 									if(in_array($variant, $SR_GLOBALS['fonts']['loaded'][$f_n]['variants'][$ft], true)) continue;
@@ -982,7 +989,7 @@ class RevSliderFunctions extends RevSliderData {
 							}
 							if(empty($weights)) continue;
 							
-							$i = 0;
+							$i = (empty($weights['normal'])) ? 1 : 0;
 							foreach($weights as $weight_values){
 								if(empty($weight_values)) continue;
 
@@ -1073,6 +1080,8 @@ class RevSliderFunctions extends RevSliderData {
 		if($fdl === 'disable') return $ret;
 		
 		if(!empty($SR_GLOBALS['fonts']['queue'])){
+			$this->remove_wordpress_global_fonts();
+
 			foreach($SR_GLOBALS['fonts']['queue'] as $f_n => $f_s){
 				if(empty($f_n)) continue;
 				if(isset($f_s['url']) && !empty($f_s['url'])) continue; //ignore custom
@@ -1143,6 +1152,71 @@ class RevSliderFunctions extends RevSliderData {
 		}
 		
 		return apply_filters('revslider_printCleanFontImport', $ret);
+	}
+
+	/**
+	 * removes fonts from queue, that are already loaded by WordPress
+	 */
+	public function remove_wordpress_global_fonts(){
+		global $SR_GLOBALS;
+
+		if(!class_exists('WP_Font_Face_Resolver')) return;
+		if(!method_exists('WP_Font_Face_Resolver', 'get_fonts_from_theme_json' )) return;
+		if(!method_exists('WP_Font_Face_Resolver', 'get_fonts_from_style_variations' )) return;
+		
+		$wp_font_list = [];
+		$wp_fonts = WP_Font_Face_Resolver::get_fonts_from_theme_json();
+		if(empty($wp_fonts)) $wp_fonts = WP_Font_Face_Resolver::get_fonts_from_style_variations();
+		foreach($wp_fonts ?? [] as $wp_font){
+			foreach($wp_font ?? [] as $_font){
+				$wpff = $this->get_val($_font, 'font-family');
+				$wpfs = $this->get_val($_font, 'font-style');
+				$wpfw = $this->get_val($_font, 'font-weight');
+				if(empty($wpff)) continue;
+				if(empty($wpfs)) continue;
+				if(empty($wpfw)) continue;
+				if(!isset($wp_font_list[$wpff])) $wp_font_list[$wpff] = [];
+				if(!isset($wp_font_list[$wpff]['variants'])) $wp_font_list[$wpff]['variants'] = [];
+				if(strpos($wpfw, ' ') !== false){
+					$wpfw = explode(' ', $wpfw);
+					$wp_font_list[$wpff]['variants'][$wpfs] = [
+						'from'	=> $this->get_val($wpfw, 0),
+						'to'	=> $this->get_val($wpfw, 1)
+					];
+				}else{
+					$wp_font_list[$wpff]['variants'][$wpfs] = $wpfw;
+				}
+			}
+		}
+
+		if(!empty($wp_font_list)){
+			foreach($SR_GLOBALS['fonts']['queue'] as $f_n => $f_s){		
+				if(empty($f_n)) continue;
+				if(isset($f_s['url']) && !empty($f_s['url'])) continue; //ignore custom
+				if(!isset($wp_font_list[$f_n])) continue;
+				$_variants	= $this->get_val($f_s, 'variants', ['normal' => [], 'italic' => []]);
+				foreach($_variants ?? [] as $f_w => $f_v){
+					$from	= (isset($wp_font_list[$f_n]['variants'][$f_w]) && is_array($wp_font_list[$f_n]['variants'][$f_w])) ? intval($wp_font_list[$f_n]['variants'][$f_w]['from']) : false;
+					$to		= (isset($wp_font_list[$f_n]['variants'][$f_w]) && is_array($wp_font_list[$f_n]['variants'][$f_w])) ? intval($wp_font_list[$f_n]['variants'][$f_w]['to']) : false;
+					$exact	= (isset($wp_font_list[$f_n]['variants'][$f_w]) && !is_array($wp_font_list[$f_n]['variants'][$f_w])) ? intval($wp_font_list[$f_n]['variants'][$f_w]) : false;
+
+					foreach($f_v ?? [] as $f_v_id => $f_v_check){
+						if($exact !== false){
+							if(intval($f_v_check) === $exact) unset($SR_GLOBALS['fonts']['queue'][$f_n]['variants'][$f_w][$f_v_id]);
+						}else{
+							if(intval($f_v_check) >= $from && intval($f_v_check) <= $to) unset($SR_GLOBALS['fonts']['queue'][$f_n]['variants'][$f_w][$f_v_id]);
+						}
+					}
+				}
+
+				if(
+					(!isset($SR_GLOBALS['fonts']['queue'][$f_n]['variants']['normal']) || empty($SR_GLOBALS['fonts']['queue'][$f_n]['variants']['normal'])) && 
+					(!isset($SR_GLOBALS['fonts']['queue'][$f_n]['variants']['italic']) || empty($SR_GLOBALS['fonts']['queue'][$f_n]['variants']['italic']))
+				){
+					unset($SR_GLOBALS['fonts']['queue'][$f_n]);
+				}
+			}
+		}
 	}
 
 	/**
@@ -1222,62 +1296,72 @@ class RevSliderFunctions extends RevSliderData {
 			$font_loaded = array();
 			if(!empty($f_raw) && is_array($f_raw) && isset($f_raw[1])){
 				//check if we are css2 or css format, if css, we need to modify $font to css2
-				if(strpos($f_raw[1], ',') !== false && strpos($f_raw[1], ';') === false || intval($f_raw[1]) > 0){
-					$f_raw[1]	= str_replace(array('%2C', 'wght', '@0,', ';0,', '@', '&family='), array(',', '', '', ',', '', ''), $f_raw[1]);
-					$font = $f_raw[0].':';
-					$weights = explode(',', $f_raw[1]);
+				if(isset($f_raw[1]) && preg_match('/^\s*ital\s*,\s*wght@/i', $f_raw[1])){
 					$collection = array('normal' => array(), 'italic' => array());
-					foreach($weights ?? [] as $wk => $weight){
-						$weight = strtolower($weight);
-						if(strpos($weight, 'ital') !== false){
-							$weight = str_replace(array('ital', 'italic'), '', $weight);
-							if(intval($weight) === 0) $weight = 400;
-							$collection['italic'][$weight] = $weight;
+					$afterAt	= substr($f_raw[1], strpos($f_raw[1], '@') + 1); // e.g. "0,900;1,700"
+					$pairs		= array_filter(array_map('trim', explode(';', $afterAt)));
+
+					foreach($pairs as $pair){
+						$parts = array_map('trim', explode(',', $pair));
+						if(count($parts) !== 2) continue;
+						list($italFlag, $w) = $parts;
+						$w = intval($w) ?: 400;
+
+						if($italFlag === '1'){
+							$collection['italic'][$w] = $w;
 						}else{
-							$collection['normal'][$weight] = $weight;
+							// treat anything not "1" as normal (Google uses 0 or omits)
+							$collection['normal'][$w] = $w;
 						}
 					}
 
-					if(!empty($collection['normal']) || !empty($collection['italic'])){
-						$mgfirst = true;
-						$italic = false;
-						if(!empty($collection['italic'])){
-							$font .= 'ital,';
-							$italic = true;
+					// Rebuild a normalized css2 query string (sorted)
+					$font = $f_raw[0] . ':';
+					$haveItalic = !empty($collection['italic']);
+					$font .= ($haveItalic ? 'ital,' : '') . 'wght@';
+
+					$mgfirst = true;
+					$i = 0;
+					foreach(array('normal', 'italic') as $cycle){
+						if(empty($collection[$cycle])) { $i++; continue; }
+						$vals = $collection[$cycle];
+						asort($vals);
+
+						foreach($vals as $w){
+							if (!$mgfirst) $font .= ';';
+							$font .= ($haveItalic ? ($i . ',' . $w) : $w); // pairs (0|1),weight if ital axis present
+							$mgfirst = false;
 						}
-						$font .= 'wght@';
-
-						$i = 0;
-						$cycles = array('normal', 'italic');
-						
-						foreach($cycles as $cycle){
-							$weight_values = $collection[$cycle];
-							//var_dump($weight_values);
-							if(empty($weight_values)) continue;
-
-							asort($weight_values); //sort as we need to start from low to high
-
-							foreach($weight_values as $weight){
-								if(!$mgfirst) $font .= ';';
-
-								$font .= ($italic === true) ? $i.','.$weight : $weight;
-								$mgfirst = false;
-							}
-							$i++;
-						}
+						$i++;
 					}
-				}else{ //no /css2 process here as we seem to be /css
-					$f_raw[1]	= str_replace(array('%2C', 'wght', '@0,', ';0,', '@', ';', '&family='), array(',', '', '', ',', '', ',', ''), $f_raw[1]);
-					$weights	= explode(',', $f_raw[1]);
-					foreach($weights ?? [] as $wk => $weight){
-						if($weight === 'ital' || $weight === 'italic'){
-							$weights[$wk] = 'italic';
-							continue;
-						}
-						$weights[$wk] = intval($weight);
-						if($weights[$wk] < 100) unset($weights[$wk]);
-					}
+
+					// Build the $weights list for downstream writing:
+					// normal weights -> "900", italic weights -> "italic900"
+					$weights = array();
+					foreach($collection['normal'] as $w)  $weights[] = (string)$w;
+					foreach($collection['italic'] as $w)  $weights[] = 'italic' . $w;
+
+					$weights = array_values(array_unique($weights));
+					if(empty($weights)) $weights = array('400');
+				}else{
+					// Legacy /css format (no css2 pairing); keep your original fallback
+					$f_raw[1] = str_replace(
+						array('%2C', 'wght', '@0,', ';0,', '@', ';', '&family='),
+						array(',', '', '', ',', '', ',', ''),
+						$this->get_val($f_raw, 1, '')
+					);
+
+					$weights = array_filter(array_map(function($w){
+						$w = strtolower(trim($w));
+						if($w === 'ital' || $w === 'italic') return 'italic400';
+						$wInt = intval($w);
+						return ($wInt >= 100) ? (string)$wInt : null;
+					}, explode(',', $f_raw[1])));
+
+					if(empty($weights)) $weights = array('400');
+					$weights = array_values(array_unique($weights));
 				}
+
 				if(empty($weights)) $weights = array('400');
 				$weights = array_unique($weights);
 			}
@@ -1832,9 +1916,10 @@ class RevSliderFunctions extends RevSliderData {
 		if(isset($_GET['action']) && $_GET['action'] == 'elementor') return false; // Elementor Page Edit
 		if(isset($_GET['vc_action']) && $_GET['vc_action'] == 'vc_inline') return false; // WP Bakery Front Edit
 		if(function_exists('is_gutenberg_page') && is_gutenberg_page()) return true; // Gutenberg Edit with WP < 5
-		$current_screen = get_current_screen();
-		if(!empty($current_screen) && method_exists($current_screen, 'is_block_editor') && $current_screen->is_block_editor()) return true; //Gutenberg Edit with WP >= 5
-		
+		if(function_exists('get_current_screen')){
+			$current_screen = get_current_screen();
+			if(!empty($current_screen) && method_exists($current_screen, 'is_block_editor') && $current_screen->is_block_editor()) return true; //Gutenberg Edit with WP >= 5
+		}
 		return false;
 	}
 	
@@ -1992,6 +2077,13 @@ rs-module .material-icons {
 		}
 		
 		return $_shortcodes;
+	}
+
+	/**
+	 * checks if any shortcode format is present in given string
+	 */
+	public function has_any_shortcode($text){
+		return (preg_match('/\[.*?\]/', $text)) ? true : false;
 	}
 
 	/**
@@ -2182,7 +2274,7 @@ rs-module .material-icons {
 		}
 
 		$classes = array_map(function($className) {
-			return preg_replace('/[^a-zA-Z\d_-]/', '', $className);
+			return preg_replace('/[^a-zA-Z \d_-]/', '', $className);
 		}, $classes);
 
 		return $single ? $classes[0] : $classes;
@@ -2199,6 +2291,25 @@ rs-module .material-icons {
 		//$wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . RevSliderFront::TABLE_STATIC_SLIDES."7");
 	}
 
+	
+	/**
+	 * checks if slide amount of v6 and v7 is the same, if not returns false
+	 */
+	public function check_if_migration_done($sid){
+		global $wpdb;
+		
+		$v6s	= $wpdb->get_results($wpdb->prepare("SELECT COUNT(slider_id) AS slides FROM " . $wpdb->prefix . RevSliderFront::TABLE_SLIDES . " WHERE slider_id = %d", array($sid)), ARRAY_A);
+		$v6ss	= $wpdb->get_results($wpdb->prepare("SELECT COUNT(slider_id) AS slides FROM " . $wpdb->prefix . RevSliderFront::TABLE_STATIC_SLIDES . " WHERE slider_id = %d", array($sid)), ARRAY_A);
+		$v7s	= $wpdb->get_results($wpdb->prepare("SELECT COUNT(slider_id) AS slides FROM " . $wpdb->prefix . RevSliderFront::TABLE_SLIDES . "7 WHERE slider_id = %d", array($sid)), ARRAY_A);
+		$v6st	= 0;
+		if(!empty($v6s) && !empty($v6ss)){
+			foreach(array_merge($v6s, $v6ss) as $item){
+				$v6st += $item['slides'];
+			}
+		}
+
+		return (intval($this->get_val($v7s, [0, 'slides'])) !== $v6st) ? false : true;
+	}
 	
 	/**
 	 * get a map of slide ids for v7 slides
@@ -2245,6 +2356,26 @@ rs-module .material-icons {
 				if($t !== $_type) continue;
 				if(isset($v[$v6_slide_id])) return $v[$v6_slide_id];
 			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * retrieves the v6 slide id by a v7 slide id from the slide map
+	 **/
+	public function get_v6_slide_by_v7_id($v7_slide_id){
+		$slide_map 	= get_option('sliderrevolution-v7-slide-map', array());
+		if(empty($slide_map)) return false;
+
+		foreach($slide_map as $module => $slides){
+			$_slides = $this->get_val($slides, 'n', []);
+			if(empty($_slides)) continue;
+			if(!in_array($v7_slide_id, $_slides)) continue;
+			foreach($_slides as $v6 => $v7){
+				if($v7 == $v7_slide_id) return $v6;
+			}
+			return false;
 		}
 
 		return false;

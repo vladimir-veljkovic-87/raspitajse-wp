@@ -38,7 +38,7 @@ $rating_avg = WP_Job_Board_Pro_Review::get_ratings_average($post->ID);
             <?php superio_candidate_display_salary($post, 'icon'); ?>
         </div>
         <?php if ( !empty( get_the_content() ) ){  ?>
-            <div class="candidate-des hidden-xs hidden-sm">
+            <div class="des hidden-xs hidden-sm">
                 <?php echo trim(superio_substring( get_the_content(),16, '' )); ?>
             </div>
         <?php } ?>

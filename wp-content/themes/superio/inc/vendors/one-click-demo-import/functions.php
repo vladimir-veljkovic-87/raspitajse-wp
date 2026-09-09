@@ -58,6 +58,7 @@ function superio_ocdi_after_import_setup( $selected_import ) {
     update_option( 'show_on_front', 'page' );
     
     update_option( 'page_for_posts', $blog_page_id->ID );
+    update_option( 'users_can_register', '1' );
     update_option( 'woocommerce_shop_page_id', $shop_page_id->ID );
     update_option( 'woocommerce_cart_page_id', $cart_page_id->ID );
     update_option( 'woocommerce_checkout_page_id', $checkout_page_id->ID );

@@ -23,11 +23,11 @@ if( $jobs->have_posts() ):
     <div class="widget-open-jobs">
         <div class="top-info-widget flex-middle">
             <h4 class="title">
-                <?php esc_html_e( 'Otvorene pozicija', 'superio' ); ?>
+                <?php esc_html_e( 'Open Position', 'superio' ); ?>
             </h4>
             <div class="ali-right">
                 <a href="<?php echo esc_url($jobs_url); ?>" class="text-theme view_all">
-                    <?php esc_html_e('Pregledajte celu listu', 'superio'); ?> <i class="ti-arrow-right"></i>
+                    <?php esc_html_e('Browse Full List', 'superio'); ?> <i class="ti-arrow-right"></i>
                 </a>
             </div>
         </div>

@@ -168,6 +168,7 @@ class Superio_Elementor_Job_Board_Pro_Job_City_Banner extends Elementor\Widget_B
             <?php
             $term = get_term_by( 'slug', $slug, 'job_listing_location' );
             $link = $custom_url;
+            $number_jobs = $count = 0;
             if ($term) {
                 if ( empty($link) ) {
                     $link = get_term_link( $term, 'job_listing_location' );
@@ -175,6 +176,7 @@ class Superio_Elementor_Job_Board_Pro_Job_City_Banner extends Elementor\Widget_B
                 if ( empty($title) ) {
                     $title = $term->name;
                 }
+                $number_jobs = $count = $term->count;
             }
             ?>
 
@@ -204,13 +206,6 @@ class Superio_Elementor_Job_Board_Pro_Job_City_Banner extends Elementor\Widget_B
                             <?php } ?>
 
                             <?php if ( $show_nb_jobs ) {
-                                    $args = array(
-                                        'fields' => 'ids',
-                                        'locations' => array($slug),
-                                        'limit' => 1
-                                    );
-                                    $query = superio_get_jobs($args);
-                                    $number_jobs = $count = $query->found_posts;
                                     $number_jobs = $number_jobs ? WP_Job_Board_Pro_Mixes::format_number($number_jobs) : 0;
                             ?>
                                 <div class="number"><?php echo sprintf(_n('<span>%d</span> job', '<span>%d</span> jobs', $count, 'superio'), $number_jobs); ?></div>

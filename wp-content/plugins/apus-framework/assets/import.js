@@ -28,6 +28,7 @@ jQuery(document).ready(function($){
             url: ajaxurl,
             data: {
                 action: 'apus_import_sample',
+                _nonce: apus_framework_opts.ajax_nonce,
                 demo_source: source,
                 ajax: 1,
                 import_type: type

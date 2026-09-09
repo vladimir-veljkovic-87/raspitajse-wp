@@ -8,17 +8,17 @@ if ( empty($user_id) ) {
 }
 ?>
 <div class="box-dashboard-wrapper">
-	<h3 class="widget-title"><?php echo esc_html__('Obriši profil','superio') ?></h3>
+	<h3 class="widget-title"><?php echo esc_html__('Delete Profile','superio') ?></h3>
 	<div class="inner-list">
 		<div class="widget-delete">
-			<div class="conf-messages"><?php esc_html_e('Da li ste sigurni da želite da obrišete svoj profil?', 'superio'); ?></div>
-			<div class="undone-messages"><?php esc_html_e('Brisanje profila se ne može opozvati!', 'superio'); ?></div>
+			<div class="conf-messages"><?php esc_html_e('Are you sure! You want to delete your profile.', 'superio'); ?></div>
+			<div class="undone-messages"><?php esc_html_e('This can\'t be undone!', 'superio'); ?></div>
 
 			<form method="post" action="" class="delete-profile-form">
 
 				<div class="form-group">
-					<div class="conf-deleted"><?php esc_html_e( 'Unesite svoju lozinku da biste potvrdili:', 'superio' ); ?></div>
-					<input id="delete-profile-password" class="form-control" type="password" name="password" required="required" placeholder="<?php esc_attr_e('Lozinka', 'superio'); ?>">
+					<div class="conf-deleted"><?php esc_html_e( 'Please enter your login Password to confirm:', 'superio' ); ?></div>
+					<input id="delete-profile-password" class="form-control" type="password" name="password" required="required" placeholder="<?php esc_attr_e('Password', 'superio'); ?>">
 				</div><!-- /.form-control -->
 
 				<?php
@@ -26,7 +26,7 @@ if ( empty($user_id) ) {
 					wp_nonce_field('wp-job-board-pro-delete-profile-nonce', 'nonce');
 				?>
 
-				<button type="submit" class="btn btn-danger delete-profile-btn"><?php esc_html_e( 'Obriši profil', 'superio' ); ?></button>
+				<button type="submit" class="btn btn-danger delete-profile-btn"><?php esc_html_e( 'Delete Profile', 'superio' ); ?></button>
 			</form>
 		</div>
 	</div>

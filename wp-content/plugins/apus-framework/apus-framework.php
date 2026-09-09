@@ -11,14 +11,14 @@
  * Description:     Apus framework for wordpress theme
  * Author:          Team ApusTheme
  * Author URI:      http://apusthemes.com
- * Version:         2.3
+ * Version:         2.5
  * Text Domain:     apus-framework
  * License:         GPL3+
  * License URI:     http://www.gnu.org/licenses/gpl-3.0.txt
  * Domain Path:     languages
  */
 
-define( 'APUS_FRAMEWORK_VERSION', '2.3');
+define( 'APUS_FRAMEWORK_VERSION', '2.5');
 define( 'APUS_FRAMEWORK_URL', plugin_dir_url( __FILE__ ) );
 define( 'APUS_FRAMEWORK_DIR', plugin_dir_path( __FILE__ ) );
 

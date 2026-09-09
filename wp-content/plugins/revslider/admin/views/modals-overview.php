@@ -134,7 +134,7 @@ if(!defined('ABSPATH')) exit();
 										<option value="REST"><?php _e('On Demand Loading', 'revslider');?></option>										
 										</select><span class="linebreak"></span>
 						</select><span class="linebreak"></span>						
-						<label_a><?php _e('Include libraries globally', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.allinclude"><span class="linebreak"></span>
+						<label_a><?php _e('Include libraries globally', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.allinclude"><span class="linebreak"></span>						
 						<label_a><?php _e('List of pages to include RevSlider libraries ', 'revslider');?></label_a><input type="text" data-r="globals.includeids" class="easyinit globalinput" placeholder="<?php _e('(ie. Example 2,homepage,5)', 'revslider');?>"><span class="linebreak"></span>
 						<label_a><?php _e('Cross-origin image defaults', 'revslider');?><a href="https://www.themepunch.com/faq/cors/" style="margin-left:10px;" target="_blank" rel="noopener"><i style="font-size:15px" class="material-icons">help</i></a></label_a><select id="crossorigin" name="crossorigin" data-theme="inmodal" class="globalinput easyinit nosearchbox tos2" data-r="globals.imgcrossOrigin">
 										<option selected="selected" value="unset"><?php _e('Unset','revslider');?></option>
@@ -143,21 +143,23 @@ if(!defined('ABSPATH')) exit();
 									</select><span class="linebreak"></span>						
 						<label_a><?php _e('Slider Revolution Analytics Sharing', 'revslider');?></label_a><input type="checkbox" data-evt="udpateTrackingEnv" class="easyinit globalinput callEvent" data-r="globals.trackingOnOff"><span class="linebreak"></span>
 						
-						<div class="div25"></div>
-						<div class="hideforsr7">
+						<div class="div25"></div>						
 							<div class="ale_i_title"><?php _e('Page Loading Optimization', 'revslider');?></div>
 							<hr class="general_hr">
-							<label_a><?php _e('Insert scripts in footer', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.script.footer"><span class="linebreak"></span>
-							<label_a><?php _e('Defer JavaScript loading', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.script.defer"><span class="linebreak"></span>
-							<label_a><?php _e('Load Files asynchronously', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.script.async"><span class="linebreak"></span>
+							<div class="hideforsr7">
+								<label_a><?php _e('Insert scripts in footer', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.script.footer"><span class="linebreak"></span>
+								<label_a><?php _e('Defer JavaScript loading', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.script.defer"><span class="linebreak"></span>
+								<label_a><?php _e('Load Files asynchronously', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.script.async"><span class="linebreak"></span>
+							</div>	
 							<label_a><?php _e('Load YouTube API early', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.script.ytapi"><span class="linebreak"></span>
-						</div>	
+						
 						
 						<div class="div25"></div>
 						<div class="ale_i_title"><?php _e('Fonts', 'revslider');?></div>
 						<hr class="general_hr">
 						<label_a><?php _e('Enable custom font selection in editor', 'revslider');?></label_a><div id="rs_gl_custom_fonts" class="basic_action_button autosize"><i class="material-icons">font_download</i><?php _e('Edit Custom Fonts', 'revslider');?></div>
 						<label_a><?php _e('Disable SR Font Awesome library', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.fontawesomedisable"><span class="linebreak"></span>					
+						<label_a><?php _e('Disable Google Server Preconnects', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.dpreconnect"><span class="linebreak"></span>					
 						<div class="div25"></div>						
 						<label_a><?php _e('Enable Google Fonts download', 'revslider');?></label_a><select id="fontdownload" name="fontdownload" data-theme="inmodal" class="globalinput easyinit nosearchbox tos2" data-r="globals.fontdownload">
 										<option selected="selected" value="off"><?php _e('Load from Google','revslider');?></option>
@@ -179,6 +181,8 @@ if(!defined('ABSPATH')) exit();
 						<label_a><?php _e('Default notebook content width', 'revslider');?></label_a><input type="text" class="easyinit globalinput" data-numeric="true" data-allowed="px" data-min="0" data-max="2400" data-r="globals.size.notebook"><span class="linebreak"></span>
 						<label_a><?php _e('Default tablet content width', 'revslider');?></label_a><input type="text" class="easyinit globalinput" data-numeric="true" data-allowed="px" data-min="0" data-max="2400" data-r="globals.size.tablet"><span class="linebreak"></span>
 						<label_a><?php _e('Default mobile content width', 'revslider');?></label_a><input type="text" class="easyinit globalinput" data-numeric="true" data-allowed="px" data-min="0" data-max="2400" data-r="globals.size.mobile"><span class="linebreak"></span>		
+						<label_a><?php _e('Viewport Breakpoints (CSS Match Mode)', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.fSUVW"><span class="linebreak"></span>						
+						
 						<div class="div25"></div>
 						<div class="ale_i_title"><?php _e('Modules Optimization', 'revslider');?></div>
 						<hr class="general_hr">
@@ -204,6 +208,7 @@ if(!defined('ABSPATH')) exit();
 						<label_a><?php _e('Editor high contrast mode', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput callEvent" data-evt="highContrast" data-r="globals.highContrast"><span class="linebreak"></span>
 						<label_a><?php _e('Template Editing Guide', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-evt="highContrast" data-r="globals.templateGuide"><span class="linebreak"></span>
 						<label_a><?php _e('Module Creation Guide', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-evt="highContrast" data-r="globals.moduleGuide"><span class="linebreak"></span>
+						<label_a><?php _e('YouTube No-Cookie (SR7)', 'revslider');?></label_a><input type="checkbox" class="easyinit globalinput" data-r="globals.ytnc"><span style="color:#777c80; opacity:0.75;font-size:10px; width:120px; white-space:nowrap;line-height:30px; display:inline-block;margin-left:10px;"><?php _e('*Requires consent for compliance', 'revslider');?></span><span class="linebreak"></span>
 
 						
 						

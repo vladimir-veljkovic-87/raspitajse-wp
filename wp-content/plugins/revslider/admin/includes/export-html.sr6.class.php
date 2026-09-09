@@ -160,7 +160,7 @@ class RevSliderSliderExportHtml extends RevSliderSliderExport {
 						$use_path		= $this->path_assets;
 						$use_path_raw	= $this->path_assets_raw;
 						
-						preg_match('/.*?.(?:jpg|jpeg|gif|png|svg)/i', $_file, $match);
+						preg_match('/.*?.(?:jpg|jpeg|gif|png|svg|webp)/i', $_file, $match);
 						preg_match('/.*?.(?:ogv|webm|mp4|mp3)/i', $_file, $match2);
 						
 						$f = false;

@@ -7,3 +7,4 @@ if(!defined('ABSPATH') && !defined('WP_UNINSTALL_PLUGIN')){
 delete_option('revslider_table_version');
 delete_option('revslider_checktables');
 delete_option('rs_public_version');
+delete_option('rs_last_launch');

@@ -115,7 +115,6 @@ function superio_wp_job_board_pro_redux_config($sections, $sidebars, $columns) {
                     'jobs-filter-top2-sidebar' => esc_html__('Jobs Filter Top 2 Sidebar', 'superio'),
                     'jobs-filter-top3-sidebar' => esc_html__('Jobs Filter Top 3 Sidebar', 'superio'),
                     'jobs-filter-top4-sidebar' => esc_html__('Jobs Filter Top 4 Sidebar', 'superio'),
-					'jobs-filter-half-job-detail' => esc_html__('Half Job Detail Sidebar', 'superio'),
                 ),
                 'default' => 'jobs-filter-top-sidebar',
                 'required' => array('jobs_show_filter_top', '=', true),

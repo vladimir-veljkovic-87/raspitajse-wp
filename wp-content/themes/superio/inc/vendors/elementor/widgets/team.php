@@ -143,10 +143,6 @@ class Superio_Elementor_Team extends Widget_Base {
             [
                 'label' => esc_html__( 'Background Hover Color', 'superio' ),
                 'type' => Controls_Manager::COLOR,
-                'scheme' => [
-                    'type' => Core\Schemes\Color::get_type(),
-                    'value' => Core\Schemes\Color::COLOR_1,
-                ],
                 'selectors' => [
                     // Stronger selector to avoid section style from overwriting
                     '{{WRAPPER}} .social a:hover' => 'background-color: {{VALUE}};',
