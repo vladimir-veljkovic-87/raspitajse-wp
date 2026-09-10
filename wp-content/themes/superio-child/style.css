@@ -77,11 +77,6 @@ form.cmb-form input[type="text"]:focus {
 .menu-item-2186 {
     /*display: none!important;*/
 }
-/* Hide Candidate page*/
-.post-type-archive-candidate.purchased-nothing {
-	display:none!important;
-}
-
 /* Phone field with flags*/
 .cmb2-id--candidate-phone .cmb-td {
 	height:60px;
