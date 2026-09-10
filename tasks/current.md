@@ -1,8 +1,8 @@
-# Zadatak 2.23 — Use the newly provisioned ambient MariaDB auth path to create/verify a full staging DB backup, then resume and complete the unchanged Superio Commit B transaction
+# Zadatak 2.24 — Diagnose the Commit B deploy-parity failure correctly, fix only the parity measurement/transfer contract if needed, and complete the Superio vendor upgrade in one bounded transaction
 
 Status: READY
 Baseline: 6d2e78ad6f866b486c303bfda050a4afec5f90e8
-Previous task: 2.22
+Previous task: 2.23
 Target environment: staging
 Production: FORBIDDEN
 
@@ -10,266 +10,209 @@ Production: FORBIDDEN
 
 Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, `origin/staging`, and `origin/feature/z2-21-superio-upgrade`.
 
-Read `tasks/current.md` and `tasks/README.md` from `origin/codex-tasks` in full before any DB command, runtime snapshot, WordPress bootstrap, deploy, restore action, or integration. Treat `codex-tasks` as READ-ONLY.
+Read `tasks/current.md` and `tasks/README.md` from `origin/codex-tasks` in full before any mutation, backup, deploy, WordPress bootstrap, or integration. Treat `codex-tasks` as READ-ONLY.
 
-Read the latest Zadatak 2.22 PARTIAL report in full. Read Zadatak 2.21 PARTIAL and the final Zadatak 2.20 PASS / Zadatak 2.18 PASS where needed for the accepted Commit B structure, child compatibility, pinned provenance, and rollback/acceptance contract.
+Read the final Zadatak 2.23 PARTIAL report in full. Read 2.21/2.20/2.18 only where needed for accepted Commit B provenance, child compatibility, backup/rollback, and acceptance contracts.
 
-Verify fresh `origin/staging` is exactly:
+Verify:
 
-`6d2e78ad6f866b486c303bfda050a4afec5f90e8`
-
-Verify fresh `origin/feature/z2-21-superio-upgrade` is exactly:
-
-`bb34d768d4edec8050975405874197dd1269d28f`
-
-and that its single parent is exactly the staging baseline above.
-
-Verify live deploy marker equals the staging baseline and primary worktree is clean/on `staging`.
-
-If any SHA, parent, marker, or cleanliness check differs, STOP. Do not rebase, rebuild, amend, cherry-pick, or manufacture a replacement vendor commit.
-
-Execute only Zadatak 2.23. Publish the final report through `codex-reports` and STOP. Do not begin post-upgrade Woo/legacy work automatically.
-
----
-
-## 1. Newly available prerequisite
-
-A human operator has provisioned MariaDB client authentication for the staging shell account outside the repository and web root. The exact auth file contents are out of scope and MUST NOT be read, copied, printed, parsed, moved, committed, uploaded, or restaged by Codex.
-
-A manual smoke check already demonstrated:
-
-- `/usr/bin/mariadb --batch --skip-column-names -e 'SELECT 1;'` returns `1`;
-- `/usr/bin/mariadb-dump --single-transaction --quick --skip-lock-tables --no-data <staging-db>` exits `0`;
-- schema smoke dump is non-empty and contains 84 `CREATE TABLE` statements.
-
-Treat the manual evidence only as justification to retry the previously blocked ambient-auth path. Reverify it yourself in a bounded credential-neutral way before any vendor deploy.
-
-Hard rule: do not inspect `~/.my.cnf` or any other option/auth file. Do not use `--password`, `MYSQL_PWD`, environment credential extraction, stdin secrets, `wp-config.php` DB_USER/DB_PASSWORD reads, or any custom credential staging.
-
-The staging database name may be obtained only through a narrowly scoped non-secret mechanism, for example `wp config get DB_NAME --type=constant` if that command succeeds without exposing other config, or an equivalently narrow read that returns only DB_NAME. Do not print the DB name in the report.
-
----
-
-## 2. Preserve exact Commit B
-
-Do not create any source commit in this task unless a rollback-only report artifact mechanism requires it; application source must remain unchanged until the existing Commit B is integrated after PASS acceptance.
-
-Reverify:
-
-- Commit B SHA exactly `bb34d768d4edec8050975405874197dd1269d28f`;
-- parent exactly `6d2e78ad6f866b486c303bfda050a4afec5f90e8`;
-- A→B changed roots exactly:
+- `origin/staging` is exactly `6d2e78ad6f866b486c303bfda050a4afec5f90e8`;
+- live staging deploy marker is the same SHA;
+- primary staging worktree is clean/on `staging`;
+- `origin/feature/z2-21-superio-upgrade` is exactly `bb34d768d4edec8050975405874197dd1269d28f`;
+- Commit B parent is exactly the staging baseline;
+- Commit A→B changes only the three authorized roots:
   - `wp-content/themes/superio/**`
   - `wp-content/plugins/apus-framework/**`
-  - `wp-content/plugins/revslider/**`
-- no child, WPJBP, Paid Listings, WP Private Message, WooCommerce, Elementor, WordPress core, scheduler, or Raspitajse-owned business source diff.
+  - `wp-content/plugins/revslider/**`.
 
-Do not rebuild or re-extract vendor payloads merely to create new hashes. Use the accepted 2.21 provenance unless a fresh bounded check contradicts it.
+If any of these differ, STOP. Do not rebase, rebuild, amend, or replace Commit B.
 
----
-
-## 3. Credential-neutral DB backup gate
-
-Before filesystem snapshots, vendor deploy, or WordPress bootstrap, prove ambient auth works without inspecting credentials.
-
-### A. Ambient auth smoke
-
-Run exactly one bounded read-only client check equivalent to:
-
-`/usr/bin/mariadb --batch --skip-column-names -e 'SELECT 1;'`
-
-Require exit 0 and output exactly `1` after normal whitespace normalization. Do not print connection details or client-option contents.
-
-If it fails, STOP with `BLOCKED_AMBIENT_DB_AUTH_REGRESSED`.
-
-### B. Resolve only DB_NAME
-
-Resolve the staging DB name through a narrowly scoped non-secret command that exposes only DB_NAME. Do not read or report DB_USER, DB_PASSWORD, DB_HOST, salts, keys, or full `wp-config.php` content.
-
-If DB_NAME cannot be resolved without widening secret access, STOP before vendor deploy.
-
-### C. Create full logical backup
-
-Create a fresh task-private mode-0700 directory outside repository and web root. The SQL file must be mode-0600.
-
-Use `/usr/bin/mariadb-dump` through the ambient auth path only. Required logical consistency options must include at minimum:
-
-- `--single-transaction`
-- `--quick`
-- `--skip-lock-tables`
-- `--hex-blob`
-- `--default-character-set=utf8mb4`
-- `--skip-tz-utc` only if required by current client/server compatibility
-- `--no-tablespaces` if required by privileges/client behavior
-- triggers/routines/events only if accessible and relevant; do not fail solely because unsupported privileged metadata is unavailable if normal WordPress table data/schema is fully captured.
-
-Do not use `--all-databases`.
-
-Require:
-
-- exit status 0;
-- non-empty dump;
-- SHA-256 recorded;
-- dump retained through the entire deploy/acceptance/rollback window;
-- no stderr indicating skipped tables, truncation, read errors, permission-denied table loss, or corruption.
-
-### D. Structural completeness
-
-Using credential-neutral read-only queries, compare live staging table set/count with the logical dump structurally without printing table names or row contents in the report.
-
-Require exact table-set/count parity. The previously observed manual schema count of 84 is a useful sanity check, but fresh authoritative evidence controls.
-
-Do not inspect application rows/PII.
-
-### E. Restore capability
-
-Prove `/usr/bin/mariadb` can authenticate through the same ambient path and that the dump is syntactically/structurally suitable for restoration.
-
-Do not attempt `CREATE DATABASE` unless a bounded privilege check clearly shows it is available. The staging account historically lacked CREATE DATABASE privilege; if still true, a destructive restore rehearsal is not required. Structural completeness + successful client authentication + valid dump syntax is sufficient, consistent with the previously accepted rollback model.
-
-If any backup gate fails, delete task-private dump/diagnostics and STOP before Commit B deploy.
+Execute only Zadatak 2.24. Publish the final report through `codex-reports` and STOP.
 
 ---
 
-## 4. Filesystem rollback snapshots and T0
+## Why this task is different
 
-Only after the DB backup gate passes, acquire the existing selective-runner shared lock nonblocking. If owned by a natural run, wait a bounded reasonable interval or STOP. Never kill the scheduler.
+Do not repeat the previous task-fragmentation pattern.
 
-Under the lock, create exact task-private non-web rollback snapshots of:
+The goal is to resolve the actual deploy-parity question and, if it is proven to be a measurement-contract problem rather than a real file-byte divergence, continue directly through the full upgrade acceptance and integration in this same task.
 
-- deployed `wp-content/themes/superio/`
-- deployed `wp-content/plugins/apus-framework/`
-- deployed `wp-content/plugins/revslider/`
+Do not create a separate diagnostic task followed by another retry task unless a real unresolved blocker remains.
 
-Preserve bytes, paths, and executable-mode metadata. Record deterministic file counts and path+byte/mode fingerprints only, not contents.
+Accepted facts from 2.23:
 
-Capture guarded sanitized T0 immediately before Commit B deploy. Reuse the full protected-state contract from Zadatak 2.21, including:
+- ambient MariaDB auth works;
+- full logical backup succeeded with 84/84 table parity;
+- rollback snapshots and protected-state capture work;
+- Commit B changed deploy completed;
+- counts and modes matched for all three target roots;
+- aggregate source/runtime byte-tree hashes differed for all three roots;
+- no target-vendor WordPress bootstrap occurred before rollback;
+- rollback restored exact T0 state;
+- staging remains safely at Commit A.
 
-- environment staging;
-- `DISABLE_WP_CRON=true`;
-- mail safety/external HTTP/payment guards active;
-- active theme/plugin versions still pre-upgrade;
-- child phone-field asset/enqueue exact;
-- protected business fingerprint;
-- exact owned cron callback/event contract;
-- non-allowlisted cron fingerprint;
-- continuation absent;
-- Action Scheduler summary and protected ID 32733 pending/attempts 0;
-- WPJBP/Paid accepted clean fingerprints;
-- WP Private Message T0 fingerprint;
-- three vendor-root runtime fingerprints;
-- sanitized vendor-owned DB surfaces sufficient for later migration accounting.
-
-No manual scheduler/business hooks.
+Because all three roots showed aggregate hash mismatch while file counts and modes matched, first determine whether the prior tree-hash comparison itself was root/path/algorithm dependent before assuming rsync changed bytes.
 
 ---
 
-## 5. Deploy exact Commit B
+## Phase 1 — Read-only forensic parity proof before touching staging runtime
 
-With lock and rollback material in place, deploy only:
+Do not deploy Commit B yet.
+
+Build deterministic inventories for each of the three Commit B source roots directly from the exact Git commit bytes. The canonical per-file identity format is:
+
+`relative_path_from_root + NUL + sha256(file_bytes) + LF`
+
+Rules:
+
+- relative paths must start below the compared root and must not include repository absolute paths, staging target absolute paths, temporary directory names, branch/worktree names, or root-specific prefixes;
+- include regular files only in the byte inventory;
+- sort bytewise by relative path;
+- separately record regular-file executable/non-executable mode map using the same root-relative paths;
+- do not use mtimes, inode numbers, owners, absolute paths, directory metadata, filesystem allocation, or host-specific metadata in byte parity.
+
+Then perform a private, non-web, no-WordPress transfer rehearsal using the exact file-copy semantics of `deployment/deploy-staging.sh` into disposable directories. Compare source→rehearsal-target with BOTH:
+
+1. exact per-file map diff;
+2. corrected root-relative aggregate digest of that exact map.
+
+Require for all three roots:
+
+- identical file count;
+- exact per-file relative path set;
+- exact SHA-256 for every file;
+- exact mode map;
+- corrected aggregate digest identical source/target.
+
+If this rehearsal fails for actual file bytes, identify the precise relative paths and classify the transfer defect. You may modify `deployment/deploy-staging.sh` only if a real transfer bug is proven, and only with the smallest staging-only fix required. Test that fix in the disposable rehearsal until exact per-file parity passes. Do not alter vendor payloads.
+
+If rehearsal per-file parity passes but the previous aggregate method would still differ when source and target live under different absolute roots, classify the prior failure as a measurement bug. In that case, do not modify deploy tooling merely to satisfy a bad hash; use the corrected root-relative parity contract for the live transaction below.
+
+If the mismatch cannot be explained or corrected safely without altering vendor bytes, STOP with evidence and no live vendor deploy.
+
+---
+
+## Phase 2 — Backup, lock, snapshots, T0
+
+Only after Phase 1 proves an exact source→target parity method:
+
+1. verify ambient MariaDB auth with one bounded `SELECT 1`;
+2. resolve only DB_NAME through the previously accepted narrow mechanism; never inspect/copy auth configuration;
+3. create a fresh full logical dump using the successful 2.23 ambient-auth `mariadb-dump` method;
+4. require exit 0, non-empty dump, clean stderr, completion marker, SHA-256, 84/84 exact live/dump table-set parity;
+5. retain the dump through acceptance/rollback;
+6. acquire the existing selective-runner shared lock nonblocking;
+7. create exact rollback snapshots of current runtime Superio/Apus/RevSlider preserving bytes and modes;
+8. capture fresh sanitized T0 protected state using the accepted 2.23 projection.
+
+No production access. No credential inspection. No broad cron/AS. No real mail/payment/network transport.
+
+---
+
+## Phase 3 — Exact Commit B live deploy and corrected immediate parity gate
+
+Deploy the unchanged existing feature tip only through:
 
 `deployment/deploy-staging.sh changed feature/z2-21-superio-upgrade`
 
-No manual vendor copy, no updater, no TGMPA install/update/bulk, no theme switch, no plugin deactivate/reactivate.
+If Phase 1 required an authorized minimal deploy-script fix, that fix must first be separately reviewed, committed from current staging, integrated to staging, and the existing Commit B relationship must be preserved without rewriting vendor bytes. If preserving the exact existing Commit B is impossible, STOP rather than rewriting history silently.
 
-Immediately prove source/runtime parity for the three target roots and exact versions:
+Immediately after deploy and BEFORE WordPress bootstrap, run the corrected parity contract from Phase 1 against each live target root.
 
-- Superio `1.3.37`
-- Apus Framework `2.5`
-- Slider Revolution `6.7.41`
+PASS requires:
 
-Confirm deleted parent `js/phone-field.js` is gone and child-owned phone asset remains intact.
+- exact relative file path set;
+- exact SHA-256 for every regular file;
+- exact executable-mode map;
+- exact corrected root-relative aggregate digest;
+- expected file counts;
+- parent `js/phone-field.js` absent;
+- child-owned phone asset unchanged.
 
-If deployment fails or parity is wrong, enter rollback immediately.
+Do not fail merely because an aggregate hash implementation includes different absolute root paths. The gate is actual root-relative per-file byte identity.
+
+If even one actual file differs, capture a bounded list of differing relative paths, sizes, source/runtime hashes and EOL classification where relevant, then rollback immediately before any target-vendor bootstrap.
 
 ---
 
-## 6. Bootstrap, migration accounting, security and compatibility acceptance
+## Phase 4 — Complete the upgrade acceptance in this same task if live per-file parity passes
 
-Run the guarded first bootstrap and then the full acceptance contract defined in Zadatak 2.21. That contract remains binding and must not be weakened.
+Do not stop after proving parity. Continue directly.
 
-At minimum require all of the following:
+Run the same guarded first bootstrap, vendor migration accounting, security acceptance, compatibility acceptance, scheduler/business-state checks, and side-effect checks required by 2.21/2.23, with these target versions:
 
-- no fatal attributable to target vendor versions;
-- child theme active;
-- exact target vendor versions loaded;
-- WPJBP 1.2.86 / Paid 1.0.19 / WP Private Message 1.0.7 unchanged;
-- Woo 9.5.4 / Elementor 3.25.11 / WP core unchanged;
-- no updater/TGMPA/install/deactivate/reactivate lifecycle action;
-- Apus 2.5 remediation boundary for prior privilege-escalation issue remains present;
-- RevSlider 6.7.41 exact provenance/loaded-copy check;
-- bounded WPJBP registration privilege-escalation regression harness PASS;
-- owned alert-management authority / retired REST / SenderPolicy unchanged;
-- child phone-field registration from `/superio-child/assets/js/phone-field.js`, version `a9a53425350b`, no parent phone URL;
-- candidate/employer registration and dashboard field/template contracts load;
-- three high-risk Paid Listings child overrides load against target parent and accepted Paid APIs;
-- package entitlement/quota + immutable 30-day validity harness PASS;
-- standalone package-purchase UI/transport contract compatible without payment;
-- job search/detail/submit/edit contracts load without real mutation;
-- candidate/employer profile templates load;
-- application contracts load without real submission;
-- owned job expiry/pre-expiry callbacks remain authoritative;
+- Superio `1.3.37`;
+- Apus Framework `2.5`;
+- Slider Revolution `6.7.41`;
+- WPJBP remains `1.2.86`;
+- Paid Listings remains `1.0.19`;
+- WP Private Message remains `1.0.7`;
+- WooCommerce remains `9.5.4`;
+- Elementor remains `3.25.11`;
+- WordPress remains `6.6.7`;
+- child remains active and unchanged.
+
+Mandatory checks include, at minimum:
+
+- no fatal/warning regression attributable to the upgraded vendor stack in bounded acceptance;
+- child `phone-field-js` loads exactly once from child path with canonical hash/version and no parent phone-field dependency;
+- candidate/employer registration and dashboard template/field contracts load;
+- package child overrides and canonical 30-day entitlement policy harness pass;
+- job search/detail/submit/edit/profile/application template contracts load without real mutations;
+- candidate→job owned evaluator remains authoritative;
+- employer→candidate remains retired;
 - candidate age auto-expiry remains disabled;
-- employer→candidate alerts remain retired;
-- candidate→job owned evaluator remains authoritative/vendor sender absent;
-- selective runner still exposes exactly the same three owned zero-argument hourly hooks; continuation absent;
+- owned job expiry/pre-expiry callbacks remain authoritative;
+- exact three owned hourly scheduler hooks remain unchanged; continuation absent;
+- protected AS ID 32733 remains pending/attempts 0;
 - Raspitajse Commerce employer lookup/HPOS declarations remain compatible;
-- Woo checkout/package relevant template contracts load;
-- changed Superio Woo override surfaces have no fatal/outdated-contract break detectable by installed Woo status/template APIs;
-- mobile-scroll/style dependencies statically mapped; browser-only visual risk reported separately, not silently fixed.
+- no WPJBP/Paid/WP Private Message downgrade/reinstall;
+- no TGMPA/updater/theme-switch/deactivate-reactivate path executed;
+- Apus 2.5 remediation boundary for prior arbitrary-option-update issue remains present;
+- RevSlider exact 6.7.41 active copy only;
+- bounded WPJBP registration privilege-escalation regression harness passes;
+- SenderPolicy/Transport authority unchanged;
+- protected business fingerprint unchanged except explicitly justified vendor-owned bookkeeping only;
+- mail/SMTP/payment/refund actual sends/execution zero;
+- actual external WordPress network zero unless guard-intercepted and blocked before transport.
 
-### Vendor DB migration accounting
-
-Compare T0→T1 DB changes at a sanitized structural/option-key level only. Permit only narrowly attributable Apus/RevSlider bookkeeping/schema/version changes. Any unexplained mutation of Raspitajse business/user/order/job/candidate/employer/application/message/package/communications data is critical failure.
-
-No row values, email addresses, saved queries, or PII in report.
-
-### Side effects
-
-Require zero real SMTP/mail, zero payment/refund, zero actual external WordPress network. Guard-intercepted vendor HTTP may be inventoried by sanitized purpose/count only.
+Known Hostinger/LiteSpeed HTTP 403 before WordPress is not a product regression; use internal/template/runtime acceptance and record the limitation once.
 
 ---
 
-## 7. Rollback contract
+## Phase 5 — Integration or rollback
 
-Do not integrate Commit B into `staging` until every critical gate passes.
+If every critical gate passes:
 
-On any critical failure:
+1. fast-forward `staging` to the exact accepted vendor commit path without rebuilding vendor payloads;
+2. deploy from final `staging` so source HEAD / `origin/staging` / deploy marker converge;
+3. rerun corrected root-relative per-file parity on all three target roots;
+4. capture final protected-state projection;
+5. verify worktree clean, protected scheduler/business state intact, target versions exact;
+6. remove DB backup and rollback snapshots only after final PASS proof;
+7. report `PASS` with classification `SUPERIO_VENDOR_STACK_UPGRADE_ACCEPTED`.
 
-1. keep `origin/staging` at Commit A;
-2. use approved changed deploy from `staging` as appropriate to return tracked paths toward Commit A state;
-3. under the shared lock restore the exact three pre-upgrade filesystem snapshots regardless of partial/full vendor deploy state;
-4. verify runtime fingerprints exactly equal T0 snapshot fingerprints;
-5. if and only if task-caused vendor DB mutation occurred, restore the fresh logical backup using `/usr/bin/mariadb` through ambient authentication only; do not inspect credentials;
-6. guarded-bootstrap restored old runtime and prove pre-upgrade versions, child/WPJBP/Paid state, scheduler contracts, business fingerprint, and transport guards;
-7. remove backup/snapshots only after rollback is proven complete;
-8. report PARTIAL/FAIL precisely and STOP.
+If any critical gate fails after live deploy:
 
-Production restore is forbidden.
+1. do not integrate Commit B;
+2. return tracked paths toward Commit A through the approved deploy contract;
+3. restore exact T0 filesystem snapshots under the lock;
+4. restore DB only if task-caused vendor DB state changed;
+5. prove exact T0 runtime/protected-state restoration;
+6. clean temporary backup/snapshots only after rollback proof;
+7. report PARTIAL with one precise blocker.
+
+Never leave staging in a mixed or partially upgraded state.
 
 ---
 
-## 8. PASS integration and cleanup
+## Source-mutation scope
 
-Only after all acceptance passes:
+Preferred source mutation count: ZERO.
 
-1. fast-forward `staging` exactly from Commit A to existing Commit B `bb34d768d4edec8050975405874197dd1269d28f`;
-2. push `staging` once normally, no force;
-3. run `deployment/deploy-staging.sh changed staging`;
-4. verify source HEAD / `origin/staging` / deploy marker all equal Commit B;
-5. verify final runtime target parity and protected-state projections;
-6. verify worktree clean;
-7. release shared lock;
-8. securely delete task-private DB backup, filesystem snapshots, and diagnostics only after final acceptance is complete.
+Only if Phase 1 proves a real bug in `deployment/deploy-staging.sh`, one minimal staging-only fix to that file is authorized. No vendor source byte changes are authorized. No child, WPJBP, Paid Listings, WP Private Message, WooCommerce, Elementor, WordPress core, Raspitajse business logic, scheduler configuration, `.gitattributes`, or `.gitignore` changes are authorized.
 
-Final PASS classification:
+Do not create another task merely because the old aggregate hash was wrong. If actual per-file parity is proven and all acceptance passes, finish the upgrade here.
 
-`SUPERIO_VENDOR_STACK_UPGRADE_ACCEPTED`
-
-The final report must record sanitized backup size/hash/table-count parity, target versions/fingerprints, protected-state equality, zero forbidden side effects, and production NO. It must not expose DB name, credentials, auth-file path contents, PII, mail bodies, or row data.
-
-## Exactly one proposed next task on PASS
-
-**Zadatak 2.24 — Re-baseline remaining Raspitajse custom WooCommerce / legacy child-theme findings after the accepted vendor upgrades and select the next bounded KEEP / REDESIGN / DROP implementation slice.**
-
-Propose only. Do not begin automatically.
+Production remains FORBIDDEN throughout.
