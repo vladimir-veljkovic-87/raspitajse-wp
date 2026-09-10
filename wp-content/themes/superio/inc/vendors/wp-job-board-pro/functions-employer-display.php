@@ -117,14 +117,14 @@ function superio_employer_display_open_position($post, $show_url = false) {
 	        'author' => $user_id
 	    );
 	$jobs = WP_Job_Board_Pro_Query::get_posts($args);
-	$count_jobs = $jobs->found_posts;
+	$count_jobs = !empty($jobs->posts) ? count($jobs->posts) : 0;
 	
 	?>
 	<span class="wrapper-open-job">
 		<?php if ($show_url) { ?>
 			<a href="<?php echo esc_url(get_permalink($post)); ?>" class="open-job">
 		<?php } ?>
-        <?php echo sprintf(_n('Otvorena pozicija - <span>%s</span>', 'Otvorene pozicije - <span>%s</span>', intval($count_jobs), 'superio'), intval($count_jobs)); ?>
+        <?php echo sprintf(_n('Open Job - <span>%s</span>', 'Open Jobs - <span>%s</span>', intval($count_jobs), 'superio'), intval($count_jobs)); ?>
         <?php if ($show_url) { ?>
 			</a>
 		<?php } ?>
@@ -142,14 +142,14 @@ function superio_employer_display_nb_jobs($post, $show_url = false) {
 	        'author' => $user_id
 	    );
 	$jobs = WP_Job_Board_Pro_Query::get_posts($args);
-	$count_jobs = $jobs->found_posts;
+	$count_jobs = !empty($jobs->posts) ? count($jobs->posts) : 0;
 	
 	?>
 	<div class="nb-job">
 		<?php if ($show_url) { ?>
 			<a href="<?php echo esc_url(get_permalink($post)); ?>">
 		<?php } ?>
-        <?php echo sprintf(_n('<span class="text">Otvorena pozicija</span> - <span>%d</span>', '<span class="text">Otvorene pozicije</span> - <span>%d</span>', intval($count_jobs), 'superio'), intval($count_jobs)); ?>
+        <?php echo sprintf(_n('<span class="text">Open Job</span> - <span>%d</span>', '<span class="text">Open Jobs</span> - <span>%d</span>', intval($count_jobs), 'superio'), intval($count_jobs)); ?>
         <?php if ($show_url) { ?>
 			</a>
 		<?php } ?>
@@ -164,7 +164,7 @@ function superio_employer_display_nb_reviews($post) {
 		$total_reviews_display = $total_reviews ? WP_Job_Board_Pro_Mixes::format_number($total_reviews) : 0;
 		?>
 		<div class="nb_reviews">
-	        <?php echo sprintf(_n('<span class="text-green">%d</span> <span class="text">Recenzija</span>', '<span class="text-green">%d</span> <span class="text">Recenzije</span>', intval($total_reviews), 'superio'), $total_reviews_display); ?>
+	        <?php echo sprintf(_n('<span class="text-green">%d</span> <span class="text">Review</span>', '<span class="text-green">%d</span> <span class="text">Reviews</span>', intval($total_reviews), 'superio'), $total_reviews_display); ?>
 	    </div>
 	    <?php
 	}
@@ -177,7 +177,7 @@ function superio_employer_display_nb_views($post) {
 	$views_display = $views ? WP_Job_Board_Pro_Mixes::format_number($views) : 0;
 	?>
 	<div class="nb_views">
-        <?php echo sprintf(_n('<span class="text-blue">%d</span> <span class="text">Pregled</span>', '<span class="text-blue">%d</span> <span class="text">Pregleda</span>', intval($views), 'superio'), $views_display); ?>
+        <?php echo sprintf(_n('<span class="text-blue">%d</span> <span class="text">View</span>', '<span class="text-blue">%d</span> <span class="text">Views</span>', intval($views), 'superio'), $views_display); ?>
     </div>
     <?php
 }
@@ -189,11 +189,11 @@ function superio_employer_display_featured_icon($post, $display_type = 'icon') {
 	if ( $featured ) {
 		if ( $display_type == 'icon' ) {
 			?>
-	        <span class="featured" data-toggle="tooltip" title="<?php esc_attr_e('Istaknuto', 'superio'); ?>"><i class="flaticon-tick"></i></span>
+	        <span class="featured" data-toggle="tooltip" title="<?php esc_attr_e('featured', 'superio'); ?>"><i class="flaticon-tick"></i></span>
 		    <?php
     	} else {
     		?>
-    		<span class="featured-text"><?php esc_html_e('Istaknuto', 'superio'); ?></span>
+    		<span class="featured-text"><?php esc_html_e('Featured', 'superio'); ?></span>
     		<?php
     	}
 	}
@@ -433,9 +433,9 @@ function superio_employer_display_per_page_form($wp_query) {
                 <option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $per_page ); ?>>
                 	<?php
                 		if ( $value == -1 ) {
-                			esc_html_e( 'Sve', 'superio' );
+                			esc_html_e( 'All', 'superio' );
                 		} else {
-                			echo sprintf( esc_html__( '%s Po Stranici', 'superio' ), $value );
+                			echo sprintf( esc_html__( '%s Per Page', 'superio' ), $value );
                 		}
                 	?>
                 </option>

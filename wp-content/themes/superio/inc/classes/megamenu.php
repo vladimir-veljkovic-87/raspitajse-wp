@@ -96,7 +96,7 @@ if ( !class_exists("Superio_Nav_Menu") ) {
 
                 $li_attributes = '';
                 $class_names = $value = '';
-
+                $classes = !empty($item->classes) ? $item->classes : array();
                 $classes[] = ($args->has_children) ? 'dropdown' : '';
                 $classes[] = ($item->current || $item->current_item_ancestor) ? 'active' : '';
                 $classes[] = 'menu-item-' . $item->ID;
@@ -159,7 +159,7 @@ if ( !class_exists("Superio_Nav_Menu") ) {
                 $item_output .= $args->has_children || $apus_mega_profile ? ' <b class="caret"></b>' : '';
                 
                 if ( $item->description ) {
-                    $item_output = '<div class="menu-item-description">' . $item->description . '</div>';
+                    $item_output .= '<div class="menu-item-description">' . $item->description . '</div>';
                 }
                 $item_output .= '</a>';
 

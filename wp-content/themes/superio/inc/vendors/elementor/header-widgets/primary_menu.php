@@ -6,6 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
+use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Elementor\Group_Control_Typography;
+
 class Superio_Elementor_Primary_Menu extends Elementor\Widget_Base {
 
 	public function get_name() {
@@ -116,7 +120,6 @@ class Superio_Elementor_Primary_Menu extends Elementor\Widget_Base {
             Elementor\Group_Control_Typography::get_type(),
             [
                 'name' => 'typography',
-                'scheme' => Elementor\Core\Schemes\Typography::TYPOGRAPHY_1,
                 'selector' => '{{WRAPPER}} .megamenu > li > a',
             ]
         );

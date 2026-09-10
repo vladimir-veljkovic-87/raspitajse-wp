@@ -29,7 +29,7 @@ if ( $meta_obj->check_post_meta_exist('award') && ($award = $meta_obj->get_post_
                     <?php } ?>
                 </div>
                 <?php if ( !empty($item['description']) ) { ?>
-                    <div class="mb0"><?php echo esc_html($item['description']); ?></div>
+                    <div class="mb0"><?php echo wpautop($item['description']); ?></div>
                 <?php } ?>
             </div>
 

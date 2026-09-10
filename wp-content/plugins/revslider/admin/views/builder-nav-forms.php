@@ -25,7 +25,9 @@ if(!defined('ABSPATH')) exit();
 			--><div id="gst_nav_8" data-select="#gst_nav_8" data-unselect=".nav_submodule_trigger" class="nav_submodule_trigger opensettingstrigger" data-collapse="true" data-forms='["#form_nav_touch"]'><i class="material-icons">pan_tool</i><span class="gso_title"><?php _e('Touch', 'revslider');?></span></div><!--
 			--><div id="gst_nav_9" data-select="#gst_nav_9" data-unselect=".nav_submodule_trigger" class="nav_submodule_trigger opensettingstrigger" data-collapse="true" data-forms='["#form_nav_misc"]'><i class="material-icons">keyboard</i><span class="gso_title"><?php _e('Keyboard', 'revslider');?></span></div><!--
 			--><div id="gst_nav_10" data-select="#gst_nav_10" data-unselect=".nav_submodule_trigger" class="nav_submodule_trigger opensettingstrigger" data-collapse="true" data-forms='["#form_nav_mousescroll"]'><i class="material-icons">mouse</i><span class="gso_title"><?php _e('Mouse', 'revslider');?></span></div><!--
+			--><div id="gst_nav_12" data-select="#gst_nav_12" data-unselect=".nav_submodule_trigger" class="nav_submodule_trigger opensettingstrigger" data-collapse="true" data-forms='["#form_nav_acc"]'><i class="material-icons">accessibility</i><span class="gso_title"><?php _e('Accessibility', 'revslider');?></span></div><!--
 			--><div id="gst_nav_11" class="callEvent general_submodule_trigger openmodaltrigger" data-evt="openNavigationEditor"><i class="material-icons">games</i><span class="gso_title"><?php _e('Nav Editor', 'revslider');?></span></div>
+			
 
 		</div>
 	</div>
@@ -1132,6 +1134,44 @@ if(!defined('ABSPATH')) exit();
 				</div>
 			</div>
 		</div><!-- KEYBOARD SETTINGS END -->
+
+		<!-- ACC  SETTINGS -->
+		<div id="form_nav_acc" data-select="#gst_nav_12" data-unselect=".nav_submodule_trigger" class="formcontainer form_menu_inside collapsed carouselenable standardenable herodisable">
+			<div class="collectortabwrap"><div id="collectortab_form_misc" class="collectortab form_menu_inside" data-forms='["#form_nav_acc"]'><i class="material-icons">accessibility</i><?php _e('Accessibility', 'revslider');?></div></div>
+			<!--<div class="form_intoaccordion"><i class="material-icons">arrow_drop_down</i></div>-->
+			<div class="form_inner">
+				<div class="form_inner_header"><i class="material-icons">accessibility</i><?php _e('Web Content Accessibility', 'revslider');?></div>
+				<!--<div class="form_intoaccordion" data-trigger="#sr_na_thumb_11"><i class="material-icons">arrow_drop_down</i></div>				-->
+				<div class="collapsable" style="display:block">
+					<label_a><?php _e('Aria Hidden', 'revslider');?></label_a><select data-theme="dark" id="le_nav_acc_hidden" class="sliderinput tos2 nosearchbox easyinit" data-r="nav.acc.hidden">
+						<option value="true"><?php _e('True', 'revslider');?></option>
+						<option value="false"><?php _e('False', 'revslider');?></option>
+					</select>
+					<div class="div10"></div>
+					<label_a><?php _e('Aria Pressed', 'revslider');?></label_a><select data-theme="dark" id="le_nav_acc_pressed" class="sliderinput tos2 nosearchbox easyinit" data-r="nav.acc.pressed">
+						<option value="set"><?php _e('update', 'revslider');?></option>
+						<option value="unset"><?php _e('ignore', 'revslider');?></option>
+					</select>
+				</div>
+			</div>
+			<div class="form_inner">
+				<div class="form_inner_header"><i class="material-icons">accessibility</i><?php _e('Aria Labels', 'revslider');?></div>
+				<!--<div class="form_intoaccordion" data-trigger="#sr_na_thumb_11"><i class="material-icons">arrow_drop_down</i></div>				-->
+				<div class="collapsable" style="display:block">
+
+					<label_a><?php _e('Next', 'revslider');?></label_a><input id="le_nav_acc_next" class="sliderinput  easyinit "  data-r="nav.acc.next"  type="text">
+					<div class="div10"></div>
+					<label_a><?php _e('Previous', 'revslider');?></label_a><input id="le_nav_acc_prev" class="sliderinput  easyinit "  data-r="nav.acc.prev"  type="text">
+					<div class="div10"></div>
+					<label_a><?php _e('Tab', 'revslider');?></label_a><input id="le_nav_acc_tab" class="sliderinput  easyinit "  data-r="nav.acc.tab"  type="text">
+					<div class="div10"></div>
+					<label_a><?php _e('Thumb', 'revslider');?></label_a><input id="le_nav_acc_thumb" class="sliderinput  easyinit "  data-r="nav.acc.thumb"  type="text">
+					<div class="div10"></div>
+					<label_a><?php _e('Bullet', 'revslider');?></label_a><input id="le_nav_acc_bullet" class="sliderinput  easyinit "  data-r="nav.acc.bullet"  type="text">
+				</div>
+			</div>
+		</div>
+
 
 		<!-- MOUSE  SETTINGS -->
 		<div id="form_nav_mousescroll" data-select="#gst_nav_10" data-unselect=".nav_submodule_trigger" class="formcontainer form_menu_inside collapsed carouselenable standardenable herodisable">

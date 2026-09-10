@@ -34,7 +34,7 @@ if ( $meta_obj->check_post_meta_exist('education') && ($education = $meta_obj->g
                     <?php } ?>
                 </div>
                 <?php if ( !empty($item['description']) ) { ?>
-                    <p class="mb0"><?php echo esc_html($item['description']); ?></p>
+                    <p class="mb0"><?php echo wpautop($item['description']); ?></p>
                 <?php } ?>
             </div>
             

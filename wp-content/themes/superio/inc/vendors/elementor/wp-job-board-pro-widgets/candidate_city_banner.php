@@ -153,6 +153,7 @@ class Superio_Elementor_Job_Board_Pro_Candidate_City_Banner extends Elementor\Wi
             <?php
             $term = get_term_by( 'slug', $slug, 'candidate_location' );
             $link = $custom_url;
+            $number_candidates = $count = 0;
             if ($term) {
                 if ( empty($link) ) {
                     $link = get_term_link( $term, 'candidate_location' );
@@ -160,6 +161,7 @@ class Superio_Elementor_Job_Board_Pro_Candidate_City_Banner extends Elementor\Wi
                 if ( empty($title) ) {
                     $title = $term->name;
                 }
+                $number_candidates = $count = $term->count;
             }
             ?>
 
@@ -184,13 +186,6 @@ class Superio_Elementor_Job_Board_Pro_Candidate_City_Banner extends Elementor\Wi
                                 <?php } ?>
 
                                 <?php if ( $show_nb_candidates ) {
-                                        $args = array(
-                                            'fields' => 'ids',
-                                            'locations' => array($slug),
-                                            'limit' => 1
-                                        );
-                                        $query = superio_get_candidates($args);
-                                        $number_candidates = $count = $query->found_posts;
                                         $number_candidates = $number_candidates ? WP_Job_Board_Pro_Mixes::format_number($number_candidates) : 0;
                                 ?>
                                     <div class="number"><?php echo sprintf(_n('<span>%d</span> candidate', '<span>%d</span> candidates', $count, 'superio'), $number_candidates); ?></div>

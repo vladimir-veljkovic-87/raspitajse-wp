@@ -30,6 +30,7 @@ $age = superio_candidate_display_meta($post, 'age');
 $qualification = superio_candidate_display_meta($post, 'qualification');
 $languages = superio_candidate_display_meta($post, 'languages');
 
+
 $email = superio_candidate_display_email($post, false, false);
 
 if($style == 'style1' || $style == 'style2'){
@@ -57,7 +58,7 @@ if ( method_exists('WP_Job_Board_Pro_User', 'is_employee') && WP_Job_Board_Pro_U
                     <i class="flaticon-money-1"></i>
                 </div>
                 <div class="details">
-                    <div class="text"><?php esc_html_e('Ponuđena plata', 'superio'); ?></div>
+                    <div class="text"><?php esc_html_e('Offered Salary', 'superio'); ?></div>
                     <div class="value"><?php echo trim($salary); ?></div>
                 </div>
             </li>
@@ -123,6 +124,8 @@ if ( method_exists('WP_Job_Board_Pro_User', 'is_employee') && WP_Job_Board_Pro_U
             </li>
         <?php } ?>
 
+
+
         <?php if ( $email ) { ?>
             <li>
                 <div class="icon">
@@ -174,4 +177,4 @@ if ( method_exists('WP_Job_Board_Pro_User', 'is_employee') && WP_Job_Board_Pro_U
         <?php } ?>
     <?php } ?>
 </div>
-<?php echo trim($after_widget); ?>
+<?php echo trim($after_widget);

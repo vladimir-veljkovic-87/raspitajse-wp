@@ -14,8 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 				<div class="ajax-pagination <?php echo trim($pagination_type == 'loadmore' ? 'loadmore-action' : 'infinite-action'); ?>">
 					<div class="apus-pagination-next-link hidden"><?php echo trim($next_link); ?></div>
-					<a href="#" class="apus-loadmore-btn"><?php esc_html_e( 'Učitaj još', 'superio' ); ?></a>
-					<span href="#" class="apus-allproducts"><?php esc_html_e( 'Svi poslodavci su učitani.', 'superio' ); ?></span>
+					<a href="#" class="apus-loadmore-btn"><?php esc_html_e( 'Load more', 'superio' ); ?></a>
+					<span href="#" class="apus-allproducts"><?php esc_html_e( 'All employers loaded.', 'superio' ); ?></span>
 				</div>
 		<?php
 			}

@@ -13,14 +13,14 @@ $location = superio_job_display_short_location($post, 'no-icon', false);
 $expires = $obj_job_meta->get_post_meta( 'expiry_date' );
 ?>
 <div class="job-detail-detail">
-    <h3 class="title"><?php esc_html_e('Pregled posla', 'superio'); ?></h3>
+    <h3 class="title"><?php esc_html_e('Job Overview', 'superio'); ?></h3>
     <ul class="list">
         <li>
             <div class="icon">
                 <i class="flaticon-calendar"></i>
             </div>
             <div class="details">
-                <div class="text"><?php esc_html_e('Datum objave', 'superio'); ?></div>
+                <div class="text"><?php esc_html_e('Date Posted', 'superio'); ?></div>
                 <div class="value"><?php the_time(get_option('date_format')); ?></div>
             </div>
         </li>
@@ -43,7 +43,7 @@ $expires = $obj_job_meta->get_post_meta( 'expiry_date' );
                     <i class="flaticon-money-1"></i>
                 </div>
                 <div class="details">
-                    <div class="text"><?php esc_html_e('Ponuđena plata', 'superio'); ?></div>
+                    <div class="text"><?php esc_html_e('Offered Salary', 'superio'); ?></div>
                     <div class="value"><?php echo trim($salary); ?></div>
                 </div>
             </li>
@@ -54,7 +54,7 @@ $expires = $obj_job_meta->get_post_meta( 'expiry_date' );
                 <i class="flaticon-waiting"></i>
             </div>
             <div class="details">
-                <div class="text"><?php esc_html_e('Datum isteka', 'superio'); ?></div>
+                <div class="text"><?php esc_html_e('Expiration date', 'superio'); ?></div>
                 <div class="value">
                     <?php
                     if ( $expires ) {

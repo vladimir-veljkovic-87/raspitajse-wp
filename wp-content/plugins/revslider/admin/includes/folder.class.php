@@ -89,7 +89,10 @@ class RevSliderFolder extends RevSliderSlider {
 		//check if Slider with title and/or alias exists, if yes change both to stay unique
 		$done = $wpdb->insert($wpdb->prefix . RevSliderFront::TABLE_SLIDER, array('title' => $title, 'alias' => $alias, 'type' => 'folder'));
 		if($done !== false){
-			$this->init_folder_by_id($wpdb->insert_id);
+			$orig_id = $wpdb->insert_id;
+			$wpdb->insert($wpdb->prefix . RevSliderFront::TABLE_SLIDER."7", array('id' => $orig_id, 'title' => $title, 'alias' => $alias, 'type' => 'folder')); //add v7 folder
+
+			$this->init_folder_by_id($orig_id);
 			$folder = $this;
 			if(intval($parent) > 0){
 				$slider		= new RevSliderFolder();
@@ -133,6 +136,11 @@ class RevSliderFolder extends RevSliderSlider {
 			}
 			$response = $wpdb->update($wpdb->prefix . RevSliderFront::TABLE_SLIDER, array('settings' => json_encode($settings)), array('id' => $folder_id));
 			$response = ($response == false && empty($wpdb->last_error)) ? true : $response;
+
+			//check if v7 folider exists, if not create. then add slider also to v7 folder
+			$folderv7 = $wpdb->get_row($wpdb->prepare("SELECT * FROM ". $wpdb->prefix . RevSliderFront::TABLE_SLIDER ."7 WHERE `id` = %s AND `type` = 'folder'", $folder_id), ARRAY_A);
+			if(empty($folderv7)) $wpdb->insert($wpdb->prefix . RevSliderFront::TABLE_SLIDER."7", array('id' => $folder['id'], 'title' => $folder['title'], 'alias' => $folder['alias'], 'type' => 'folder')); //add v7 folder
+			$wpdb->update($wpdb->prefix . RevSliderFront::TABLE_SLIDER."7", array('settings' => json_encode($settings)), array('id' => $folder_id));
 		}
 		
 		return $response;

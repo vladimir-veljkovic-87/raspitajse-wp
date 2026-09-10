@@ -27,7 +27,8 @@ if(!defined('ABSPATH')) exit();
 			--><div id="gst_slide_3" data-select="#gst_slide_3" data-unselect=".slide_submodule_trigger" class="slide_submodule_trigger opensettingstrigger slidebg_image_settings slidebg_external_settings slide_bg_settings" data-collapse="true" data-forms='["#form_slide_kenburn_outter"]'><i id="gst_kenburns_title_icon" class="material-icons">leak_add</i><span id="gst_kenburns_title" class="gso_title"><?php _e('Ken Burns', 'revslider');?></span></div><!--
 			--><div id="gst_slide_7" data-select="#gst_slide_7" data-unselect=".slide_submodule_trigger" class="slide_submodule_trigger opensettingstrigger" data-collapse="true" data-forms='["#form_slide_parameters"]'><i class="material-icons">info</i><span class="gso_title"><?php _e('Params', 'revslider');?></span></div><!--
 			--><div id="gst_slide_11" data-select="#gst_slide_11" data-unselect=".slide_submodule_trigger" class="slide_submodule_trigger opensettingstrigger callEvent" data-evt="updateSlideLoopRange" data-collapse="true" data-forms='["#form_slide_loops"]'><i class="material-icons">repeat_one</i><span class="gso_title"><?php _e('Loop Layers', 'revslider');?></span></div><!--
-			--><div id="gst_slide_12" data-select="#gst_slide_12" data-unselect=".slide_submodule_trigger" class="slide_submodule_trigger opensettingstrigger" data-collapse="true" data-forms='["#form_slide_onscroll"]'><i class="material-icons">system_update_alt</i><span class="gso_title"><?php _e('On Scroll', 'revslider');?></span></div>
+			--><div id="gst_slide_12" data-select="#gst_slide_12" data-unselect=".slide_submodule_trigger" class="slide_submodule_trigger opensettingstrigger" data-collapse="true" data-forms='["#form_slide_onscroll"]'><i class="material-icons">system_update_alt</i><span class="gso_title"><?php _e('On Scroll', 'revslider');?></span></div><!--
+			--><div id="gst_slide_14" data-select="#gst_slide_14" data-unselect=".slide_submodule_trigger" class="slide_submodule_trigger opensettingstrigger" data-collapse="true" data-forms='["#form_slide_acc"]'><i class="material-icons">accessibility</i><span class="gso_title"><?php _e('Accessibility', 'revslider');?></span></div>
 			<?php
 if ($wpml->wpml_exists()) {
 	?>
@@ -239,6 +240,7 @@ if ($wpml->wpml_exists()) {
 						</row>
 					</div>
 					<div class="div15"></div>
+					<div class="slidebg_youtube_settings slide_bg_settings"><label_a><?php _e('Anim Duration', 'revslider');?></label_a><input id="slide_vid_animdur" class="slideinput easyinit" type="text" data-r="bg.video.animDur" data-suffix="" data-allowed="" data-numeric="true" data-min="0" data-max="5000"><span class="linebreak"></span></div>
 					<div class="slidebg_youtube_settings slide_bg_settings"><label_a><?php _e('Arguments', 'revslider');?></label_a><input id="slide_vid_argsyt" class="slideinput easyinit" type="text" data-r="bg.video.args"><span class="linebreak"></span></div>
 					<div class="slidebg_vimeo_settings slide_bg_settings"><label_a><?php _e('Arguments', 'revslider');?></label_a><input id="slide_vid_argvim" class="slideinput easyinit" type="text" data-r="bg.video.argsVimeo"><span class="linebreak"></span></div>
 					<div class="div15"></div>
@@ -920,6 +922,39 @@ if ($wpml->wpml_exists()) {
 					<label_a><?php _e('Description', 'revslider');?></label_a><textarea placeholder="Enter any Description which can be referenced from Navigation Elements." style="height:100px; line-height:20px;padding-top:5px;width:100%" id="slide_info_desc" class="slideinput easyinit" type="text" data-r="info.description"></textarea><span class="linebreak"></span>
 				</div>
 			</div><!-- END OF PARAMETERS -->
+		</div>
+	</div>
+
+	<!-- SLIDE ACCESSIBILITY SETTINGS-->
+	<div class="form_collector slide_settings_collector" data-type="slideconfig" data-pcontainer="#slide_settings" data-offset="#rev_builder_wrapper">
+		<div id="form_slide_acc"  class="formcontainer form_menu_inside collapsed" data-select="#gst_slide_14" >
+			<!-- ACC SETTINGS -->
+			<div id="form_slidegeneral_acc" class="form_inner open">
+				<div class="form_inner_header"><i class="material-icons">info</i><?php _e('Web Content Accessibility', 'revslider');?></div>				
+				<div class="collapsable">
+					<label_a><?php _e('Aria Hidden', 'revslider');?></label_a><select data-theme="dark" id="le_slide_acc_hidden" class="slideinput tos2 nosearchbox easyinit" data-r="acc.hidden">
+						<option value="true"><?php _e('True', 'revslider');?></option>
+						<option value="false"><?php _e('False', 'revslider');?></option>
+						<option value="auto"><?php _e('Dynamic', 'revslider');?></option>						
+					</select>
+					<div class="div10"></div>
+					<label_a><?php _e('Role', 'revslider');?></label_a><select data-theme="dark" id="le_slide_acc_role" class="slideinput tos2 nosearchbox easyinit"  data-r="acc.role">
+						<option value="unset"><?php _e('Unset', 'revslider');?></option>
+						<option value="group"><?php _e('Group', 'revslider');?></option>
+						<option value="presentation"><?php _e('Presentation', 'revslider');?></option>
+						<option value="article"><?php _e('Article', 'revslider');?></option>
+						<option value="region"><?php _e('Region', 'revslider');?></option>
+					</select>
+					<div class="div10"></div>
+					<label_a><?php _e('Description', 'revslider');?></label_a><input id="le_slide_acc_roledep" class="slideinput  easyinit "  data-r="acc.roledep"  type="text">
+					<div class="div10"></div>
+					<label_a><?php _e('Aria Label', 'revslider');?></label_a><input id="le_slide_acc_label" class="slideinput valueduekeyboard easyinit input_with_presets" data-presets_text="$I$Unset!$R$Auto!$C$Custom" data-presets_val="unset!auto!Custom Slide Label" data-r="acc.label"  type="text">
+					<div class="div10"></div>
+					
+					<label_a><?php _e('Aria Live', 'revslider');?></label_a><input id="le_slide_acc_live" class="slideinput valueduekeyboard easyinit input_with_presets" data-presets_text="$I$Unset!$R$Auto!$C$Custom" data-presets_val="unset!auto!Custom Live Text" data-r="acc.live"  type="text">
+					
+				</div>
+			</div><!-- END OF ACC SETTINGS -->
 		</div>
 	</div>
 

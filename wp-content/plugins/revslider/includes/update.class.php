@@ -86,7 +86,7 @@ class RevSliderUpdate extends RevSliderFunctions {
 
 	public function _check_updates(){
 		// Get data
-		if(empty($this->data)){
+		if(empty($this->data) || !isset($this->data->basic)){
 			$data = get_option($this->option, false);
 			$data = $data ? $data : new stdClass;
 			
@@ -125,8 +125,9 @@ class RevSliderUpdate extends RevSliderFunctions {
 
 		// Build request
 		$rattr = array(
-			'code'		=> urlencode(get_option('revslider-code', '')),
-			'version'	=> urlencode(RS_REVISION)
+			'code'        => urlencode( get_option( 'revslider-code', '' ) ),
+			'version'     => urlencode( RS_REVISION ),
+			'last_launch' => urlencode( get_option( 'rs_last_launch', '' ) ),
 		);
 		
 		if($this->_truefalse(get_option('revslider-valid', 'false')) !== true && version_compare(RS_REVISION, get_option('revslider-stable-version', '4.2'), '<')){ //We'll get the last stable only now!
@@ -166,7 +167,8 @@ class RevSliderUpdate extends RevSliderFunctions {
 				'item' => urlencode(RS_PLUGIN_SLUG),
 				'hash' => urlencode($hash),
 				'code' => urlencode($purchase),
-				'addition' => apply_filters('revslider_retrieve_version_info_addition', array())
+				'addition' => apply_filters('revslider_retrieve_version_info_addition', array()),
+				'last_launch' => urlencode( get_option( 'rs_last_launch', '' ) ),
 			);
 
 			$request	= $rslb->call_url($this->remote_url, $data, 'updates');

@@ -34,7 +34,7 @@ if ( !empty($icon['id']) ) {
 								<?php
 								$title = superio_get_config('404_title');
 								if ( !empty($title) ) {
-									echo esc_html($title);
+									echo wpautop($title);
 								} else {
 									esc_html_e('Oops! That page can&rsquo;t be found.', 'superio');
 								}
@@ -46,7 +46,7 @@ if ( !empty($icon['id']) ) {
 								<?php
 								$description = superio_get_config('404_description');
 								if ( !empty($description) ) {
-									echo esc_html($description);
+									echo wpautop($description);
 								} else {
 									esc_html_e('It looks like nothing was found at this location. Maybe try a search?', 'superio');
 								}

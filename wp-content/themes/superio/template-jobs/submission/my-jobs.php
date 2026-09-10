@@ -10,7 +10,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 ?>
 
 <div class="box-dashboard-wrapper my-job-employer">
-	<h3 class="widget-title"><?php echo esc_html__('Upravljanje poslovima','superio') ?></h3>
+	<h3 class="widget-title"><?php echo esc_html__('Manage Jobs','superio') ?></h3>
 	<div class="inner-list">
 		<div class="search-orderby-wrapper flex-middle-sm">
 			<div class="search-my-jobs-form search-applicants-form">
@@ -20,7 +20,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 						<button class="search-submit btn btn-sm btn-search" name="submit">
 							<i class="flaticon-magnifiying-glass"></i>
 						</button>
-						<input type="text" placeholder="<?php esc_attr_e( 'Pretraga ...', 'superio' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
+						<input type="text" placeholder="<?php esc_attr_e( 'Search ...', 'superio' ); ?>" class="form-control" name="search" value="<?php echo esc_attr(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
 
 					</div>
 					<input type="hidden" name="paged" value="1" />
@@ -29,9 +29,9 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 			<div class="sort-my-jobs-form sortby-form">
 				<?php
 					$orderby_options = apply_filters( 'wp_job_board_pro_my_jobs_orderby', array(
-						'menu_order'	=> esc_html__( 'Podrazumevano', 'superio' ),
-						'newest' 		=> esc_html__( 'Najnovije', 'superio' ),
-						'oldest'     	=> esc_html__( 'Najstarije', 'superio' ),
+						'menu_order'	=> esc_html__( 'Default', 'superio' ),
+						'newest' 		=> esc_html__( 'Newest', 'superio' ),
+						'oldest'     	=> esc_html__( 'Oldest', 'superio' ),
 					) );
 
 					$orderby = isset( $_GET['orderby'] ) ? wp_unslash( $_GET['orderby'] ) : 'newest'; 
@@ -39,7 +39,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 
 				<div class="orderby-wrapper flex-middle">
 					<span class="text-sort">
-						<?php echo esc_html__('Sortiraj po: ','superio'); ?>
+						<?php echo esc_html__('Sort by: ','superio'); ?>
 					</span>
 					<form class="my-jobs-ordering" method="get">
 						<select name="orderby" class="orderby">
@@ -95,11 +95,11 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 				<table class="job-table">
 					<thead>
 						<tr>
-							<th class="job-title"><?php esc_html_e('Naslov', 'superio'); ?></th>
-							<th class="job-applicants"><?php esc_html_e('Kandidati', 'superio'); ?></th>
-							<th class="job-date"><?php esc_html_e('Kreirano & Ističe', 'superio'); ?></th>
+							<th class="job-title"><?php esc_html_e('Title', 'superio'); ?></th>
+							<th class="job-applicants"><?php esc_html_e('Applicants', 'superio'); ?></th>
+							<th class="job-date"><?php esc_html_e('Created & Expired', 'superio'); ?></th>
 							<th class="job-status"><?php esc_html_e('Status', 'superio'); ?></th>
-							<th class="job-actions"><?php esc_html_e('Akcije', 'superio'); ?></th>
+							<th class="job-actions"><?php esc_html_e('Actions', 'superio'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -124,7 +124,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 										<?php endif; ?>
 										<?php superio_job_display_urgent_icon($post,'icon'); ?>
 										<?php if ( $filled ) { ?>
-											<span class="application-status-label success"><?php esc_html_e('Popunjeno', 'superio'); ?></span>
+											<span class="application-status-label success"><?php esc_html_e('Filled', 'superio'); ?></span>
 										<?php } ?>
 									</div>
 									<div class="job-metas">
@@ -138,17 +138,17 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 								<?php
 									$count_applicants = WP_Job_Board_Pro_Job_Listing::count_applicants($post->ID);
 									echo '<span class="number">'.$count_applicants.'</span> ';
-									esc_html_e('Kandidat(a)', 'superio');
+									esc_html_e('Applicant(s)', 'superio');
 								?>
 							</td>
 
 							<td>
 								<div class="job-table-info-content-date-expiry">
 									<div class="created">
-										<strong><?php esc_html_e('Kreirano: ', 'superio'); ?></strong><?php the_time( get_option('date_format') ); ?>
+										<strong><?php esc_html_e('Created: ', 'superio'); ?></strong><?php the_time( get_option('date_format') ); ?>
 									</div>
 									<div class="expiry-date">
-										<strong><?php esc_html_e('Datum isteka:', 'superio'); ?></strong>
+										<strong><?php esc_html_e('Expiry date: ', 'superio'); ?></strong>
 										<span class="text-danger">
 										<?php
 											$expires = get_post_meta( $post->ID, WP_JOB_BOARD_PRO_JOB_LISTING_PREFIX.'expiry_date', true);
@@ -187,12 +187,12 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 											
 											if ( $filled ) {
 												$classes = 'mark_not_filled';
-												$title = esc_html__('Označi kao nepopunjeno', 'superio');
+												$title = esc_html__('Mark not filled', 'superio');
 												$nonce = wp_create_nonce( 'wp-job-board-pro-mark-not-filled-nonce' );
 												$icon_class = 'fa fa-lock';
 											} else {
 												$classes = 'mark_filled';
-												$title = esc_html__('Označi kao popunjeno', 'superio');
+												$title = esc_html__('Mark filled', 'superio');
 												$nonce = wp_create_nonce( 'wp-job-board-pro-mark-filled-nonce' );
 												$icon_class = 'fa fa-unlock';
 											}
@@ -200,7 +200,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 											<a data-toggle="tooltip" class="fill-btn btn-action-icon <?php echo esc_attr($classes); ?>" href="javascript:void(0);" title="<?php echo esc_attr($title); ?>" data-job_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr($nonce); ?>"><i class="<?php echo esc_attr($icon_class); ?>"></i></a>
 
 											<?php if ( wp_job_board_pro_get_option('user_edit_published_submission') !== 'no' ) { ?>
-												<a data-toggle="tooltip" class="edit-btn btn-action-icon edit job-table-action" href="<?php echo esc_url($edit_url); ?>" title="<?php esc_attr_e('Edituj', 'superio'); ?>">
+												<a data-toggle="tooltip" class="edit-btn btn-action-icon edit job-table-action" href="<?php echo esc_url($edit_url); ?>" title="<?php esc_attr_e('Edit', 'superio'); ?>">
 													<i class="ti-pencil-alt"></i>
 												</a>
 												<?php
@@ -209,7 +209,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 										case 'expired' :
 											$relist_url = add_query_arg( 'action', 'relist', remove_query_arg( 'action', $my_jobs_url ) );
 											?>
-											<a data-toggle="tooltip" href="<?php echo esc_url($relist_url); ?>" class="btn-action-icon edit job-table-action" title="<?php esc_attr_e('Ponovo objavi', 'superio'); ?>">
+											<a data-toggle="tooltip" href="<?php echo esc_url($relist_url); ?>" class="btn-action-icon edit job-table-action" title="<?php esc_attr_e('Relist', 'superio'); ?>">
 												<i class="fa fa-registered"></i>
 											</a>
 											<?php
@@ -220,7 +220,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 												if ( wp_job_board_pro_get_option('user_edit_published_submission') !== 'no' ) {
 												$edit_url = add_query_arg( 'action', 'edit', remove_query_arg( 'action', $my_jobs_url ) );
 													?>
-													<a data-toggle="tooltip" class="edit-btn btn-action-icon edit job-table-action" href="<?php echo esc_url($edit_url); ?>" title="<?php esc_attr_e('Edituj', 'superio'); ?>">
+													<a data-toggle="tooltip" class="edit-btn btn-action-icon edit job-table-action" href="<?php echo esc_url($edit_url); ?>" title="<?php esc_attr_e('Edit', 'superio'); ?>">
 														<i class="ti-pencil-alt"></i>
 													</a>
 													<?php
@@ -228,7 +228,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 											} else {
 												$continue_url = add_query_arg( 'action', 'continue', remove_query_arg( 'action', $my_jobs_url ) );
 												?>
-												<a data-toggle="tooltip" href="<?php echo esc_url($continue_url); ?>" class="edit-btn btn-action-icon edit job-table-action" title="<?php esc_attr_e('Nastavi', 'superio'); ?>">
+												<a data-toggle="tooltip" href="<?php echo esc_url($continue_url); ?>" class="edit-btn btn-action-icon edit job-table-action" title="<?php esc_attr_e('Continue', 'superio'); ?>">
 													<i class="ti-arrow-right"></i>
 												</a>
 												<?php
@@ -239,7 +239,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 											if ( wp_job_board_pro_get_option('user_edit_published_submission') !== 'no' ) {
 												$edit_url = add_query_arg( 'action', 'edit', remove_query_arg( 'action', $my_jobs_url ) );
 												?>
-												<a data-toggle="tooltip" class="edit-btn btn-action-icon edit job-table-action" href="<?php echo esc_url($edit_url); ?>" title="<?php esc_attr_e('Izmeni', 'superio'); ?>">
+												<a data-toggle="tooltip" class="edit-btn btn-action-icon edit job-table-action" href="<?php echo esc_url($edit_url); ?>" title="<?php esc_attr_e('Edit', 'superio'); ?>">
 													<i class="ti-pencil-alt"></i>
 												</a>
 												<?php
@@ -249,7 +249,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 										case 'preview' :
 											$continue_url = add_query_arg( 'action', 'continue', remove_query_arg( 'action', $my_jobs_url ) );
 											?>
-											<a data-toggle="tooltip" href="<?php echo esc_url($continue_url); ?>" class="edit-btn btn-action-icon edit job-table-action" title="<?php esc_attr_e('Nastavi', 'superio'); ?>">
+											<a data-toggle="tooltip" href="<?php echo esc_url($continue_url); ?>" class="edit-btn btn-action-icon edit job-table-action" title="<?php esc_attr_e('Continue', 'superio'); ?>">
 												<i class="ti-arrow-right"></i>
 											</a>
 											<?php
@@ -258,7 +258,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 									?>
 
 
-									<a data-toggle="tooltip" class="remove-btn btn-action-icon deleted job-table-action job-button-delete" href="javascript:void(0)" data-job_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-delete-job-nonce' )); ?>" title="<?php esc_attr_e('Obriši', 'superio'); ?>">
+									<a data-toggle="tooltip" class="remove-btn btn-action-icon deleted job-table-action job-button-delete" href="javascript:void(0)" data-job_id="<?php echo esc_attr($post->ID); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce( 'wp-job-board-pro-delete-job-nonce' )); ?>" title="<?php esc_attr_e('Remove', 'superio'); ?>">
 										<i class="ti-close"></i>
 									</a>
 								</div>
@@ -280,7 +280,7 @@ $my_jobs_url = get_permalink( $my_jobs_page_id );
 			?>
 		<?php else : ?>
 			<div class="alert alert-warning">
-				<p><?php esc_html_e( 'Nemate još nijedan oglas. Počnite tako što ćete kreirati novi.', 'superio' ); ?></p>
+				<p><?php esc_html_e( 'You don\'t have any jobs, yet. Start by creating new one.', 'superio' ); ?></p>
 			</div>
 		<?php endif; ?>
 	</div>

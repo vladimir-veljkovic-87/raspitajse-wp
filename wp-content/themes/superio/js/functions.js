@@ -65,7 +65,11 @@
 
             $(document.body).on('click', '.nav [data-toggle="dropdown"]' ,function(){
                 if ( this.href && this.href != '#'){
-                    window.location.href = this.href;
+                    if ( this.target && this.target == '_blank' ) {
+                        window.open(this.href, '_blank');
+                    } else {
+                        window.location.href = this.href;
+                    }
                 }
             });
 
@@ -329,11 +333,8 @@
 
         initHeaderSticky: function(main_sticky_class) {
             if ( $('.' + main_sticky_class).length ) {
-
                 if ( typeof Waypoint !== 'undefined' ) {
-                    
                     if ( $('.' + main_sticky_class) && typeof Waypoint.Sticky !== 'undefined' ) {
-                        
                         var sticky = new Waypoint.Sticky({
                             element: $('.' + main_sticky_class)[0],
                             wrapper: '<div class="main-sticky-header-wrapper">',
@@ -468,7 +469,7 @@
         mainMenuInit: function() {
             $('.apus-megamenu .megamenu .has-mega-menu.aligned-fullwidth').each(function(e){
                 var $this = $(this),
-                    i = $this.closest(".elementor-section"),
+                    i = $this.closest(".elementor-section, .elementor-element.e-parent"),
                     a = $this.closest('.apus-megamenu');
 
                 if ( !$this.find('.elementor-element').hasClass('elementor-section-stretched') ) {

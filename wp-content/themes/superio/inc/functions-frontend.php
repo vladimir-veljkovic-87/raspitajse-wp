@@ -507,7 +507,7 @@ function superio_display_sidebar_left( $sidebar_configs ) {
 	if ( isset($sidebar_configs['left']) ) : ?>
 		<div class="sidebar-wrapper <?php echo esc_attr($sidebar_configs['left']['class']) ;?>">
 		  	<aside class="sidebar sidebar-left" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
-		  		<div class="close-sidebar-btn hidden-lg hidden-md txt-a-left"> <i class="ti-close"></i> <span><?php esc_html_e('Zatvori', 'superio'); ?></span></div>
+		  		<div class="close-sidebar-btn hidden-lg hidden-md"> <i class="ti-close"></i> <span><?php esc_html_e('Close', 'superio'); ?></span></div>
 		   		<?php if ( is_active_sidebar( $sidebar_configs['left']['sidebar'] ) ): ?>
 		   			<?php dynamic_sidebar( $sidebar_configs['left']['sidebar'] ); ?>
 		   		<?php endif; ?>
@@ -520,7 +520,7 @@ function superio_display_sidebar_right( $sidebar_configs ) {
 	if ( isset($sidebar_configs['right']) ) : ?>
 		<div class="sidebar-wrapper <?php echo esc_attr($sidebar_configs['right']['class']) ;?>">
 		  	<aside class="sidebar sidebar-right" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
-		  		<div class="close-sidebar-btn hidden-lg hidden-md"><i class="ti-close"></i> <span><?php esc_html_e('Zatvori', 'superio'); ?></span></div>
+		  		<div class="close-sidebar-btn hidden-lg hidden-md"><i class="ti-close"></i> <span><?php esc_html_e('Close', 'superio'); ?></span></div>
 		   		<?php if ( is_active_sidebar( $sidebar_configs['right']['sidebar'] ) ): ?>
 			   		<?php dynamic_sidebar( $sidebar_configs['right']['sidebar'] ); ?>
 			   	<?php endif; ?>
@@ -530,48 +530,8 @@ function superio_display_sidebar_right( $sidebar_configs ) {
 }
 
 function superio_before_content( $sidebar_configs ) {
-    // Check if either left or right sidebar exists
-    if ( isset($sidebar_configs['left']) || isset($sidebar_configs['right']) ) :
-        
-        // Start the flex container div
-        echo '<div class="top-icon-wr scrollto" style="display:flex;align-items: center;padding: 25px 15px 0 15px;">';
-
-        // "Show Sidebar" button
-        ?>
-        <a href="javascript:void(0)" style="flex:1;margin:0;" class="mobile-sidebar-btn hidden-lg hidden-md"> 
-            <i class="fa fa-bars"></i> <?php echo esc_html__('Otvori Obaveštenja', 'superio'); ?>
-        </a>
-        <?php
-
-        // Get the current user's roles
-        if ( is_user_logged_in() ) {
-            $user = wp_get_current_user();
-            $roles = $user->roles;
-
-            // Add link based on custom roles
-            if ( in_array('wp_job_board_pro_candidate', $roles) ) {
-                // For candidates, show "Search Jobs" link
-                ?>
-                <a style="flex:1;text-align:right;" href="<?php echo esc_url(home_url('/job-list-2')); ?>" class="search-jobs-link hidden-lg hidden-md">
-                    <i class="fa fa-search" style="margin-right:5px;font-size: 18px;"></i> <?php echo esc_html__('Pretraži Poslove', 'superio'); ?>
-                </a>
-                <?php
-            } elseif ( in_array('wp_job_board_pro_employer', $roles) ) {
-                // For employers, show "Post Job" link
-                ?>
-                <a style="flex:1;text-align:right;" href="<?php echo esc_url(home_url('/submit-job')); ?>" class="submit-job-link hidden-lg hidden-md">
-                    <i class="fa flaticon-pen"  style="margin-right:5px;font-size: 18px;"></i> <?php echo esc_html__('Pošalji Oglas', 'superio'); ?>
-                </a>
-                <?php
-            }
-        }
-
-        // Close the flex container div
-        echo '</div>';
-
-        // Overlay for mobile sidebar panel
-        echo '<div class="mobile-sidebar-panel-overlay"></div>';
-
-    endif;
+	if ( isset($sidebar_configs['left']) || isset($sidebar_configs['right']) ) : ?>
+		<a href="javascript:void(0)" class="mobile-sidebar-btn hidden-lg hidden-md"> <i class="fa fa-bars"></i> <?php echo esc_html__('Show Sidebar', 'superio'); ?></a>
+		<div class="mobile-sidebar-panel-overlay"></div>
+	<?php endif;
 }
-

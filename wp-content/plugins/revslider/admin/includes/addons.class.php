@@ -42,7 +42,7 @@ class RevSliderAddons extends RevSliderFunctions { //before: Rev_addon_Admin
 		'revslider-slicey-addon'			=> '6.7.0',
 		'revslider-snow-addon'				=> '6.7.0',
 		'revslider-thecluster-addon'		=> '6.7.0',
-		'revslider-transitionpack-addon'	=> '6.7.0',
+		'revslider-transitionpack-addon'	=> '6.7.8',
 		'revslider-typewriter-addon'		=> '6.7.0',
 		'revslider-weather-addon'			=> '6.7.0',
 		'revslider-whiteboard-addon'		=> '6.7.0',
@@ -175,6 +175,8 @@ class RevSliderAddons extends RevSliderFunctions { //before: Rev_addon_Admin
 			
 			$count++;
 		}while($done == false && $count < 5);
+
+		if (is_wp_error($get)) return false;
 		
 		if($get && $get['body'] != 'invalid' && wp_remote_retrieve_response_code($get) == 200){
 			$upload_dir	= wp_upload_dir();

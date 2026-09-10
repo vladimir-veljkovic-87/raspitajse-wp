@@ -665,8 +665,8 @@
             var self = this;
             // login/register
             $('.user-login-form, .must-log-in').on('click', function(e){
-                e.preventDefault();
                 if ( $('.apus-user-login').length ) {
+                    e.preventDefault();
                     $('.apus-user-login').trigger('click');
                 }
             });

@@ -22,7 +22,12 @@ $urgent = WP_Job_Board_Pro_Candidate::get_post_meta( $post->ID, 'urgent', true )
                     <div class="candidate-thumbnail">
                         <div class="inner-image">
                             <a href="<?php the_permalink(); ?>">
-                                <?php echo get_the_post_thumbnail( $post->ID, 'thumbnail' ); ?>
+                                <?php
+                                    $attachment_id = get_post_thumbnail_id($post);
+                                    $imgData = base64_encode(file_get_contents(get_attached_file( $attachment_id )));
+                                    echo '<img src="data:image/jpeg;base64,' . $imgData . '" />';
+                                ?>
+                                <?php //echo get_the_post_thumbnail( $post->ID, 'thumbnail' ); ?>
                             </a>
                         </div>
                     </div>
@@ -31,7 +36,7 @@ $urgent = WP_Job_Board_Pro_Candidate::get_post_meta( $post->ID, 'urgent', true )
                     <div class="title-wrapper">
                         <h1 class="candidate-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1>
                         <?php if ( $urgent ) { ?>
-                            <span class="urgent"><?php esc_html_e('Urgentno', 'superio'); ?></span>
+                            <span class="urgent"><?php esc_html_e('Urgent', 'superio'); ?></span>
                         <?php } ?>
                     </div>
                     <?php if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) { ?>

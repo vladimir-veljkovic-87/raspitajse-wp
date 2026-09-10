@@ -93,7 +93,9 @@ class RevSliderFront extends RevSliderFrontGlobal {
 		$breakpoints[] = intval($this->get_val($global, array('size', 'notebook'), '1024'));
 		$breakpoints[] = intval($this->get_val($global, array('size', 'tablet'), '778'));
 		$breakpoints[] = intval($this->get_val($global, array('size', 'mobile'), '480'));
+		$fSUVW	 = $this->_truefalse($this->get_val($global, 'fSUVW', false));
 
+		$ytnc	 = $this->_truefalse($this->get_val($global, 'ytnc', false));
 		$libs	 = array();
 		$css	 = array();
 		$modules = array('module','page','slide','layer','draw','animate','srtools','canvas','defaults','carousel','navigation','media','modifiers');
@@ -130,12 +132,14 @@ class RevSliderFront extends RevSliderFrontGlobal {
 		$script .= "	SR7.E.plugin_url	= '". str_replace(array("\n", "\r"), '', RS_PLUGIN_URL) ."';" . "\n";
 		$script .= "	SR7.E.wp_plugin_url = '". str_replace(array("\n", "\r"), '', WP_PLUGIN_URL) . "/" ."';" . "\n";
 		$script .= "	SR7.E.revision		= '". RS_REVISION ."';" . "\n";
-		$script .= "	SR7.E.fontBaseUrl	= '". $this->modify_fonts_url('https://fonts.googleapis.com/css2?family=') ."';" . "\n";
+		$script .= "	SR7.E.fontBaseUrl	= '". ($this->get_val($global, 'fontdownload') === 'off' ? $this->modify_fonts_url('https://fonts.googleapis.com/css2?family=') : '') ."';" . "\n";
 		$script .= "	SR7.G.breakPoints 	= [".implode(',', $breakpoints)."];" . "\n";
+		$script .= "	SR7.G.fSUVW 		= ".(($fSUVW === true) ? 'true' : 'false').";" . "\n";
 		$script .= "	SR7.E.modules 		= ['".implode("','", $modules)."'];" . "\n";
 		if(!empty($libs))	$script .= '	SR7.E.libs 			= [' . implode(',', $libs) . '];' . "\n";
 		if(!empty($css))	$script .= '	SR7.E.css 			= [' . implode(',', $css) . '];' . "\n";
 		$script .= "	SR7.E.resources		= {};" . "\n";
+		$script .= "	SR7.E.ytnc			= ".(($ytnc === false) ? 'false' : 'true').";" . "\n";
 
 		$script = apply_filters('revslider_js_add_header_scripts_js', $script);
 		
@@ -187,7 +191,17 @@ class RevSliderFront extends RevSliderFrontGlobal {
 			
 			$slider->init_by_alias($alias, false);
 			if($slider->inited === false) continue;
-			
+
+			if($SR_GLOBALS['use_table_version'] === 7){
+				$v7sid = $slider->get_id();
+				if($this->check_if_migration_done($v7sid) === false){
+					$SR_GLOBALS['use_table_version'] = 6;
+					$slider	= new RevSliderSlider();
+					$slider->init_by_id($v7sid);
+					if($slider->inited === false) continue;
+				}
+			}
+
 			if($SR_GLOBALS['use_table_version'] === 6) $this->v6_slider = true;
 
 			$dl = $slider->get_param('deepLinks', []);
@@ -243,6 +257,7 @@ class RevSliderFront extends RevSliderFrontGlobal {
 	public function load_header_fonts(){
 		$global = $this->get_global_settings();
 		if($this->get_val($global, 'fontdownload', 'off') === 'disable') return;
+		if($this->_truefalse($this->get_val($global, 'dpreconnect', false)) === true) return;
 
 		echo '<link rel="preconnect" href="https://fonts.googleapis.com">'."\n";
 		echo '<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>'."\n";

@@ -35,7 +35,7 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 	<div id="job-apply-email-form-wrapper-<?php echo esc_attr($post->ID); ?>" class="job-apply-email-form-wrapper mfp-hide">
 	<div class="inner">
 		<h2 class="widget-title">
-			<span><?php esc_html_e('Prijavite se za ovaj posao', 'superio'); ?></span>
+			<span><?php esc_html_e('Apply for this job', 'superio'); ?></span>
 		</h2>
 
 	    <form id="job-apply-email-form-<?php echo esc_attr($post->ID); ?>" class="job-apply-email-form" method="post" action="" enctype="multipart/form-data">
@@ -109,7 +109,7 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 				            <div class="label-can-drag">
 								<div class="form-group group-upload">
 							        <div class="upload-file-btn" data-text="<?php echo esc_attr(sprintf(esc_html__('Upload CV (%s)', 'superio'), $cv_types_str)); ?>">
-						            	<span class="text"><?php echo sprintf(esc_html__('Dodaj CV (%s)', 'superio'), $cv_types_str); ?></span>
+						            	<span class="text"><?php echo sprintf(esc_html__('Upload CV (%s)', 'superio'), $cv_types_str); ?></span>
 							        </div>
 							    </div>
 							</div>
@@ -148,7 +148,7 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 	      	<?php wp_nonce_field( 'wp-job-board-pro-apply-email', 'wp-job-board-pro-apply-email-nonce' ); ?>
 	      	<input type="hidden" name="action" value="wp_job_board_pro_ajax_apply_email">
 	      	<input type="hidden" name="job_id" value="<?php echo esc_attr($post->ID); ?>">
-	        <button class="button btn btn-theme btn-block" name="apply-email"><?php echo esc_html__( 'Prijavi se za posao', 'superio' ); ?></button>
+	        <button class="button btn btn-theme btn-block" name="apply-email"><?php echo esc_html__( 'Apply Job', 'superio' ); ?></button>
 	    </form>
 	</div>
 	</div>

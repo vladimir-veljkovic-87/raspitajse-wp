@@ -53,7 +53,7 @@ function superio_job_display_employer_title($post, $display_type = 'no-icon',$fu
 		?>
 	        <h3 class="employer-title">
 	        	<?php if($full == "full"){ ?>
-	        		<span class="addon"><?php echo esc_html__('od','superio') ?></span>
+	        		<span class="addon"><?php echo esc_html__('by','superio') ?></span>
 	        	<?php } ?>
 	            <a href="<?php echo esc_url( get_permalink($employer_id) ); ?>">
 	            	<?php if ($display_type == 'icon') { ?>
@@ -79,15 +79,15 @@ function superio_job_display_job_category($post, $display_category = 'no-title',
 				?>
 				<div class="job-category with-title">
 					<?php if($full == "full"){ ?>
-		        		<span class="addon"><?php echo esc_html__('u','superio') ?></span>
+		        		<span class="addon"><?php echo esc_html__('in','superio') ?></span>
 		        	<?php } ?>
-					<strong><?php esc_html_e('Kategorija posla:', 'superio'); ?></strong>
+					<strong><?php esc_html_e('Job Category:', 'superio'); ?></strong>
 				<?php
 			} elseif ($display_category == 'icon') {
 				?>
 				<div class="job-category with-icon">
 					<?php if($full == "full"){ ?>
-		        		<span class="addon"><?php echo esc_html__('u','superio') ?></span>
+		        		<span class="addon"><?php echo esc_html__('in','superio') ?></span>
 		        	<?php } ?>
 					<i class="flaticon-briefcase-1"></i>
 			<?php
@@ -95,7 +95,7 @@ function superio_job_display_job_category($post, $display_category = 'no-title',
 				?>
 				<div class="job-category">
 					<?php if($full == "full"){ ?>
-		        		<span class="addon"><?php echo esc_html__('u','superio') ?></span>
+		        		<span class="addon"><?php echo esc_html__('in','superio') ?></span>
 		        	<?php } ?>
 				<?php
 			}
@@ -152,7 +152,7 @@ function superio_job_display_job_type($post, $display_type = 'no-title', $color 
 			if ( $display_type == 'title' ) {
 				?>
 				<div class="job-type with-title">
-					<strong><?php esc_html_e('Vrsta posla:', 'superio'); ?></strong>
+					<strong><?php esc_html_e('Job Type:', 'superio'); ?></strong>
 				<?php
 			} elseif ($display_type == 'icon') {
 				?>
@@ -202,7 +202,7 @@ function superio_job_display_tags($post, $display_type = 'no-title', $echo = tru
 			if ( $display_type == 'title' ) {
 				?>
 				<div class="job-tags">
-				<strong><?php esc_html_e('Označeno kao:', 'superio'); ?></strong>
+				<strong><?php esc_html_e('Tagged as:', 'superio'); ?></strong>
 				<?php
 			} else {
 				?>
@@ -448,7 +448,7 @@ function superio_job_display_featured_icon($post, $display = 'icon') {
 		<?php if($display == 'icon') {?>
         	<span class="featured" data-toggle="tooltip" title="<?php esc_attr_e('featured', 'superio'); ?>"><i class="ti-crown"></i></span>
         <?php } else { ?>
-        	<span class="featured-text"><?php esc_html_e('Premium oglas', 'superio'); ?></span>
+        	<span class="featured-text"><?php esc_html_e('Featured', 'superio'); ?></span>
         <?php } ?>
     <?php }
 }
@@ -459,9 +459,9 @@ function superio_job_display_urgent_icon($post, $display = 'text') {
 	$urgent = $obj_job_meta->get_post_meta( 'urgent' );
 	if ( $urgent ) { ?>
 		<?php if($display == 'text') { ?>
-        	<span class="urgent"><?php esc_html_e('Urgentno', 'superio'); ?></span>
+        	<span class="urgent"><?php esc_html_e('Urgent', 'superio'); ?></span>
         <?php } else { ?>
-    		<span class="urgent urgent-icon" data-toggle="tooltip" title="<?php esc_attr_e('Urgentno', 'superio'); ?>">
+    		<span class="urgent urgent-icon" data-toggle="tooltip" title="<?php esc_attr_e('Urgent', 'superio'); ?>">
     			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M13.4525 5.8875C13.4129 5.80063 13.3492 5.72692 13.2691 5.67509C13.1889 5.62325 13.0955 5.59546 13 5.595H9.11254L10.7725 1.175C10.8008 1.09944 10.8103 1.01816 10.8003 0.938117C10.7903 0.858071 10.7611 0.781629 10.7152 0.715315C10.6693 0.649001 10.608 0.594784 10.5366 0.55729C10.4651 0.519797 10.3857 0.500141 10.305 0.5H6.27504C6.17859 0.500417 6.08431 0.528725 6.00358 0.581511C5.92285 0.634297 5.85911 0.709307 5.82004 0.7975L2.54504 8.185C2.5114 8.26095 2.49721 8.34409 2.50375 8.4269C2.5103 8.50972 2.53737 8.58959 2.58253 8.65932C2.62769 8.72904 2.68951 8.78641 2.76241 8.82625C2.8353 8.86609 2.91697 8.88714 3.00004 8.8875H6.37504L5.67504 11.52L4.78504 14.8725C4.75567 14.982 4.76438 15.0982 4.80974 15.2021C4.8551 15.306 4.93441 15.3914 5.03467 15.4443C5.13494 15.4972 5.2502 15.5144 5.36155 15.4932C5.47291 15.472 5.57375 15.4136 5.64754 15.3275L13.375 6.4225C13.4379 6.35013 13.4786 6.26123 13.4923 6.16638C13.5061 6.07153 13.4923 5.97473 13.4525 5.8875ZM6.30754 13.0425L7.50004 8.515C7.51163 8.46251 7.51584 8.40866 7.51254 8.355C7.50428 8.2281 7.44797 8.10913 7.35508 8.02228C7.2622 7.93543 7.13971 7.88723 7.01254 7.8875H3.76254L6.60254 1.5H9.58254L7.92254 5.92C7.89423 5.99576 7.88473 6.07726 7.89484 6.1575C7.90495 6.23775 7.93437 6.31434 7.98059 6.38071C8.0268 6.44709 8.08843 6.50126 8.16018 6.53858C8.23193 6.5759 8.31166 6.59526 8.39254 6.595H11.8925L6.30754 13.0425Z" fill="currentColor"/>
 				</svg>
@@ -628,9 +628,9 @@ function superio_job_display_per_page_form($wp_query) {
                 <option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $per_page ); ?>>
                 	<?php
                 		if ( $value == -1 ) {
-                			esc_html_e( 'Sve', 'superio' );
+                			esc_html_e( 'All', 'superio' );
                 		} else {
-                			echo sprintf( esc_html__( '%s Po Stranici', 'superio' ), $value );
+                			echo sprintf( esc_html__( '%s Per Page', 'superio' ), $value );
                 		}
                 	?>
                 </option>

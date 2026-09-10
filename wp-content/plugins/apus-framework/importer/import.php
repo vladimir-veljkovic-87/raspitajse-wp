@@ -93,12 +93,21 @@ class Apus_Import {
  	}
 
 	public function import_sample() {
+		
+		if ( !isset($_REQUEST['_nonce']) || ! wp_verify_nonce( $_REQUEST['_nonce'], 'apus-framework-ajax-nonce' ) ) {
+			die( __( 'Security check', 'apus-framework' ) ); 
+		}
+
+		if ( !current_user_can( 'manage_options' ) ) {
+			die( __( 'Security check', 'apus-framework' ) );
+		}
+
 		@ini_set( 'max_execution_time', '1200' );
 		@ini_set( 'post_max_size', '64M');
 		
-		$demo_source = isset($_REQUEST['demo_source']) ? $_REQUEST['demo_source'] : '';
-		$import_type = isset($_REQUEST['import_type']) ? $_REQUEST['import_type'] : '';
-		$ajax = isset($_REQUEST['ajax']) ? $_REQUEST['ajax'] : '';
+		$demo_source = isset($_REQUEST['demo_source']) ? sanitize_text_field($_REQUEST['demo_source']) : '';
+		$import_type = isset($_REQUEST['import_type']) ? sanitize_text_field($_REQUEST['import_type']) : '';
+		$ajax = isset($_REQUEST['ajax']) ? sanitize_text_field($_REQUEST['ajax']) : '';
 		$res = array();
 		if ( $demo_source && $import_type ) {
 			$fnc_call = 'import_'.$import_type;
@@ -116,7 +125,7 @@ class Apus_Import {
 			'loop'	  => $loop,
 			'loopnumber' => 0
 		);
-		$import_type = isset($_REQUEST['import_type']) ? $_REQUEST['import_type'] : '';
+		$import_type = isset($_REQUEST['import_type']) ? sanitize_text_field($_REQUEST['import_type']) : '';
 
 		if ($loop) {
 			$res['next'] = $import_type;
@@ -380,7 +389,12 @@ class Apus_Import {
 	public function apus_page_content() {
 		// script
 		wp_enqueue_style( 'apus-framework-backend', APUS_FRAMEWORK_URL . 'assets/backend.css', array(), APUS_FRAMEWORK_VERSION );
-		wp_enqueue_script( 'apus-framework-import', APUS_FRAMEWORK_URL . 'assets/import.js', array( 'jquery' ), APUS_FRAMEWORK_VERSION, true );
+		wp_register_script( 'apus-framework-import', APUS_FRAMEWORK_URL . 'assets/import.js', array( 'jquery' ), APUS_FRAMEWORK_VERSION, true );
+
+		wp_localize_script( 'apus-framework-import', 'apus_framework_opts', array(
+			'ajax_nonce' => wp_create_nonce( 'apus-framework-ajax-nonce' ),
+		));
+		wp_enqueue_script( 'apus-framework-import' );
 
 		$demo_data_file_path = APUS_IMPORT_CONFIG_DIR . 'sample-data.php';
 		$demo_data_dir_path  = APUS_IMPORT_CONFIG_DIR;

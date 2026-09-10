@@ -29,13 +29,13 @@ $job_layout = !empty($job_layout) ? $job_layout : 'v1';
 									switch ($restrict_detail) {
 										case 'register_user':
 											?>
-											<h2 class="restrict-title"><?php esc_html_e( 'Ova stranica je ograničena samo za registrovane korisnike.', 'superio' ); ?></h2>
-											<div class="restrict-content"><?php esc_html_e( 'Molimo vas da se prijavite da biste videli ovu stranicu', 'superio' ); ?></div>
+											<h2 class="restrict-title"><?php esc_html_e( 'This page is restricted for registered users only.', 'superio' ); ?></h2>
+											<div class="restrict-content"><?php esc_html_e( 'Please login to view this page', 'superio' ); ?></div>
 											<?php
 											break;
 										case 'register_candidate':
 											?>
-											<h2 class="restrict-title"><?php esc_html_e( 'Molimo vas da se prijavite kao kandidat da biste videli posao.', 'superio' ); ?></h2>
+											<h2 class="restrict-title"><?php esc_html_e( 'Please login as candidate to view job.', 'superio' ); ?></h2>
 											<?php
 											break;
 										default:
@@ -65,9 +65,9 @@ $job_layout = !empty($job_layout) ? $job_layout : 'v1';
 				endwhile; ?>
 
 				<?php the_posts_pagination( array(
-					'prev_text'          => esc_html__( 'Prethodna stranica', 'superio' ),
-					'next_text'          => esc_html__( 'Sledeća stranica', 'superio' ),
-					'before_page_number' => '<span class="meta-nav screen-reader-text">' . esc_html__( 'Strana', 'superio' ) . ' </span>',
+					'prev_text'          => esc_html__( 'Previous page', 'superio' ),
+					'next_text'          => esc_html__( 'Next page', 'superio' ),
+					'before_page_number' => '<span class="meta-nav screen-reader-text">' . esc_html__( 'Page', 'superio' ) . ' </span>',
 				) ); ?>
 			<?php else : ?>
 				<?php get_template_part( 'content', 'none' ); ?>

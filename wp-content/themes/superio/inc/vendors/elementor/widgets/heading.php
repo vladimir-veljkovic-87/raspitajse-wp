@@ -231,10 +231,6 @@ class Superio_Elementor_Widget_Heading extends Widget_Base {
 			[
 				'label' => esc_html__( 'Text Color', 'superio' ),
 				'type' => Controls_Manager::COLOR,
-				'scheme' => [
-					'type' => Core\Schemes\Color::get_type(),
-					'value' => Core\Schemes\Color::COLOR_1,
-				],
 				'selectors' => [
 					// Stronger selector to avoid section style from overwriting
 					'{{WRAPPER}} .superio-heading-title' => 'color: {{VALUE}};',
@@ -246,7 +242,6 @@ class Superio_Elementor_Widget_Heading extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'typography',
-				'scheme' => Core\Schemes\Typography::TYPOGRAPHY_1,
 				'selector' => '{{WRAPPER}} .superio-heading-title',
 			]
 		);

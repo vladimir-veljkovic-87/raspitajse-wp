@@ -83,7 +83,7 @@
                             <?php }
                         }
 
-                        if ( superio_get_config('show_notification' , true) && is_user_logged_in() ) {
+                        if ( superio_get_config('show_notification' , true) ) {
                             if ( is_user_logged_in() ) {
                                 $user_id = WP_Job_Board_Pro_User::get_user_id();
                                 if ( WP_Job_Board_Pro_User::is_employer($user_id) ) {

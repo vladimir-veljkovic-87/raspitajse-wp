@@ -4,6 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
+use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Elementor\Group_Control_Typography;
+
 class Superio_Elementor_Job_Board_Pro_Search_Form extends Elementor\Widget_Base {
 
     public function get_name() {
@@ -344,7 +348,6 @@ class Superio_Elementor_Job_Board_Pro_Search_Form extends Elementor\Widget_Base 
             [
                 'label' => esc_html__( 'Title Typography', 'superio' ),
                 'name' => 'typography_title',
-                'scheme' => Elementor\Core\Schemes\Typography::TYPOGRAPHY_1,
                 'selector' => '{{WRAPPER}} .widget-title',
             ]
         );
@@ -377,7 +380,6 @@ class Superio_Elementor_Job_Board_Pro_Search_Form extends Elementor\Widget_Base 
             [
                 'label' => esc_html__( 'Description Typography', 'superio' ),
                 'name' => 'typography_des',
-                'scheme' => Elementor\Core\Schemes\Typography::TYPOGRAPHY_1,
                 'selector' => '{{WRAPPER}} .des',
             ]
         );

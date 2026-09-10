@@ -102,6 +102,8 @@ if ( !class_exists("Superio_Mobile_Menu") ) {
                 if ( $apus_mega_profile ) {
                     $args->has_children = true; 
                 }
+
+                $classes = !empty($item->classes) ? $item->classes : array();
                 $classes[] = ($args->has_children) ? 'has-submenu' : '';
                 $classes[] = ($item->current || $item->current_item_ancestor) ? 'active' : '';
                 $classes[] = 'menu-item-' . $item->ID;
@@ -147,6 +149,10 @@ if ( !class_exists("Superio_Mobile_Menu") ) {
                 $item_output .= '<a'. $attributes .'>';
                 $item_output .= $args->link_before . $this->display_icon($item) . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
                 $item_output .= $text_label;
+
+                if ( $item->description ) {
+                    $item_output .= '<div class="menu-item-description">' . $item->description . '</div>';
+                }
                 $item_output .= '</a>';
                 $item_output .= $args->has_children || $apus_mega_profile ? '' : '';
                 $item_output .= $args->after;

@@ -20,7 +20,7 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 <div id="job-apply-internal-form-wrapper-<?php echo esc_attr($rand); ?>" class="job-apply-internal-form-wrapper mfp-hide">
 	<div class="inner">
 		<h2 class="widget-title">
-			<span><?php esc_html_e('Prijavite se za ovaj posao', 'superio'); ?></span>
+			<span><?php esc_html_e('Apply for this job', 'superio'); ?></span>
 		</h2>
 
 	    <form id="job-apply-internal-form-<?php echo esc_attr($post->ID); ?>" class="job-apply-internal-form" method="post" action="" enctype="multipart/form-data">
@@ -28,7 +28,7 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 	    		<?php if ( $cv_required == 'on' ) { ?>
 		    		<?php if ( is_array($cv_attachments) ) { ?>
 				        <div class="col-sm-12">
-				        	<div class="file-or-upload"><?php esc_html_e('Izaberite vaš CV', 'superio'); ?></div>
+				        	<div class="file-or-upload"><?php esc_html_e('Select a your CV', 'superio'); ?></div>
 					        <div class="wrapper-file-action <?php echo trim( (count($cv_attachments) > 1)?'has-multiply':'' ); ?>">
 					            <?php
 					            foreach ($cv_attachments as $id => $cv_url) {
@@ -54,7 +54,7 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 						        }
 							    ?>
 
-							    <div class="file-or-upload"><?php esc_html_e('ili dodajte vaš CV', 'superio'); ?></div>
+							    <div class="file-or-upload"><?php esc_html_e('or upload your CV', 'superio'); ?></div>
 					        </div><!-- /.form-group -->
 					    </div>
 					<?php } ?>
@@ -70,8 +70,8 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 
 				            <div class="label-can-drag">
 								<div class="form-group group-upload">
-							        <div class="upload-file-btn" data-text="<?php echo esc_attr(sprintf(esc_html__('Dodaj CV (%s)', 'superio'), $cv_types_str)); ?>">
-						            	<span class="text"><?php echo sprintf(esc_html__('Dodaj CV (%s)', 'superio'), $cv_types_str); ?></span>
+							        <div class="upload-file-btn" data-text="<?php echo esc_attr(sprintf(esc_html__('Upload CV (%s)', 'superio'), $cv_types_str)); ?>">
+						            	<span class="text"><?php echo sprintf(esc_html__('Upload CV (%s)', 'superio'), $cv_types_str); ?></span>
 							        </div>
 							    </div>
 							</div>
@@ -81,7 +81,7 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 			    
 		        <div class="col-sm-12">
 			     	<div class="form-group space-30">
-			            <textarea class="form-control style2" name="message" placeholder="<?php esc_attr_e( 'Poruka', 'superio' ); ?>" required="required"></textarea>
+			            <textarea class="form-control style2" name="message" placeholder="<?php esc_attr_e( 'Message', 'superio' ); ?>" required="required"></textarea>
 			        </div>
 		        </div><!-- /.form-group -->
 
@@ -98,7 +98,7 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 								<input type="checkbox" name="terms_and_conditions" value="on" id="register-terms-and-conditions" required>
 								<?php
 									$allowed_html_array = array( 'a' => array('href' => array(), 'target' => array()) );
-									echo sprintf(wp_kses(__('Prihvatate naše <a href="%s" target="_blank">Uslove korišćenja i Politiku privatnosti</a>', 'superio'), $allowed_html_array), esc_url($page_url));
+									echo sprintf(wp_kses(__('You accept our <a href="%s" target="_blank">Terms and Conditions and Privacy Policy</a>', 'superio'), $allowed_html_array), esc_url($page_url));
 								?>
 							</label>
 						</div>
@@ -114,7 +114,7 @@ $cv_required = wp_job_board_pro_get_option('candidate_apply_job_cv_required', 'o
 	      	<?php wp_nonce_field( 'wp-job-board-pro-apply-internal-nonce', 'nonce' ); ?>
 	      	<input type="hidden" name="action" value="wp_job_board_pro_ajax_apply_internal">
 	      	<input type="hidden" name="job_id" value="<?php echo esc_attr($post->ID); ?>">
-	        <button class="button btn btn-theme btn-block" name="apply-email"><?php echo esc_html__( 'Prijavi se na posao', 'superio' ); ?></button>
+	        <button class="button btn btn-theme btn-block" name="apply-email"><?php echo esc_html__( 'Apply Job', 'superio' ); ?></button>
 	    </form>
 	</div>
 </div>

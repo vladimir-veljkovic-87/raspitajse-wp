@@ -353,7 +353,7 @@ class Superio_Elementor_User_Info2 extends Elementor\Widget_Base {
                                 <?php
                                 if ( $show_candidate || $show_employer ) {
                                     ?>
-                                    <span class="separate"></span>
+                                    <span class="separate">/</span>
                                     <span><?php echo trim($register_text); ?></span>
                                 <?php } ?>
                             </a>

@@ -17,11 +17,11 @@ $args = array(
 );
 $loop = WP_Private_Message_Message::get_list_messages($args); ?>
 <div class="box-dashboard-wrapper">
-	<h3 class="widget-title"><?php echo esc_html__('Poruke','superio') ?></h3>
+	<h3 class="widget-title"><?php echo esc_html__('Messages','superio') ?></h3>
 	<div class="space-30">
 	<?php if ( $loop->have_posts() ) { ?>
 		<a href="javascript:void(0);" class="btn toggle-message-btn">
-			<?php esc_html_e('Prikaži sanduče sa porukama', 'superio'); ?> <i class="fa fa-angle-down" aria-hidden="true"></i>
+			<?php esc_html_e('Show messages box', 'superio'); ?> <i class="fa fa-angle-down" aria-hidden="true"></i>
 		</a>
 		<div class="message-section-wrapper">
 			<div class="message-inner row">
@@ -30,7 +30,7 @@ $loop = WP_Private_Message_Message::get_list_messages($args); ?>
 						<form id="search-message-form" class="search-message-form" action="" method="post">
 							<div class="search-wrapper-message">
 								<div class="form-group">
-						            <input type="text" class="form-control" name="search" placeholder="<?php esc_attr_e( 'Pretraga kontakata...', 'superio' ); ?>">
+						            <input type="text" class="form-control" name="search" placeholder="<?php esc_attr_e( 'Search Contacts...', 'superio' ); ?>">
 						        </div>
 						      	<input type="hidden" name="action" value="wp_private_message_search_message">
 						        <button class="search-message-btn btn"><i class="ti-search"></i></button>
@@ -41,9 +41,9 @@ $loop = WP_Private_Message_Message::get_list_messages($args); ?>
 					        ?>
 					        <div class="filter-options">
 					        	<ul class="list-options-action">
-					        		<li><input id="search_read_all" type="radio" name="search_read" value="all" <?php checked($search_read, 'all'); ?>><label for="search_read_all"><?php esc_html_e('Sve', 'superio'); ?></label></li>
-					        		<li><input id="search_read_read" type="radio" name="search_read" value="read" <?php checked($search_read, 'read'); ?>><label for="search_read_read"><?php esc_html_e('Pročitane', 'superio'); ?></label></li>
-					        		<li><input id="search_read_unread" type="radio" name="search_read" value="unread" <?php checked($search_read, 'unread'); ?>><label for="search_read_unread"><?php esc_html_e('Nepročitane', 'superio'); ?></label></li>
+					        		<li><input id="search_read_all" type="radio" name="search_read" value="all" <?php checked($search_read, 'all'); ?>><label for="search_read_all"><?php esc_html_e('All', 'superio'); ?></label></li>
+					        		<li><input id="search_read_read" type="radio" name="search_read" value="read" <?php checked($search_read, 'read'); ?>><label for="search_read_read"><?php esc_html_e('Read', 'superio'); ?></label></li>
+					        		<li><input id="search_read_unread" type="radio" name="search_read" value="unread" <?php checked($search_read, 'unread'); ?>><label for="search_read_unread"><?php esc_html_e('Unread', 'superio'); ?></label></li>
 					        	</ul>
 					        </div>
 						</form>
@@ -77,7 +77,7 @@ $loop = WP_Private_Message_Message::get_list_messages($args); ?>
 							$next_page = $paged + 1;
 							if ( $next_page <= $loop->max_num_pages ) { ?>
 								<div class="loadmore-action">
-									<a href="javascript:void(0);" class="loadmore-message-btn" data-paged="<?php echo esc_attr($next_page); ?>"><?php esc_html_e( 'Učitaj još', 'superio' ); ?></a>
+									<a href="javascript:void(0);" class="loadmore-message-btn" data-paged="<?php echo esc_attr($next_page); ?>"><?php esc_html_e( 'Load more', 'superio' ); ?></a>
 								</div>
 							<?php } ?>
 						</div>
@@ -93,7 +93,7 @@ $loop = WP_Private_Message_Message::get_list_messages($args); ?>
 			</div>
 		</div>
 	<?php } else { ?>
-		<div class="not-found"><?php esc_html_e('Nijedna poruka nije pronađena', 'superio'); ?></div>
+		<div class="not-found"><?php esc_html_e('No message found', 'superio'); ?></div>
 	<?php } ?>
 	</div>
 </div>

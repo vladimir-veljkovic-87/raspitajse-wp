@@ -52,7 +52,7 @@ $applicants_count = $applicants->found_posts;
 
 ?>
 <div class="box-dashboard-wrapper employer-dashboard-wrapper">
-	<h3 class="title"><?php esc_html_e('Statistika prijava', 'superio'); ?></h3>
+	<h3 class="title"><?php esc_html_e('Applications statistics', 'superio'); ?></h3>
 	<div class="space-30">
 		<div class="statistics row">
 			<div class="col-xs-12 col-lg-3 col-sm-6">
@@ -65,7 +65,7 @@ $applicants_count = $applicants->found_posts;
 						</div>
 						<div class="inner">
 							<div class="number-count"><?php echo esc_html( $count_jobs ? WP_Job_Board_Pro_Mixes::format_number($count_jobs) : 0); ?></div>
-							<span><?php esc_html_e('Objavljeni poslovi', 'superio'); ?></span>
+							<span><?php esc_html_e('Posted Jobs', 'superio'); ?></span>
 						</div>
 					</div>
 				</div>
@@ -80,7 +80,7 @@ $applicants_count = $applicants->found_posts;
 					</div>
 					<div class="inner">
 						<div class="number-count"><?php echo esc_html( $applicants_count ? WP_Job_Board_Pro_Mixes::format_number($applicants_count) : 0 ); ?></div>
-						<span><?php esc_html_e('Prijave', 'superio'); ?></span>
+						<span><?php esc_html_e('Application', 'superio'); ?></span>
 					</div>
 				</div>
 				</div>
@@ -95,7 +95,7 @@ $applicants_count = $applicants->found_posts;
 					</div>
 					<div class="inner">
 						<div class="number-count"><?php echo esc_html( $total_reviews ? WP_Job_Board_Pro_Mixes::format_number($total_reviews) : 0 ); ?></div>
-						<span><?php esc_html_e('Recenzije', 'superio'); ?></span>
+						<span><?php esc_html_e('Review', 'superio'); ?></span>
 					</div>
 				</div>
 				</div>
@@ -110,7 +110,7 @@ $applicants_count = $applicants->found_posts;
 					</div>
 					<div class="inner">
 						<div class="number-count"><?php echo esc_html($shortlist ? WP_Job_Board_Pro_Mixes::format_number($shortlist) : 0); ?></div>
-						<span><?php esc_html_e('U užem izboru', 'superio'); ?></span>
+						<span><?php esc_html_e('Shortlisted', 'superio'); ?></span>
 					</div>
 				</div>
 				</div>
@@ -142,7 +142,7 @@ $applicants_count = $applicants->found_posts;
 					$class_second_column = 'with-employer';
 			?>
 				<div class="inner-list">
-					<h3 class="title-small"><?php echo esc_html__( 'Pregledi stranice', 'superio' ); ?></h3>
+					<h3 class="title-small"><?php echo esc_html__( 'Page Views', 'superio' ); ?></h3>
 					<div class="page_views-wrapper">
 						
 						<div class="page_views-wrapper">
@@ -154,7 +154,7 @@ $applicants_count = $applicants->found_posts;
 								<div class="row">
 									<div class="col-xs-6">
 										<div class="form-group">
-											<label><?php esc_html_e('Poslovi', 'superio'); ?></label>
+											<label><?php esc_html_e('Jobs', 'superio'); ?></label>
 											<select class="form-control" name="job_id">
 												<?php foreach ($jobs->posts as $post_id) { ?>
 													<option value="<?php echo esc_attr($post_id); ?>"><?php echo esc_html(get_the_title($post_id)); ?></option>
@@ -165,11 +165,11 @@ $applicants_count = $applicants->found_posts;
 
 									<div class="col-xs-6">
 										<div class="form-group">
-											<label><?php esc_html_e('Broj dana', 'superio'); ?></label>
+											<label><?php esc_html_e('Number Days', 'superio'); ?></label>
 											<select class="form-control" name="nb_days">
-												<option value="30"><?php esc_html_e('30 dana', 'superio'); ?></option>
-												<option value="15" selected><?php esc_html_e('15 dana', 'superio'); ?></option>
-												<option value="7"><?php esc_html_e('7 dana', 'superio'); ?></option>
+												<option value="30"><?php esc_html_e('30 days', 'superio'); ?></option>
+												<option value="15" selected><?php esc_html_e('15 days', 'superio'); ?></option>
+												<option value="7"><?php esc_html_e('7 days', 'superio'); ?></option>
 											</select>
 										</div>
 									</div>
@@ -180,7 +180,7 @@ $applicants_count = $applicants->found_posts;
 				</div>
 			<?php } else { ?>
 				<div class="inner-list">
-					<h3 class="title-small"><?php echo esc_html__( 'Pregledi vašeg profila', 'superio' ); ?></h3>
+					<h3 class="title-small"><?php echo esc_html__( 'Your Profile Views', 'superio' ); ?></h3>
 					<div class="page_views-wrapper">
 						<?php
 						$number_days = 14;
@@ -222,7 +222,7 @@ $applicants_count = $applicants->found_posts;
 			</div>
 			<div class="col-sm-4">
 				<div class="inner-list dashboard-notifications <?php echo esc_attr($class_second_column); ?>">
-				<h3 class="title-small"><?php echo esc_html__( 'Obaveštenja', 'superio' ); ?></h3>
+				<h3 class="title-small"><?php echo esc_html__( 'Notifications', 'superio' ); ?></h3>
 				<?php
 				$notifications = WP_Job_Board_Pro_User_Notification::get_notifications($employer_id, 'employer');
 				if ( !empty($notifications) ) {
@@ -296,7 +296,7 @@ $applicants_count = $applicants->found_posts;
 		</div>
 	<?php } ?>
 	<div class="inner-list">
-		<h3 class="title-small"><?php esc_html_e('Nedavne prijave kandidata', 'superio'); ?></h3>
+		<h3 class="title-small"><?php esc_html_e('Recent Applicants', 'superio'); ?></h3>
 		<div class="applicants">
 			<?php
 				if ( !empty($job_ids) ) {
@@ -332,12 +332,12 @@ $applicants_count = $applicants->found_posts;
 						wp_reset_postdata();
 					} else {
 						?>
-						<div class="no-found"><?php esc_html_e('Nema prijavljenih kandidata.', 'superio'); ?></div>
+						<div class="no-found"><?php esc_html_e('No applicants found.', 'superio'); ?></div>
 						<?php
 					}
 				} else {
 					?>
-					<div class="no-found"><?php esc_html_e('Nema prijavljenih kandidata.', 'superio'); ?></div>
+					<div class="no-found"><?php esc_html_e('No applicants found.', 'superio'); ?></div>
 					<?php
 				}
 			?>

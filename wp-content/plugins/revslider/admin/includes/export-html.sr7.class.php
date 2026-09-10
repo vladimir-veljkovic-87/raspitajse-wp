@@ -236,7 +236,7 @@ class RevSliderSliderExportHtml extends RevSliderSliderExport {
 				$_file	= str_replace('\/', '/', $_file);
 				
 				//check if video or image
-				preg_match('/.*?.(?:jpg|jpeg|gif|png|svg)/i', $_file, $match); //image
+				preg_match('/.*?.(?:jpg|jpeg|gif|png|svg|webp)/i', $_file, $match); //image
 				preg_match('/.*?.(?:ogv|webm|mp4|mp3)/i', $_file, $match2); //video
 				
 				$f = false;

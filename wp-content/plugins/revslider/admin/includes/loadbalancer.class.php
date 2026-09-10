@@ -7,7 +7,7 @@
  
 if(!defined('ABSPATH')) exit();
 
-class RevSliderLoadBalancer {
+class RevSliderLoadBalancer extends RevSliderFunctions {
 
 	public $servers = [];
 	public $defaults = ['themepunch.tools', 'themepunch-ext-a.tools', 'themepunch-ext-b.tools', 'themepunch-ext-c.tools'];

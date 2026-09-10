@@ -852,8 +852,6 @@ class RevSliderSliderImport extends RevSliderSlider {
 				}
 			}
 			
-			$this->slides_data[$slide_key]['layers'] = $layers;
-			
 			$d = array('params' => $params, 'sliderParams' => $this->slider_data, 'layers' => $layers, 'settings' => $settings, 'imported' => $this->imported);
 			$d = apply_filters('revslider_importSliderFromPost_modify_data', $d, 'normal', $this->download_path, $this);
 			
@@ -863,6 +861,10 @@ class RevSliderSliderImport extends RevSliderSlider {
 			$settings		= $d['settings'];
 			$this->imported	= $d['imported'];
 			
+			$this->slides_data[$slide_key]['layers'] = $d['layers'];
+			$this->slides_data[$slide_key]['params'] = $d['params'];
+			$this->slides_data[$slide_key]['settings'] = $d['settings'];
+
 			$my_layers		= json_encode($layers);
 			$my_layers		= (empty($my_layers)) ? stripslashes(json_encode($layers)) : $my_layers;
 			$my_params		= json_encode($params);
@@ -1073,7 +1075,8 @@ class RevSliderSliderImport extends RevSliderSlider {
 							$zimage	= $wp_filesystem->exists($this->download_path.'images/'.$svg);
 							if(!$zimage) $zimage = $wp_filesystem->exists(str_replace('//', '/', $this->download_path.'images/'.$svg));
 							$svgurl = ($zimage === true) ? $this->get_image_url_from_path($this->check_file_in_zip($this->download_path, $svg, $alias, $this->imported, true)) : content_url().$svg;
-							
+							if($zimage === false && (strpos($svg, 'http:') !== false || strpos($svg, 'https:') !== false)) $svgurl = ''; //remove, as its not in the zip and also not an internal server svg
+
 							if(!empty($svg)) $layer['svg']['source'] = $svgurl;
 						}
 					}
@@ -1083,9 +1086,6 @@ class RevSliderSliderImport extends RevSliderSlider {
 				}
 			}
 			
-			$this->slides_data[$slide_key]['layers'] = $layers;
-			
-			
 			$d = array('params' => $params, 'sliderParams' => $this->slider_data, 'layers' => $layers, 'settings' => $settings, 'imported' => $this->imported);
 			$d = apply_filters('revslider_importSliderFromPost_modify_data', $d, 'normal', $this->download_path, $this);
 			
@@ -1094,6 +1094,10 @@ class RevSliderSliderImport extends RevSliderSlider {
 			$params			= $d['params'];
 			$layers			= $d['layers'];
 			$settings		= $d['settings'];
+
+			$this->slides_data[$slide_key]['layers'] = $d['layers'];
+			$this->slides_data[$slide_key]['params'] = $d['params'];
+			$this->slides_data[$slide_key]['settings'] = $d['settings'];
 			
 			$my_layers	 = json_encode($layers);
 			$my_layers	 = (empty($my_layers)) ? stripslashes(json_encode($layers)) : $my_layers;
@@ -1103,7 +1107,7 @@ class RevSliderSliderImport extends RevSliderSlider {
 			$my_settings = (empty($my_settings)) ? stripslashes(json_encode($settings)) : $my_settings;
 			
 			//create new slide
-			$wpdb->insert(
+			$ret = $wpdb->insert(
 				$wpdb->prefix . RevSliderFront::TABLE_SLIDES,
 				array(
 					'slider_id'	=> $this->slider_id,
@@ -1453,6 +1457,10 @@ class RevSliderSliderImport extends RevSliderSlider {
 				$my_settings = json_encode($d['settings']);
 				$my_settings = (empty($my_settings)) ? stripslashes(json_encode($d['settings'])) : $my_settings;
 				
+				//$this->slides_data[$slide_key]['layers'] = $d['layers'];
+				//$this->slides_data[$slide_key]['params'] = $d['params'];
+				//$this->slides_data[$slide_key]['settings'] = $d['settings'];
+				
 				if($this->exists){
 					$wpdb->update(
 						$wpdb->prefix . RevSliderFront::TABLE_STATIC_SLIDES,
@@ -1587,7 +1595,7 @@ class RevSliderSliderImport extends RevSliderSlider {
 				$my_params	 = (empty($my_params)) ? stripslashes(json_encode($d['params'])) : $my_params;
 				$my_settings = json_encode($d['settings']);
 				$my_settings = (empty($my_settings)) ? stripslashes(json_encode($d['settings'])) : $my_settings;
-				
+
 				if($this->exists){
 					$wpdb->update(
 						$wpdb->prefix . RevSliderFront::TABLE_STATIC_SLIDES,
