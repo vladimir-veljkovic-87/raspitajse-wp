@@ -22,6 +22,12 @@ ALLOWLIST=(
   "wp-content/mu-plugins"
 )
 
+VENDOR_RECONCILE_ROOTS=(
+  "wp-content/themes/superio"
+  "wp-content/plugins/apus-framework"
+  "wp-content/plugins/revslider"
+)
+
 # Retired vendor payloads are deletion-only. They are intentionally excluded
 # from ALLOWLIST so a full or changed deploy can never reinstall them.
 REMOVED_PLUGIN_ROOTS=(
@@ -186,6 +192,20 @@ changed_deploy() {
     echo "Removing deleted file: ${path}"
     rm -f -- "${TARGET_SITE_ROOT}/${path}"
   done < "${TMP_DELETED}"
+
+  for path in "${VENDOR_RECONCILE_ROOTS[@]}"; do
+    [[ -d "${REPO_DIR}/${path}" ]] \
+      || fail "Vendor reconciliation source is missing: ${path}"
+    [[ ! -L "${TARGET_SITE_ROOT}/${path}" ]] \
+      || fail "Refusing symlinked vendor reconciliation target: ${path}"
+
+    mkdir -p "${TARGET_SITE_ROOT}/${path}"
+
+    echo "Reconciling vendor root: ${path}"
+    rsync -a --checksum --no-times --omit-dir-times --delete-delay -- \
+      "${REPO_DIR}/${path}/" \
+      "${TARGET_SITE_ROOT}/${path}/"
+  done
 
   for path in "${REMOVED_PLUGIN_ROOTS[@]}"; do
     # Once a removal has been deployed, later commits have no source tree and
