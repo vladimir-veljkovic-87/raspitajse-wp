@@ -231,3 +231,35 @@ function raspitajse_staging_disable_wpforms_spam_purge_interval( $interval ) {
     return raspitajse_staging_reporting_telemetry_is_disabled() ? 0 : $interval;
 }
 add_filter( 'wpforms_tasks_actions_purge_spam_task_interval', 'raspitajse_staging_disable_wpforms_spam_purge_interval', PHP_INT_MIN );
+
+/**
+ * Prevent normal request shutdown from broadly dispatching the mixed-risk
+ * Action Scheduler backlog while exact-ID recovery is active.
+ */
+function raspitajse_staging_disable_action_scheduler_async_dispatch() {
+    if ( ! raspitajse_staging_cron_recovery_guard_is_active() ) {
+        return;
+    }
+
+    global $wp_filter;
+
+    if ( empty( $wp_filter['shutdown'] ) ) {
+        return;
+    }
+
+    foreach ( $wp_filter['shutdown']->callbacks as $priority => $callbacks ) {
+        foreach ( $callbacks as $entry ) {
+            $callback = $entry['function'];
+            if (
+                is_array( $callback )
+                && is_object( $callback[0] )
+                && $callback[0] instanceof ActionScheduler_QueueRunner
+                && 'maybe_dispatch_async_request' === $callback[1]
+            ) {
+                remove_action( 'shutdown', $callback, $priority );
+            }
+        }
+    }
+}
+add_action( 'plugins_loaded', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MAX );
+add_action( 'init', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MIN );
