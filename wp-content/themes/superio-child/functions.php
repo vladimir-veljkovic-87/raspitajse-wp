@@ -114,11 +114,9 @@ function my_custom_page_callback() {
 
 // Restrict wp-admin but allow AJAX requests
 function restrict_wp_admin_access() {
-    $allowed_user_id = 1; // ID korisnika kojem je dozvoljen pristup wp-admin
-
     if ( is_admin()
         && !( defined('DOING_AJAX') && DOING_AJAX ) // Dozvoli admin-ajax.php
-        && get_current_user_id() != $allowed_user_id
+        && ! current_user_can( 'manage_options' )
     ) {
         wp_redirect( home_url() );
         exit;
