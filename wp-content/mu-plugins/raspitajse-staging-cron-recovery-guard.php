@@ -241,25 +241,20 @@ function raspitajse_staging_disable_action_scheduler_async_dispatch() {
         return;
     }
 
-    global $wp_filter;
-
-    if ( empty( $wp_filter['shutdown'] ) ) {
+    if ( ! class_exists( 'ActionScheduler_QueueRunner' ) ) {
         return;
     }
 
-    foreach ( $wp_filter['shutdown']->callbacks as $priority => $callbacks ) {
-        foreach ( $callbacks as $entry ) {
-            $callback = $entry['function'];
-            if (
-                is_array( $callback )
-                && is_object( $callback[0] )
-                && $callback[0] instanceof ActionScheduler_QueueRunner
-                && 'maybe_dispatch_async_request' === $callback[1]
-            ) {
-                remove_action( 'shutdown', $callback, $priority );
-            }
-        }
+    $callback = [
+        ActionScheduler_QueueRunner::instance(),
+        'maybe_dispatch_async_request',
+    ];
+    $priority = has_action( 'shutdown', $callback );
+
+    if ( false !== $priority ) {
+        remove_action( 'shutdown', $callback, $priority );
     }
 }
 add_action( 'plugins_loaded', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MAX );
 add_action( 'init', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MIN );
+add_action( 'shutdown', 'raspitajse_staging_disable_action_scheduler_async_dispatch', PHP_INT_MIN );
