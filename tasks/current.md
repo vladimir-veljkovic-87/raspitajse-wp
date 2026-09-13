@@ -1,109 +1,139 @@
-# Zadatak 2.25 — Complete the remaining Raspitajse-owned WooCommerce/custom commerce cleanup and leave staging with one authoritative implementation per required business behavior
+# Zadatak 2.31 — Definitively diagnose and correct the WooCommerce admin order renderer smoke harness before any further 2.25 finalization attempt
 
 Status: READY
-Baseline: 31d06a71c15e4d8c048f3c5a0de9f5e750557d74
-Previous task: 2.24
+Baseline: 29cadafbe9d88d256807a682c3926f8d8540bff2
+Previous task: 2.30
 Target environment: staging
 Production: FORBIDDEN
 
 ## Result required
 
-This task is successful only if the remaining in-scope legacy/custom WooCommerce and package-related Raspitajse code is resolved on staging so that every still-required business behavior has exactly one authoritative implementation, obsolete/duplicate code is removed, and the accepted package/checkout behavior still passes end-to-end guarded acceptance.
+End the repeated Zadatak 2.25 finalization loop by establishing one authoritative, reusable WooCommerce admin order renderer smoke setup that passes independently on the current recovery runtime before it is used by another atomic finalization attempt.
 
-Do not report PASS for inventory, analysis, partial migration, cleanup preparation, or a safely aborted attempt. PASS means the target staging state is actually implemented, deployed, verified, and left active.
+This task is not successful for attribution alone. It must identify the exact PHP Error behind failure hash `e2576da614a922965cac0706e97db5f55691254e4f66c0bafe380d0064cb0d4d`, correct the authoritative existing smoke harness or its generator, and prove the focused renderer contract end to end.
 
-## Mandatory preamble
+PASS classification: `FOCUSED_ADMIN_RENDERER_HARNESS_CORRECTED`.
 
-Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, and `origin/staging`. Read `tasks/current.md` and `tasks/README.md` from `origin/codex-tasks` in full. Read the final 2.24 PASS report and the earlier custom-Woo/package audit and implementation reports needed to recover the accepted KEEP / REDESIGN / DROP decisions and existing Raspitajse Commerce/package ownership.
+Do not begin, integrate, deploy, or report completion of Zadatak 2.25 in this task.
 
-Verify fresh `origin/staging` and the live deploy marker are exactly `31d06a71c15e4d8c048f3c5a0de9f5e750557d74`, the staging worktree is clean/on `staging`, and the upgraded vendor stack remains Superio 1.3.37 / Apus 2.5 / RevSlider 6.7.41. If baseline or deploy marker differs, STOP.
+## Mandatory preamble and accounted split state
 
-Execute only 2.25. `codex-tasks` is read-only. Production is forbidden.
+Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, and `origin/staging`. Read `tasks/current.md` and `tasks/README.md` from `origin/codex-tasks` in full. Read the final reports for 2.27, 2.28, 2.29 and 2.30.
 
-## Scope and governing architecture
+The following state is expected and explicitly accounted for:
 
-WooCommerce remains infrastructure. Do not refactor WooCommerce core or reproduce its standard order/payment/privacy/session lifecycle. Do not modify WooCommerce vendor code.
+- `origin/staging`: `29cadafbe9d88d256807a682c3926f8d8540bff2`;
+- prepared combined 2.25 candidate: `ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`;
+- live staging deploy marker: `73f43334ecc14adcf5704fcead243a67bca4c71f`;
+- current protected business fingerprint: `f3f7ce8a46e82e9164a85132f72eed50a1ca9daff026f939062197f0cf1537cc`;
+- pending Action Scheduler count: 6;
+- pending fingerprint: `3c7068c59c2a1e43d6d6ecec1bf1d73abc835a24cfaf1c8b72f8bfd9e937c6e9`;
+- claims: 0;
+- action 32733: complete, attempts 1;
+- async-dispatch and targeted DROP guards: active;
+- staging administrator user 141 retains `manage_options`.
 
-Raspitajse-owned commerce/business logic belongs in Raspitajse-owned code, primarily the existing owned commerce/package layers where appropriate. Legacy theme/functions.php or ad-hoc custom hooks are references for business purpose only, not architecture to preserve.
+STOP on any unaccounted deviation. Do not “repair” the split state in this task.
 
-Use the established classification rule for every in-scope legacy unit: KEEP, REDESIGN, or DROP. Required business behavior may be moved before old code is removed; never delete a required behavior first.
+## Known prior failure
 
-The accepted package model remains canonical:
-- Paid Listings entitlement is authoritative;
-- package ownership uses the accepted `job_package` / `_wjbpwpl_user_id` model;
-- package ad usage window is 30 calendar days from first successful processing/completed activation and is immutable once started;
-- pending/on-hold must not start the clock;
-- package entitlement validity is separate from individual listing duration;
-- standalone package purchase UI uses the already accepted owned transport, not a global interceptor;
-- employer checkout/HPOS support remains in the owned Raspitajse Commerce implementation.
+The first renderer smoke failed before renderer entry because calling `WC_Order::set_status('completed')` caused `maybe_set_date_paid()` to evaluate `woocommerce_payment_complete_order_status`, which the payment guard correctly blocked.
 
-Do not regress any of those accepted rules.
+The subsequent corrected smoke failed with PHP `Error`, hash:
+
+`e2576da614a922965cac0706e97db5f55691254e4f66c0bafe380d0064cb0d4d`
+
+The second error has not yet been attributed. Do not guess, allowlist, suppress, or weaken a guard based on the hash.
+
+Existing evidence root:
+
+`/tmp/raspitajse-task-2.25-final-atomic.qafdp0/atomic-evidence`
 
 ## Work to complete in this task
 
-Perform one bounded discovery-to-implementation transaction, not a chain of analysis-only follow-up tasks.
+### 1. Attribute the exact Error before changing the harness
 
-1. Inventory all remaining Raspitajse-authored WooCommerce/package/checkout/order hooks and helpers still active outside the accepted owned implementation. Include child-theme/functions.php, custom snippets/files, mu-plugins/owned plugins, and any repository/runtime custom code that participates in the same business behaviors. Exclude unchanged vendor/core internals except as dependency references.
+Read the existing evidence and extract a sanitized record containing:
 
-2. Reconcile that inventory against the prior custom-Woo audit and all already-completed migrations. For each remaining active unit, determine business purpose and classify KEEP / REDESIGN / DROP. If an earlier audit item is already superseded by an owned implementation, prove that and treat the old implementation as removable duplicate unless another required side effect remains.
+- Error class and complete message;
+- originating file and line;
+- sanitized stack trace;
+- the last completed harness phase;
+- whether `WC_Meta_Box_Order_Data::output()` was entered;
+- actual renderer method signature from Reflection;
+- runtime values/types for the order object, current user, current screen, request context and required WooCommerce globals without PII or secrets.
 
-3. In the same task, implement the target architecture:
-- move still-required Raspitajse business behavior into the appropriate owned layer when it is not already there;
-- retain only genuinely necessary thin compatibility/bootstrap glue in the child/theme layer;
-- remove duplicate, dead, abandoned, telemetry/debug, unsafe logging, vendor-notice, obsolete checkout/package, or superseded hooks;
-- do not create a second source of truth for package entitlement, ownership, validity, order status, or checkout state;
-- do not modify vendor plugin/theme/core files merely to simplify migration.
+Determine the root cause as one of:
 
-4. Remove legacy implementations only after their replacements/authoritative equivalents are proven in the same transaction.
+- incorrect WordPress/WooCommerce admin lifecycle setup;
+- invalid in-memory order state;
+- wrong renderer invocation contract;
+- missing admin dependency/bootstrap;
+- product regression.
 
-5. Deploy the accepted feature and leave staging on the new integrated commit only after every critical acceptance gate below passes.
+### 2. Locate the authoritative harness source
 
-If discovery reveals a genuinely unrelated subsystem that cannot be safely resolved without broadening scope, document it but do not let it block completion of the commerce result unless it is an actual dependency of the required behaviors.
+Identify the existing authoritative source or generator that produces the admin renderer portion of the 2.25 finalization smoke. Correct that source. Do not fix only a disposable copied command while leaving the next generated harness broken.
+
+Do not create a parallel test system. If the authoritative harness is intentionally materialized under the existing task directory, update that exact harness and record its path and SHA-256. If it has a tracked source/generator, modify only the minimum necessary test/tool file on a scoped branch based on the prepared candidate; do not modify application, theme, WooCommerce, WordPress core, or other vendor code.
+
+### 3. Build a semantically valid focused renderer fixture
+
+The focused probe must:
+
+- use an unsaved `WC_Order` with ID 0;
+- never call `save()`, checkout, payment completion, stock mutation, email dispatch or refund logic;
+- avoid entering `woocommerce_payment_complete_order_status` through fixture construction;
+- use staging administrator user 141 and prove the required capabilities;
+- establish the canonical WooCommerce HPOS admin order screen lifecycle and a non-null correct current screen;
+- provide internally consistent `HTTP_HOST`, `SERVER_NAME`, `REQUEST_URI`, `pagenow`, `GET` and `REQUEST` state;
+- call the real `WC_Meta_Box_Order_Data::output()` using its reflected current signature;
+- restore prior user, screen, globals and request state after the assertion;
+- retain all existing mail, PHPMailer, SMTP, HTTP, payment, broad-runner and protected-action guards.
+
+Do not weaken or bypass the payment guard. Construct the fixture so no payment path is invoked.
+
+### 4. Iterate only inside this focused task
+
+This task may perform up to three bounded focused diagnostic/correction probes if needed. It must not start the full 2.25 atomic finalization between probes.
+
+Each probe must run under the staging safety locks, must not mutate persistent business/Action Scheduler state, and must preserve the exact before/after fingerprints. Stop immediately if any probe causes an unplanned persistent mutation or if the root cause would require product/vendor changes.
+
+Do not publish a separate numbered report after each focused probe. Publish one final 2.31 report.
 
 ## Mandatory acceptance
 
-Before integration capture a sanitized T0 protected-state projection. Use existing staging guards: no real SMTP/mail, no payment/refund execution, no external WordPress HTTP merely to prove behavior, no broad WP-Cron or Action Scheduler runner. Protected AS ID 32733 must remain pending/attempts 0.
+PASS requires all of the following in a fresh process:
 
-The authoritative guarded acceptance must prove at minimum:
+- `WC_Meta_Box_Order_Data::output()` is demonstrably entered exactly once;
+- renderer invocation completes without Throwable;
+- meaningful admin order markup is produced;
+- the intended Raspitajse owned billing/render hook is invoked exactly once;
+- the order remains ID 0 and no order/customer/item row is created;
+- no option, transient, user, candidate, package, order, refund or scheduler row is modified;
+- business fingerprint remains `f3f7ce8a46e82e9164a85132f72eed50a1ca9daff026f939062197f0cf1537cc`;
+- pending Action Scheduler remains 6 with fingerprint `3c7068c59c2a1e43d6d6ecec1bf1d73abc835a24cfaf1c8b72f8bfd9e937c6e9`;
+- claims remain 0 and action 32733 remains complete/attempts 1;
+- mail, PHPMailer, SMTP, HTTP transport, payment/refund, broad scheduler runner and protected-action execution counters are all 0;
+- stderr and structured PHP notices/warnings/errors/fatals are empty, except only an already-approved exact Elementor deprecation signature if it occurs;
+- the corrected authoritative harness/generator path, diff and SHA-256 are recorded so the next 2.25 attempt can reuse it without reconstruction.
 
-- WordPress bootstrap and relevant frontend/admin template loading have no fatal regression;
-- WooCommerce remains 9.5.4 and core/vendor files are untouched;
-- Superio 1.3.37 / Apus 2.5 / RevSlider 6.7.41 remain exact and functional;
-- WPJBP 1.2.86 and Paid Listings 1.0.19 remain exact and are not reinstalled/downgraded;
-- HPOS compatibility declarations and employer lookup/checkout behavior still pass;
-- employer and candidate package purchase/access behavior uses the intended owned paths;
-- package activation clock starts only on accepted successful order states, never pending/on-hold, and cannot be reset by later transitions;
-- 30-calendar-day validity including DST/boundary cases passes the accepted policy harness;
-- quota/entitlement and individual job listing duration remain separate;
-- standalone package purchase UI/transport still works without a real payment;
-- checkout contains no PII/debug logging regression;
-- no duplicate callback remains registered for any migrated business event;
-- no legacy hook can independently mutate the same package entitlement/validity/ownership state after cutover;
-- candidate→job communications, employer→candidate retirement, job expiry/pre-expiry callbacks, and the exact three owned hourly scheduler hooks remain unchanged;
-- protected business fingerprint is unchanged except for explicitly created reversible test fixtures, which must be cleaned exactly;
-- mail sends 0, SMTP/PHPMailer transports 0, payment/refund execution 0, broad cron/AS execution 0, production operations 0.
+A mere HTTP status, a caught exception, skipped renderer, mocked renderer, or markup produced without the real renderer is not PASS.
 
-Use bounded reversible fixtures where needed. Clean all task-created orders/users/packages/options/transients after assertions and prove cleanup.
+## STOP conditions
 
-## Git and deployment contract
+Return `PRODUCT_REGRESSION` and STOP if the real renderer fails after canonical context is established and the cause lies in application/vendor behavior rather than the harness.
 
-Create one scoped feature branch from exact baseline. Prefer a small number of cohesive commits, but do not split discovery and completion into separate numbered tasks. Application mutations may include only Raspitajse-owned/custom paths and narrowly necessary tests/deployment metadata. Vendor/core trees are read-only for this task.
+Return `BLOCKED` with one exact blocker if safe focused reproduction is impossible. Do not respond by launching another 2.25 finalization attempt.
 
-Review exact changed paths, run syntax/static checks, then deploy through the accepted staging deploy workflow. Integrate into `staging` only after acceptance passes. Re-deploy final staging so source HEAD, `origin/staging`, and deploy marker converge.
+## Git, reporting and safety
 
-If a critical acceptance failure occurs after mutation, rollback the task-authored source/runtime changes to the exact T0 state and do not integrate a partial result.
-
-## PASS definition
-
-PASS classification: `REMAINING_CUSTOM_COMMERCE_CLEANUP_COMPLETED`.
-
-PASS requires all of the following simultaneously:
-- all remaining in-scope legacy/custom commerce units classified and resolved;
-- every required business behavior has one authoritative implementation;
-- superseded/obsolete implementations are removed from active runtime;
-- accepted package, checkout, HPOS and purchase behavior passes;
-- no duplicate mutating hooks remain;
-- final staging is deployed on the integrated commit and clean;
-- protected state and side-effect counters pass.
-
-Anything short of that is not task completion. Publish the final report through `codex-reports` and STOP. Do not start legacy-theme cleanup or scheduler cleanup automatically.
+- `codex-tasks` is read-only to the executor.
+- Production is forbidden.
+- Do not integrate or update `staging`.
+- Do not change the live deploy marker.
+- Do not deploy application/theme/vendor code.
+- Do not run broad WP-Cron or Action Scheduler queues.
+- Do not execute mail, SMTP, HTTP transport, payment or refund operations.
+- Keep reports free of PII, credentials and protected values.
+- Publish exactly one final 2.31 report through `codex-reports` and STOP.
