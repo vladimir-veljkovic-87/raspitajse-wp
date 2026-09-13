@@ -1,179 +1,153 @@
-# Zadatak 2.37 — Execute the fully normalized recovery finalizer and complete Zadatak 2.25
+# Zadatak 2.38 — Resolve the runtime job_package fixture contract and its Action Scheduler residue
 
 Status: READY
 Baseline: ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4
-Previous task: 2.36
+Previous task: 2.37
 Target environment: staging
 Production: FORBIDDEN
-Finalizes: Zadatak 2.25
+Finalization dependency: Zadatak 2.25
 
 ## Result required
 
-Apply all already-proven recovery-contract normalizations plus one narrow report-helper quiet-mode correction, validate the complete orchestration contract before lock entry, and finish Zadatak 2.25 in this task.
+Resolve the exact post-deploy runtime acceptance failure from Zadatak 2.37 without launching another full finalization attempt.
 
-PASS classification: `REMAINING_CUSTOM_COMMERCE_CLEANUP_COMPLETED`.
+Determine whether `fixture_job_package_product=false` is an authoritative runtime-harness fixture defect or a real product regression. Correct the authoritative existing runtime harness only if the fixture is wrong, prove the affected commerce assertion chain in a focused guarded feature-code probe, and attribute/clean only any Action Scheduler rows proven to be residue of the failed fixture.
 
-No application code changes, Git integration, Git push to application branches, new application commit, or further diagnostic task are authorized.
+PASS classification: `JOB_PACKAGE_RUNTIME_CONTRACT_CORRECTED`.
 
-## Mandatory preamble
+Do not finalize Zadatak 2.25 in this task.
 
-Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, `origin/staging`, and `feature/z2-25-live-recovery`. Read `tasks/current.md` and `tasks/README.md` in full. Read PASS reports 2.31/2.33 and BLOCKED reports 2.32/2.34/2.35/2.36, including the complete 2.36 contract audit.
+## Mandatory preamble and expected state
 
-Production is forbidden. `codex-tasks` is read-only to the executor.
+Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, `origin/staging`, and `feature/z2-25-live-recovery`. Read `tasks/current.md` and `tasks/README.md` in full. Read the PASS 2.31/2.33 reports and the complete 2.37 FAIL report/evidence.
 
-## Exact state
+Expected state:
 
-- integrated target / `origin/staging`: `ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`;
-- live recovery commit and marker: `e9d58c62713fbed895a0d174b3fbeb33ee48c957`;
-- five live allowlisted files match recovery commit `e9d58c...`;
+- `origin/staging`: `ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`;
+- live recovery files and marker: `e9d58c62713fbed895a0d174b3fbeb33ee48c957`;
 - business fingerprint: `f3f7ce8a46e82e9164a85132f72eed50a1ca9daff026f939062197f0cf1537cc`;
 - owned-contract fingerprint: `655c645e8e12f8c31e5ec95a499d7759b1214f1698b47921c8253e5284ad6c93`;
 - cron fingerprint: `145d4732c3f1a9765281791a8c26fcf41a96cd7df521e133e7963537432e4e70`;
-- pending AS: 6 / `3c7068c59c2a1e43d6d6ecec1bf1d73abc835a24cfaf1c8b72f8bfd9e937c6e9`;
-- claims: 0; AS 32733: complete/attempts 1;
-- scheduler guards and administrator capability active.
+- claims: 0; AS 32733 complete/attempts 1;
+- both scheduler guards active;
+- current pending AS: 10 with fingerprint `bca972265123523927ebbb660ce560a5125fbf0caa8cfc9fbc1ba6a05e4e998e`;
+- pending IDs: 32777, 32778, 32779, 32783, 32784, 32848, 32855, 32856, 32857, 32858.
 
-STOP on an unaccounted difference.
+STOP on an unaccounted difference. Production is forbidden. `codex-tasks` is read-only to the executor.
 
-## Proven artifacts
+## Exact known failure
 
-- Task 2.35 derived finalizer:
-  `/tmp/raspitajse-task-2.35-final.sdtptr/finalize-already-integrated.sh`;
-- required SHA-256:
-  `7cb893991dc480be02eacc6d5871edf2f40600fc2c879c2d83de43354aed97ee`;
-- complete 2.36 contract audit:
-  `/tmp/raspitajse-task-2.36-contract-audit.FeFK8J/contract-audit.md`;
-- corrected smoke SHA-256:
-  `88dd1d7916a3805accae7825ec7b75dc15e1f12777f6b9c53f5939afbe2e83c0`;
-- static harness SHA-256:
-  `f8239178888a276eb9c2efe9f1fbe11549c2a371c3a92815ff4b072db00c2b3e`;
-- report helper source: `tools/codex-report.sh` from exact target commit `ec97a6f...`;
-- report helper Git blob SHA: `1fc9848edf873473d9963764285b510c428652fb`.
+Authoritative runtime harness:
 
-Do not edit any source artifact in place.
+`/tmp/raspitajse-task-2.25-final-atomic.qafdp0/runtime-acceptance.php`
 
-## Pre-lock derivation
+Primary failure:
 
-Create one private task directory. Derive two immutable artifacts there.
+- line 97: `fixture_job_package_product`;
+- expected: saved fixture product resolves through WooCommerce as type `job_package`;
+- actual: false.
 
-### A. Recovery-aware finalizer
+Dependent failures:
 
-Copy the exact Task 2.35 derived finalizer and apply all recovery normalizations authorized by 2.36:
+- `processing_creates_one_entitlement`;
+- `activation_window_stamped`;
+- `package_duration_separate_from_validity`;
+- `package_available_before_boundary`;
+- `package_expired_at_boundary`;
+- `quota_exhaustion_independent`;
+- `completed_retry_idempotent`.
 
-- target and `origin/staging` remain `ec97a6f...`;
-- no integration or application push;
-- current live/preflight/rollback marker and five-file recovery source are `e9d58c...`, replacing obsolete `73f43334...` wherever they represent deployed preflight/rollback state;
-- successful deploy marker target remains `ec97a6f...`;
-- pending count/fingerprint, claims and AS 32733 use the exact current values above;
-- scalar `checks: 27` correction remains;
-- previous evidence is rotated to a unique sibling archive and never deleted or overwritten;
-- exactly one fresh atomic evidence directory is created.
+The previous harness exited 1 with empty stderr. Do not treat dependent assertions as separate root causes until the product fixture contract is corrected.
 
-Apply the complete 2.36 audit table, not only the first occurrence. Prove no executable stale-state assertion remains.
+Evidence:
 
-### B. Quiet report helper
+`/tmp/raspitajse-task-2.25-final-atomic.qafdp0/atomic-evidence/runtime-acceptance.raw`
 
-Copy `tools/codex-report.sh` from exact target commit to a private `codex-report-quiet.sh`.
+## Phase 1 — read-only attribution
 
-The only permitted helper changes are adding Git quiet flags to the four successful operational commands:
+Before any live change:
 
-- `git fetch --quiet ...`;
-- `git worktree add --quiet ...`;
-- `git ... commit --quiet ...`;
-- `git ... push --quiet ...`.
+1. Record the authoritative runtime harness SHA-256 and inspect its complete fixture creation, product save, product-type assignment, cache invalidation, reload and cleanup order.
+2. Inspect the currently loaded WooCommerce 11.1 and WP Job Board Pro Paid Listings product-type registration and the canonical application/admin creation path for a `job_package` product.
+3. Determine:
+   - the concrete class created before save;
+   - product ID after save;
+   - `product_type` taxonomy terms before/after save;
+   - object-cache state and the class/type returned by a fresh `wc_get_product()`;
+   - whether the harness assigns the type before it has a persistent product ID;
+   - whether the harness incorrectly expects `WC_Product_Simple::set_props()` or save alone to persist a custom product type;
+   - whether the plugin's custom product class/registration is loaded in WP-CLI.
+4. Attribute exact pending IDs 32855–32858 read-only: hook, group, created/scheduled time, status/attempts/claim, hashed args and relation to the failed fixture product/order IDs. Do not expose PII or raw arguments.
 
-Preserve:
+Return `PRODUCT_REGRESSION` and STOP without mutation if a canonically created real `job_package` product cannot resolve correctly under the integrated feature code.
 
-- `set -Eeuo pipefail`;
-- every argument, secret scan, source-branch validation and cleanup;
-- commit/push behavior to `codex-reports`;
-- exit codes;
-- stdout publication receipt;
-- error stderr;
-- all failure paths.
+## Phase 2 — authoritative harness correction
 
-Do not redirect or suppress stderr globally. Git `--quiet` may suppress successful progress only; genuine Git errors must still produce nonzero exit and stderr.
+If attribution proves `HARNESS_FIXTURE_DEFECT`:
 
-Change the derived finalizer to invoke this exact private quiet helper. Keep the existing requirement that helper exit code is 0, stderr is empty, the expected report path/commit receipt exists, remote report count is exactly one, and the published report is readable from `origin/codex-reports`.
+- modify only the existing authoritative runtime harness or its actual generator;
+- use the canonical WP Job Board Pro/WooCommerce product-type creation contract found in Phase 1;
+- do not force a false result by mocking `get_type()`, filtering the assertion, hard-coding the expected string, or bypassing a real fresh `wc_get_product()` reload;
+- preserve every business assertion and side-effect guard;
+- preserve exact reversible fixture cleanup;
+- record before/after SHA-256 and unified diff;
+- PHP lint once;
+- make the corrected artifact immutable before focused execution.
 
-## Complete static validation
+Do not modify WooCommerce, WP Job Board Pro, Paid Listings, theme, application commerce code or MU guards.
 
-Before lock:
+## Phase 3 — exact Action Scheduler residue decision
 
-- verify source hashes/blob;
-- modes 0700;
-- `bash -n` both derived files;
-- save unified diffs against both sources;
-- compute and record both derived SHA-256 values;
-- prove finalizer diff contains only the complete 2.36 recovery normalization and helper-path substitution;
-- prove helper diff contains only the four quiet flags;
-- prove no application Git mutation command exists in the finalizer;
-- prove the report helper still pushes only to `codex-reports`;
-- use the 2.36 contract table to verify every state, marker, evidence, report and rollback entry;
-- verify both hashes again immediately before execution.
+The six established KEEP IDs 32777, 32778, 32779, 32783, 32784 and 32848 must not be modified.
 
-The derived artifacts become immutable after validation.
+For IDs 32855–32858:
 
-## One atomic execution
+- if and only if each is individually proven to have been created by the failed 2.37 fixture and references only a deleted/nonexistent fixture object, save exact rollback rows and cancel/delete those exact IDs without executing callbacks;
+- if any row is legitimate infrastructure or attribution is incomplete, do not modify it and classify it for a new accepted baseline;
+- never run a queue or broad cleanup.
 
-One process holds both staging OS locks continuously through all phases and final report publication. No user pause after lock entry.
+## Phase 4 — focused feature-code proof
 
-### Recovery control
+Use one bounded process under both staging locks.
 
-Directly verify exact state/fingerprints and run corrected control smoke:
+1. Save/verify the exact five-file recovery snapshot.
+2. Temporarily reconcile the five allowlisted live paths to target `ec97a6f...`.
+3. Run only the corrected focused runtime fixture chain sufficient to prove:
+   - a persistent fixture product is canonically `job_package` after a fresh reload;
+   - processing creates exactly one entitlement;
+   - activation window is stamped once;
+   - duration and validity remain separate;
+   - before/at-boundary behavior passes;
+   - quota exhaustion is independent;
+   - completed retry is idempotent.
+4. Clean every created fixture by exact ID and prove absence.
+5. Restore all five live files and marker to recovery commit `e9d58c...` even on success.
+6. Prove byte-level rollback and protected state before releasing locks.
 
-- packages PASS/200;
-- checkout PASS/200;
-- real WooCommerce admin renderer entered/completed once;
-- owned billing hook once;
-- in-memory order ID 0 and not persisted;
-- zero diagnostics and all side-effect counters zero.
+Up to three focused fixture attempts are allowed inside this task, but no full static/runtime/final smoke or final 2.25 deployment is permitted.
 
-### Live reconciliation
+## Mandatory acceptance
 
-Deploy from exact integrated target `ec97a6f...` by actual hash comparison, not marker/Git delta, for:
+PASS requires:
 
-- `wp-content/plugins/raspitajse-commerce/raspitajse-commerce.php`;
-- `wp-content/themes/superio-child/functions.php`;
-- `wp-content/themes/superio-child/style.css`;
-- `wp-content/mu-plugins/raspitajse-staging-cron-recovery-guard.php`;
-- `wp-content/mu-plugins/raspitajse-staging-action-scheduler-drop-guard.php`.
+- exact `HARNESS_FIXTURE_DEFECT` root cause;
+- canonical corrected product fixture;
+- fresh `wc_get_product()` resolves the saved fixture as type `job_package`;
+- all eight affected assertions pass;
+- no unrelated existing assertion is weakened;
+- all fixture IDs and related rows are removed;
+- IDs 32855–32858 are either exactly cleaned with proof or explicitly accepted with complete attribution;
+- six established KEEP IDs remain unchanged;
+- business/owned-contract/cron fingerprints unchanged;
+- claims 0 and AS 32733 complete/attempts 1;
+- all mail/SMTP/HTTP/payment/refund/broad-runner/protected-action counters 0;
+- live files and marker restored to exact recovery SHA;
+- corrected runtime harness path, diff and immutable SHA-256 recorded.
 
-Prove all five target hashes, no unrelated change, PHP lint, and marker `ec97a6f...`.
+## Git, reporting and safety
 
-### Final acceptance
-
-Require:
-
-- static suite: one JSON, 27 checks, zero failures, exit 0, empty unexpected stderr;
-- complete guarded runtime 2.25 acceptance;
-- identical corrected feature smoke including real renderer;
-- no remaining fixtures;
-- exact business/owned-contract/cron/pending fingerprints;
-- claims 0 and AS 32733 complete/1;
-- guards and admin capability active;
-- mail/PHPMailer/SMTP/external HTTP/payment/refund/broad-runner/protected-action/production counters all zero;
-- `origin/staging`, five live files and marker converge on `ec97a6f...`.
-
-## Failure and rollback
-
-Before deploy: preserve recovery state.
-
-After deploy: restore five recovery files and marker `e9d58c...`, prove hashes/fingerprints, do not change Git, preserve evidence and publish one BLOCKED report.
-
-No retry or fix-forward in the locked process.
-
-## Final report
-
-On PASS publish exactly one report through the private quiet helper:
-
-- Task: `Zadatak 2.25 — final recovery completion`;
-- Control specification: `Zadatak 2.37`;
-- Result: PASS;
-- classification: `REMAINING_CUSTOM_COMMERCE_CLEANUP_COMPLETED`;
-- target SHA, derived artifact hashes/diffs;
-- all control/static/runtime/smoke evidence;
-- final fingerprints, counters and five-path convergence;
-- production untouched.
-
-Release locks only after report is remotely verified. Then STOP.
+- Do not update `origin/staging`.
+- Do not change application Git history.
+- Do not leave feature code deployed.
+- Do not publish a final 2.25 report.
+- Publish exactly one 2.38 report through `codex-reports` and STOP.
