@@ -1,158 +1,139 @@
-# Zadatak 2.39 — Prove the corrected job_package runtime fixture and remove exact fixture scheduler residue
+# Zadatak 2.40 — Final live deployment and completion of Zadatak 2.25
 
 Status: READY
 Baseline: ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4
-Previous task: 2.38
+Previous task: 2.39
 Target environment: staging
 Production: FORBIDDEN
-Finalization dependency: Zadatak 2.25
+Finalizes: Zadatak 2.25
 
 ## Result required
 
-Complete the execution and cleanup portions intentionally not run in Zadatak 2.38:
+Perform the single remaining final live deployment and acceptance using only artifacts already proven by Tasks 2.31, 2.33, 2.37 and 2.39.
 
-1. remove only the four already-proven pending Action Scheduler rows left by deleted Task 2.37 fixtures;
-2. prove the corrected canonical `job_package` fixture under the integrated feature code;
-3. ensure the authoritative runtime harness cleans any Action Scheduler rows created by its own disposable fixtures;
-4. restore live staging to the exact recovery commit after the focused proof.
+PASS classification: `REMAINING_CUSTOM_COMMERCE_CLEANUP_COMPLETED`.
 
-PASS classification: `JOB_PACKAGE_RUNTIME_CONTRACT_CORRECTED`.
+Do not introduce a new harness, architecture, diagnostic task, feature branch, application commit, merge or push. `origin/staging` is already integrated.
 
-Do not perform final Zadatak 2.25 deployment or reporting in this task.
+## Mandatory preamble
 
-## Mandatory preamble and expected state
+Fetch fresh refs and read `tasks/current.md`, `tasks/README.md`, and complete reports 2.37–2.39.
 
-Fetch fresh `origin/codex-tasks`, `origin/codex-reports`, `origin/staging`, and `feature/z2-25-live-recovery`. Read `tasks/current.md`, `tasks/README.md`, and the complete 2.37/2.38 reports.
-
-Expected:
+Expected state:
 
 - `origin/staging=ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`;
-- live five-file recovery state and marker: `e9d58c62713fbed895a0d174b3fbeb33ee48c957`;
-- business fingerprint: `f3f7ce8a46e82e9164a85132f72eed50a1ca9daff026f939062197f0cf1537cc`;
-- owned-contract: `655c645e8e12f8c31e5ec95a499d7759b1214f1698b47921c8253e5284ad6c93`;
+- live recovery files/marker: `e9d58c62713fbed895a0d174b3fbeb33ee48c957`;
+- business: `f3f7ce8a46e82e9164a85132f72eed50a1ca9daff026f939062197f0cf1537cc`;
+- owned contract: `655c645e8e12f8c31e5ec95a499d7759b1214f1698b47921c8253e5284ad6c93`;
 - cron: `145d4732c3f1a9765281791a8c26fcf41a96cd7df521e133e7963537432e4e70`;
-- pending AS: 10 / `bca972265123523927ebbb660ce560a5125fbf0caa8cfc9fbc1ba6a05e4e998e`;
+- pending AS: 6 / `3c7068c59c2a1e43d6d6ecec1bf1d73abc835a24cfaf1c8b72f8bfd9e937c6e9`;
 - claims 0; AS 32733 complete/attempts 1;
+- six KEEP IDs: 32777, 32778, 32779, 32783, 32784, 32848;
 - scheduler guards and admin capability active.
 
-Pending KEEP IDs that must remain unchanged:
+STOP on any unaccounted difference. Production is forbidden.
 
-`32777, 32778, 32779, 32783, 32784, 32848`.
+## Immutable proven artifacts
 
-Proven Task 2.37 fixture residue:
+- recovery-aware finalizer proven through control smoke, deployment, static acceptance and entry into runtime:
+  `/tmp/raspitajse-task-2.37-final.RXqbnD/finalize-recovery-aware.sh`;
+- source finalizer SHA-256:
+  `18f0730a8f9ce3639eedf09df60ec7a00df10130450803824589bff19a1322f4`;
+- quiet report helper:
+  `/tmp/raspitajse-task-2.37-final.RXqbnD/codex-report-quiet.sh`;
+- quiet helper SHA-256:
+  `da1da6f089e686137a20ff7e80ee17fac4bdd22e83fcc7b77b25c701f60c6dee`;
+- corrected integration smoke SHA-256:
+  `88dd1d7916a3805accae7825ec7b75dc15e1f12777f6b9c53f5939afbe2e83c0`;
+- corrected static harness SHA-256:
+  `f8239178888a276eb9c2efe9f1fbe11549c2a371c3a92815ff4b072db00c2b3e`;
+- corrected runtime harness:
+  `/tmp/raspitajse-task-2.25-final-atomic.qafdp0/runtime-acceptance.php`;
+- corrected runtime harness SHA-256:
+  `1eaf8f57ee0e39debff7c9a6d6757659d986f2d680282b39a2e466da3d27fe1d`.
 
-- 32855 and 32858: `woocommerce_run_product_attribute_lookup_update_callback`, group `woocommerce-db-updates`, reference deleted product 11469;
-- 32856 and 32857: `wc-admin_import_orders`, group `wc-admin-data`, reference deleted orders 11470/11471;
-- all attempts 0, claim 0.
+Verify all paths/hashes before derivation.
 
-STOP on any unaccounted difference.
+## Only authorized pre-lock derivation
 
-## Authoritative corrected runtime harness
+Copy the exact recovery-aware finalizer to a fresh private task directory. Do not edit the source.
 
-Path:
+Inspect whether it embeds the previous runtime-harness hash. If present, replace only that expected value with `1eaf8f57...`. If it does not embed a runtime hash, make no such change.
 
-`/tmp/raspitajse-task-2.25-final-atomic.qafdp0/runtime-acceptance.php`
+Replace only final report metadata `Control specification: Zadatak 2.37` with `Control specification: Zadatak 2.40`.
 
-Required SHA-256:
+No other finalizer logic or gate may change.
 
-`e29758118e94d34de915fceca5ece6a11ece14e43344d934e6572ddefa067d41`
+Copy the exact quiet report helper unchanged. Preserve its SHA-256.
 
-The proven product-fixture correction instantiates:
+Before lock:
 
-`WP_Job_Board_Pro_Wc_Paid_Listings_Product_Type_Package(0)`
+- save finalizer diff and SHA-256;
+- `bash -n` both files;
+- prove diff is limited to the optional runtime hash and report-control metadata;
+- prove no Git application mutation commands exist;
+- prove helper can push only to `codex-reports`;
+- preserve/rotate every existing active evidence directory to a unique readable sibling archive without deletion or overwrite;
+- prepare exactly one fresh evidence destination;
+- verify all hashes immediately before execution.
 
-and no longer assigns the product type through a post-save raw taxonomy workaround.
+## One atomic execution
 
-Verify this exact state before further modification.
+One process holds both staging OS locks continuously through report publication.
 
-## Authoritative fixture cleanup correction
+Run the derived finalizer once.
 
-Before lock, inspect the harness's existing fixture ledger and cleanup path. Extend only that cleanup path so it records and removes Action Scheduler actions created exclusively by the current disposable product/order fixtures.
+It must complete:
 
-Requirements:
+1. Exact recovery preflight and corrected control smoke:
+   - packages 200/PASS;
+   - checkout 200/PASS;
+   - real admin renderer entered/completed once;
+   - owned billing hook once;
+   - no persistent fixture or side effect.
 
-- capture the initial AS ID set before fixture creation;
-- after business assertions and normal fixture cleanup, identify only newly created actions;
-- accept only hooks `woocommerce_run_product_attribute_lookup_update_callback` and `wc-admin_import_orders`;
-- require expected groups, attempts 0, claim 0 and arguments referencing only the current recorded fixture product/order IDs;
-- back up exact rows/logs before removal;
-- remove by exact action ID through the Action Scheduler store without running callbacks;
-- fail closed on every unexpected hook, group, claim, attempt or argument;
-- prove no task-created AS row remains;
-- do not modify pre-existing actions.
+2. Actual-hash live reconciliation from integrated target `ec97a6f...` for the three differing 2.25 files while confirming both guard files already match target.
 
-Do not weaken any assertion or side-effect guard. Do not modify application, vendor, theme, WooCommerce, Paid Listings or MU-plugin code.
+3. Static acceptance:
+   - 27/27;
+   - zero failures;
+   - process exit 0;
+   - empty unexpected stderr.
 
-Record the minimal diff, PHP lint and new immutable runtime-harness SHA-256.
+4. Corrected runtime acceptance using exact SHA `1eaf8f57...`:
+   - 35/35;
+   - process exit 0;
+   - canonical freshly reloaded `job_package`;
+   - all fixture and fixture-created AS rows removed;
+   - six KEEP AS rows unchanged.
 
-## One focused locked operation
+5. Identical corrected post-deploy smoke and final invariants:
+   - all three smoke targets pass;
+   - business/contract/cron/pending fingerprints exact;
+   - claims 0; AS 32733 complete/1;
+   - guards/admin capability intact;
+   - all mail/SMTP/HTTP/payment/refund/broad-runner/protected-action/production counters 0;
+   - all five live files and marker equal `ec97a6f...`.
 
-One process holds both staging OS locks continuously through cleanup, temporary feature reconciliation, runtime proof, fixture cleanup, recovery restoration and evidence persistence.
+## Failure and rollback
 
-### A. Exact old-residue cleanup
+Before deployment, leave recovery unchanged.
 
-After revalidating all four IDs against the 2.38 attribution, save exact rollback rows/logs and remove only 32855–32858 by exact ID. Do not execute callbacks.
+After deployment, restore all five live files and marker to exact recovery commit `e9d58c...`, prove hashes/fingerprints, preserve evidence, do not change Git, and publish one precise BLOCKED report.
 
-Prove the six KEEP IDs remain byte-identical and pending returns to:
+No retry or fix-forward inside the locked process.
 
-- count 6;
-- fingerprint `3c7068c59c2a1e43d6d6ecec1bf1d73abc835a24cfaf1c8b72f8bfd9e937c6e9`.
+## Final report
 
-### B. Temporary target reconciliation
+On PASS publish exactly one final report through the proven quiet helper:
 
-Save and verify the five-file recovery snapshot. Temporarily reconcile these paths to integrated target `ec97a6f...` by actual hashes:
-
-- `wp-content/plugins/raspitajse-commerce/raspitajse-commerce.php`;
-- `wp-content/themes/superio-child/functions.php`;
-- `wp-content/themes/superio-child/style.css`;
-- both staging scheduler guard MU plugins.
-
-Do not change `origin/staging`.
-
-### C. Corrected runtime proof
-
-Run the corrected authoritative runtime acceptance under all transport/payment/scheduler guards.
-
-Require:
-
-- all 35 checks pass;
-- saved fixture product freshly reloads as the Paid Listings custom class and type `job_package`;
-- all previously failed eight assertions pass;
-- every product/order/entitlement/package/user/meta fixture is deleted by exact ID;
-- every newly created fixture-linked Action Scheduler row is removed by the new exact cleanup;
-- six KEEP actions remain unchanged;
-- pending returns to count 6 and exact fingerprint;
-- business/owned-contract/cron fingerprints unchanged;
-- claims 0 and AS 32733 complete/1;
-- mail/PHPMailer/SMTP/external HTTP/payment/refund/broad-runner/protected-action counters all 0;
-- empty unexpected stderr/PHP diagnostics.
-
-### D. Mandatory live recovery restoration
-
-Whether the proof passes or fails, restore all five live files and deploy marker to exact recovery commit `e9d58c...`.
-
-Prove byte hashes, protected fingerprints, AS state and free locks before reporting.
-
-## Failure rules
-
-If exact attribution or cleanup cannot be proven, do not delete anything.
-
-If runtime fails, restore live recovery state and preserve exact fixture/AS rollback evidence. Do not start final 2.25 deployment.
-
-No retry outside a maximum of three focused runtime fixture attempts within this task.
-
-## Reporting
-
-Publish exactly one 2.39 report with:
-
-- old residue cleanup IDs/proof;
-- corrected runtime harness diff/path/SHA;
-- 35-check result and exit code;
-- fresh `job_package` class/type proof;
-- complete fixture and AS cleanup;
-- final six KEEP IDs/fingerprint;
-- recovery file/marker restoration;
-- fingerprints and side-effect counters;
+- Task: `Zadatak 2.25 — final recovery completion`;
+- Control specification: `Zadatak 2.40`;
+- Result: PASS;
+- classification: `REMAINING_CUSTOM_COMMERCE_CLEANUP_COMPLETED`;
+- integrated/deployed SHA `ec97a6f...`;
+- control/static/runtime/feature smoke results;
+- final fingerprints/counters and five-file convergence;
 - production untouched.
 
-Then STOP.
+Release locks only after remote report verification. Then STOP.
