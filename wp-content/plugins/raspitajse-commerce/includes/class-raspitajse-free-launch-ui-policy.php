@@ -37,6 +37,7 @@ final class Raspitajse_Free_Launch_UI_Policy {
             return;
         }
         self::$activated = true;
+        self::detach_owned_paid_callbacks();
 
         add_action( 'after_setup_theme', array( __CLASS__, 'hide_theme_cart' ), PHP_INT_MAX );
         add_action( 'wp_loaded', array( __CLASS__, 'deny_add_to_cart_request' ), PHP_INT_MIN );
@@ -50,6 +51,21 @@ final class Raspitajse_Free_Launch_UI_Policy {
         add_filter( 'woocommerce_get_checkout_url', array( __CLASS__, 'filter_paid_url' ), PHP_INT_MAX );
         add_filter( 'woocommerce_add_to_cart_validation', array( __CLASS__, 'deny_public_purchase' ), PHP_INT_MIN );
         add_filter( 'woocommerce_is_purchasable', array( __CLASS__, 'filter_product_purchasable' ), PHP_INT_MAX, 2 );
+    }
+
+    private static function detach_owned_paid_callbacks() {
+        remove_action( 'wp_footer', array( 'Raspitajse_Commerce', 'render_checkout_prefill' ), 10 );
+        remove_action( 'wp_enqueue_scripts', array( 'Raspitajse_Commerce', 'enqueue_package_purchase_transport' ), 10 );
+        remove_filter( 'woocommerce_checkout_get_value', array( 'Raspitajse_Commerce', 'filter_checkout_country' ), 10 );
+        remove_action( 'woocommerce_checkout_create_order', array( 'Raspitajse_Commerce', 'persist_company_order_data' ), 20 );
+
+        remove_action( 'woocommerce_checkout_before_customer_details', array( 'Raspitajse_Commerce_Checkout_Policy', 'render_legal_entity_notice' ), 10 );
+        remove_filter( 'woocommerce_checkout_fields', array( 'Raspitajse_Commerce_Checkout_Policy', 'filter_checkout_fields' ), 10 );
+        remove_action( 'wp_footer', array( 'Raspitajse_Commerce_Checkout_Policy', 'render_currency_preview' ), 10 );
+        remove_action( 'woocommerce_checkout_create_order', array( 'Raspitajse_Commerce_Checkout_Policy', 'convert_order_to_rsd' ), 30 );
+        remove_action( 'wp_head', array( 'Raspitajse_Commerce_Checkout_Policy', 'hide_standard_bank_details' ), 10 );
+        remove_action( 'woocommerce_thankyou', array( 'Raspitajse_Commerce_Checkout_Policy', 'render_payment_instructions' ), 1 );
+        remove_filter( 'wpo_wcpdf_attach_invoice', array( 'Raspitajse_Commerce_Checkout_Policy', 'filter_invoice_attachment' ), 10 );
     }
 
     public static function is_enabled() {
