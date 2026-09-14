@@ -1,164 +1,150 @@
-# Zadatak 2.44 — Read-only attribution of Action Scheduler IDs 32867 and 32868
+# Zadatak 2.45 — Complete post-deploy business-journey acceptance
 
 Status: READY
 Baseline: ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4
-Previous task: 2.43
+Previous task: 2.44
+Roadmap milestone: NOW — Post-deploy business-journey acceptance
 Target environment: staging
 Production: FORBIDDEN
 
 ## Objective
 
-Attribute exactly the two new pending Action Scheduler rows `32867` and `32868` that blocked Task 2.43.
+Complete the acceptance matrix deferred by Task 2.43 without reopening completed Zadatak 2.25 and without blocking on unrelated, unexecuted vendor scheduler rows.
 
-This task is strictly read-only. Do not execute, claim, cancel, delete, reschedule, update or recreate any action. Do not run a queue runner, due-action runner, WP-Cron event, callback, fixture, smoke test, deployment or acceptance matrix. Do not modify Git, application code, WordPress options, business data, users, sessions, files, deploy marker or production.
+This is acceptance, not development or scheduler remediation. Do not modify application/vendor/core code, Git history, deployed files, marker, options, real users/passwords/emails, or production. Do not deploy or rollback.
 
-PASS classification: `ACTION_SCHEDULER_DRIFT_ATTRIBUTED`.
+PASS classification: `POSTDEPLOY_BUSINESS_JOURNEYS_ACCEPTED`.
 
 ## Mandatory preamble
 
 Fetch fresh refs and read:
 
-- `tasks/current.md` and `tasks/README.md`;
-- final Zadatak 2.25 report `reports/20260914T103546Z-zadatak-2_25.md`;
-- complete Task 2.43 report and its evidence at `/tmp/raspitajse-task-2.43.cP7kIL`;
-- relevant reports/evidence for Tasks 2.29, 2.37, 2.39 and 2.42 where scheduler fixture IDs, KEEP/DROP actions and cleanup are recorded.
+- `tasks/README.md`, `tasks/ROADMAP.md`, and this task;
+- final 2.25 report `reports/20260914T103546Z-zadatak-2_25.md`;
+- complete reports 2.43 and 2.44.
+
+Require clean worktree, `origin/staging`, all five live files and marker at `ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`; business/owned-contract/cron fingerprints equal the final 2.25 report; claims 0; AS 32733 complete/attempts 1; scheduler guards/admin capability/registration/mail safety active; both staging locks free.
+
+Any application, business-state, protected-action, claim, deployed-file or marker drift is blocking. Do not repair it.
+
+## Corrected scheduler gate
+
+Do not require the global pending queue to equal the historical count of six.
+
+Under both locks capture an authoritative dynamic T0 snapshot:
+
+- the six protected KEEP IDs 32777, 32778, 32779, 32783, 32784 and 32848;
+- vendor rows 32867 and 32868 if still present;
+- every other pre-existing pending row.
+
+Apply these rules:
+
+1. The six protected KEEP rows/logs must match their final 2.25 state exactly.
+2. ID 32867 remains `WPForms DROP / PROVEN`; leave it untouched.
+3. ID 32868 remains observed AIOSEO sitemap maintenance with unresolved enqueue provenance; leave it untouched.
+4. Any other pre-existing row may enter the observational vendor T0 set only when static/read-only metadata shows a named vendor owner, no business-object reference, attempts 0 and claim 0.
+5. An unknown/Raspitajse-owned row, business-object reference, attempt or claim is BLOCKED.
+6. Every pre-existing T0 row/log must remain byte/state-identical at T1.
+7. Task-created fixture actions must be separately ledgered and removed by exact ID.
+8. Do not execute, claim, cancel, delete, reschedule or normalize any pre-existing action.
+
+Do not spend more than one bounded preflight attribution pass on unrelated vendor rows and do not create another scheduler archaeology task. Record observational rows in the report.
+
+## Persistent guarded execution
+
+Use one session-independent worker following the proven 2.41/2.42 transport. The same worker holds both OS locks through T0, tests, exact fixture cleanup, T1, report publication and remote verification.
+
+Retain guards for mail/PHPMailer/SMTP, external HTTP, payment/refund/payment-complete paths, broad cron/Action Scheduler runners and protected callbacks. All side-effect counters must remain 0.
+
+Only the exact known Elementor diagnostic SHA-256 `5fb64aa49cd5918e5d10b4940b0b8c5eba35a60e61a4c43bf4ff855cf7f6f83d` may be classified non-blocking. Every other PHP diagnostic/stderr blocks. Do not suppress diagnostics or expose credentials/PII.
+
+## Acceptance matrix
+
+### Registration and login infrastructure
+
+Using browser-like local staging requests, require:
+
+- registration and login pages HTTP 200 with expected forms;
+- registration targets `?wjbp-ajax=wp_job_board_pro_ajax_registernew`;
+- login targets `?wjbp-ajax=wp_job_board_pro_ajax_login`;
+- no registration native POST fallback to `/register/`;
+- required WP Job Board Pro assets, including the four remediated files, return 200, match live content and never return 403;
+- invalid registration nonce returns expected security JSON and creates zero users/profiles;
+- empty/invalid login returns expected CAPTCHA/validation JSON and creates no session;
+- `users_can_register=1`.
+
+Do not bypass CAPTCHA. Real interactive CAPTCHA login/registration may be reported NOT TESTED and does not block the automated infrastructure result. Never claim an authenticated browser session unless proven.
+
+### Roles and dashboards
+
+Without altering real users, prove:
+
+- user 141 remains Administrator/`manage_options` and is permitted into `/wp-admin/`;
+- AJAX exception is intact;
+- candidate/employer roles do not gain `manage_options`;
+- intended role dashboard routing/visibility works;
+- candidate/employer cannot access restricted administrator pages;
+- capability state is identical after testing.
+
+Use in-memory identity switching. A persisted user fixture is forbidden unless absolutely required; if required, it must be uniquely prefixed, privately credentialed, never mailed, ledgered and exactly deleted.
+
+### Packages, checkout, activation and quotas
 
 Require:
 
-- clean worktree;
-- `origin/staging=ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`;
-- all five live files and deploy marker equal that SHA;
-- both staging locks free before entry;
-- no scheduler runner/lock-holder active;
-- claims 0 and AS 32733 complete/attempts 1;
-- business, owned-contract and non-allowlisted cron fingerprints equal the final 2.25 report;
-- six protected KEEP IDs 32777, 32778, 32779, 32783, 32784, 32848 remain byte/state-identical;
-- current pending snapshot contains those six plus exactly 32867 and 32868.
+- `/packages/` and `/checkout/` HTTP 200 with expected contracts;
+- canonical in-memory `job_package` class/type;
+- candidate/employer package eligibility separation;
+- no real order/payment/refund/mail/external request.
 
-If additional unexplained drift appears, record it but do not expand scope or mutate anything. The task may continue attribution of 32867/32868 only if their exact rows remain unchanged and can be isolated safely; otherwise publish BLOCKED.
+Verify and run at most once the immutable runtime harness:
 
-## Read-only lock and access model
+- path `/tmp/raspitajse-task-2.25-final-atomic.qafdp0/runtime-acceptance.php`;
+- SHA-256 `1eaf8f57ee0e39debff7c9a6d6757659d986f2d680282b39a2e466da3d27fe1d`;
+- require 35/35, zero failures, exit 0;
+- require exact cleanup of all fixture posts/orders/meta and task-created AS rows/logs.
 
-Use one short-lived process holding both staging OS locks during the authoritative T0 snapshot, attribution reads, T1 snapshot, evidence persistence and report publication.
+### Administration and final smoke
 
-Prefer raw read-only database queries and static filesystem/Git reads that do not bootstrap WordPress.
+Require:
 
-If WordPress bootstrap is absolutely required for a metadata name lookup:
+- WooCommerce HPOS admin order renderer entered/completed once;
+- expected markup and owned billing hook once;
+- packages, checkout and admin renderer final smoke PASS;
+- no persistent fixture/session/role/capability change.
 
-- install guards before bootstrap;
-- block action scheduling, async dispatch, cron spawning, mail, SMTP, HTTP transport, payment and callbacks;
-- do not call scheduler APIs that can write;
-- prove before/after database equality;
-- treat any attempted write or side effect as BLOCKED.
+## Final invariants
 
-No parallel staging process is allowed.
+T1 must equal T0 for:
 
-## Exact row evidence
-
-For each ID 32867 and 32868, capture a sanitized evidence row containing:
-
-- exact action ID;
-- hook;
-- status;
-- group ID and resolved group slug/name;
-- scheduled local and GMT timestamps;
-- creation/enqueue timestamp when available;
-- schedule type/interval/recurrence in sanitized form;
-- priority;
-- attempts;
-- claim ID;
-- SHA-256 of raw arguments;
-- SHA-256 of extended arguments;
-- SHA-256 of the complete canonicalized database row;
-- related Action Scheduler log row IDs, timestamps and sanitized message classification;
-- SHA-256 of each unredacted private log row.
-
-Store raw arguments/log payload only in private mode-0600 evidence if required for attribution. Never print or publish raw serialized arguments, email addresses, names, tokens, URLs containing secrets, candidate/employer profile data, rendered mail, order/customer data or other PII.
-
-Prove neither action has been claimed or attempted during this task.
-
-## Attribution
-
-For each action independently:
-
-1. Decode arguments only in private evidence.
-2. Identify every referenced object ID/type without publishing private content.
-3. Check read-only whether referenced posts/orders/users/options/fixtures exist and whether they match previously recorded fixture ledgers.
-4. Correlate creation/scheduled timestamps with Task 2.42 execution, its runtime fixture creation/cleanup, report publication and any documented staging request.
-5. Compare hook, group and argument hashes against:
-   - Task 2.39/2.42 fixture-created actions;
-   - the six KEEP actions;
-   - Task 2.29 DROP actions;
-   - known WooCommerce/WP Job Board Pro infrastructure actions.
-6. Search the exact deployed and Git source statically for:
-   - hook registration;
-   - scheduling/enqueue call;
-   - group assignment;
-   - argument construction;
-   - cancellation/cleanup behavior.
-7. Identify the responsible owner/layer: Raspitajse-owned code, WooCommerce, WP Job Board Pro, another named vendor, Task fixture, or unknown.
-8. Determine the exact trigger: runtime fixture, page/bootstrap request, order/status transition, plugin maintenance, manual action or unknown.
-9. State why the rows were created after the final 2.25 six-action snapshot and why they survived cleanup, using evidence rather than inference.
-
-No external/vendor request may be made merely to prove attribution.
-
-## Classification and recommendation
-
-Assign each ID one evidence-backed classification:
-
-- `KEEP`: required business/operational action;
-- `REDESIGN`: business need remains but scheduling/ownership should move to a Raspitajse-owned implementation;
-- `DROP`: irrelevant vendor/telemetry/maintenance behavior or proven disposable fixture residue.
-
-Also assign one provenance confidence:
-
-- `PROVEN`;
-- `HIGH_CONFIDENCE_INFERENCE`;
-- `UNRESOLVED`.
-
-PASS requires PROVEN attribution for both IDs. Otherwise result is BLOCKED.
-
-For each row state exactly one follow-up recommendation, without performing it:
-
-- accept into a newly documented legitimate baseline;
-- delete that exact ID only as proven fixture residue;
-- separately remediate the scheduling source;
-- leave untouched pending further evidence.
-
-Do not recommend broad scheduler execution or bulk deletion.
-
-## T0/T1 equality gate
-
-Capture authoritative T0 immediately after both locks are held and T1 after all attribution reads.
-
-Require exact equality for:
-
-- complete rows and logs of IDs 32867 and 32868;
-- all six KEEP rows/logs;
-- pending count, ID list and fingerprint;
-- claims and AS 32733;
+- Git, five live files and marker;
 - business, owned-contract and cron fingerprints;
+- all six protected KEEP rows/logs;
+- every observational pre-existing vendor row/log;
+- claims and AS 32733;
 - users/options/roles;
-- all five live file hashes and marker;
-- Git state;
-- mail/SMTP/HTTP/payment/broad-runner/protected-action counters at 0.
+- registration, guards, mail safety and admin capability.
 
-No staging mutation is acceptable, including timestamp-only scheduler changes.
+All task fixture ledger entries must be absent. Mail, PHPMailer, SMTP, payment, refund, unexpected external HTTP, broad-runner, protected-action and production counters must be 0.
+
+## Failure
+
+No fix-forward, deploy or scheduler remediation. Clean only exact task-created fixtures/actions/sessions, prove original state, publish one precise 2.45 BLOCKED report, release locks and STOP.
+
+If the worker disappears, start no second acceptance worker. A cleanup-only holder may remove exact task fixtures and verify T0, then publish BLOCKED.
 
 ## Report
 
 Publish exactly one report to `codex-reports`:
 
-- Task: `Zadatak 2.44 — Read-only Action Scheduler drift attribution`;
+- Task: `Zadatak 2.45 — Complete post-deploy business-journey acceptance`;
 - Result: PASS or BLOCKED;
-- classification on PASS: `ACTION_SCHEDULER_DRIFT_ATTRIBUTED`;
-- one sanitized attribution table for IDs 32867 and 32868;
-- owner, exact trigger, referenced-object disposition, KEEP/REDESIGN/DROP and confidence for each;
-- T0/T1 equality;
-- exact recommended next action;
-- confirmation that Task 2.43 was not resumed;
-- no callbacks/runners/mutations;
+- PASS classification `POSTDEPLOY_BUSINESS_JOURNEYS_ACCEPTED`;
+- every matrix result and automated-vs-interactive distinction;
+- protected and observational scheduler T0/T1 equality;
+- fixture cleanup and zero counters;
+- deployed SHA/marker unchanged;
 - locks released;
 - production untouched.
 
-Verify the remote report path, 40-hex commit, `origin/codex-reports` equality and non-empty readback before releasing locks. Then STOP.
+Verify remote report path, 40-hex commit, `origin/codex-reports` equality and non-empty readback before releasing locks. Then STOP.
