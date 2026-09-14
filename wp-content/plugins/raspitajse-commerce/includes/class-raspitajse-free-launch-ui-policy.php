@@ -76,11 +76,13 @@ final class Raspitajse_Free_Launch_UI_Policy {
     }
 
     public static function is_exempt_context() {
-        return is_admin()
+        $exempt = is_admin()
             || wp_doing_ajax()
             || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
             || ( defined( 'WP_CLI' ) && WP_CLI )
             || ( defined( 'DOING_CRON' ) && DOING_CRON );
+
+        return (bool) apply_filters( 'raspitajse_free_launch_exempt_context', $exempt );
     }
 
     public static function hide_theme_cart() {
