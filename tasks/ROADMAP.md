@@ -1,7 +1,7 @@
 # Raspitajse production-readiness roadmap
 
 Updated: 2026-09-14
-Current application baseline: `origin/staging@ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`
+Current application baseline: `origin/staging@7ce577b5802bcea143c693d426febf743d1ab340`
 Target: free public launch
 Production: FORBIDDEN until the explicit go-live task is approved
 
@@ -207,15 +207,21 @@ The prior paid-package/checkout-oriented acceptance specification is superseded 
 
 #### Zadatak 2.46 — Read-only free-access impact map
 
+Status: completed — PASS.
+
 Inventory every current dependency on packages, checkout, orders and paid-listing entitlements; locate the current job-post limit/status counting paths; classify each behavior; define the smallest safe migration to free access with three active jobs per employer.
 
 No code or staging mutation.
 
 #### Zadatak 2.47 — Implement free access and three-active-job quota
 
+Status: application completed and deployed at `7ce577b5802bcea143c693d426febf743d1ab340`. Static/runtime/concurrency and protected-state gates passed. The execution report is procedural PARTIAL only because evidence-directory permissions caused the original holder to exit after successful integration; do not rerun without direct regression evidence.
+
 Implement the Raspitajse-owned policy on a feature branch, with concurrency-safe enforcement, status-transition tests, existing-user behavior and no public checkout dependency.
 
 #### Zadatak 2.48 — Remove paid journey from public UI
+
+Status: current.
 
 Remove/hide package, pricing, cart, checkout and payment redirects/CTAs from candidate/employer journeys while preserving historical WooCommerce data and required infrastructure.
 
