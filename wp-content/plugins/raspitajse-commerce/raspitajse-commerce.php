@@ -849,7 +849,9 @@ final class Raspitajse_Commerce_Checkout_Policy {
 
 
 require_once __DIR__ . '/includes/class-raspitajse-commerce-job-package-policy.php';
+require_once __DIR__ . '/includes/class-raspitajse-free-job-access-policy.php';
 
 Raspitajse_Commerce::boot();
 Raspitajse_Commerce_Checkout_Policy::boot();
 Raspitajse_Commerce_Job_Package_Policy::boot();
+Raspitajse_Free_Job_Access_Policy::boot();
