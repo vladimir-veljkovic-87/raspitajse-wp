@@ -21,14 +21,19 @@ final class Raspitajse_Commerce {
      */
     public static function boot() {
         add_action( 'before_woocommerce_init', array( __CLASS__, 'declare_hpos_compatibility' ) );
-        add_action( 'wp_footer', array( __CLASS__, 'render_checkout_prefill' ) );
-        add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_package_purchase_transport' ) );
-        add_filter( 'woocommerce_checkout_get_value', array( __CLASS__, 'filter_checkout_country' ), 10, 2 );
-        add_action( 'woocommerce_checkout_create_order', array( __CLASS__, 'persist_company_order_data' ), 20, 2 );
         add_action(
             'woocommerce_admin_order_data_after_billing_address',
             array( __CLASS__, 'render_admin_company_data' )
         );
+
+        if ( Raspitajse_Free_Job_Access_Policy::is_enabled() ) {
+            return;
+        }
+
+        add_action( 'wp_footer', array( __CLASS__, 'render_checkout_prefill' ) );
+        add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_package_purchase_transport' ) );
+        add_filter( 'woocommerce_checkout_get_value', array( __CLASS__, 'filter_checkout_country' ), 10, 2 );
+        add_action( 'woocommerce_checkout_create_order', array( __CLASS__, 'persist_company_order_data' ), 20, 2 );
     }
 
     /**
@@ -393,6 +398,10 @@ final class Raspitajse_Commerce_Checkout_Policy {
      * Register one owned callback for each custom checkout/payment behavior.
      */
     public static function boot() {
+        if ( Raspitajse_Free_Job_Access_Policy::is_enabled() ) {
+            return;
+        }
+
         add_action(
             'woocommerce_checkout_before_customer_details',
             array( __CLASS__, 'render_legal_entity_notice' )
@@ -850,8 +859,10 @@ final class Raspitajse_Commerce_Checkout_Policy {
 
 require_once __DIR__ . '/includes/class-raspitajse-commerce-job-package-policy.php';
 require_once __DIR__ . '/includes/class-raspitajse-free-job-access-policy.php';
+require_once __DIR__ . '/includes/class-raspitajse-free-launch-ui-policy.php';
 
 Raspitajse_Commerce::boot();
 Raspitajse_Commerce_Checkout_Policy::boot();
 Raspitajse_Commerce_Job_Package_Policy::boot();
 Raspitajse_Free_Job_Access_Policy::boot();
+Raspitajse_Free_Launch_UI_Policy::boot();
