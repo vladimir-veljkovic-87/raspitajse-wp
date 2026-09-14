@@ -1,101 +1,286 @@
-# Raspitajse technical roadmap
+# Raspitajse production-readiness roadmap
 
 Updated: 2026-09-14
-Application baseline: `origin/staging@ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`
-Production: FORBIDDEN unless a later task explicitly authorizes a release
+Current application baseline: `origin/staging@ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`
+Target: free public launch
+Production: FORBIDDEN until the explicit go-live task is approved
 
-## Purpose
+## 1. Product decisions
 
-This file is the high-level source of truth for why numbered Codex tasks exist and what phase comes next. Detailed execution instructions remain in `tasks/current.md` and immutable `tasks/<id>.md`.
+### Launch business model
 
-The roadmap follows one product rule: migrate Raspitajse business needs, data and user outcomes—not vendor implementation for its own sake.
+- Candidate and employer registration are free.
+- No payment gateway, paid checkout, paid subscription or paid package is required at launch.
+- One employer may have at most **3 simultaneously active public job listings**.
+- Draft, pending-review, expired, rejected and trashed listings do not consume an active slot.
+- Editing an existing active listing does not consume another slot.
+- When an active listing expires or is unpublished, its slot becomes available again.
+- Administrators may manage listings without the employer quota blocking administrative operations.
+- Candidates may create a profile/CV, search and apply without purchasing a package. Application abuse is controlled through validation, CAPTCHA/rate limits and moderation—not payment.
+- Existing WooCommerce orders/products/history are preserved. No destructive migration is allowed.
+- WooCommerce may remain installed as infrastructure while dependencies are retired, but cart/checkout/payment must not be part of the public free-launch journey.
+- Future monetization remains possible, but it is outside the launch scope.
 
-## Decision rules
+### Ownership direction
 
-Every legacy behavior is classified:
+- The “three active jobs” rule is a Raspitajse business rule and must live in a Raspitajse-owned layer.
+- Vendor theme/plugin code may provide UI and storage infrastructure, but must not become the authoritative owner of the quota.
+- Legacy paid-package behavior is classified per hook/function as `KEEP`, `REDESIGN` or `DROP`.
+- Required behavior is not removed until its free replacement is implemented, tested and confirmed.
 
-- `KEEP` — required business or operational behavior;
-- `REDESIGN` — the business need remains, but implementation should move to a cleaner Raspitajse-owned layer;
-- `DROP` — irrelevant vendor telemetry, announcements, abandoned behavior or unnecessary maintenance.
+## 2. Definition of production-ready staging
 
-A completed milestone is not reopened without concrete regression evidence.
+Staging is production-ready only when every mandatory launch gate below is PASS against one frozen release-candidate commit.
 
-Action Scheduler gates use two layers:
+### Gate A — Source, environment and deploy integrity
 
-1. Raspitajse-owned/business actions, claims, protected IDs and side effects are strict blockers.
-2. Unrelated vendor actions are captured as an observational T0 set and must remain unexecuted and byte/state-identical at T1. Their mere presence or a changed global queue count does not block unrelated business acceptance.
+- Git is the source of truth; staging contains no undocumented manual code delta.
+- WordPress core, active theme, child theme and required plugins have a recorded compatibility/version matrix.
+- Parent-theme updates do not overwrite child-theme/Raspitajse-owned code.
+- Environment-specific secrets, domains, mail, CAPTCHA and cache settings are documented.
+- Staging and production configuration differences are explicit and intentional.
+- File ownership/modes are verified; no `777`, no inaccessible tracked assets.
+- Deploy is changed-only, reproducible and produces a truthful marker.
+- Rollback restores the previous release without changing Git history.
+- Production data is never used for unsafe fixtures.
 
-Unknown actions that reference business objects, become claimed/attempted, or cannot be safely guarded remain blocking. Broad queue execution and bulk deletion are always forbidden.
+Exit: two consecutive staging deploy/rollback rehearsals from Git with identical hashes and no manual file edits.
 
-## Status
+### Gate B — Free access and employer quota
+
+- New and existing employers receive free access without an order or package purchase.
+- Employers with 0–2 active listings may create another listing.
+- An employer with 3 active listings is blocked before a fourth becomes public.
+- The rejection is clear, localized and does not lose entered draft data.
+- Draft/pending/expired/rejected/trash statuses are counted correctly.
+- Publish, unpublish, expiry, deletion and status transitions release/consume slots exactly once.
+- Concurrent submissions cannot bypass the limit.
+- Administrators can moderate/manage listings without corrupting employer quota.
+- Candidates do not require packages for profile/CV/search/application.
+- Package/cart/checkout/payment CTAs and redirects are absent from the free public journey.
+- Existing paid order/product/history data remains intact and readable.
+
+Exit: deterministic unit/runtime tests plus real-browser employer journey proving the fourth active listing is blocked and a freed slot can be reused.
+
+### Gate C — Authentication, roles and real browser journeys
+
+Candidate:
+
+- register with real CAPTCHA;
+- receive/complete the intended verification or welcome flow;
+- login/logout/reset password;
+- create/edit profile and CV;
+- search/view jobs;
+- apply once and see the correct status;
+- cannot enter employer/admin-only areas.
+
+Employer:
+
+- register/login/reset password;
+- create/edit company profile;
+- create draft, submit and manage jobs;
+- see applicants through authorized UI;
+- cannot access another employer’s jobs/applicants;
+- quota behavior matches Gate B.
+
+Administrator:
+
+- secure wp-admin access;
+- user, employer, candidate, job and moderation operations;
+- no hardcoded user-ID authorization;
+- least-privilege capability checks.
+
+Exit: Chrome/Edge plus Safari or equivalent mobile-browser run, with screenshots/network evidence and zero new PHP fatal/warning/error. Automated handler tests do not replace real CAPTCHA/session testing.
+
+### Gate D — Core job-board business behavior
+
+- Job creation, moderation, publication, editing, expiry and archive behavior are correct.
+- Candidate application links the correct candidate, job and employer.
+- Duplicate application behavior is intentional.
+- Employer can view only authorized applicant data.
+- Job alerts preserve the required business purpose and use a Raspitajse-owned/safe implementation.
+- Expiry/notification workflows are idempotent and do not resend endlessly.
+- Search/filter/location behavior works for launch content.
+- Empty states and validation messages are usable and localized.
+
+Exit: one controlled end-to-end candidate/employer/admin fixture journey with exact cleanup and audit evidence.
+
+### Gate E — Email and background processing
+
+- Registration, password reset, application, employer notification, job alert and expiry messages are inventoried as KEEP/REDESIGN/DROP.
+- Required emails reach controlled real inboxes using production-like configuration.
+- From/reply-to/domain authentication and bounce handling are verified.
+- Templates contain correct data and no unintended PII.
+- Business cron/Action Scheduler hooks have an owner, idempotency rule, retry policy and monitoring.
+- Raspitajse-owned/protected actions are strict gates.
+- Unrelated vendor actions are observed separately and cannot block unrelated business acceptance merely by existing.
+- No broad queue runner is used in acceptance fixtures.
+- WPForms vendor announcement action 32867 remains a separately planned DROP remediation.
+- AIOSEO image-sitemap action 32868 remains a separately documented vendor-maintenance decision.
+
+Exit: each required business event is triggered once in isolation, produces one expected outcome, and leaves no unexplained business action/claim.
+
+### Gate F — Security and privacy
+
+- HTTPS everywhere; secure cookies and production debug settings.
+- Strong unique administrator credentials and 2FA.
+- No shared/unnecessary administrators.
+- Secrets are outside Git and rotated before launch where necessary.
+- Dashboard file editor disabled.
+- Unused plugins/themes removed after dependency proof.
+- Active dependencies have no known critical/high unresolved vulnerability.
+- Login, registration, reset and submission endpoints have CAPTCHA/rate limiting and enumeration protection.
+- Uploads/CVs enforce type, size, authorization and non-executable storage behavior.
+- Database/file permissions and wp-config protection are verified.
+- Logs/reports do not expose passwords, tokens, email contents, CVs or candidate PII.
+- Privacy notice, cookie behavior, consent, retention, export and deletion flows cover candidate CV/profile/application data.
+- Legal text is reviewed for Serbia, Croatia/EU, Bosnia and other enabled launch markets.
+
+Exit: security checklist PASS, vulnerability scan reviewed, privacy/data-lifecycle test PASS, and zero unresolved P0/P1 issue.
+
+### Gate G — Performance, accessibility, localization and SEO
+
+- Critical pages: home, jobs, job detail, register, login, candidate dashboard, employer dashboard and job submission.
+- No 4xx/5xx or missing required assets.
+- With the expected initial traffic, a bounded load test sustains at least 25 concurrent users without 5xx or data corruption.
+- Mobile Core Web Vitals targets: LCP <= 2.5s, INP <= 200ms, CLS <= 0.1 on critical public pages.
+- Dynamic uncached registration/dashboard/submission pages meet documented response-time budgets.
+- WCAG 2.2 AA checks cover keyboard, focus, labels, form errors, contrast, reflow and status messages.
+- Supported launch languages are complete and no critical UI string falls back unexpectedly. Planned content locales are Serbian, Croatian and English unless the launch scope is changed.
+- Staging remains non-indexable; production robots/canonical/sitemap behavior is validated at release.
+- AIOSEO behavior is tested as SEO infrastructure, not as a blocker for unrelated commerce/auth flows.
+
+Exit: performance, accessibility, localization and SEO reports contain no launch-blocking defect.
+
+### Gate H — Backup, recovery and observability
+
+- Automated database and files/media backups exist outside the live web root.
+- At least one full restore is performed on an isolated environment.
+- Recommended initial targets: RPO <= 24 hours, RTO <= 4 hours, application rollback <= 15 minutes.
+- Monitoring covers uptime, SSL, HTTP 5xx, PHP fatal, failed login bursts, mail failure, business scheduler failure, disk and database capacity.
+- Alerts have a real owner and tested destination.
+- A launch-day operational checklist and incident/rollback contacts exist.
+
+Exit: restore drill PASS and a synthetic alert is received by the responsible operator.
+
+### Gate I — Release candidate and go/no-go
+
+- One release-candidate SHA is frozen.
+- Zero open P0/P1 defects.
+- P2 defects require documented impact, workaround, owner and explicit acceptance.
+- All mandatory gates A–H are PASS.
+- Production backup and rollback inputs are verified immediately before release.
+- Production deployment is a separate explicitly approved task.
+- Post-deploy smoke covers public pages, auth, job submission, application, admin and background health without creating unintended mail/payment/actions.
+
+Exit: signed go/no-go report followed by a separately authorized production deployment.
+
+## 3. Roadmap phases and task sequence
 
 ### DONE
 
-#### Staging safety foundation
+#### Foundation and Zadatak 2.25
 
-- staging-only execution and production prohibition;
-- scheduler DROP/async guards;
-- mail, SMTP, external HTTP and payment interception for fixtures;
-- exact cleanup/evidence/report workflow;
-- administrator capability fix;
-- registration enabled and WP Job Board Pro asset permissions remediated.
-
-#### Zadatak 2.25 — Remaining custom commerce cleanup
-
-Status: `DONE / PASS`
-
-- integrated and deployed SHA: `ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`;
-- static acceptance: 27/27;
-- runtime acceptance: 35/35;
-- packages, checkout and WooCommerce HPOS admin renderer smoke: PASS;
-- final report: `reports/20260914T103546Z-zadatak-2_25.md`;
+- staging safety/guard/evidence workflow;
+- admin capability and registration infrastructure remediation;
+- WP Job Board Pro asset permission remediation;
+- Zadatak 2.25 custom commerce cleanup deployed at `ec97a6f76a3d393bac5e2629b977cf6a1fbe9bf4`;
+- static 27/27, runtime 35/35 and three smoke targets PASS;
 - production untouched.
 
-Tasks 2.26–2.42 are recovery, diagnostic and finalization history for this completed milestone. They are not open product work.
+Tasks 2.26–2.42 are closed recovery/finalization history. Do not reopen them without direct regression evidence.
 
-#### Zadatak 2.44 — Scheduler attribution checkpoint
+#### Scheduler observation
 
-Status: `COMPLETE / PARTIAL ATTRIBUTION`
+- 32867: WPForms vendor announcement fetch, `DROP / PROVEN`;
+- 32868: AIOSEO image-sitemap maintenance, vendor owner/purpose proven and enqueue provenance unresolved;
+- neither is Raspitajse business state;
+- both remain unexecuted and are not allowed to block unrelated launch gates merely by existing.
 
-- ID 32867: WPForms vendor notification fetch; `DROP / PROVEN`;
-- ID 32868: AIOSEO image-sitemap maintenance; vendor owner and purpose proven, exact enqueue source unresolved;
-- both remain pending, unexecuted and unchanged;
-- neither is part of Raspitajse business state;
-- no further vendor-internal investigation blocks the user-journey acceptance milestone.
+### SUPERSEDED BEFORE EXECUTION
 
-### NOW
+#### Zadatak 2.45
 
-#### Zadatak 2.45 — Post-deploy business-journey acceptance
+The prior paid-package/checkout-oriented acceptance specification is superseded by the explicit free-launch decision. Do not execute `tasks/2.45.md`.
 
-Run the previously deferred registration/login, role/dashboard, packages/checkout, activation/quota and admin acceptance against the deployed 2.25 code.
+### NOW — Free launch architecture
 
-Vendor scheduler rows are observed and protected from execution; they do not redefine the Raspitajse business baseline and do not block acceptance merely by existing.
+#### Zadatak 2.46 — Read-only free-access impact map
 
-Exit condition: one PASS/BLOCKED report with exact cleanup, zero side effects and no production access.
+Inventory every current dependency on packages, checkout, orders and paid-listing entitlements; locate the current job-post limit/status counting paths; classify each behavior; define the smallest safe migration to free access with three active jobs per employer.
 
-### NEXT
+No code or staging mutation.
 
-After 2.45, choose one Raspitajse-owned subsystem from the existing inventory based on business value and migration risk. Before implementation, publish a short bounded discovery task that states:
+#### Zadatak 2.47 — Implement free access and three-active-job quota
 
-- business outcome;
-- current owner/dependencies;
-- KEEP/REDESIGN/DROP decision;
-- target Raspitajse-owned implementation;
-- staging acceptance and rollback boundary.
+Implement the Raspitajse-owned policy on a feature branch, with concurrency-safe enforcement, status-transition tests, existing-user behavior and no public checkout dependency.
 
-Do not return to 2.25 or scheduler archaeology unless 2.45 produces direct business-regression evidence.
+#### Zadatak 2.48 — Remove paid journey from public UI
 
-### LATER
+Remove/hide package, pricing, cart, checkout and payment redirects/CTAs from candidate/employer journeys while preserving historical WooCommerce data and required infrastructure.
 
-- remediate the WPForms vendor-announcement scheduling source and then remove only its proven exact pending residue;
-- decide whether AIOSEO image-sitemap scheduling is retained/configured or redesigned, independently of business acceptance;
-- perform real interactive CAPTCHA registration/login with controlled credentials if product sign-off requires it;
-- production release requires a separate explicit task and approval.
+### NEXT — Business journey proof
 
-## Task discipline
+#### Zadatak 2.49 — Real browser auth and role E2E
 
-- `tasks/current.md` is the only executable pointer.
-- One task must map to exactly one roadmap milestone.
+Candidate/employer/admin registration, CAPTCHA, login, reset, profile/dashboard and authorization matrix.
+
+#### Zadatak 2.50 — Job lifecycle and application E2E
+
+Employer creates/submits/manages up to three active jobs; candidate searches/applies; admin moderates; authorization and cleanup proven.
+
+#### Zadatak 2.51 — Email and business scheduler acceptance
+
+Required transactional messages and business-owned background jobs, including idempotency, retry and monitoring.
+
+### RELEASE READINESS
+
+#### Zadatak 2.52 — Dependency, update and security gate
+
+WordPress/theme/plugin compatibility, vulnerabilities, file permissions, admin/2FA, secrets, uploads and hardening.
+
+#### Zadatak 2.53 — Privacy and data lifecycle
+
+Consent, retention, export/delete, CV/application access and legal-content checklist.
+
+#### Zadatak 2.54 — Performance, accessibility, localization and SEO
+
+Core Web Vitals, bounded load, WCAG 2.2 AA, SR/HR/EN content, robots/canonical/sitemap.
+
+#### Zadatak 2.55 — Backup, restore and monitoring drill
+
+Full restore, rollback timing, uptime/error/capacity/business-job alerts.
+
+#### Zadatak 2.56 — Release rehearsal
+
+Freeze candidate SHA; deploy, smoke, rollback and redeploy on staging without manual drift.
+
+#### Zadatak 2.57 — Production go/no-go
+
+Consolidate Gates A–I. No production mutation.
+
+### PRODUCTION — EXPLICIT APPROVAL REQUIRED
+
+#### Zadatak 2.58 — Production deployment
+
+Created only after 2.57 PASS and explicit user approval. Includes verified backup, deploy, smoke, monitoring and rollback boundary.
+
+## 4. Severity and blocking policy
+
+- `P0`: security/data-loss/site-wide outage — always blocking.
+- `P1`: critical launch journey broken, authorization failure, duplicate/corrupt business action — always blocking.
+- `P2`: material defect with safe workaround — requires explicit acceptance.
+- `P3`: cosmetic/minor issue — may be deferred with owner.
+
+A vendor diagnostic or scheduler row is not automatically P1. Severity is based on user/business impact and containment.
+
+## 5. Task discipline
+
+- `tasks/current.md` is the sole executable pointer.
+- Every task maps to one roadmap phase and has explicit exit criteria.
+- Completed milestones remain closed.
+- Incidental findings do not expand scope automatically.
+- Application changes use feature branches from the exact declared staging baseline.
 - Reports go only to `codex-reports`.
-- Codex stops after the report and never invents the next task.
-- Incidental vendor behavior is recorded but does not automatically expand scope.
+- Production is forbidden unless the task explicitly authorizes it.
+- Codex stops after publishing the report and never invents the next task.
