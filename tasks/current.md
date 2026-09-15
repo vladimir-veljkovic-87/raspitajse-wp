@@ -1,64 +1,49 @@
-# Zadatak 2.51.4 — Lean background-business smoke
+# Zadatak 2.51.5 — Direct job-expiry smoke
 
 Status: READY
 Baseline: 7e8ff8bc0978fd72fe941e76e5490c86912137ef
-Previous task: 2.51.3
+Previous task: 2.51.4
 Target: staging
 Production: FORBIDDEN
-Time budget: 20 minutes
+Time budget: 10 minutes
 
 ## Goal
 
-Prove two launch-relevant outcomes on staging:
+Prove only that the existing job-expiry callback removes an expired public job from the employer's active-job quota and is idempotent.
 
-1. an expired public job stops consuming one of the employer's three active slots;
-2. a matching candidate job alert creates one correct email event.
-
-No application change or deployment is authorized.
+No application change, deploy or Git integration is authorized.
 
 ## Lean execution
 
-Follow `tasks/README.md`. Read only the directly responsible code and current settings.
+Follow `tasks/README.md`. Reuse the callback already identified in 2.51.4:
 
-This is not a global scheduler audit:
+`WP_Job_Board_Pro_Job_Listing::check_for_expired_jobs`
 
-- do not run any complete cron or queue runner;
-- do not inventory or investigate unrelated scheduled work;
-- invoke only the two directly responsible business callbacks;
-- use one short static ownership check and one focused runtime smoke;
-- do not create a large harness, finalizer, evidence framework or historical fingerprint comparison;
-- stop if a callback cannot be isolated safely.
+Do not search for another implementation, inspect historical scheduler reports, test job alerts, create a harness/finalizer, enumerate queues, run WP-Cron, or run Action Scheduler.
 
-## Acceptance
+If execution cannot finish within 10 minutes, stop and publish the last checkpoint.
 
-Use the smallest synthetic fixtures needed and remove them by exact recorded IDs.
+## Focused smoke
 
-Expiry:
+Confirm the declared baseline and staging environment. Before mutation, confirm there are no unrelated currently-due public jobs that this callback would alter. If any exist, return `BLOCKED: EXPIRY_CALLBACK_NOT_ISOLATABLE`.
 
-- one expired public job leaves the active/public set;
-- one employer slot becomes available;
-- repeating the same callback causes no additional state transition.
+Under the standard staging mutation lock:
 
-Job alert:
+1. create one synthetic employer and one synthetic public job with an expiry time in the past;
+2. record exact fixture IDs and the employer's active-job count;
+3. intercept any email before transport;
+4. invoke the exact callback directly once;
+5. verify the job is no longer active/public and the employer active-job count decreased by exactly one;
+6. verify the Raspitajse three-active-job policy recognizes the released slot;
+7. invoke the same callback once more and verify no further state or notification change;
+8. delete only the recorded fixtures and confirm relevant initial counts return;
+9. release the lock.
 
-- one matching alert event is generated for the intended candidate;
-- rendered content contains the correct staging job data/link;
-- no production or paid-flow link is present;
-- mail is intercepted before transport, so no real email is sent;
-- verify the implementation's actual duplicate-prevention boundary without inventing a stricter rule.
-
-All fixture counts must return to their initial values. External HTTP, payment, real email and broad scheduler executions must remain zero.
-
-Do not modify production, application code, settings, schedules or unrelated records.
+No real email, external HTTP, payment, broad scheduler execution, option change or unrelated record mutation is allowed.
 
 ## Result
 
-Return one of:
+- `PASS: DIRECT_JOB_EXPIRY_SMOKE` if expiry, quota release, idempotency and cleanup pass.
+- Otherwise return one precise `BLOCKED` reason.
 
-- `PASS: BUSINESS_SCHEDULER_SMOKE`;
-- `BLOCKED: EXPIRY_CALLBACK_DEFECT`;
-- `BLOCKED: JOB_ALERT_CALLBACK_DEFECT`;
-- `BLOCKED: CALLBACK_NOT_SAFELY_ISOLATABLE`;
-- `BLOCKED: OWNED_BACKGROUND_REDESIGN_REQUIRED`.
-
-Publish one concise report containing callback ownership, both business outcomes, intercepted-mail count, fixture cleanup and unchanged final staging baseline. STOP after the report.
+Publish one short report with callback ownership, before/after status and active count, idempotency, intercepted-mail count, cleanup and unchanged Git/live/marker baseline. STOP after the report.
