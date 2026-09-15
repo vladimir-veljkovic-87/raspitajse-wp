@@ -77,6 +77,23 @@ Unless a task explicitly authorizes otherwise:
 - Do not remove a legacy implementation that still serves a required business function until its replacement is implemented, tested, and confirmed.
 - Prefer small, verifiable, staging-first slices with explicit diffs, fixtures, cleanup, and audit trail.
 
+## Lean execution policy
+
+All new tasks default to the smallest execution that proves the business outcome.
+
+- Target one bounded outcome and approximately 30 minutes of execution.
+- Read only the current task, mandatory workflow rules, changed files and directly relevant code. Do not reread historical reports unless the task names one exact unresolved fact.
+- Reuse verified artifacts and existing harnesses. Do not regenerate a passed test suite merely for procedural completeness.
+- Do not generate large one-off finalizer/orchestration scripts.
+- Hold staging locks only while changing live files, the deploy marker or database state. Git fetch/push, HTTP smoke tests, report writing and evidence formatting happen outside the lock.
+- Use short phases: preflight; locked mutation; smoke; integration; report. If smoke fails, reacquire the lock for bounded rollback.
+- Test the business-critical path and likely regression surface. Do not require global scheduler/database fingerprints when the task does not affect them.
+- One static test and one focused functional smoke are the default. Additional tests require a task-specific risk reason.
+- Evidence is concise: changed files, test result, final hashes/state and rollback status. Do not duplicate raw command output in reports.
+- If a command or helper produces no output for 10 minutes, stop and report the exact checkpoint. Do not retry the same failing mechanism repeatedly.
+- A procedural evidence issue after proven application success must not trigger reimplementation or repetition of expensive product tests.
+- Production remains forbidden unless an explicit production task authorizes it.
+
 ## Execution hygiene
 
 - Read the entire task before implementation.
