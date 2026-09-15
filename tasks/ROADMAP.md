@@ -235,13 +235,15 @@ Candidate/employer/admin endpoint, asset, role mapping, profile/dashboard and au
 
 #### Zadatak 2.50 — Lean job lifecycle and application smoke
 
-Status: current. One controlled server/business journey with exact fixture cleanup; visual browser confirmation remains a short owner check.
+Status: server/business smoke completed — PASS. Visual browser confirmation remains a short owner check.
 
 Employer creates three active jobs, fourth is blocked, candidate applies once, duplicate/cross-employer access is rejected, and a freed slot is reused.
 
-#### Zadatak 2.51 — Email and business scheduler acceptance
+#### Zadatak 2.51 — Lean transactional email smoke
 
-Required transactional messages and business-owned background jobs, including idempotency, retry and monitoring.
+Status: current. Validate only launch-critical email rendering with transport intercepted. Business scheduler behavior is separated into a later lean follow-up.
+
+Required transactional messages are checked for recipient role, resolved data and staging links without sending real email.
 
 ### RELEASE READINESS
 
