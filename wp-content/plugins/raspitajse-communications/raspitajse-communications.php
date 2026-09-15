@@ -99,6 +99,61 @@ final class Raspitajse_Communications_Sender_Policy {
     }
 }
 
+/**
+ * Keep the enabled WP Job Board Pro welcome email actionable and environment-aware.
+ */
+final class Raspitajse_Communications_Welcome_Email {
+
+    const TEMPLATE_KEY = 'user_register_auto_approve';
+
+    public static function boot() {
+        add_filter(
+            'wp-job-board-pro-render-emails-vars',
+            array( __CLASS__, 'ensure_login_link' ),
+            PHP_INT_MAX,
+            4
+        );
+    }
+
+    /**
+     * Add the configured login-page URL only when the welcome template omitted it.
+     */
+    public static function ensure_login_link( $output, $args, $key, $type ) {
+        if ( self::TEMPLATE_KEY !== $key || 'content' !== $type ) {
+            return $output;
+        }
+
+        if (
+            ! class_exists( 'WP_Job_Board_Pro_Email' )
+            || ! is_callable( array( 'WP_Job_Board_Pro_Email', 'login_url' ) )
+        ) {
+            return $output;
+        }
+
+        $login_url = WP_Job_Board_Pro_Email::login_url( is_array( $args ) ? $args : array() );
+        if ( ! is_string( $login_url ) || '' === trim( $login_url ) ) {
+            return $output;
+        }
+
+        $decoded = html_entity_decode( (string) $output, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+        if ( false !== strpos( $decoded, $login_url ) ) {
+            return $output;
+        }
+
+        $link = sprintf(
+            '<p class="raspitajse-welcome-login-link"><a href="%1$s">%2$s</a></p>',
+            esc_url( $login_url ),
+            esc_html__( 'Prijavite se na svoj nalog', 'raspitajse-communications' )
+        );
+
+        if ( false !== stripos( (string) $output, '</body>' ) ) {
+            return preg_replace( '/<\/body>/i', $link . '</body>', (string) $output, 1 );
+        }
+
+        return rtrim( (string) $output ) . $link;
+    }
+}
+
 final class Raspitajse_Communications_Transport {
 
     const ENABLE_FLAG   = 'RASPITAJSE_COMMUNICATIONS_TRANSPORT_ENABLED';
@@ -2060,6 +2115,7 @@ final class Raspitajse_Communications_Alert_Security {
     }
 }
 
+Raspitajse_Communications_Welcome_Email::boot();
 Raspitajse_Communications_Transport::boot();
 Raspitajse_Communications_Job_Listing_Expiry::boot();
 Raspitajse_Communications_Employer_Job_Expiry_Notification::boot();
