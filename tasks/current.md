@@ -1,106 +1,87 @@
-# Zadatak 2.51 — Lean transactional email smoke
+# Zadatak 2.51.1 — Fix welcome-email login link
 
 Status: READY
 Baseline: 11fbf2014026a5e4486665a62bb42b4e636d9940
-Previous task: 2.50
+Previous task: 2.51
 Target: staging
 Production: FORBIDDEN
-Time budget: 25 minutes
-Mode: controlled staging fixtures; no application-code change; no real email transport
+Time budget: 20 minutes
 
 ## Goal
 
-Prove that the launch-critical transactional email events generate valid messages with correct staging links and resolved business data.
+Resolve the single Task 2.51 blocker: the enabled candidate registration/welcome email lacks the canonical staging login link.
 
-PASS classification: `TRANSACTIONAL_EMAIL_RENDER_SMOKE_PASS`.
+PASS classification: `WELCOME_EMAIL_LOGIN_LINK_DEPLOYED`.
 
-Background cron and Action Scheduler behavior are intentionally excluded and will be handled in a separate lean task.
+Do not retest password reset, employer application notification or candidate application confirmation; they already passed.
 
 ## Lean rules
 
-Read only `tasks/README.md`, this task and the exact mail callbacks/services invoked. Do not read historical reports, inventory unrelated vendor mail, create a broad mail framework or generate a finalizer script.
+Read only `tasks/README.md`, this task, the Task 2.51 report and the exact login-page/email-template code and settings needed for this defect.
 
-Use the existing staging mail-safety layer and one small temporary probe. Every message must be intercepted at `pre_wp_mail` before PHPMailer/SMTP. Never use or print a real recipient address, reset token, password, full message body or candidate PII.
+Do not create a large harness or finalizer script. Do not use broad scheduler, database, mail or security inventories. If a command has no output for 10 minutes, stop. Maximum one correction for a probe error.
 
-No feature branch, code edit, commit, push or deploy is authorized. If a product defect is found, report it and stop; repair belongs to a separate small task.
+## Establish the correct URL first
 
-## Preflight
+Before changing code, determine the canonical login URL from current WordPress/WP Job Board Pro page settings and confirm its final HTTP destination.
 
-Verify:
+Do not assume `/login-register/` merely because the previous probe expected it. Record the actual configured page ID, generated URL and redirect destination without exposing secrets.
 
-- Git staging, live owned files and deploy marker equal the baseline;
-- clean worktree and staging environment;
-- staging mail-safety MU plugin is active;
-- `pre_wp_mail` interception is installed before any probe;
-- both staging locks are free;
-- initial counts for users, profiles, jobs and applications.
+If the welcome email already contains the actual canonical login URL, make no product change and report the previous assertion as a harness defect.
 
-Do not inspect or gate on unrelated scheduler rows.
+## Minimal repair
 
-## Controlled fixtures
+If the actual canonical login URL is missing:
 
-Create only the minimum synthetic employer, candidate, profiles, one job and one application context required by the existing services. Use reserved non-deliverable domains and random credentials that are never printed or saved.
+- implement the smallest update-safe fix in an existing Raspitajse-owned plugin;
+- prefer an existing email-content filter or owned mail adapter;
+- use the existing generated `login_url` value or canonical WordPress URL helper;
+- do not hardcode the staging host or a production domain;
+- do not edit WP Job Board Pro, Superio, WordPress, WooCommerce or other vendor/core files;
+- do not mutate the stored vendor template option unless no owned filter exists and the report explains why; Git-managed owned code is preferred;
+- preserve the current subject, other body content and localization;
+- do not add package, pricing, checkout or payment content.
 
-Ledger every created ID before moving to the next event. Hold the staging mutation lock only during fixture creation/change and exact cleanup.
+Create a feature branch from the exact baseline. The diff should be limited to the minimum owned file(s).
 
-Use WordPress/WP Job Board Pro/Raspitajse APIs, not raw SQL.
+## Focused test
 
-## Email events
+Test only candidate registration/welcome rendering with one synthetic candidate fixture:
 
-Trigger each event once through its normal service or closest side-effect-free public callback:
+- message is generated once;
+- intended role is candidate;
+- canonical login URL is present and points to staging;
+- no unresolved placeholder, production URL or paid-commerce link;
+- `pre_wp_mail` intercepts before PHPMailer/SMTP;
+- no real email, external HTTP, payment or scheduler execution;
+- fixture is removed by exact ID and initial counts return.
 
-1. account registration/welcome for a synthetic user;
-2. password-reset request for that synthetic user;
-3. candidate application notification to the owning employer;
-4. application confirmation/status message to the candidate, if this is part of the currently enabled launch behavior;
-5. job submission/publication notification, if currently enabled.
+Do not repeat the other Task 2.51 messages.
 
-For every enabled event assert:
+## Deploy and integrate
 
-- exactly the intended recipient role is selected;
-- subject and body are non-empty;
-- no unresolved `{{placeholder}}`, raw template token or PHP diagnostic remains;
-- staging URLs use the canonical staging host and expected path;
-- no pricing, package, checkout, payment or production URL appears;
-- only the minimum expected mail API call is made;
-- `pre_wp_mail` blocks transport before PHPMailer/SMTP.
+After lint and the focused test pass:
 
-An event that is intentionally disabled is PASS only when its owning setting/hook proves that decision; do not enable options merely for the test.
+1. push the feature branch;
+2. acquire the staging mutation lock only for changed-file deployment and marker update;
+3. deploy the exact owned changed file(s), verify hashes and release the lock;
+4. run one post-deploy welcome-email render check;
+5. if it fails, reacquire the lock, restore baseline file(s)/marker and report BLOCKED;
+6. if it passes, fast-forward `staging` and push without force;
+7. verify Git/live/marker alignment and publish the short report outside the lock.
 
-Report recipients only as role labels plus salted hashes. Report body/subject only as hashes and boolean assertions.
+No generated orchestration script.
 
-## Cleanup and side effects
+## Report
 
-Delete all fixture application, job, profiles and users by ledgered IDs using normal APIs. Verify initial counts are restored.
+Publish one concise report containing:
 
-Required final state:
+- actual canonical login URL path;
+- whether the previous assertion was valid;
+- exact changed files and final SHA, or no-change conclusion;
+- pre/post welcome-email result;
+- transport counters and fixture cleanup;
+- final Git/live/marker state;
+- locks released and production untouched.
 
-- PHPMailer/SMTP transport: 0;
-- payment/gateway: 0;
-- external HTTP transport: 0;
-- cron/Action Scheduler execution or mutation: 0;
-- new PHP notice/warning/error/fatal: 0;
-- code, options, source/live files and deploy marker unchanged.
-
-If cleanup fails, perform at most one bounded correction using only ledgered IDs. Never use broad deletion.
-
-## Result and report
-
-PASS requires all enabled launch email events to render correctly, all transport to be intercepted and exact cleanup.
-
-BLOCKED requires one exact event, callback, unresolved field, wrong route/recipient role or cleanup failure. Do not implement a fix in this task.
-
-Publish one short report with:
-
-- result/classification and baseline;
-- one row per email event: enabled/disabled, intended role, render PASS/BLOCKED, transport blocked;
-- placeholder/link/content assertions without PII;
-- fixture types and sanitized IDs;
-- before/after counts;
-- side-effect counters;
-- exact blocker if any;
-- locks released, no code/deploy change and production untouched.
-
-If a command has no output for 10 minutes, stop. Maximum one correction for probe syntax/bootstrap.
-
-Verify the remote report and STOP. Do not begin the scheduler follow-up task.
+STOP after PASS or BLOCKED. Do not start another task.
