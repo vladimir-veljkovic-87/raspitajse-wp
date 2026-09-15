@@ -1,7 +1,7 @@
 # Raspitajse production-readiness roadmap
 
-Updated: 2026-09-14
-Current application baseline: `origin/staging@11fbf2014026a5e4486665a62bb42b4e636d9940`
+Updated: 2026-09-15
+Current application baseline: `origin/staging@7e8ff8bc0978fd72fe941e76e5490c86912137ef`
 Target: free public launch
 Production: FORBIDDEN until the explicit go-live task is approved
 
@@ -247,7 +247,11 @@ Required transactional messages are checked for recipient role, resolved data an
 
 #### Zadatak 2.51.1 — Welcome-email login link
 
-Status: current. Confirm the actual canonical login URL, then make and deploy only the minimum owned welcome-email correction if required.
+Status: completed — PASS at `7e8ff8bc0978fd72fe941e76e5490c86912137ef`. The candidate welcome email now includes the dynamic canonical `/login-register/` URL through Raspitajse-owned code.
+
+#### Zadatak 2.51.2 — Real staging welcome-email delivery
+
+Status: current. Send exactly one welcome message through the real staging transport to the configured controlled safety recipient. Inbox receipt requires owner confirmation.
 
 ### RELEASE READINESS
 
