@@ -1,74 +1,58 @@
-# Zadatak 2.51.2 — Real staging welcome-email delivery
+# Zadatak 2.51.3 — Retry one real staging welcome email
 
 Status: READY
 Baseline: 7e8ff8bc0978fd72fe941e76e5490c86912137ef
-Previous task: 2.51.1
+Previous task: 2.51.2
 Target: staging
 Production: FORBIDDEN
-Time budget: 15 minutes
+Time budget: 10 minutes
 
 ## Goal
 
-Send exactly one real candidate welcome email from staging to the existing configured staging safety recipient, which the owner has explicitly approved for this test.
+Retry the one real candidate welcome-email delivery that Task 2.51.2 stopped before `wp_mail()`.
 
-This task proves dispatch through the real WordPress/PHPMailer transport. Inbox receipt remains a separate owner confirmation.
+The prior failure is a harness-only token case mismatch. No message was sent, and SMTP, the single configured staging safety recipient, template, login path, Git/live alignment and clean state already passed.
 
-No application code, Git integration or deploy is authorized.
+No code change, deploy, Git integration or persistent configuration change is authorized.
 
-## Lean execution
+## Lean retry
 
-Read only `tasks/README.md`, this task, the Task 2.51.1 latest report, and the exact staging mail-safety/template callbacks needed for this single send.
+Read only `tasks/README.md`, this task and the exact 2.51.2 report. Do not repeat broad preflight, template inventories, other email tests, scheduler checks or security checks. Do not create a harness/finalizer/evidence framework.
 
-Do not create a harness, finalizer or evidence framework. Do not run broad mail, scheduler, database, HTTP or security inventories. Do not retest the other Task 2.51 messages. Stop if any command is silent for 10 minutes.
+Reconfirm only:
 
-## Preflight
+- HEAD, `origin/staging` and deploy marker equal the declared baseline;
+- WordPress environment is `staging`;
+- one configured staging safety recipient and SMTP configuration still resolve.
 
-Confirm:
+Never print or report the recipient or credentials.
 
-- `origin/staging`, clean local staging HEAD, live deploy marker and deployed Communications file are aligned at the declared baseline;
-- WordPress reports the `staging` environment;
-- the canonical login URL is still `/login-register/`;
-- the staging mail configuration has a real transport configured;
-- exactly one configured staging safety recipient resolves locally.
+## Correct the process-local token assertion
 
-Never print, commit or report the recipient address.
+Generate the non-secret token as exactly eight uppercase hexadecimal characters, for example:
 
-Inspect the existing staging mail-safety implementation. Prefer its documented one-message/test bypass if present. If it has no safe process-local way to permit exactly one controlled message, return `BLOCKED: CONTROLLED_TRANSPORT_PATH_UNAVAILABLE`; do not persistently weaken or edit the mail guard.
+`strtoupper(bin2hex(random_bytes(4)))`
+
+Validate it with `/^[A-F0-9]{8}$/`. This is test-process logic only; do not modify application code.
 
 ## One controlled send
 
-Reuse the already proven candidate welcome-email rendering path. A short process-local WP-CLI/PHP invocation is allowed; no generated script.
+Perform exactly one invocation using the already proven welcome-email render path and the existing process-local safety controls:
 
-Requirements:
+- final To is the single configured staging safety recipient; Cc/Bcc are empty;
+- template contains the staging `/login-register/` URL and no production or paid-flow URL;
+- subject contains the token;
+- real `wp_mail()`/PHPMailer SMTP transport is called once;
+- no external HTTP, payment, cron or Action Scheduler execution;
+- if a synthetic fixture is required, remove it by exact ID and restore initial counts.
 
-- create at most one synthetic candidate fixture only if the existing render path requires it;
-- use clearly synthetic non-production data;
-- generate the same welcome template proven in 2.51.1;
-- require the staging login URL and reject production, package, pricing, cart, checkout and payment links before sending;
-- enforce immediately before PHPMailer transport that To contains exactly the single configured staging safety recipient, with no Cc or Bcc;
-- subject must include a short unique staging test token so the owner can identify it;
-- call the real transport exactly once;
-- no other email, external HTTP, payment, cron or Action Scheduler execution;
-- remove any synthetic fixture by exact ID after the send and restore initial counts.
+Do not retry a failed transport in this task.
 
-Do not include credentials, reset tokens, real candidate PII or production recipients.
+## Result
 
-## Result classification
+- `SENT_AWAITING_INBOX_CONFIRMATION`: exactly one message was accepted for transport and cleanup passed.
+- `BLOCKED`: transport was not called/accepted or a safety/cleanup assertion failed.
 
-- `SENT_AWAITING_INBOX_CONFIRMATION`: WordPress/PHPMailer accepted exactly one controlled message for transport and cleanup passed.
-- `BLOCKED`: no message was sent, or recipient/transport/template/cleanup validation failed.
-- Never claim inbox delivery merely from a successful `wp_mail()` return.
+A successful `wp_mail()` return is not proof of inbox receipt. Report UTC send time, the non-secret token, transport acceptance, send count, cleanup and final baseline state. Do not include the recipient address or message body.
 
-## Report
-
-Publish one concise report containing:
-
-- UTC send time and non-secret test token;
-- From domain and transport type, without credentials;
-- recipient count `1`, never the address;
-- template/login-link validation;
-- WordPress/PHPMailer acceptance result;
-- send count, cleanup result and final Git/live/marker state;
-- production untouched.
-
-STOP after the report. Do not send a second message and do not start another task.
+STOP after one concise report. Do not start another task.
