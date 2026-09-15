@@ -1,57 +1,47 @@
-# Zadatak 2.51.7 — Attribute zero-event job alert
+# Zadatak 2.51.8 — Capture job-alert failure category
 
 Status: READY
 Baseline: 7e8ff8bc0978fd72fe941e76e5490c86912137ef
-Previous task: 2.51.6
+Previous task: 2.51.7
 Target: staging
 Production: FORBIDDEN
 Time budget: 15 minutes
 
 ## Goal
 
-Determine exactly why the single Task 2.51.6 invocation of the owned job-alert delivery service produced zero mail events.
+Identify the exact saved inner failure behind the 2.51.7 job-alert result `retryable_failed`.
 
-Avoid another blind retry. If the cause is only an incorrect synthetic fixture, run one corrected focused probe in this task. If it is product code or configuration, report the exact failing condition and smallest repair without implementing it.
+Do not perform another blind acceptance retry and do not implement a repair.
 
-## Lean investigation
+## Lean attribution
 
-Follow `tasks/README.md`. Read only:
+Follow `tasks/README.md`. Read only the 2.51.7 report/retained focused evidence, the exact delivery service failure paths, and the directly used owned adapters.
 
-- the exact Task 2.51.6 report and retained focused evidence, if still present;
-- `Raspitajse_Communications_Candidate_Job_Alert_Delivery_Service::process`;
-- its directly called owned query/mail adapter methods;
-- the minimum vendor field/status definitions needed to understand matching.
+First try to prove a unique cause read-only by matching the corrected fixture inputs to the ordered exception/failure branches. If one exact cause is proven, publish it without creating fixtures.
 
-Do not inspect unrelated mail types, expiry, cron queues, Action Scheduler, historical reports or global database state. Do not create a harness/finalizer or broad trace.
+Do not inspect unrelated emails, expiry, global logs, cron/Action Scheduler queues, or historical reports. Do not create a harness/finalizer or broad trace.
 
-List the ordered early-return/matching conditions and identify the first condition not satisfied by the 2.51.6 fixture. Maximum one small read-only diagnostic query before deciding.
+## One diagnostic probe only if needed
 
-## Conditional corrected probe
+If static attribution is not unique, run one minimal diagnostic probe:
 
-Only if the first failing condition proves the application is correct and the 2.51.6 fixture was malformed:
-
-- make the smallest fixture correction;
-- explicitly include every auto-created related profile/post in the cleanup ledger;
-- run the exact delivery callback once;
+- use a valid 32-character claim token;
+- recreate only the minimum synthetic candidate, alert and matching job;
+- record the auto-created candidate profile and every fixture ID before callback execution;
 - intercept mail before transport;
-- verify one intended candidate event, matching job title and staging link, with no unresolved/production/paid-flow URL;
-- clean every recorded fixture by exact ID and restore initial counts.
+- invoke `Raspitajse_Communications_Candidate_Job_Alert_Delivery_Service::process` exactly once;
+- immediately read the owned alert-delivery aggregate/record before cleanup and capture the sanitized `failure_category`, retry state and non-secret exception class/message hash;
+- then clean every fixture by exact ID and restore initial counts.
 
-No second correction or retry is allowed.
+Do not retry or correct the fixture in this task.
 
-If the cause is product code/configuration, do not mutate fixtures or application state after attribution.
-
-## Boundaries
-
-No application change, deploy, Git integration, setting/schedule mutation, real email, external HTTP, payment, expiry callback or broad scheduler runner.
+No real email, external HTTP, payment, expiry callback, broad scheduler execution, code/deploy/Git/configuration change or production access.
 
 ## Result
 
 Return exactly one:
 
-- `PASS: JOB_ALERT_HARNESS_CORRECTED`;
-- `BLOCKED: JOB_ALERT_PRODUCT_DEFECT`;
-- `BLOCKED: JOB_ALERT_CONFIGURATION_DEFECT`;
-- `BLOCKED: JOB_ALERT_CAUSE_NOT_PROVEN`.
+- `PASS: JOB_ALERT_FAILURE_ATTRIBUTED` with the exact first failing condition and classification as harness, product or configuration;
+- `BLOCKED: JOB_ALERT_FAILURE_NOT_OBSERVABLE` if the owned state still cannot expose it safely.
 
-Publish one concise report with the exact first failing condition, classification, any corrected-probe result, cleanup and unchanged Git/live/marker baseline. STOP after the report.
+The report must give the smallest recommended next action, cleanup result and unchanged Git/live/marker baseline. STOP after the report.
