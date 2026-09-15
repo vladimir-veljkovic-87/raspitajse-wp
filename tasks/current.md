@@ -1,87 +1,74 @@
-# Zadatak 2.51.1 — Fix welcome-email login link
+# Zadatak 2.51.2 — Real staging welcome-email delivery
 
 Status: READY
-Baseline: 11fbf2014026a5e4486665a62bb42b4e636d9940
-Previous task: 2.51
+Baseline: 7e8ff8bc0978fd72fe941e76e5490c86912137ef
+Previous task: 2.51.1
 Target: staging
 Production: FORBIDDEN
-Time budget: 20 minutes
+Time budget: 15 minutes
 
 ## Goal
 
-Resolve the single Task 2.51 blocker: the enabled candidate registration/welcome email lacks the canonical staging login link.
+Send exactly one real candidate welcome email from staging to the existing configured staging safety recipient, which the owner has explicitly approved for this test.
 
-PASS classification: `WELCOME_EMAIL_LOGIN_LINK_DEPLOYED`.
+This task proves dispatch through the real WordPress/PHPMailer transport. Inbox receipt remains a separate owner confirmation.
 
-Do not retest password reset, employer application notification or candidate application confirmation; they already passed.
+No application code, Git integration or deploy is authorized.
 
-## Lean rules
+## Lean execution
 
-Read only `tasks/README.md`, this task, the Task 2.51 report and the exact login-page/email-template code and settings needed for this defect.
+Read only `tasks/README.md`, this task, the Task 2.51.1 latest report, and the exact staging mail-safety/template callbacks needed for this single send.
 
-Do not create a large harness or finalizer script. Do not use broad scheduler, database, mail or security inventories. If a command has no output for 10 minutes, stop. Maximum one correction for a probe error.
+Do not create a harness, finalizer or evidence framework. Do not run broad mail, scheduler, database, HTTP or security inventories. Do not retest the other Task 2.51 messages. Stop if any command is silent for 10 minutes.
 
-## Establish the correct URL first
+## Preflight
 
-Before changing code, determine the canonical login URL from current WordPress/WP Job Board Pro page settings and confirm its final HTTP destination.
+Confirm:
 
-Do not assume `/login-register/` merely because the previous probe expected it. Record the actual configured page ID, generated URL and redirect destination without exposing secrets.
+- `origin/staging`, clean local staging HEAD, live deploy marker and deployed Communications file are aligned at the declared baseline;
+- WordPress reports the `staging` environment;
+- the canonical login URL is still `/login-register/`;
+- the staging mail configuration has a real transport configured;
+- exactly one configured staging safety recipient resolves locally.
 
-If the welcome email already contains the actual canonical login URL, make no product change and report the previous assertion as a harness defect.
+Never print, commit or report the recipient address.
 
-## Minimal repair
+Inspect the existing staging mail-safety implementation. Prefer its documented one-message/test bypass if present. If it has no safe process-local way to permit exactly one controlled message, return `BLOCKED: CONTROLLED_TRANSPORT_PATH_UNAVAILABLE`; do not persistently weaken or edit the mail guard.
 
-If the actual canonical login URL is missing:
+## One controlled send
 
-- implement the smallest update-safe fix in an existing Raspitajse-owned plugin;
-- prefer an existing email-content filter or owned mail adapter;
-- use the existing generated `login_url` value or canonical WordPress URL helper;
-- do not hardcode the staging host or a production domain;
-- do not edit WP Job Board Pro, Superio, WordPress, WooCommerce or other vendor/core files;
-- do not mutate the stored vendor template option unless no owned filter exists and the report explains why; Git-managed owned code is preferred;
-- preserve the current subject, other body content and localization;
-- do not add package, pricing, checkout or payment content.
+Reuse the already proven candidate welcome-email rendering path. A short process-local WP-CLI/PHP invocation is allowed; no generated script.
 
-Create a feature branch from the exact baseline. The diff should be limited to the minimum owned file(s).
+Requirements:
 
-## Focused test
+- create at most one synthetic candidate fixture only if the existing render path requires it;
+- use clearly synthetic non-production data;
+- generate the same welcome template proven in 2.51.1;
+- require the staging login URL and reject production, package, pricing, cart, checkout and payment links before sending;
+- enforce immediately before PHPMailer transport that To contains exactly the single configured staging safety recipient, with no Cc or Bcc;
+- subject must include a short unique staging test token so the owner can identify it;
+- call the real transport exactly once;
+- no other email, external HTTP, payment, cron or Action Scheduler execution;
+- remove any synthetic fixture by exact ID after the send and restore initial counts.
 
-Test only candidate registration/welcome rendering with one synthetic candidate fixture:
+Do not include credentials, reset tokens, real candidate PII or production recipients.
 
-- message is generated once;
-- intended role is candidate;
-- canonical login URL is present and points to staging;
-- no unresolved placeholder, production URL or paid-commerce link;
-- `pre_wp_mail` intercepts before PHPMailer/SMTP;
-- no real email, external HTTP, payment or scheduler execution;
-- fixture is removed by exact ID and initial counts return.
+## Result classification
 
-Do not repeat the other Task 2.51 messages.
-
-## Deploy and integrate
-
-After lint and the focused test pass:
-
-1. push the feature branch;
-2. acquire the staging mutation lock only for changed-file deployment and marker update;
-3. deploy the exact owned changed file(s), verify hashes and release the lock;
-4. run one post-deploy welcome-email render check;
-5. if it fails, reacquire the lock, restore baseline file(s)/marker and report BLOCKED;
-6. if it passes, fast-forward `staging` and push without force;
-7. verify Git/live/marker alignment and publish the short report outside the lock.
-
-No generated orchestration script.
+- `SENT_AWAITING_INBOX_CONFIRMATION`: WordPress/PHPMailer accepted exactly one controlled message for transport and cleanup passed.
+- `BLOCKED`: no message was sent, or recipient/transport/template/cleanup validation failed.
+- Never claim inbox delivery merely from a successful `wp_mail()` return.
 
 ## Report
 
 Publish one concise report containing:
 
-- actual canonical login URL path;
-- whether the previous assertion was valid;
-- exact changed files and final SHA, or no-change conclusion;
-- pre/post welcome-email result;
-- transport counters and fixture cleanup;
-- final Git/live/marker state;
-- locks released and production untouched.
+- UTC send time and non-secret test token;
+- From domain and transport type, without credentials;
+- recipient count `1`, never the address;
+- template/login-link validation;
+- WordPress/PHPMailer acceptance result;
+- send count, cleanup result and final Git/live/marker state;
+- production untouched.
 
-STOP after PASS or BLOCKED. Do not start another task.
+STOP after the report. Do not send a second message and do not start another task.
