@@ -241,9 +241,13 @@ Employer creates three active jobs, fourth is blocked, candidate applies once, d
 
 #### Zadatak 2.51 — Lean transactional email smoke
 
-Status: current. Validate only launch-critical email rendering with transport intercepted. Business scheduler behavior is separated into a later lean follow-up.
+Status: four-message smoke completed with one blocker: the welcome email lacked the asserted canonical login link. Lean repair continues as Task 2.51.1; the other three enabled messages must not be retested.
 
 Required transactional messages are checked for recipient role, resolved data and staging links without sending real email.
+
+#### Zadatak 2.51.1 — Welcome-email login link
+
+Status: current. Confirm the actual canonical login URL, then make and deploy only the minimum owned welcome-email correction if required.
 
 ### RELEASE READINESS
 
