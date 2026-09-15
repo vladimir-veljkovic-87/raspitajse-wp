@@ -1,94 +1,94 @@
-# Zadatak 2.48.1 — Lean completion of free public journey
+# Zadatak 2.49 — Lean authentication and role smoke
 
 Status: READY
-Baseline staging: 7ce577b5802bcea143c693d426febf743d1ab340
-Existing feature branch: feature/task-2.48-free-public-ui
-Previous task: 2.48 (interrupted by usage limit before deploy)
+Baseline: 11fbf2014026a5e4486665a62bb42b4e636d9940
+Previous task: 2.48.1
 Target: staging
 Production: FORBIDDEN
-Time budget: 30 minutes
+Time budget: 20 minutes
+Mode: read-only
 
 ## Goal
 
-Finish the already implemented Task 2.48 without repeating completed work.
+Confirm that staging authentication endpoints, required assets and WordPress role/capability routing are ready for a short manual browser check.
 
-Expected remote feature diff from baseline:
+This task does not attempt to automate real CAPTCHA, passwords, email delivery or interactive browser sessions.
 
-- only `wp-content/plugins/raspitajse-commerce/includes/class-raspitajse-free-launch-ui-policy.php`;
-- only `wp-content/plugins/raspitajse-commerce/raspitajse-commerce.php`;
-- five commits ahead of baseline when this recovery task was authored.
+PASS classification: `AUTH_ROLE_SERVER_SMOKE_PASS`.
 
-The earlier run already recorded:
+## Minimal reads
 
-- static acceptance PASS;
-- guarded pre-deploy acceptance PASS with 83 assertions;
-- feature branch pushed;
-- no staging deploy or integration;
-- no database fixtures or mutations.
+Read only:
 
-## Lean execution rules
+- `tasks/README.md`;
+- this task;
+- the active child-theme wp-admin redirect function;
+- the WP Job Board Pro registration/login handler entry points;
+- the deployed Raspitajse free-access/UI policies only where needed to exclude redirect regressions.
 
-Read only `tasks/README.md`, this task, the two changed files and the existing local PASS artifacts if present. Do not reread historical task reports or regenerate the 83-assertion harness.
+Do not read historical reports or create a new test framework.
 
-Do not create a large finalizer script. Do not use `codex-tmp-rewrite.sh`. Do not hold an OS lock during Git fetch/push, HTTP smoke tests, evidence formatting or report publication.
+## Preconditions
 
-If any command/helper produces no output for 10 minutes, stop it and report the exact checkpoint. Maximum one correction for a harness/command error.
+Verify:
 
-## Preflight
+- local staging, `origin/staging`, live owned files and deploy marker equal the baseline;
+- worktree is clean;
+- staging environment is active;
+- `users_can_register=1`;
+- required roles exist: administrator, employer and candidate.
 
-Read-only verify:
+This is read-only. No staging lock is required because no database or file mutation is allowed.
 
-1. no stale Task 2.48 process and both staging locks are free;
-2. `origin/staging`, live deployed owned files and marker remain at the baseline;
-3. the remote feature branch is based directly on the baseline and changes only the two authorized files;
-4. worktree has no unrelated change;
-5. both changed PHP files pass lint;
-6. if the previous static/runtime artifacts exist, validate their recorded PASS/result/hash only; do not rerun them.
+## Focused checks
 
-Any unrelated source, live or marker drift is BLOCKED.
+Use existing WP-CLI, curl and WordPress APIs directly. No generated scripts longer than a small temporary probe.
 
-## Deploy
+1. `/login/`, `/register/`, password-reset entry, candidate dashboard, employer dashboard and `/wp-admin/` return expected non-5xx responses.
+2. WP Job Board Pro `main.js` and the four previously repaired registration assets return HTTP 200.
+3. Login and registration AJAX endpoints exist and return valid structured validation responses for deliberately incomplete/invalid requests; create no account and establish no session.
+4. Administrator capability check:
+   - an existing administrator has `manage_options`;
+   - the child-theme rule permits that administrator to reach wp-admin;
+   - no hardcoded user-ID authorization is present.
+5. Employer capability/routing check:
+   - an existing employer resolves to the employer profile;
+   - can access employer dashboard/submission authorization;
+   - cannot obtain `manage_options` or administrator-only access.
+6. Candidate capability/routing check:
+   - an existing candidate resolves to the candidate profile;
+   - can access candidate dashboard/profile/application authorization;
+   - cannot access employer or administrator-only operations.
+7. AJAX remains exempt from the non-admin wp-admin redirect.
+8. Free-launch redirects do not capture login, register, password reset, dashboard or application endpoints.
+9. No new PHP notice/warning/error/fatal appears during the probes.
+10. No database/file/options/user mutation, mail, SMTP, payment, external HTTP transport or scheduler execution occurs.
 
-Use existing proven deploy/copy helpers. No generated orchestration program.
+Do not display usernames, emails, password hashes, reset tokens, cookies, nonces or other PII/secrets in output or report.
 
-1. Acquire the staging mutation lock only for the live mutation.
-2. Reconfirm live hashes and marker.
-3. Save baseline copies of the two authorized live files.
-4. Deploy exactly the two feature files and set the marker to the full feature SHA.
-5. Verify deployed hashes.
-6. Release the lock immediately.
+## Result handling
 
-Do not modify the database, WordPress options, pages, menus, products, orders, entitlements, vendor files or theme files.
+PASS if all server checks above succeed. A missing real browser/CAPTCHA/password test is expected and must be reported as `MANUAL_BROWSER_CHECK_REQUIRED`, not as a Codex failure.
 
-## Focused smoke
+BLOCKED only for an actual endpoint, asset, capability, role mapping or redirect defect. Diagnose the exact defect but do not implement a fix in this read-only task.
 
-Run one bounded smoke suite:
+## Report
 
-- `/`, `/login/`, `/register/`, `/jobs/`, `/user-dashboard/`, `/submit-job/` return the expected non-5xx result;
-- public HTML contains no links/forms/scripts for pricing, packages, cart, checkout, order-pay or add-payment-method;
-- submit-job still exposes the free job path;
-- direct GET to pricing/packages/cart/checkout is safely redirected or denied without a loop;
-- a POST probe to a paid route is rejected and creates no cart/order/payment state;
-- wp-admin historical order renderer remains registered;
-- Task 2.47 free-access/quota hook remains registered;
-- PHP error delta is zero;
-- mail, payment, external HTTP and broad scheduler execution counters are zero.
+Publish one short report containing:
 
-No fixture creation, broad Action Scheduler/WP-Cron runner, real mail or payment.
+- PASS/BLOCKED and classification;
+- baseline confirmation;
+- a ten-row check table;
+- any actual blocker;
+- the following manual checklist:
+  1. admin login and wp-admin;
+  2. employer login/dashboard/logout;
+  3. candidate login/dashboard/logout;
+  4. one password-reset request to a controlled inbox;
+  5. registration form with real CAPTCHA, without completing account creation unless explicitly approved;
+- zero-mutation/side-effect confirmation;
+- production untouched.
 
-If smoke fails, reacquire the mutation lock, restore the two baseline files and baseline marker, verify rollback, release the lock and report BLOCKED.
+If any command has no output for 10 minutes, stop and report the checkpoint. Do not retry with a new harness.
 
-## Integrate
-
-If smoke passes:
-
-1. verify live files and marker still match the feature SHA;
-2. fast-forward `staging` to the feature branch and push without force;
-3. verify local staging, `origin/staging`, live hashes and marker align;
-4. publish one short report to `codex-reports`.
-
-The report needs only: result, final SHA, two-file diff, reused pre-deploy PASS evidence, focused smoke table, zero-side-effect confirmation, final alignment, locks released and production untouched.
-
-PASS classification: `FREE_PUBLIC_JOURNEY_DEPLOYED`.
-
-STOP after PASS or BLOCKED. Do not begin Task 2.49.
+Verify the remote report and STOP. Do not begin Task 2.50.
