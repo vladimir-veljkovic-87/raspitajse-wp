@@ -1,47 +1,73 @@
-# Zadatak 2.51.8 — Capture job-alert failure category
+# Zadatak 2.51.9 — Fix owned job-alert placeholders
 
 Status: READY
 Baseline: 7e8ff8bc0978fd72fe941e76e5490c86912137ef
-Previous task: 2.51.7
+Previous task: 2.51.8
 Target: staging
 Production: FORBIDDEN
-Time budget: 15 minutes
+Time budget: 25 minutes
 
 ## Goal
 
-Identify the exact saved inner failure behind the 2.51.7 job-alert result `retryable_failed`.
+Fix the proven owned job-alert integration defect: Raspitajse placeholders remain unresolved because the vendor `job_alert_notice` renderer does not declare them.
 
-Do not perform another blind acceptance retry and do not implement a repair.
+PASS classification: `JOB_ALERT_PLACEHOLDERS_DEPLOYED`.
 
-## Lean attribution
+## Scope
 
-Follow `tasks/README.md`. Read only the 2.51.7 report/retained focused evidence, the exact delivery service failure paths, and the directly used owned adapters.
+Change only the Raspitajse-owned Communications plugin. Do not modify vendor/core/theme files or stored template options.
 
-First try to prove a unique cause read-only by matching the corrected fixture inputs to the ordered exception/failure branches. If one exact cause is proven, publish it without creating fixtures.
+In the owned job-alert mail adapter, explicitly substitute only the exact owned placeholders already computed and passed by the delivery service, including `{{job_data}}` and the existing `{{newest_*}}` values, before the unresolved-placeholder guard.
 
-Do not inspect unrelated emails, expiry, global logs, cron/Action Scheduler queues, or historical reports. Do not create a harness/finalizer or broad trace.
+Requirements:
 
-## One diagnostic probe only if needed
+- preserve normal vendor variables and rendering;
+- preserve localization, escaping and existing HTML behavior;
+- do not introduce hardcoded staging/production hosts;
+- do not remove or weaken the unresolved-placeholder validation;
+- unknown placeholders must still fail closed;
+- no payment/package/checkout content.
 
-If static attribution is not unique, run one minimal diagnostic probe:
+Prefer a small deterministic owned substitution helper in the existing file over extending vendor declarations globally.
 
-- use a valid 32-character claim token;
-- recreate only the minimum synthetic candidate, alert and matching job;
-- record the auto-created candidate profile and every fixture ID before callback execution;
-- intercept mail before transport;
-- invoke `Raspitajse_Communications_Candidate_Job_Alert_Delivery_Service::process` exactly once;
-- immediately read the owned alert-delivery aggregate/record before cleanup and capture the sanitized `failure_category`, retry state and non-secret exception class/message hash;
-- then clean every fixture by exact ID and restore initial counts.
+## Lean implementation
 
-Do not retry or correct the fixture in this task.
+Follow `tasks/README.md`. Read only this task, the 2.51.8 report, and the directly involved delivery/mail-adapter code.
 
-No real email, external HTTP, payment, expiry callback, broad scheduler execution, code/deploy/Git/configuration change or production access.
+Create a feature branch from the exact baseline. No large harness, finalizer, scheduler inventory or historical fingerprint suite.
+
+Run:
+
+1. PHP lint and one focused static assertion proving exact owned placeholders are handled while an unknown placeholder remains rejected.
+2. One focused pre-deploy direct job-alert probe with the minimal synthetic candidate/alert/job fixture:
+   - valid claim token;
+   - exactly one matching job selected;
+   - exactly one candidate email event intercepted before transport;
+   - owned placeholders resolved;
+   - expected job title and staging job link present;
+   - no unresolved, production or paid-flow URL;
+   - exact-ID cleanup restores initial counts.
+
+Do not run expiry, other email templates, WP-Cron or Action Scheduler.
+
+## Deploy and integration
+
+After the focused probe passes:
+
+1. push the feature branch;
+2. use the standard changed-file staging deployment for only the modified owned file under the staging mutation lock;
+3. verify repository/live hash equality and marker;
+4. release the lock;
+5. run one post-deploy focused job-alert probe with mail intercepted;
+6. if it fails, restore the baseline file and marker under the lock and report BLOCKED;
+7. if it passes, fast-forward `staging` and push without force;
+8. verify clean Git/live/marker alignment.
+
+No real email, external HTTP, payment or broad scheduler execution.
 
 ## Result
 
-Return exactly one:
+- `PASS: JOB_ALERT_PLACEHOLDERS_DEPLOYED` if pre/post probes, cleanup and alignment pass.
+- Otherwise return one precise `BLOCKED` reason and rollback status.
 
-- `PASS: JOB_ALERT_FAILURE_ATTRIBUTED` with the exact first failing condition and classification as harness, product or configuration;
-- `BLOCKED: JOB_ALERT_FAILURE_NOT_OBSERVABLE` if the owned state still cannot expose it safely.
-
-The report must give the smallest recommended next action, cleanup result and unchanged Git/live/marker baseline. STOP after the report.
+Publish one concise report with changed file, final SHA, resolved-placeholder evidence, event count, cleanup, final alignment and production untouched. STOP after the report.
