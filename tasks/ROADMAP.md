@@ -221,7 +221,7 @@ Implement the Raspitajse-owned policy on a feature branch, with concurrency-safe
 
 #### Zadatak 2.48 — Remove paid journey from public UI
 
-Status: current.
+Status: implementation and pre-deploy acceptance completed on the feature branch; final deploy/integration continues as lean recovery Task 2.48.1.
 
 Remove/hide package, pricing, cart, checkout and payment redirects/CTAs from candidate/employer journeys while preserving historical WooCommerce data and required infrastructure.
 
@@ -282,6 +282,7 @@ A vendor diagnostic or scheduler row is not automatically P1. Severity is based 
 
 ## 5. Task discipline
 
+- New tasks follow the mandatory lean execution policy in `tasks/README.md`: one bounded outcome, minimal relevant reads, reuse of passed evidence, no generated monolithic finalizers, and locks only around actual staging mutation.
 - `tasks/current.md` is the sole executable pointer.
 - Every task maps to one roadmap phase and has explicit exit criteria.
 - Completed milestones remain closed.
