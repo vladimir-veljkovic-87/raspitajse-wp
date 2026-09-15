@@ -1,58 +1,64 @@
-# Zadatak 2.51.3 — Retry one real staging welcome email
+# Zadatak 2.51.4 — Lean background-business smoke
 
 Status: READY
 Baseline: 7e8ff8bc0978fd72fe941e76e5490c86912137ef
-Previous task: 2.51.2
+Previous task: 2.51.3
 Target: staging
 Production: FORBIDDEN
-Time budget: 10 minutes
+Time budget: 20 minutes
 
 ## Goal
 
-Retry the one real candidate welcome-email delivery that Task 2.51.2 stopped before `wp_mail()`.
+Prove two launch-relevant outcomes on staging:
 
-The prior failure is a harness-only token case mismatch. No message was sent, and SMTP, the single configured staging safety recipient, template, login path, Git/live alignment and clean state already passed.
+1. an expired public job stops consuming one of the employer's three active slots;
+2. a matching candidate job alert creates one correct email event.
 
-No code change, deploy, Git integration or persistent configuration change is authorized.
+No application change or deployment is authorized.
 
-## Lean retry
+## Lean execution
 
-Read only `tasks/README.md`, this task and the exact 2.51.2 report. Do not repeat broad preflight, template inventories, other email tests, scheduler checks or security checks. Do not create a harness/finalizer/evidence framework.
+Follow `tasks/README.md`. Read only the directly responsible code and current settings.
 
-Reconfirm only:
+This is not a global scheduler audit:
 
-- HEAD, `origin/staging` and deploy marker equal the declared baseline;
-- WordPress environment is `staging`;
-- one configured staging safety recipient and SMTP configuration still resolve.
+- do not run any complete cron or queue runner;
+- do not inventory or investigate unrelated scheduled work;
+- invoke only the two directly responsible business callbacks;
+- use one short static ownership check and one focused runtime smoke;
+- do not create a large harness, finalizer, evidence framework or historical fingerprint comparison;
+- stop if a callback cannot be isolated safely.
 
-Never print or report the recipient or credentials.
+## Acceptance
 
-## Correct the process-local token assertion
+Use the smallest synthetic fixtures needed and remove them by exact recorded IDs.
 
-Generate the non-secret token as exactly eight uppercase hexadecimal characters, for example:
+Expiry:
 
-`strtoupper(bin2hex(random_bytes(4)))`
+- one expired public job leaves the active/public set;
+- one employer slot becomes available;
+- repeating the same callback causes no additional state transition.
 
-Validate it with `/^[A-F0-9]{8}$/`. This is test-process logic only; do not modify application code.
+Job alert:
 
-## One controlled send
+- one matching alert event is generated for the intended candidate;
+- rendered content contains the correct staging job data/link;
+- no production or paid-flow link is present;
+- mail is intercepted before transport, so no real email is sent;
+- verify the implementation's actual duplicate-prevention boundary without inventing a stricter rule.
 
-Perform exactly one invocation using the already proven welcome-email render path and the existing process-local safety controls:
+All fixture counts must return to their initial values. External HTTP, payment, real email and broad scheduler executions must remain zero.
 
-- final To is the single configured staging safety recipient; Cc/Bcc are empty;
-- template contains the staging `/login-register/` URL and no production or paid-flow URL;
-- subject contains the token;
-- real `wp_mail()`/PHPMailer SMTP transport is called once;
-- no external HTTP, payment, cron or Action Scheduler execution;
-- if a synthetic fixture is required, remove it by exact ID and restore initial counts.
-
-Do not retry a failed transport in this task.
+Do not modify production, application code, settings, schedules or unrelated records.
 
 ## Result
 
-- `SENT_AWAITING_INBOX_CONFIRMATION`: exactly one message was accepted for transport and cleanup passed.
-- `BLOCKED`: transport was not called/accepted or a safety/cleanup assertion failed.
+Return one of:
 
-A successful `wp_mail()` return is not proof of inbox receipt. Report UTC send time, the non-secret token, transport acceptance, send count, cleanup and final baseline state. Do not include the recipient address or message body.
+- `PASS: BUSINESS_SCHEDULER_SMOKE`;
+- `BLOCKED: EXPIRY_CALLBACK_DEFECT`;
+- `BLOCKED: JOB_ALERT_CALLBACK_DEFECT`;
+- `BLOCKED: CALLBACK_NOT_SAFELY_ISOLATABLE`;
+- `BLOCKED: OWNED_BACKGROUND_REDESIGN_REQUIRED`.
 
-STOP after one concise report. Do not start another task.
+Publish one concise report containing callback ownership, both business outcomes, intercepted-mail count, fixture cleanup and unchanged final staging baseline. STOP after the report.
