@@ -1,94 +1,112 @@
-# Zadatak 2.49 — Lean authentication and role smoke
+# Zadatak 2.50 — Lean job lifecycle and application smoke
 
 Status: READY
 Baseline: 11fbf2014026a5e4486665a62bb42b4e636d9940
-Previous task: 2.48.1
+Previous task: 2.49
 Target: staging
 Production: FORBIDDEN
-Time budget: 20 minutes
-Mode: read-only
+Time budget: 30 minutes
+Mode: controlled staging fixtures, no application-code change
 
 ## Goal
 
-Confirm that staging authentication endpoints, required assets and WordPress role/capability routing are ready for a short manual browser check.
+Prove one essential job-board journey using temporary staging fixtures:
 
-This task does not attempt to automate real CAPTCHA, passwords, email delivery or interactive browser sessions.
+1. employer creates and publishes jobs within the free limit;
+2. the fourth active job is blocked;
+3. candidate applies once;
+4. duplicate application is rejected;
+5. employer sees only authorized applicant data;
+6. freeing a slot allows the blocked job to publish.
 
-PASS classification: `AUTH_ROLE_SERVER_SMOKE_PASS`.
+PASS classification: `JOB_APPLICATION_CORE_SMOKE_PASS`.
 
-## Minimal reads
+This task validates server/business behavior. It does not automate a visual browser or CAPTCHA session. Manual browser confirmation remains a separate short owner check.
 
-Read only:
+## Lean rules
 
-- `tasks/README.md`;
-- this task;
-- the active child-theme wp-admin redirect function;
-- the WP Job Board Pro registration/login handler entry points;
-- the deployed Raspitajse free-access/UI policies only where needed to exclude redirect regressions.
+Read only `tasks/README.md`, this task and the exact job/application functions invoked by the probe. Reuse the deployed Task 2.47 quota policy. Do not read historical reports, inventory unrelated hooks, rebuild the concurrency test or create a deployment/finalizer script.
 
-Do not read historical reports or create a new test framework.
+No feature branch, code edit, commit, push or deploy is authorized. If a product defect is found, report its exact failing step and stop; fixing it is a separate small task.
 
-## Preconditions
+If a command gives no output for 10 minutes, stop. Maximum one correction for a probe syntax/bootstrap mistake.
 
-Verify:
+## Preflight
 
-- local staging, `origin/staging`, live owned files and deploy marker equal the baseline;
-- worktree is clean;
-- staging environment is active;
-- `users_can_register=1`;
-- required roles exist: administrator, employer and candidate.
+Verify only:
 
-This is read-only. No staging lock is required because no database or file mutation is allowed.
+- local staging, `origin/staging`, live owned files and marker equal the baseline;
+- clean worktree and staging environment;
+- Task 2.47 free-access/quota and Task 2.48 free-journey policies are active;
+- both staging locks are free;
+- record initial counts for users, employer/candidate profiles, jobs and applications.
 
-## Focused checks
+Do not inspect or gate on unrelated vendor scheduler rows.
 
-Use existing WP-CLI, curl and WordPress APIs directly. No generated scripts longer than a small temporary probe.
+## Fixtures and safety
 
-1. `/login/`, `/register/`, password-reset entry, candidate dashboard, employer dashboard and `/wp-admin/` return expected non-5xx responses.
-2. WP Job Board Pro `main.js` and the four previously repaired registration assets return HTTP 200.
-3. Login and registration AJAX endpoints exist and return valid structured validation responses for deliberately incomplete/invalid requests; create no account and establish no session.
-4. Administrator capability check:
-   - an existing administrator has `manage_options`;
-   - the child-theme rule permits that administrator to reach wp-admin;
-   - no hardcoded user-ID authorization is present.
-5. Employer capability/routing check:
-   - an existing employer resolves to the employer profile;
-   - can access employer dashboard/submission authorization;
-   - cannot obtain `manage_options` or administrator-only access.
-6. Candidate capability/routing check:
-   - an existing candidate resolves to the candidate profile;
-   - can access candidate dashboard/profile/application authorization;
-   - cannot access employer or administrator-only operations.
-7. AJAX remains exempt from the non-admin wp-admin redirect.
-8. Free-launch redirects do not capture login, register, password reset, dashboard or application endpoints.
-9. No new PHP notice/warning/error/fatal appears during the probes.
-10. No database/file/options/user mutation, mail, SMTP, payment, external HTTP transport or scheduler execution occurs.
+Use one synthetic employer and one synthetic candidate with reserved non-deliverable email domains. Generate random credentials in memory and never print or save them.
 
-Do not display usernames, emails, password hashes, reset tokens, cookies, nonces or other PII/secrets in output or report.
+Before creation:
 
-## Result handling
+- install existing mail/payment/external-HTTP guards;
+- create a simple exact-ID ledger;
+- acquire the staging mutation lock.
 
-PASS if all server checks above succeed. A missing real browser/CAPTCHA/password test is expected and must be reported as `MANUAL_BROWSER_CHECK_REQUIRED`, not as a Codex failure.
+Use normal WordPress/WP Job Board Pro APIs. Do not use raw SQL for creation or deletion. Do not run broad WP-Cron or Action Scheduler.
 
-BLOCKED only for an actual endpoint, asset, capability, role mapping or redirect defect. Diagnose the exact defect but do not implement a fix in this read-only task.
+Keep the lock only while fixture rows are being created/changed/cleaned. Report writing and Git operations happen outside it.
 
-## Report
+## Focused journey
+
+Perform these checks:
+
+1. Create the temporary employer and candidate with correct roles and reciprocal profile relations.
+2. Confirm neither user has or needs an order, product or job-package entitlement.
+3. As the employer, create three valid unexpired `job_listing` posts and request publication. All three must become public and belong to that employer.
+4. Create a fourth job with identifiable synthetic content and request publication. It must remain non-public/draft, preserve its content and expose the owned quota reason.
+5. As the candidate, apply to one published job through the normal application service/handler with only the minimum valid fixture data.
+6. Confirm exactly one application links the correct candidate, job and employer.
+7. Repeat the same application attempt. The system must not create a second application.
+8. Confirm the employer can read the application for its own job.
+9. Create a second temporary employer only if required for the authorization check; otherwise use an isolated ownership-context probe. A different employer must not read or change the first employer’s application/job.
+10. Unpublish one of the three active jobs, then republish the previously blocked fourth job. Final active count must be exactly three.
+11. Confirm no cart, checkout, order, entitlement, payment or scheduler row was created.
+12. Clean all fixture applications, jobs, profiles and users by exact ledgered IDs using normal APIs. Verify final counts return to preflight values.
+
+Admin moderation and concurrency were already proven in Task 2.47 and must not be repeated.
+
+## Side effects
+
+Expected database mutations are limited to ledgered fixture users/profiles/jobs/applications and their ordinary metadata, followed by exact cleanup.
+
+Required final counters:
+
+- real mail/PHPMailer/SMTP transport: 0;
+- payment/gateway: 0;
+- external HTTP transport: 0;
+- broad cron/Action Scheduler runner: 0;
+- unexpected order, entitlement or scheduler rows: 0;
+- new PHP notice/warning/error/fatal: 0.
+
+If cleanup fails, keep the lock, report the exact remaining IDs and perform only one bounded cleanup correction. Never use broad deletion.
+
+## Result and report
+
+PASS requires all 12 checks, exact cleanup, restored initial counts and zero prohibited side effects.
+
+BLOCKED means one concrete business assertion or cleanup step failed. Do not modify production code during this task.
 
 Publish one short report containing:
 
-- PASS/BLOCKED and classification;
-- baseline confirmation;
-- a ten-row check table;
-- any actual blocker;
-- the following manual checklist:
-  1. admin login and wp-admin;
-  2. employer login/dashboard/logout;
-  3. candidate login/dashboard/logout;
-  4. one password-reset request to a controlled inbox;
-  5. registration form with real CAPTCHA, without completing account creation unless explicitly approved;
-- zero-mutation/side-effect confirmation;
-- production untouched.
+- result/classification and baseline;
+- a 12-row PASS/BLOCKED table;
+- fixture object types and sanitized IDs;
+- before/after counts;
+- side-effect counters;
+- any exact defect;
+- locks released;
+- no code/deploy/production change;
+- manual-browser reminder for employer job form and candidate Apply button.
 
-If any command has no output for 10 minutes, stop and report the checkpoint. Do not retry with a new harness.
-
-Verify the remote report and STOP. Do not begin Task 2.50.
+Verify the remote report and STOP. Do not begin Task 2.51.
