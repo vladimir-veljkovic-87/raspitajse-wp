@@ -229,13 +229,15 @@ Remove/hide package, pricing, cart, checkout and payment redirects/CTAs from can
 
 #### Zadatak 2.49 — Lean authentication and role smoke
 
-Status: current. Codex performs the bounded read-only server/role smoke. Real CAPTCHA, password and browser-session checks remain a short owner-operated manual checklist.
+Status: server smoke completed — PASS. Real CAPTCHA, password and browser-session checks remain a short owner-operated manual checklist.
 
 Candidate/employer/admin endpoint, asset, role mapping, profile/dashboard and authorization smoke.
 
-#### Zadatak 2.50 — Job lifecycle and application E2E
+#### Zadatak 2.50 — Lean job lifecycle and application smoke
 
-Employer creates/submits/manages up to three active jobs; candidate searches/applies; admin moderates; authorization and cleanup proven.
+Status: current. One controlled server/business journey with exact fixture cleanup; visual browser confirmation remains a short owner check.
+
+Employer creates three active jobs, fourth is blocked, candidate applies once, duplicate/cross-employer access is rejected, and a freed slot is reused.
 
 #### Zadatak 2.51 — Email and business scheduler acceptance
 
