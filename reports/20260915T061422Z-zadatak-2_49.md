@@ -1,6 +1,6 @@
 # Codex Execution Report
 
-- Task: Zadatak 2.49 — Lean authentication and role smoke
+- Task: Zadatak 2.49 - Lean authentication and role smoke
 - Task ID: 2.49
 - Result: PASS
 - Recorded at (UTC): 2026-09-15T06:14:22Z
@@ -10,6 +10,52 @@
 - Staging deploy marker: 11fbf2014026a5e4486665a62bb42b4e636d9940
 - Staging environment: staging
 
-## Task report
+## Summary
 
-## Summary\n- Result: PASS\n- Classification: AUTH_ROLE_SERVER_SMOKE_PASS\n- Baseline: \n- Scope was read-only staging server smoke; no application or database mutation was authorized or performed.\n- Interactive authentication remains: .\n\n## Ten-row check table\n\n| # | Check | Result | Evidence |\n|---|---|---|---|\n| 1 | Public/auth endpoints | PASS |  301 canonical WordPress redirect;  200; password-reset entry 200; candidate/employer dashboard 200;  302 login redirect; submission route 200; all non-5xx. |\n| 2 | Required WP Job Board Pro assets | PASS | , Leaflet JS/CSS and Select2 JS/CSS returned 200 with expected MIME type; response hashes matched baseline files. |\n| 3 | Login/register AJAX validation | PASS | Both custom WJBP endpoints returned HTTP 200 and structured  validation payloads for incomplete requests; no Set-Cookie and role counts unchanged. |\n| 4 | Administrator capability/routing | PASS | Existing administrator found with ; child redirect permits that capability; no hardcoded user-ID authorization. |\n| 5 | Employer capability/routing | PASS | Existing employer resolved to an employer profile and passed employer dashboard/submission authorization; no . |\n| 6 | Candidate capability/routing | PASS | Existing candidate resolved to a candidate profile and passed dashboard/application authorization; no employer or admin authorization. |\n| 7 | AJAX wp-admin exemption | PASS | Active child rule retains the  exemption before enforcing . |\n| 8 | Free-launch redirect exclusions | PASS | Auth, reset, dashboard, submission and AJAX probes were not captured by ; policy protects only paid routes and exempts AJAX. |\n| 9 | PHP diagnostics | PASS | Probe bodies contained no PHP notice/warning/error/fatal; staging debug log was unchanged since before the probe window. |\n| 10 | Mutation and side effects | PASS | Registration remained enabled; admin/employer/candidate counts remained 3/1/1; no users, AS actions or AS logs were created on the probe date; active claims 0; invalid handlers terminated before mail/payment/scheduler work, mail safety remained loaded, no session cookie was established, and owned live hashes/worktree remained unchanged. |\n\n## Baseline and runtime state\n- Local : \n- : \n- Source HEAD: \n- Deploy marker: \n- Live Raspitajse-owned files: 13 checked, 0 baseline mismatches; child auth files also matched where checked.\n- WordPress environment: \n- ; administrator, employer and candidate roles all exist.\n- Deployed SHA unchanged; no deploy occurred.\n\n## Manual browser checklist\n1. Admin login and .\n2. Employer login, dashboard and logout.\n3. Candidate login, dashboard and logout.\n4. One password-reset request to the controlled staging inbox.\n5. Registration form with real CAPTCHA, without completing account creation unless explicitly approved.\n\n## Warnings / errors\n- None.\n- Real CAPTCHA, passwords, email delivery and interactive browser sessions were intentionally not automated.\n\n## Safety\n- Database mutation: NO\n- Action Scheduler execution/mutation: NO\n- Mail/SMTP/payment execution: NO\n- Deployment: NO\n- Production touched: NO\n
+- Classification: `AUTH_ROLE_SERVER_SMOKE_PASS`
+- Baseline confirmed: `11fbf2014026a5e4486665a62bb42b4e636d9940`
+- Read-only staging smoke passed.
+- Interactive authentication remains `MANUAL_BROWSER_CHECK_REQUIRED`.
+
+## Ten-row check table
+
+| # | Check | Result | Evidence |
+|---|---|---|---|
+| 1 | Public/auth endpoints | PASS | `/login/` 301 canonical WordPress redirect; `/register/` 200; password reset 200; dashboards 200; `/wp-admin/` 302 login redirect; submission 200; all non-5xx. |
+| 2 | Required assets | PASS | `main.js`, Leaflet JS/CSS and Select2 JS/CSS returned 200 with expected MIME types and hashes matching Git. |
+| 3 | Login/register AJAX | PASS | Both endpoints returned HTTP 200 and structured `status=false` validation; no Set-Cookie; role counts unchanged. |
+| 4 | Administrator | PASS | Existing administrator has `manage_options`; child redirect permits it; no hardcoded user-ID authorization. |
+| 5 | Employer | PASS | Employer profile, dashboard and submission authorization resolved; no `manage_options`. |
+| 6 | Candidate | PASS | Candidate profile, dashboard and application authorization resolved; no employer/admin authorization. |
+| 7 | AJAX exemption | PASS | Child wp-admin redirect retains the `DOING_AJAX` exemption. |
+| 8 | Free-launch redirects | PASS | Auth, reset, dashboard, submission and AJAX were not captured by `Raspitajse-Free-Launch`. |
+| 9 | PHP diagnostics | PASS | No diagnostic in response bodies; staging debug log unchanged since before the probe window. |
+| 10 | Mutation/side effects | PASS | Role counts stayed 3/1/1; zero users, AS actions or AS logs created on probe date; claims 0; mail safety loaded; no session, payment or scheduler execution; live hashes/worktree unchanged. |
+
+## Runtime state
+
+- Local `staging`, `origin/staging`, source HEAD and deploy marker all equal the baseline.
+- Live owned files: 13 checked, 0 mismatches; relevant child files also matched.
+- Environment: `staging`; `users_can_register=1`; required roles exist.
+- No deploy occurred.
+
+## Manual browser checklist
+
+1. Admin login and `/wp-admin/`.
+2. Employer login, dashboard and logout.
+3. Candidate login, dashboard and logout.
+4. One password-reset request to the controlled staging inbox.
+5. Registration with real CAPTCHA, without completing account creation unless explicitly approved.
+
+## Warnings / errors
+
+- None.
+- Real CAPTCHA, passwords, email delivery and interactive sessions were intentionally not automated.
+
+## Safety
+
+- Database mutation: NO
+- Action Scheduler execution/mutation: NO
+- Mail/SMTP/payment execution: NO
+- Deployment: NO
+- Production touched: NO
