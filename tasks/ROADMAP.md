@@ -1,7 +1,7 @@
 # Raspitajse production-readiness roadmap
 
 Updated: 2026-09-14
-Current application baseline: `origin/staging@7ce577b5802bcea143c693d426febf743d1ab340`
+Current application baseline: `origin/staging@11fbf2014026a5e4486665a62bb42b4e636d9940`
 Target: free public launch
 Production: FORBIDDEN until the explicit go-live task is approved
 
@@ -221,15 +221,17 @@ Implement the Raspitajse-owned policy on a feature branch, with concurrency-safe
 
 #### Zadatak 2.48 — Remove paid journey from public UI
 
-Status: implementation and pre-deploy acceptance completed on the feature branch; final deploy/integration continues as lean recovery Task 2.48.1.
+Status: completed — PASS at `11fbf2014026a5e4486665a62bb42b4e636d9940` through lean recovery Task 2.48.1.
 
 Remove/hide package, pricing, cart, checkout and payment redirects/CTAs from candidate/employer journeys while preserving historical WooCommerce data and required infrastructure.
 
 ### NEXT — Business journey proof
 
-#### Zadatak 2.49 — Real browser auth and role E2E
+#### Zadatak 2.49 — Lean authentication and role smoke
 
-Candidate/employer/admin registration, CAPTCHA, login, reset, profile/dashboard and authorization matrix.
+Status: current. Codex performs the bounded read-only server/role smoke. Real CAPTCHA, password and browser-session checks remain a short owner-operated manual checklist.
+
+Candidate/employer/admin endpoint, asset, role mapping, profile/dashboard and authorization smoke.
 
 #### Zadatak 2.50 — Job lifecycle and application E2E
 
