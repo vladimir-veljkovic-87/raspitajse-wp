@@ -1,112 +1,106 @@
-# Zadatak 2.50 — Lean job lifecycle and application smoke
+# Zadatak 2.51 — Lean transactional email smoke
 
 Status: READY
 Baseline: 11fbf2014026a5e4486665a62bb42b4e636d9940
-Previous task: 2.49
+Previous task: 2.50
 Target: staging
 Production: FORBIDDEN
-Time budget: 30 minutes
-Mode: controlled staging fixtures, no application-code change
+Time budget: 25 minutes
+Mode: controlled staging fixtures; no application-code change; no real email transport
 
 ## Goal
 
-Prove one essential job-board journey using temporary staging fixtures:
+Prove that the launch-critical transactional email events generate valid messages with correct staging links and resolved business data.
 
-1. employer creates and publishes jobs within the free limit;
-2. the fourth active job is blocked;
-3. candidate applies once;
-4. duplicate application is rejected;
-5. employer sees only authorized applicant data;
-6. freeing a slot allows the blocked job to publish.
+PASS classification: `TRANSACTIONAL_EMAIL_RENDER_SMOKE_PASS`.
 
-PASS classification: `JOB_APPLICATION_CORE_SMOKE_PASS`.
-
-This task validates server/business behavior. It does not automate a visual browser or CAPTCHA session. Manual browser confirmation remains a separate short owner check.
+Background cron and Action Scheduler behavior are intentionally excluded and will be handled in a separate lean task.
 
 ## Lean rules
 
-Read only `tasks/README.md`, this task and the exact job/application functions invoked by the probe. Reuse the deployed Task 2.47 quota policy. Do not read historical reports, inventory unrelated hooks, rebuild the concurrency test or create a deployment/finalizer script.
+Read only `tasks/README.md`, this task and the exact mail callbacks/services invoked. Do not read historical reports, inventory unrelated vendor mail, create a broad mail framework or generate a finalizer script.
 
-No feature branch, code edit, commit, push or deploy is authorized. If a product defect is found, report its exact failing step and stop; fixing it is a separate small task.
+Use the existing staging mail-safety layer and one small temporary probe. Every message must be intercepted at `pre_wp_mail` before PHPMailer/SMTP. Never use or print a real recipient address, reset token, password, full message body or candidate PII.
 
-If a command gives no output for 10 minutes, stop. Maximum one correction for a probe syntax/bootstrap mistake.
+No feature branch, code edit, commit, push or deploy is authorized. If a product defect is found, report it and stop; repair belongs to a separate small task.
 
 ## Preflight
 
-Verify only:
+Verify:
 
-- local staging, `origin/staging`, live owned files and marker equal the baseline;
+- Git staging, live owned files and deploy marker equal the baseline;
 - clean worktree and staging environment;
-- Task 2.47 free-access/quota and Task 2.48 free-journey policies are active;
+- staging mail-safety MU plugin is active;
+- `pre_wp_mail` interception is installed before any probe;
 - both staging locks are free;
-- record initial counts for users, employer/candidate profiles, jobs and applications.
+- initial counts for users, profiles, jobs and applications.
 
-Do not inspect or gate on unrelated vendor scheduler rows.
+Do not inspect or gate on unrelated scheduler rows.
 
-## Fixtures and safety
+## Controlled fixtures
 
-Use one synthetic employer and one synthetic candidate with reserved non-deliverable email domains. Generate random credentials in memory and never print or save them.
+Create only the minimum synthetic employer, candidate, profiles, one job and one application context required by the existing services. Use reserved non-deliverable domains and random credentials that are never printed or saved.
 
-Before creation:
+Ledger every created ID before moving to the next event. Hold the staging mutation lock only during fixture creation/change and exact cleanup.
 
-- install existing mail/payment/external-HTTP guards;
-- create a simple exact-ID ledger;
-- acquire the staging mutation lock.
+Use WordPress/WP Job Board Pro/Raspitajse APIs, not raw SQL.
 
-Use normal WordPress/WP Job Board Pro APIs. Do not use raw SQL for creation or deletion. Do not run broad WP-Cron or Action Scheduler.
+## Email events
 
-Keep the lock only while fixture rows are being created/changed/cleaned. Report writing and Git operations happen outside it.
+Trigger each event once through its normal service or closest side-effect-free public callback:
 
-## Focused journey
+1. account registration/welcome for a synthetic user;
+2. password-reset request for that synthetic user;
+3. candidate application notification to the owning employer;
+4. application confirmation/status message to the candidate, if this is part of the currently enabled launch behavior;
+5. job submission/publication notification, if currently enabled.
 
-Perform these checks:
+For every enabled event assert:
 
-1. Create the temporary employer and candidate with correct roles and reciprocal profile relations.
-2. Confirm neither user has or needs an order, product or job-package entitlement.
-3. As the employer, create three valid unexpired `job_listing` posts and request publication. All three must become public and belong to that employer.
-4. Create a fourth job with identifiable synthetic content and request publication. It must remain non-public/draft, preserve its content and expose the owned quota reason.
-5. As the candidate, apply to one published job through the normal application service/handler with only the minimum valid fixture data.
-6. Confirm exactly one application links the correct candidate, job and employer.
-7. Repeat the same application attempt. The system must not create a second application.
-8. Confirm the employer can read the application for its own job.
-9. Create a second temporary employer only if required for the authorization check; otherwise use an isolated ownership-context probe. A different employer must not read or change the first employer’s application/job.
-10. Unpublish one of the three active jobs, then republish the previously blocked fourth job. Final active count must be exactly three.
-11. Confirm no cart, checkout, order, entitlement, payment or scheduler row was created.
-12. Clean all fixture applications, jobs, profiles and users by exact ledgered IDs using normal APIs. Verify final counts return to preflight values.
+- exactly the intended recipient role is selected;
+- subject and body are non-empty;
+- no unresolved `{{placeholder}}`, raw template token or PHP diagnostic remains;
+- staging URLs use the canonical staging host and expected path;
+- no pricing, package, checkout, payment or production URL appears;
+- only the minimum expected mail API call is made;
+- `pre_wp_mail` blocks transport before PHPMailer/SMTP.
 
-Admin moderation and concurrency were already proven in Task 2.47 and must not be repeated.
+An event that is intentionally disabled is PASS only when its owning setting/hook proves that decision; do not enable options merely for the test.
 
-## Side effects
+Report recipients only as role labels plus salted hashes. Report body/subject only as hashes and boolean assertions.
 
-Expected database mutations are limited to ledgered fixture users/profiles/jobs/applications and their ordinary metadata, followed by exact cleanup.
+## Cleanup and side effects
 
-Required final counters:
+Delete all fixture application, job, profiles and users by ledgered IDs using normal APIs. Verify initial counts are restored.
 
-- real mail/PHPMailer/SMTP transport: 0;
+Required final state:
+
+- PHPMailer/SMTP transport: 0;
 - payment/gateway: 0;
 - external HTTP transport: 0;
-- broad cron/Action Scheduler runner: 0;
-- unexpected order, entitlement or scheduler rows: 0;
-- new PHP notice/warning/error/fatal: 0.
+- cron/Action Scheduler execution or mutation: 0;
+- new PHP notice/warning/error/fatal: 0;
+- code, options, source/live files and deploy marker unchanged.
 
-If cleanup fails, keep the lock, report the exact remaining IDs and perform only one bounded cleanup correction. Never use broad deletion.
+If cleanup fails, perform at most one bounded correction using only ledgered IDs. Never use broad deletion.
 
 ## Result and report
 
-PASS requires all 12 checks, exact cleanup, restored initial counts and zero prohibited side effects.
+PASS requires all enabled launch email events to render correctly, all transport to be intercepted and exact cleanup.
 
-BLOCKED means one concrete business assertion or cleanup step failed. Do not modify production code during this task.
+BLOCKED requires one exact event, callback, unresolved field, wrong route/recipient role or cleanup failure. Do not implement a fix in this task.
 
-Publish one short report containing:
+Publish one short report with:
 
 - result/classification and baseline;
-- a 12-row PASS/BLOCKED table;
-- fixture object types and sanitized IDs;
+- one row per email event: enabled/disabled, intended role, render PASS/BLOCKED, transport blocked;
+- placeholder/link/content assertions without PII;
+- fixture types and sanitized IDs;
 - before/after counts;
 - side-effect counters;
-- any exact defect;
-- locks released;
-- no code/deploy/production change;
-- manual-browser reminder for employer job form and candidate Apply button.
+- exact blocker if any;
+- locks released, no code/deploy change and production untouched.
 
-Verify the remote report and STOP. Do not begin Task 2.51.
+If a command has no output for 10 minutes, stop. Maximum one correction for probe syntax/bootstrap.
+
+Verify the remote report and STOP. Do not begin the scheduler follow-up task.
