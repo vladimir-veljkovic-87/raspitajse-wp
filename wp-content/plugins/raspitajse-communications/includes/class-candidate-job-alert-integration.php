@@ -284,28 +284,30 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Mailer {
             'job_alert_notice',
             'subject'
         );
+        $content_args = apply_filters(
+            'wp-job-board-pro-job-alert-email-content-args',
+            array(
+                'job_data'                    => $job_content,
+                'alert_title'                 => esc_html( get_the_title( $alert_id ) ),
+                'email_frequency_type'        => esc_html( $frequency_label ),
+                'jobs_alert_url'              => esc_url( $jobs_url ),
+                'newest_employer_name'        => $newest['employer_name'],
+                'newest_job_title'            => $newest['job_title'],
+                'newest_job_url'              => $newest['job_url'],
+                'newest_job_publish_date'     => $newest['job_publish_date'],
+                'newest_job_expiry_date'      => $newest['job_expiry_date'],
+                'newest_job_apply_email'      => $newest['job_apply_email'],
+                'newest_location'             => $newest['location'],
+                'newest_salary'               => $newest['salary'],
+                'newest_alert_title'          => $newest['alert_title'],
+            )
+        );
         $content = WP_Job_Board_Pro_Email::render_email_vars(
-            apply_filters(
-                'wp-job-board-pro-job-alert-email-content-args',
-                array(
-                    'job_data'                    => $job_content,
-                    'alert_title'                 => esc_html( get_the_title( $alert_id ) ),
-                    'email_frequency_type'        => esc_html( $frequency_label ),
-                    'jobs_alert_url'              => esc_url( $jobs_url ),
-                    'newest_employer_name'        => $newest['employer_name'],
-                    'newest_job_title'            => $newest['job_title'],
-                    'newest_job_url'              => $newest['job_url'],
-                    'newest_job_publish_date'     => $newest['job_publish_date'],
-                    'newest_job_expiry_date'      => $newest['job_expiry_date'],
-                    'newest_job_apply_email'      => $newest['job_apply_email'],
-                    'newest_location'             => $newest['location'],
-                    'newest_salary'               => $newest['salary'],
-                    'newest_alert_title'          => $newest['alert_title'],
-                )
-            ),
+            $content_args,
             'job_alert_notice',
             'content'
         );
+        $content = self::replace_owned_placeholders( $content, $content_args );
 
         if (
             '' === trim( (string) $subject )
@@ -326,6 +328,30 @@ final class Raspitajse_Communications_Candidate_Job_Alert_Mailer {
             $content,
             "Content-Type: text/html; charset=UTF-8\r\n"
         );
+    }
+
+    private static function replace_owned_placeholders( $content, $args ) {
+        $owned_placeholders = array(
+            'job_data',
+            'newest_employer_name',
+            'newest_job_title',
+            'newest_job_url',
+            'newest_job_publish_date',
+            'newest_job_expiry_date',
+            'newest_job_apply_email',
+            'newest_location',
+            'newest_salary',
+            'newest_alert_title',
+        );
+        $replace = array();
+
+        foreach ( $owned_placeholders as $placeholder ) {
+            if ( isset( $args[ $placeholder ] ) && is_scalar( $args[ $placeholder ] ) ) {
+                $replace[ '{{' . $placeholder . '}}' ] = (string) $args[ $placeholder ];
+            }
+        }
+
+        return str_replace( array_keys( $replace ), array_values( $replace ), (string) $content );
     }
 
     private static function job_row( $job_id, $alert_title, $jobs_url ) {
