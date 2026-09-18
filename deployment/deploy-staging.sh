@@ -22,6 +22,34 @@ ALLOWLIST=(
   "wp-content/mu-plugins"
 )
 
+PACKAGE_TREE_ROOTS=(
+  "wp-admin"
+  "wp-includes"
+  "wp-content/plugins/wpforms-lite"
+)
+
+# Exact regular files from the official WordPress package root. Configuration,
+# server-control and arbitrary repository-root files are intentionally absent.
+CORE_TOP_LEVEL_FILES=(
+  "index.php"
+  "license.txt"
+  "readme.html"
+  "wp-activate.php"
+  "wp-blog-header.php"
+  "wp-comments-post.php"
+  "wp-cron.php"
+  "wp-links-opml.php"
+  "wp-load.php"
+  "wp-login.php"
+  "wp-mail.php"
+  "wp-settings.php"
+  "wp-signup.php"
+  "wp-trackback.php"
+  "xmlrpc.php"
+)
+
+DEPLOY_PATHS=("${ALLOWLIST[@]}" "${PACKAGE_TREE_ROOTS[@]}" "${CORE_TOP_LEVEL_FILES[@]}")
+PACKAGE_ROLLBACK_DIR="/home/u601262303/deploy-state/raspitajse-core-wpforms-rollback"
 VENDOR_RECONCILE_ROOTS=(
   "wp-content/themes/superio"
   "wp-content/plugins/apus-framework"
@@ -40,12 +68,15 @@ TMP_CHANGED=""
 TMP_DELETED=""
 TMP_STATE=""
 TMP_MANIFEST=""
+TMP_PACKAGE_ROLLBACK=""
 
 usage() {
   cat <<'EOF'
 Usage:
   ./deploy-staging.sh full [staging|feature/<branch>]
   ./deploy-staging.sh changed [staging|feature/<branch>]
+  ./deploy-staging.sh snapshot-packages [staging|feature/<branch>]
+  ./deploy-staging.sh restore-packages [staging|feature/<branch>]
 
 Default branch: staging
 EOF
@@ -56,6 +87,7 @@ cleanup() {
   [[ -z "${TMP_DELETED}" ]] || rm -f -- "${TMP_DELETED}"
   [[ -z "${TMP_STATE}" ]] || rm -f -- "${TMP_STATE}"
   [[ -z "${TMP_MANIFEST}" ]] || rm -f -- "${TMP_MANIFEST}"
+  [[ -z "${TMP_PACKAGE_ROLLBACK}" ]] || rm -rf -- "${TMP_PACKAGE_ROLLBACK}"
 }
 
 fail() {
@@ -73,7 +105,7 @@ trap cleanup EXIT
 trap on_error ERR
 
 case "${MODE}" in
-  full|changed) ;;
+  full|changed|snapshot-packages|restore-packages) ;;
   *) usage; exit 2 ;;
 esac
 
@@ -113,22 +145,116 @@ ORIGIN_SHA="$(git rev-parse "origin/${BRANCH}")"
 [[ "${HEAD_SHA}" == "${ORIGIN_SHA}" ]] \
   || fail "Local HEAD does not match origin/${BRANCH}."
 
-is_allowed_path() {
-  local path="$1"
-
-  [[ "${path}" != /* ]] || return 1
-  [[ "${path}" != *".."* ]] || return 1
-
-  case "${path}" in
-    wp-content/themes/superio-child/*|wp-content/themes/superio/*|wp-content/plugins/apus-framework/*|wp-content/plugins/revslider/*|wp-content/plugins/wp-job-board-pro/*|wp-content/plugins/wp-job-board-pro-wc-paid-listings/*|wp-content/plugins/raspitajse-communications/*|wp-content/plugins/raspitajse-commerce/*|wp-content/mu-plugins/*)
-      return 0
-      ;;
-    *)
-      return 1
-      ;;
-  esac
+is_core_top_level_path() {
+  local path="$1" allowed
+  for allowed in "${CORE_TOP_LEVEL_FILES[@]}"; do
+    [[ "${path}" == "${allowed}" ]] && return 0
+  done
+  return 1
 }
 
+is_package_path() {
+  local path="$1"
+  case "${path}" in
+    wp-admin/*|wp-includes/*|wp-content/plugins/wpforms-lite/*) return 0 ;;
+  esac
+  is_core_top_level_path "${path}"
+}
+
+is_allowed_path() {
+  local path="$1"
+  [[ "${path}" != /* ]] || return 1
+  [[ "${path}" != *".."* ]] || return 1
+  case "${path}" in
+    wp-content/themes/superio-child/*|wp-content/themes/superio/*|wp-content/plugins/apus-framework/*|wp-content/plugins/revslider/*|wp-content/plugins/wp-job-board-pro/*|wp-content/plugins/wp-job-board-pro-wc-paid-listings/*|wp-content/plugins/raspitajse-communications/*|wp-content/plugins/raspitajse-commerce/*|wp-content/mu-plugins/*|wp-admin/*|wp-includes/*|wp-content/plugins/wpforms-lite/*) return 0 ;;
+  esac
+  is_core_top_level_path "${path}"
+}
+
+assert_no_symlink_components() {
+  local base="$1" relative="$2" part
+  local current="${base}"
+  local -a parts
+  IFS='/' read -r -a parts <<< "${relative}"
+  for part in "${parts[@]}"; do
+    [[ -n "${part}" ]] || fail "Empty path component in ${relative}."
+    current="${current}/${part}"
+    [[ ! -L "${current}" ]] || fail "Refusing symlinked package path: ${current}"
+  done
+}
+
+package_sources_complete() {
+  local path
+  for path in "${PACKAGE_TREE_ROOTS[@]}"; do [[ -d "${REPO_DIR}/${path}" && ! -L "${REPO_DIR}/${path}" ]] || return 1; done
+  for path in "${CORE_TOP_LEVEL_FILES[@]}"; do [[ -f "${REPO_DIR}/${path}" && ! -L "${REPO_DIR}/${path}" ]] || return 1; done
+}
+
+assert_package_target_roots() {
+  local path
+  for path in "${PACKAGE_TREE_ROOTS[@]}"; do
+    [[ -d "${TARGET_SITE_ROOT}/${path}" ]] || fail "Package target root is missing: ${path}"
+    [[ ! -L "${TARGET_SITE_ROOT}/${path}" ]] || fail "Refusing symlinked package target root: ${path}"
+  done
+}
+
+reconcile_package_trees() {
+  local path
+  package_sources_complete || fail "Complete canonical core/WPForms source inventory is required."
+  assert_package_target_roots
+  for path in "${PACKAGE_TREE_ROOTS[@]}"; do
+    [[ -z "$(find "${REPO_DIR}/${path}" -type l -print -quit)" ]] || fail "Package source tree contains a symlink: ${path}"
+    [[ -z "$(find "${TARGET_SITE_ROOT}/${path}" -type l -print -quit)" ]] || fail "Package target tree contains a symlink: ${path}"
+    echo "Reconciling package root: ${path}"
+    rsync -a --checksum --no-times --omit-dir-times --delete-delay -- "${REPO_DIR}/${path}/" "${TARGET_SITE_ROOT}/${path}/"
+  done
+  for path in "${CORE_TOP_LEVEL_FILES[@]}"; do
+    assert_no_symlink_components "${REPO_DIR}" "${path}"
+    assert_no_symlink_components "${TARGET_SITE_ROOT}" "${path}"
+    echo "Syncing canonical core root file: ${path}"
+    rsync -a --checksum --no-times --omit-dir-times -- "${REPO_DIR}/${path}" "${TARGET_SITE_ROOT}/${path}"
+  done
+}
+
+snapshot_packages() {
+  local path metadata
+  [[ ! -e "${PACKAGE_ROLLBACK_DIR}" && ! -L "${PACKAGE_ROLLBACK_DIR}" ]] || fail "Package rollback snapshot already exists: ${PACKAGE_ROLLBACK_DIR}"
+  assert_package_target_roots
+  TMP_PACKAGE_ROLLBACK="$(mktemp -d "${PACKAGE_ROLLBACK_DIR}.tmp.XXXXXX")"
+  mkdir -p "${TMP_PACKAGE_ROLLBACK}/root" "${TMP_PACKAGE_ROLLBACK}/wp-content/plugins"
+  for path in "${PACKAGE_TREE_ROOTS[@]}"; do
+    [[ -z "$(find "${TARGET_SITE_ROOT}/${path}" -type l -print -quit)" ]] || fail "Package target tree contains a symlink: ${path}"
+    mkdir -p "${TMP_PACKAGE_ROLLBACK}/${path}"
+    rsync -a --delete -- "${TARGET_SITE_ROOT}/${path}/" "${TMP_PACKAGE_ROLLBACK}/${path}/"
+  done
+  for path in "${CORE_TOP_LEVEL_FILES[@]}"; do
+    [[ -f "${TARGET_SITE_ROOT}/${path}" && ! -L "${TARGET_SITE_ROOT}/${path}" ]] || fail "Canonical live core root file is missing or unsafe: ${path}"
+    cp -p -- "${TARGET_SITE_ROOT}/${path}" "${TMP_PACKAGE_ROLLBACK}/root/${path}"
+  done
+  metadata="${TMP_PACKAGE_ROLLBACK}/metadata"
+  printf 'format=1\ncommit=%s\n' "${HEAD_SHA}" > "${metadata}"
+  mv -- "${TMP_PACKAGE_ROLLBACK}" "${PACKAGE_ROLLBACK_DIR}"
+  TMP_PACKAGE_ROLLBACK=""
+  echo "Package rollback snapshot created for ${HEAD_SHA}."
+}
+
+restore_packages() {
+  local path snapshot_commit
+  [[ -d "${PACKAGE_ROLLBACK_DIR}" && ! -L "${PACKAGE_ROLLBACK_DIR}" ]] || fail "Package rollback snapshot is missing or unsafe."
+  snapshot_commit="$(sed -n 's/^commit=//p' "${PACKAGE_ROLLBACK_DIR}/metadata")"
+  [[ "${snapshot_commit}" == "${HEAD_SHA}" ]] || fail "Rollback snapshot commit does not match checked out deploy source."
+  assert_package_target_roots
+  for path in "${PACKAGE_TREE_ROOTS[@]}"; do
+    [[ -d "${PACKAGE_ROLLBACK_DIR}/${path}" && ! -L "${PACKAGE_ROLLBACK_DIR}/${path}" ]] || fail "Rollback package tree is missing or unsafe: ${path}"
+    [[ -z "$(find "${PACKAGE_ROLLBACK_DIR}/${path}" -type l -print -quit)" ]] || fail "Rollback package tree contains a symlink: ${path}"
+    rsync -a --checksum --delete-delay -- "${PACKAGE_ROLLBACK_DIR}/${path}/" "${TARGET_SITE_ROOT}/${path}/"
+  done
+  for path in "${CORE_TOP_LEVEL_FILES[@]}"; do
+    [[ -f "${PACKAGE_ROLLBACK_DIR}/root/${path}" && ! -L "${PACKAGE_ROLLBACK_DIR}/root/${path}" ]] || fail "Rollback core root file is missing or unsafe: ${path}"
+    assert_no_symlink_components "${TARGET_SITE_ROOT}" "${path}"
+    cp -p -- "${PACKAGE_ROLLBACK_DIR}/root/${path}" "${TARGET_SITE_ROOT}/${path}"
+  done
+  echo "Package rollback snapshot restored for ${HEAD_SHA}."
+}
 full_deploy() {
   local path
 
@@ -145,12 +271,18 @@ full_deploy() {
       "${REPO_DIR}/${path}/" \
       "${TARGET_SITE_ROOT}/${path}/"
   done
+
+  if package_sources_complete; then
+    reconcile_package_trees
+  else
+    echo "Canonical core package is not tracked at ${HEAD_SHA}; package roots left unchanged."
+  fi
 }
 
 changed_deploy() {
   [[ -f "${STATE_FILE}" ]] || fail "No previous successful deploy marker found. Run a full deploy first."
 
-  local previous_sha path previous_count deleted_count
+  local previous_sha path previous_count deleted_count package_changed=0
   previous_sha="$(tr -d '[:space:]' < "${STATE_FILE}")"
 
   [[ -n "${previous_sha}" ]] || fail "Deploy state marker is empty. Run a full deploy."
@@ -170,10 +302,10 @@ changed_deploy() {
   TMP_DELETED="$(mktemp)"
 
   git diff --name-only --no-renames -z --diff-filter=ACMRTUXB \
-    "${previous_sha}" "${HEAD_SHA}" -- "${ALLOWLIST[@]}" > "${TMP_CHANGED}"
+    "${previous_sha}" "${HEAD_SHA}" -- "${DEPLOY_PATHS[@]}" > "${TMP_CHANGED}"
 
   git diff --name-only --no-renames -z --diff-filter=D \
-    "${previous_sha}" "${HEAD_SHA}" -- "${ALLOWLIST[@]}" > "${TMP_DELETED}"
+    "${previous_sha}" "${HEAD_SHA}" -- "${DEPLOY_PATHS[@]}" > "${TMP_DELETED}"
 
   echo "Deploying changed files from ${previous_sha} to ${HEAD_SHA}."
 
@@ -182,6 +314,13 @@ changed_deploy() {
     [[ -e "${REPO_DIR}/${path}" || -L "${REPO_DIR}/${path}" ]] \
       || fail "Changed source path is missing: ${path}"
 
+    if is_package_path "${path}"; then
+      assert_no_symlink_components "${REPO_DIR}" "${path}"
+      assert_no_symlink_components "${TARGET_SITE_ROOT}" "${path}"
+      package_changed=1
+      continue
+    fi
+
     echo "Syncing changed file: ${path}"
     rsync -aR --checksum --no-times --omit-dir-times --itemize-changes -- "${path}" "${TARGET_SITE_ROOT}/"
   done < "${TMP_CHANGED}"
@@ -189,9 +328,19 @@ changed_deploy() {
   while IFS= read -r -d '' path; do
     is_allowed_path "${path}" || fail "Refusing unexpected deleted path: ${path}"
 
+    if is_package_path "${path}"; then
+      assert_no_symlink_components "${TARGET_SITE_ROOT}" "${path}"
+      package_changed=1
+      continue
+    fi
+
     echo "Removing deleted file: ${path}"
     rm -f -- "${TARGET_SITE_ROOT}/${path}"
   done < "${TMP_DELETED}"
+
+  if [[ "${package_changed}" -eq 1 ]]; then
+    reconcile_package_trees
+  fi
 
   for path in "${VENDOR_RECONCILE_ROOTS[@]}"; do
     [[ -d "${REPO_DIR}/${path}" ]] \
@@ -234,6 +383,8 @@ changed_deploy() {
 case "${MODE}" in
   full) full_deploy ;;
   changed) changed_deploy ;;
+  snapshot-packages) snapshot_packages; exit 0 ;;
+  restore-packages) restore_packages ;;
 esac
 
 COMMUNICATIONS_PATH="wp-content/plugins/raspitajse-communications"
