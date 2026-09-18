@@ -1,259 +1,126 @@
-# Zadatak 2.53 — Add bounded core/WPForms deploy support and complete both patch updates in one transaction
+# Zadatak 2.53.1 — Deploy already-validated WordPress/WPForms patch commit
 
 Status: READY
-Baseline: e40619b99563871889caffbd082f0da9d1cd25d3
-Previous task: 2.52.2
+Baseline / Commit A: `8d774c1e831d754c7e3f7e57842f61471a43f811`
+Prepared feature / Commit B: `4ad988463b89f9ad3c22f9f22c6766c6301f38eb`
+Feature branch: `feature/task-2.53-core-wpforms-patch`
+Previous task: 2.53
 Target: staging
 Production: FORBIDDEN
-Time budget: 60 minutes
+Time budget: 25 minutes
 
-## Required result
+## Goal
 
-This task is complete only when staging is running and verified on:
+Finish the already prepared update so staging runs:
 
-- WordPress core `7.1.1`;
+- WordPress `7.1.1`;
 - WPForms Lite `2.0.2`;
 
-with Git, live runtime, and deploy marker aligned to the final accepted staging SHA.
+and align local `staging`, `origin/staging`, live bytes, and deploy marker to exact Commit B.
 
-Do not return PASS for deploy-tool preparation alone, package download alone, or partial update progress. If the final versions are not both active and accepted, return one precise BLOCKED result.
+This is a lean recovery task. Reuse the validated artifacts and evidence from Zadatak 2.53. Do not redownload packages, rebuild Commit B, repeat the 4,049-file lint/checksum suite, or create a new generated harness/finalizer.
 
-## Starting facts
+## Accepted prior evidence
 
-Read `tasks/README.md` and the final Zadatak 2.52.2 report before mutation.
+The final 2.53 report is authoritative for:
 
-Verify fresh:
+- Commit A deploy support and rehearsal: PASS;
+- Commit B scope: only official WordPress 7.1.1 core paths and `wp-content/plugins/wpforms-lite/**`;
+- official package hashes and integrity/checksums: PASS;
+- changed-PHP syntax and package inventory parity: PASS;
+- DB schema version unchanged at `61833`;
+- no DB backup/upgrade required;
+- rollback snapshot/readiness established.
 
-- `origin/staging == e40619b99563871889caffbd082f0da9d1cd25d3`;
-- local staging worktree is clean;
-- live deploy marker equals the same baseline;
-- live WordPress is still `7.1`;
-- live WPForms Lite is still `2.0.1.1`;
-- both updates are still available/relevant.
+Action Scheduler item `32733` is now accepted as historical baseline:
 
-If any baseline/version assumption changed, STOP with one precise blocker rather than silently rebasing the task.
+- status: `complete`;
+- attempts: `1`;
+- completion predates Zadatak 2.53.
 
-The 2.52.2 blocker is already known: `deployment/deploy-staging.sh` cannot deploy WordPress core paths or `wp-content/plugins/wpforms-lite`. Resolve that blocker inside this task and then continue directly through both updates. Do not split this into another deploy-tool-only task followed by another update task.
+Do not change, restore, reschedule, or execute this item. Require only that its status and attempt count remain `complete/1` before and after this task.
 
-## Phase A — bounded deploy capability
+## Preflight — one short pass
 
-Create one scoped feature branch from the exact baseline.
+Fetch `staging`, the feature branch, and `codex-reports`. Read the final 2.53 report.
 
-The first feature commit may modify only `deployment/deploy-staging.sh` and must add a narrowly scoped, reusable staging deployment path for:
+Require:
 
-1. WordPress core package files;
-2. `wp-content/plugins/wpforms-lite/**`.
+- clean worktree;
+- local/origin `staging` and live deploy marker = exact Commit A;
+- live WordPress = `7.1`;
+- live WPForms Lite = `2.0.1.1`;
+- feature branch remote contains exact Commit B and Commit B is a direct descendant of Commit A;
+- Commit B diff scope remains limited to the two already-approved package roots;
+- Action Scheduler `32733` = `complete/1`;
+- standard staging mutation/runner lock is free.
 
-Do NOT add repository root `.` to the general allowlist. Do NOT create a mechanism capable of syncing arbitrary top-level files.
+Do not inspect unrelated scheduler rows or rebuild broad fingerprints. Any unexpected mismatch is one precise BLOCKED result.
 
-### WordPress core path contract
+Before live mutation, acquire the existing staging lock and retain/verify rollback material for the exact affected core/WPForms paths plus the current marker. Use the already integrated deploy mechanism; do not author another deploy script.
 
-The deploy script must permit only canonical WordPress core package paths:
+## Deploy and acceptance
 
-- `wp-admin/**`;
-- `wp-includes/**`;
-- top-level regular files that are actually part of the official WordPress core package being deployed.
+Deploy exact Commit B using `deployment/deploy-staging.sh`. The existing marker at Commit A must not cause a skip.
 
-Explicitly forbid at minimum:
+Verify once:
 
-- `wp-config.php` and `wp-config-sample.php` unless the latter is actually part of the official package diff and the task proves it is safe;
-- `.htaccess`;
-- `.user.ini`;
-- any credential/auth file;
-- `wp-content/**` except the separately authorized WPForms Lite root;
-- server/deployment state files;
-- arbitrary untracked root files.
+1. live WordPress = `7.1.1`;
+2. live WPForms Lite = `2.0.2`;
+3. exact source/live byte parity for Commit B changed paths and required deletions;
+4. `wp-config.php`, `.htaccess`, and `.user.ini` state unchanged;
+5. WordPress bootstrap succeeds;
+6. home, `/login-register/`, and jobs route succeed using one bounded request each;
+7. wp-admin/plugin bootstrap succeeds;
+8. WPForms Lite is active and loads; if an existing published form exists, render one without submission, otherwise record `WPFORM_RENDER_NOT_APPLICABLE`;
+9. Raspitajse-owned plugins and active child theme load;
+10. no new update-attributable PHP fatal/error/warning;
+11. Action Scheduler `32733` remains exactly `complete/1`.
 
-Prefer deriving the allowed top-level core file set from the verified official package inventory rather than maintaining a broad wildcard.
+Do not send email, submit forms, run payment/refund, cron, Action Scheduler, quota, application, expiry, communications, entitlement, or job-alert suites. Do not add a broad HTTP/security harness.
 
-### WPForms path contract
+## PASS path
 
-Allow only:
+If the single acceptance pass succeeds:
 
-`wp-content/plugins/wpforms-lite/**`
+1. fast-forward local `staging` from Commit A to exact Commit B;
+2. push `staging` without force;
+3. run only the required final marker/parity verification;
+4. require local staging = origin staging = deploy marker = Commit B;
+5. require live versions `7.1.1` and `2.0.2`;
+6. release the lock after evidence/report write;
+7. publish `PASS: PATCH_UPDATES_DEPLOYED`.
 
-with the same symlink, deletion, checksum, source-existence, and target-boundary protections used by the existing guarded deploy code.
+## Failure path
 
-### Required deploy-tool properties
-
-The new path must:
-
-- work for both forward deploy and rollback;
-- support changed, added, and deleted tracked files;
-- never follow a symlinked target root;
-- never write outside the staging site root;
-- preserve the existing communications manifest/parity behavior and current vendor reconciliation behavior;
-- leave all existing allowlisted behavior unchanged;
-- refuse any target path outside the explicit core/WPForms contract;
-- update the deploy marker only after the complete deployment succeeds.
-
-Run `bash -n` and a disposable non-web rehearsal proving that representative add/change/delete operations for core and WPForms are accepted while representative forbidden paths are rejected.
-
-Do not touch production.
-
-## Phase B — establish rollback-capable deploy tooling
-
-Commit the deploy-tool change separately as Commit A.
-
-Review Commit A diff and require it contains only `deployment/deploy-staging.sh`.
-
-Fast-forward `staging` to Commit A and push without force. This is intentionally permitted before the package update so that the accepted deploy mechanism remains available for rollback if the package deployment fails.
-
-Run the normal staging deploy once from Commit A. No application/core/plugin bytes should change in this step; only Git/live marker alignment should advance to Commit A.
-
-Verify:
-
-- local/origin staging = Commit A;
-- deploy marker = Commit A;
-- WordPress still `7.1`;
-- WPForms Lite still `2.0.1.1`;
-- worktree clean.
-
-If Commit A cannot be integrated/deployed safely, STOP. Do not attempt the package updates.
-
-## Phase C — official package update in the same task
-
-From exact Commit A create/continue the same scoped feature branch for Commit B.
-
-Download only the official target packages from authoritative WordPress.org sources:
-
-- WordPress core `7.1.1`;
-- WPForms Lite `2.0.2`.
-
-External network access is authorized only as required to retrieve and verify these two official packages/checksums. Do not use vendor updaters inside WordPress admin and do not update anything else.
-
-Record package provenance and SHA-256 without printing secrets.
-
-Apply packages to the repository working copy with these rules:
-
-- no bundled theme updates;
-- no unrelated plugin changes;
-- no `wp-config.php` changes;
-- no changes outside canonical core files and `wp-content/plugins/wpforms-lite/**`;
-- remove files only when the official target package proves they were removed;
-- Git remains the source of truth.
-
-Require the final feature diff relative to Commit A to contain only:
-
-- canonical WordPress core 7.1.1 package changes;
-- WPForms Lite 2.0.2 package changes.
-
-Verify official integrity/checksums where available, run one bounded PHP syntax pass over changed PHP files, and run a strict diff-scope check.
-
-Commit package changes separately as Commit B and push the feature branch.
-
-## Phase D — rollback readiness before live package mutation
-
-Before deploying Commit B:
-
-- acquire the standard staging mutation/runner lock;
-- retain exact rollback copies or a verified restorable inventory of the live/tracked core and WPForms paths affected by Commit B;
-- capture the current deploy marker and installed versions;
-- determine whether `7.1 → 7.1.1` changes WordPress DB schema version.
-
-If a DB schema change is required, create and verify a full staging DB backup before deployment using the already proven ambient MariaDB auth path. If no schema change is required, explicitly record `DB_BACKUP_NOT_REQUIRED_NO_SCHEMA_CHANGE`.
-
-Do not inspect credential files. No production access.
-
-## Phase E — deploy both updates and verify the actual result
-
-Deploy exact Commit B using only the newly accepted `deployment/deploy-staging.sh` path.
-
-Immediately verify:
-
-- live WordPress version = `7.1.1`;
-- live WPForms Lite version = `2.0.2`;
-- all changed core/WPForms files have exact source/runtime byte parity;
-- deleted package files are absent;
-- forbidden root/config files were not touched;
-- deploy marker = Commit B feature SHA before integration.
-
-If the core update requires the standard WordPress DB upgrade, run only that required upgrade under the held lock after the verified backup. Do not run unrelated migrations.
-
-## Phase F — one focused acceptance pass only
-
-Run one bounded acceptance pass. Do not grow a new broad harness and do not repeat unrelated suites.
-
-Required checks:
-
-- WordPress bootstrap completes without a new fatal/error/warning attributable to these updates;
-- public home, `/login-register/`, and jobs page succeed where the environment permits WordPress handling;
-- administrator wp-admin bootstrap and plugin screen load;
-- WPForms Lite plugin loads and remains active;
-- if at least one existing published WPForms form exists, render/bootstrap one existing form without submitting it; otherwise record `WPFORM_RENDER_NOT_APPLICABLE`;
-- existing Raspitajse owned plugins and active child theme remain loaded;
-- no plugin/theme activation changes except none;
-- no real email/SMTP, form submission, payment/refund, broad cron, or Action Scheduler execution;
-- protected Action Scheduler item 32733 remains pending with attempts 0;
-- no unexpected external WordPress HTTP transport beyond the two already completed package-download/checksum operations outside the runtime acceptance;
-- no production access.
-
-Known Hostinger/LiteSpeed pre-WordPress HTTP 403 is not by itself a product regression; use internal bootstrap/template evidence when applicable and record that limitation once.
-
-Do not rerun quota, applications, expiry, communications, package-entitlement, or job-alert suites unless a direct regression from these two patch updates is observed.
-
-## Phase G — integration or exact rollback
-
-### PASS path
-
-Only if both target versions and every critical acceptance gate pass:
-
-1. fast-forward `staging` from Commit A to exact Commit B and push without force;
-2. deploy final `staging`;
-3. verify local staging = origin/staging = live deploy marker;
-4. reverify WordPress `7.1.1`, WPForms Lite `2.0.2`, and exact source/runtime parity for the changed target paths;
-5. remove rollback material only after final proof;
-6. publish:
-   `PASS: PATCH_UPDATES_DEPLOYED`.
-
-### Failure path
-
-If package deploy, DB upgrade, parity, or focused acceptance fails:
+If deployment or acceptance fails:
 
 1. do not integrate Commit B;
-2. use the now-integrated Commit A deploy mechanism to restore the exact Commit A core/WPForms runtime state and marker;
-3. restore DB only if this task changed DB schema/state and restoration is required;
-4. prove WordPress `7.1`, WPForms Lite `2.0.1.1`, source/runtime baseline parity, and clean protected state;
-5. keep the validated Commit A deploy-tool improvement on staging unless Commit A itself is the cause of the failure;
-6. publish one precise BLOCKED reason and STOP.
+2. restore the exact Commit A core/WPForms live state and marker using the retained rollback material and existing deploy support;
+3. verify WordPress `7.1`, WPForms Lite `2.0.1.1`, and marker Commit A;
+4. leave Git history unchanged;
+5. publish one precise BLOCKED reason and stop.
 
-Never leave staging in a mixed core/plugin state.
+Never leave a mixed core/plugin runtime.
 
-## Scope
+## Scope and efficiency rules
 
-Authorized source changes:
+Allowed:
 
-- Commit A: `deployment/deploy-staging.sh` only.
-- Commit B: official WordPress core 7.1.1 package diff plus `wp-content/plugins/wpforms-lite/**` 2.0.2 package diff only.
+- deploy/integrate exact Commit B;
+- rollback only affected WordPress core/WPForms paths and marker;
+- one concise report.
 
 Forbidden:
 
 - production;
-- themes;
-- Superio/Apus/RevSlider;
-- WP Job Board Pro / Paid Listings;
-- Raspitajse-owned business code;
-- communications/commerce behavior changes;
-- scheduler configuration changes;
-- other plugins;
-- broad WordPress updater/TGMPA actions;
-- force push/history rewrite.
+- scheduler mutation/execution;
+- package redownload/rebuild;
+- source-code changes;
+- new commits other than fast-forwarding exact Commit B to staging and the report commit;
+- other plugins/themes;
+- force push/rebase/reset;
+- generated finalizer or new broad test framework;
+- repeating already accepted 2.53 validation.
 
-## Final report
-
-Publish one concise final report containing:
-
-- result;
-- Commit A SHA;
-- Commit B/final staging SHA when PASS;
-- old/new WordPress and WPForms versions;
-- official package provenance/hashes;
-- exact changed scope;
-- deploy-tool validation result;
-- DB schema/backup status;
-- focused smoke result;
-- rollback status if used;
-- final local/origin/live/marker alignment;
-- production touched: NO.
-
-STOP after the report.
+STOP after one report.
