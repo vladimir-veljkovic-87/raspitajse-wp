@@ -219,7 +219,7 @@ class Connection {
 			$this->secret = $data['secret'];
 		}
 
-		$this->is_live_mode = Helpers::is_production_mode();
+		$this->is_live_mode = ! empty( $data['mode'] ) ? $data['mode'] === Helpers::PRODUCTION : Helpers::is_production_mode();
 
 		$this->set_status( empty( $data['status'] ) ? self::STATUS_VALID : $data['status'] );
 	}
@@ -245,12 +245,22 @@ class Connection {
 		// Default to the current class.
 		$class = static::class;
 
-		if ( Helpers::is_pro() && Helpers::is_legacy() ) {
+		// The addon class is only guaranteed to be loaded when the addon's autoloader has run.
+		// On multisite is_pro() can be true from an activation record alone.
+		if (
+			Helpers::is_pro() &&
+			Helpers::is_legacy() &&
+			// phpcs:ignore WPForms.PHP.BackSlash.UseShortSyntax
+			class_exists( \WPFormsPaypalCommerce\Connection::class )
+		) {
 			// phpcs:ignore WPForms.PHP.BackSlash.UseShortSyntax
 			$class = \WPFormsPaypalCommerce\Connection::class;
 		}
 
-		return new $class( (array) $connections[ $mode ] );
+		$connection_data         = (array) $connections[ $mode ];
+		$connection_data['mode'] = $mode;
+
+		return new $class( $connection_data );
 	}
 
 	/**

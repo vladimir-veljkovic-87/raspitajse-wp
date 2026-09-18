@@ -113,6 +113,24 @@ class Notifications extends Mailer {
 	public $rendering_context;
 
 	/**
+	 * Headers value returned by filter.
+	 *
+	 * @since 1.10.2
+	 *
+	 * @var string|array|null
+	 */
+	private $filtered_headers;
+
+	/**
+	 * Exclusion options for the currently rendered {all_fields} tag.
+	 *
+	 * @since 2.0.2
+	 *
+	 * @var array
+	 */
+	private $all_fields_exclude = [];
+
+	/**
 	 * Get the instance of a class.
 	 *
 	 * @since 1.8.9
@@ -195,6 +213,9 @@ class Notifications extends Mailer {
 			return false;
 		}
 
+		// Reset per-send state so a value captured for a previous email never bleeds into this one.
+		$this->filtered_headers = null;
+
 		// Don't send anything if emails have been disabled.
 		if ( $this->is_email_disabled() ) {
 			return false;
@@ -264,6 +285,10 @@ class Notifications extends Mailer {
 
 		// Set the attachments to the email.
 		$this->__set( 'attachments', $data['attachments'] );
+
+		if ( isset( $data['headers'] ) && ( is_string( $data['headers'] ) || is_array( $data['headers'] ) ) ) {
+			$this->filtered_headers = $data['headers'];
+		}
 
 		$entry_obj = wpforms()->obj( 'entry' );
 
@@ -402,9 +427,7 @@ class Notifications extends Mailer {
 
 		$message = $this->process_tag( $message );
 
-		if ( strpos( $message, '{all_fields}' ) !== false ) {
-			$message = str_replace( '{all_fields}', $this->process_field_values(), $message );
-		}
+		$message = $this->replace_all_fields_tag( $message );
 
 		/**
 		 * Filter and modify the email message content before sending.
@@ -443,6 +466,47 @@ class Notifications extends Mailer {
 			$message,
 			$this
 		);
+	}
+
+	/**
+	 * Replace every {all_fields} tag, honoring its exclusion parameters.
+	 *
+	 * @since 2.0.2
+	 *
+	 * @param string $message Email message.
+	 *
+	 * @return string
+	 */
+	private function replace_all_fields_tag( string $message ): string {
+
+		return AllFieldsTag::replace(
+			$message,
+			function ( array $options ) {
+
+				$this->all_fields_exclude = AllFieldsTag::expand( $options, (array) $this->form_data );
+				$rendered                 = $this->process_field_values();
+				$this->all_fields_exclude = [];
+
+				return $rendered;
+			}
+		);
+	}
+
+	/**
+	 * Whether a field is excluded from the currently rendered {all_fields} output.
+	 *
+	 * Container fields use it to suppress their own markup when the fields
+	 * inside them are excluded.
+	 *
+	 * @since 2.0.2
+	 *
+	 * @param array $field Field data.
+	 *
+	 * @return bool
+	 */
+	public function is_field_excluded( array $field ): bool {
+
+		return AllFieldsTag::is_excluded( $field, $this->all_fields_exclude );
 	}
 
 	/**
@@ -507,10 +571,13 @@ class Notifications extends Mailer {
 	 * Get processed field values.
 	 *
 	 * @since 1.9.7.3
+	 * @since 2.0.2 The `$exclude` parameter was added.
+	 *
+	 * @param array $exclude Exclusion options as returned by AllFieldsTag::parse().
 	 *
 	 * @return string
 	 */
-	public function get_processed_field_values(): string {
+	public function get_processed_field_values( array $exclude = [] ): string {
 
 		$template = self::get_available_templates( $this->current_template );
 
@@ -533,7 +600,10 @@ class Notifications extends Mailer {
 		}
 
 		$this->field_template = $email_template->get_field_template();
-		$field_values         = trim( $this->process_field_values() );
+
+		$this->all_fields_exclude = AllFieldsTag::expand( $exclude, (array) $this->form_data );
+		$field_values             = trim( $this->process_field_values() );
+		$this->all_fields_exclude = [];
 
 		return make_clickable( $field_values );
 	}
@@ -575,6 +645,10 @@ class Notifications extends Mailer {
 				continue;
 			}
 
+			if ( $this->is_field_excluded( $field ) ) {
+				continue;
+			}
+
 			$field_message = $this->get_field_plain( $field, $show_empty_fields );
 
 			/**
@@ -608,6 +682,11 @@ class Notifications extends Mailer {
 	 * @return string
 	 */
 	public function get_field_plain( array $field, bool $show_empty_fields ): string { // phpcs:ignore Generic.Metrics.CyclomaticComplexity
+
+		// Container fields render their children directly, bypassing the message loops.
+		if ( $this->is_field_excluded( $field ) ) {
+			return '';
+		}
 
 		$field_id = $field['id'] ?? '';
 
@@ -732,6 +811,10 @@ class Notifications extends Mailer {
 				continue;
 			}
 
+			if ( $this->is_field_excluded( $field ) ) {
+				continue;
+			}
+
 			$field_message = $this->get_field_html( $field, $show_empty_fields, $other_fields );
 
 			/**
@@ -768,6 +851,11 @@ class Notifications extends Mailer {
 	 * @return string
 	 */
 	public function get_field_html( array $field, bool $show_empty_fields, array $other_fields ): string { // phpcs:ignore Generic.Metrics.CyclomaticComplexity
+
+		// Container fields render their children directly, bypassing the message loops.
+		if ( $this->is_field_excluded( $field ) ) {
+			return '';
+		}
 
 		$field_type = ! empty( $field['type'] ) ? $field['type'] : '';
 		$field_id   = $field['id'] ?? '';
@@ -826,13 +914,16 @@ class Notifications extends Mailer {
 			'email-html'
 		);
 
+		// The filtered value may contain markup built from stored submission data, so sanitize it before it enters the email body.
 		/** This filter is documented in src/SmartTags/SmartTag/FieldHtmlId.php.*/
-		$field_val = (string) apply_filters( // phpcs:ignore WPForms.PHP.ValidateHooks.InvalidHookName
-			'wpforms_html_field_value',
-			$field_val,
-			$this->fields[ $field_id ] ?? $field,
-			$this->form_data,
-			'email-html'
+		$field_val = wpforms_esc_entry_field_value(
+			apply_filters( // phpcs:ignore WPForms.PHP.ValidateHooks.InvalidHookName, WPForms.Comments.PHPDocHooks.RequiredHookDocumentation
+				'wpforms_html_field_value',
+				$field_val,
+				$this->fields[ $field_id ] ?? $field,
+				$this->form_data,
+				'email-html'
+			)
 		);
 
 		$field_val = str_replace( [ "\r\n", "\r", "\n" ], '<br/>', $field_val );
@@ -945,6 +1036,7 @@ class Notifications extends Mailer {
 		// In these contexts, we need to check if the smart tag is allowed.
 		$address_context = [
 			'notification-from',
+			'notification-reply-to',
 		];
 
 		// Check if the smart tag is allowed AND if the context is allowed.
@@ -1095,6 +1187,9 @@ class Notifications extends Mailer {
 			$matches = [];
 
 			if ( preg_match( $regex, $reply_to, $matches ) ) {
+				// The display name accepts any field value and is made header-safe by
+				// sanitize_email_header_name() below, so it must not run through the
+				// address-field validation that the 'notification-reply-to' context applies.
 				$reply_to_name = $this->sanitize( $matches[1] );
 				$reply_to      = trim( $matches[2], '<> ' );
 			}
@@ -1108,7 +1203,7 @@ class Notifications extends Mailer {
 		}
 
 		if ( $reply_to_name ) {
-			$reply_to = "$reply_to_name <{$reply_to}>";
+			$reply_to = $this->sanitize_email_header_name( $reply_to_name ) . " <{$reply_to}>";
 		}
 
 		/**
@@ -1136,6 +1231,18 @@ class Notifications extends Mailer {
 	public function sanitize( $input = '', $context = 'notification' ): string {
 
 		return wpforms_decode_string( $this->process_tag( $input, $context ) );
+	}
+
+	/**
+	 * Get the email headers.
+	 *
+	 * @since 1.10.2
+	 *
+	 * @return string|array
+	 */
+	public function get_headers() {
+
+		return $this->filtered_headers ?? parent::get_headers();
 	}
 
 	/**

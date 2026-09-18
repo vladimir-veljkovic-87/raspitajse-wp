@@ -2,6 +2,10 @@
 
 namespace WPForms;
 
+use WPForms\Analytics\Analytics;
+use WPForms\Db\Analytics\DB as AnalyticsDB;
+use WPForms\Pro\Analytics\Analytics as ProAnalytics; // Pro symbol; every usage below is guarded by is_pro() at runtime.
+
 /**
  * WPForms Class Loader.
  *
@@ -55,6 +59,8 @@ class Loader {
 		$this->populate_education();
 		$this->populate_robots();
 		$this->populate_anti_spam();
+		$this->populate_setup_wizard();
+		$this->populate_analytics();
 	}
 
 	/**
@@ -71,6 +77,44 @@ class Loader {
 
 		$this->classes[] = [
 			'name' => 'Emails\Summaries',
+		];
+
+		$this->classes[] = [
+			'name' => 'Helpers\Plugin',
+			'id'   => 'plugin',
+		];
+
+		// Always-on — binds invalidation hooks that fire on front-end requests.
+		$this->classes[] = [
+			'name' => 'Admin\Dashboard\Cache',
+			'id'   => 'dashboard_cache',
+			'hook' => false,
+		];
+
+		// Feeds the Dashboard tasks into the Tasks manager via `wpforms_tasks_get_tasks`.
+		$this->classes[] = [
+			'name' => 'Admin\Dashboard\Tasks',
+			'id'   => 'dashboard_tasks',
+		];
+	}
+
+	/**
+	 * Populate the Setup Wizard class.
+	 *
+	 * @since 2.0.0
+	 */
+	private function populate_setup_wizard(): void {
+
+		$this->classes[] = [
+			'name' => 'SetupWizard\SetupWizard',
+			'id'   => 'setup_wizard',
+			'hook' => 'init',
+		];
+
+		$this->classes[] = [
+			'name' => 'SetupChecklist\SetupChecklist',
+			'id'   => 'setup_checklist',
+			'hook' => 'init',
 		];
 	}
 
@@ -181,6 +225,15 @@ class Loader {
 				'id'   => 'notice',
 			],
 			[
+				'name' => 'Admin\Settings\Captcha\ConfigurationError',
+				'id'   => 'captcha_configuration_error',
+				'run'  => 'hooks',
+			],
+			[
+				'name' => 'Admin\MediaLibrary',
+				'hook' => 'admin_init',
+			],
+			[
 				'name' => 'Admin\Revisions',
 				'id'   => 'revisions',
 				'hook' => 'admin_init',
@@ -266,6 +319,28 @@ class Loader {
 				'condition' => wpforms_is_admin_ajax(),
 			],
 			[
+				'name'      => 'Admin\Dashboard\Ajax',
+				'id'        => 'dashboard_ajax',
+				'hook'      => 'admin_init',
+				'run'       => 'hooks',
+				'condition' => wpforms_is_admin_ajax(),
+			],
+			[
+				'name'      => 'Admin\Addons\Install',
+				'hook'      => 'admin_init',
+				'run'       => 'hooks',
+				'condition' => wpforms_is_admin_ajax(),
+			],
+			[
+				'name'      => 'Admin\Dashboard\Heartbeat',
+				'id'        => 'dashboard_heartbeat',
+				'hook'      => 'admin_init',
+				'run'       => 'hooks',
+				// wp_doing_ajax(), not wpforms_is_admin_ajax() — the WP heartbeat action
+				// is 'heartbeat', not 'wpforms_*', so the WPForms-specific check rejects it.
+				'condition' => wpforms()->is_pro() && wp_doing_ajax(),
+			],
+			[
 				'name'      => 'Admin\Tools\Importers',
 				'hook'      => 'admin_init',
 				'run'       => 'load',
@@ -316,9 +391,20 @@ class Loader {
 				'hook' => 'admin_init',
 			],
 			[
+				'name' => 'Admin\PluginsCategory',
+				'id'   => 'plugins_category',
+				'hook' => 'admin_init',
+			],
+			[
 				'name' => 'Admin\Splash\SplashScreen',
 				'id'   => 'splash_screen',
 				'hook' => 'admin_init',
+			],
+			[
+				'name'      => 'Admin\LicenseModal',
+				'id'        => 'license_modal',
+				'hook'      => 'init',
+				'condition' => wpforms()->is_pro(),
 			],
 			[
 				'name' => 'Admin\Splash\SplashCache',
@@ -335,6 +421,17 @@ class Loader {
 			],
 			[
 				'name' => 'Admin\Builder\PurgeEntries',
+			],
+			[
+				'name' => 'Admin\Dashboard\Page',
+				'id'   => 'dashboard_page',
+			],
+			[
+				'name'      => 'Admin\Dashboard\StripeConnect',
+				'id'        => 'dashboard_stripe_connect',
+				'hook'      => 'init',
+				'run'       => 'hooks',
+				'condition' => is_admin(),
 			]
 		);
 	}
@@ -367,6 +464,15 @@ class Loader {
 	 * @noinspection ClassConstantCanBeUsedInspection
 	 */
 	private function populate_fields(): void {
+
+		// Field objects registry. Must listen before any field constructs on `init`,
+		// so instantiate it immediately (no hook) and wire its action listener now.
+		$this->classes[] = [
+			'name' => 'Forms\Fields\Registry',
+			'id'   => 'fields_registry',
+			'hook' => false,
+			'run'  => 'hooks',
+		];
 
 		// Fancy fields.
 		$this->classes[] = [
@@ -535,6 +641,12 @@ class Loader {
 		];
 
 		$this->classes[] = [
+			'name'        => 'Forms\Fields\Addons\Ranking\Field',
+			'addon_class' => 'WPFormsSurveys\Fields\Ranking\Field',
+			'addon_slug'  => 'surveys-polls',
+		];
+
+		$this->classes[] = [
 			'name'        => 'Forms\Fields\Addons\Map\Field',
 			'addon_class' => 'WPFormsGeolocation\Forms\Field',
 			'addon_slug'  => 'geolocation',
@@ -624,6 +736,15 @@ class Loader {
 				'hook' => 'init',
 			],
 			[
+				'name' => 'Admin\Entries\Import\Import',
+				'id'   => 'entries_import',
+				'hook' => 'init',
+			],
+			[
+				'name' => 'Admin\Entries\Import\Ajax',
+				'hook' => 'init',
+			],
+			[
 				'name' => 'Admin\Entries\DefaultScreen',
 				'hook' => 'admin_init',
 			]
@@ -671,6 +792,11 @@ class Loader {
 				'hook' => 'wpforms_builder_init',
 			],
 			[
+				'name' => 'Admin\Builder\Settings\QrCode',
+				'hook' => 'admin_init',
+				'id'   => 'builder_settings_qr_code',
+			],
+			[
 				'name' => 'Admin\Builder\Notifications\Advanced\EmailTemplate',
 				'hook' => 'wpforms_builder_init',
 			],
@@ -678,6 +804,11 @@ class Loader {
 				'name' => 'Admin\Builder\ContextMenu',
 				'hook' => 'wpforms_builder_init',
 				'id'   => 'context_menu',
+			],
+			[
+				'name' => 'Admin\Builder\PreviewDropdown',
+				'hook' => 'wpforms_builder_init',
+				'id'   => 'preview_dropdown',
 			],
 			[
 				'name' => 'Admin\Builder\ImageUpload',
@@ -702,6 +833,9 @@ class Loader {
 			[
 				'name' => 'Admin\Builder\Ajax\SaveForm',
 				'id'   => 'builder_save_form',
+			],
+			[
+				'name' => 'Admin\Builder\Ajax\TemplatesLoader',
 			],
 			[
 				'name' => 'Admin\Builder\Payments',
@@ -877,6 +1011,12 @@ class Loader {
 				'id'   => 'education',
 			],
 			[
+				'name' => 'Admin\Education\FeatureTooltip',
+				'id'   => 'education_feature_tooltip',
+				'hook' => false,
+				'run'  => 'init',
+			],
+			[
 				'name' => 'Admin\Education\Fields',
 				'id'   => 'education_fields',
 			],
@@ -904,6 +1044,34 @@ class Loader {
 				'name'     => 'Admin\Education\Pointers\Payment',
 				'hook'     => 'admin_init',
 				'priority' => 20,
+			],
+			[
+				'name' => 'Education\ActiveLayer\InstallTracker',
+				'id'   => 'activelayer_install_tracker',
+			],
+			[
+				'name' => 'Education\WPConsent\InstallTracker',
+				'id'   => 'wpconsent_install_tracker',
+			],
+			[
+				'name' => 'Education\SugarCalendar\InstallTracker',
+				'id'   => 'sugar_calendar_install_tracker',
+			],
+			[
+				'name' => 'Admin\\Education\\Builder\\Gdpr',
+				'id'   => 'education_builder_gdpr',
+			],
+			[
+				'name' => 'Admin\\Education\\Promo\\SugarCalendar\\TemplatesGrid',
+				'id'   => 'education_promo_sugar_calendar_templates',
+			],
+			[
+				'name' => 'Admin\\Education\\Promo\\SugarCalendar\\FieldsPanel',
+				'id'   => 'education_promo_sugar_calendar_fields',
+			],
+			[
+				'name' => 'Admin\\Settings\\Gdpr\\WPConsentCallout',
+				'id'   => 'gdpr_wpconsent_callout',
 			]
 		);
 
@@ -914,17 +1082,22 @@ class Loader {
 			'Builder\Captcha',
 			'Builder\Fields',
 			'Builder\Settings',
+			'Builder\AddonBanners',
 			'Builder\Providers',
 			'Builder\Payments',
 			'Builder\DidYouKnow',
 			'Builder\Geolocation',
 			'Builder\Quiz',
+			'Builder\Ranking',
 			'Builder\Confirmations',
 			'Builder\Notifications',
 			'Builder\PDF',
+			'Builder\AdoptionTooltips',
+			'Builder\QrCode',
 			'Admin\DidYouKnow',
 			'Admin\Settings\Integrations',
 			'Admin\Settings\Geolocation',
+			'Admin\Settings\Gdpr',
 			'Admin\NoticeBar',
 			'Admin\Entries\Geolocation',
 			'Admin\Entries\UserJourney',
@@ -975,5 +1148,92 @@ class Loader {
 				'hook' => 'init',
 			]
 		);
+	}
+
+	/**
+	 * Register Form Analytics classes.
+	 *
+	 * @since 2.0.0
+	 */
+	private function populate_analytics(): void {
+
+		// Aggregation task registers unconditionally so that init() can clean
+		// up a stale recurring schedule when the kill switch flips off after having been on.
+		// Runs on `init` because the task's constructor needs the `tasks` service,
+		// which is itself registered on `init`.
+		$this->classes[] = [
+			'name'     => 'Tasks\Actions\AnalyticsAggregationTask',
+			'id'       => 'analytics_aggregation_task',
+			'hook'     => 'init',
+			'priority' => 20,
+			'run'      => false,
+		];
+
+		if ( ! Analytics::is_enabled() ) {
+			return;
+		}
+
+		// Tables are created by Upgrade2_0_0 migration.
+		// Skip runtime analytics until the migration has run; they become active
+		// on the next request after table creation.
+		if ( ! AnalyticsDB::tables_exist() ) {
+			return;
+		}
+
+		$this->classes[] = [
+			'name' => 'Analytics\Analytics',
+			'id'   => 'analytics',
+		];
+
+		$this->classes[] = [
+			'name' => 'Db\Analytics\DB',
+			'id'   => 'analytics_db',
+			'hook' => false,
+			'run'  => false,
+		];
+
+		$this->classes[] = [
+			'name'      => 'Analytics\Stats',
+			'id'        => 'analytics_stats',
+			'hook'      => false,
+			'run'       => false,
+			'condition' => wpforms()->is_pro() && ProAnalytics::is_allowed(),
+		];
+
+		$this->classes[] = [
+			'name' => 'Analytics\Aggregation',
+			'id'   => 'analytics_aggregation',
+			'hook' => false,
+			'run'  => false,
+		];
+
+		$this->classes[] = [
+			'name' => 'Analytics\Process',
+			'id'   => 'analytics_process',
+		];
+
+		$this->classes[] = [
+			'name' => 'Frontend\Analytics',
+			'id'   => 'analytics_frontend',
+		];
+
+		$this->classes[] = [
+			'name' => 'Admin\Forms\Analytics',
+			'id'   => 'admin_forms_analytics',
+			'hook' => 'admin_init',
+		];
+
+		$this->classes[] = [
+			'name'      => 'Admin\Analytics\Page',
+			'id'        => 'analytics_page',
+			'condition' => wpforms()->is_pro() && ProAnalytics::is_allowed(),
+		];
+
+		$this->classes[] = [
+			'name'      => 'Admin\Analytics\Ajax',
+			'id'        => 'analytics_ajax',
+			'hook'      => 'admin_init',
+			'condition' => wpforms()->is_pro() && ProAnalytics::is_allowed() && wpforms_is_admin_ajax(),
+		];
 	}
 }

@@ -357,6 +357,7 @@ function wpforms_get_form_fields( $form = false, $allowlist = [] ) { // phpcs:ig
 		'payment-total',
 		'phone',
 		'radio',
+		'ranking',
 		'rating',
 		'richtext',
 		'select',
@@ -560,6 +561,10 @@ function wpforms_get_all_smart_tags( $content ) {
 	 * [ =][^\n}]* space or equal sign and any number of any characters except new line and closing curly brace.
 	 */
 	preg_match_all( '~{([a-z0-9_]+)(|[ =][^\n}]*)}~', $content, $smart_tags );
+
+	if ( empty( $smart_tags[0] ) ) {
+		return [];
+	}
 
 	return array_combine( $smart_tags[0], $smart_tags[1] );
 }

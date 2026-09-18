@@ -1370,6 +1370,9 @@ class Frontend {
 
 		echo '<input type="hidden" name="wpforms[id]" value="' . absint( $form_id ) . '">';
 
+		// Rendered for every form, so that the frontend recovery check does not fire when the time limit is off.
+		echo '<input type="hidden" name="wpforms[time_token]" value="' . esc_attr( wpforms()->obj( 'token' )->get_time_token( $form_data ) ) . '">';
+
 		if ( is_user_logged_in() ) {
 			?>
 			<input
@@ -1929,6 +1932,7 @@ class Frontend {
 			 */
 			'mailcheck_toplevel_domains' => array_map( 'sanitize_text_field', (array) apply_filters( 'wpforms_mailcheck_toplevel_domains', [ 'dev' ] ) ), // phpcs:ignore WPForms.PHP.ValidateHooks.InvalidHookName
 			'is_ssl'                     => is_ssl(),
+			'nonce'                      => wp_create_nonce( 'wpforms' ),
 		];
 
 		// Include payment-related strings if needed.
