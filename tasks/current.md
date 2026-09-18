@@ -1,62 +1,87 @@
-# Zadatak 2.52.1 — Lean dependency and version baseline
+# Zadatak 2.52.2 — Rollback-backed patch updates
 
 Status: READY
 Baseline: e40619b99563871889caffbd082f0da9d1cd25d3
-Previous task: 2.51.13
+Previous task: 2.52.1
 Target: staging
 Production: FORBIDDEN
-Time budget: 20 minutes
+Time budget: 30 minutes
 
 ## Goal
 
-Create a concise, current read-only dependency/version baseline for the production-readiness security phase.
+Update only these confirmed staging patch candidates:
 
-Do not update, activate, deactivate, install, remove or modify anything.
+- WordPress core `7.1 → 7.1.1`;
+- WPForms Lite `2.0.1.1 → 2.0.2`.
 
-## Lean scope
+Preserve Git as the source of truth and provide a verified rollback.
 
-Follow `tasks/README.md`. Read only current staging metadata and directly relevant plugin/theme headers.
+Do not update Twenty Twenty-Three, themes, licensed vendor packages or any other plugin.
 
-Record:
+## Lean preflight
 
-- WordPress, PHP and database versions;
-- active parent/child theme names and versions, including their parent relationship;
-- active plugins with installed version, owner/source, update mechanism and currently reported update availability;
-- required Raspitajse-owned/MU plugins and their status;
-- inactive plugins/themes as KEEP, REVIEW or REMOVE CANDIDATE based only on current launch need;
-- whether WordPress currently reports an available core, plugin or theme update;
-- obvious version/dependency incompatibilities reported by WordPress/plugin metadata.
+Follow `tasks/README.md`. Confirm:
 
-Use current WordPress update metadata. At most one normal read-only update-information refresh is allowed if cached data is absent or stale; record that it occurred. Do not install any update and do not contact unrelated services.
+- clean Git/live/marker alignment at the declared baseline;
+- both exact target updates are still reported;
+- sufficient disk space;
+- whether core and WPForms files are Git-tracked and the existing repository update/deploy convention.
 
-## Boundaries
+If either target changed/disappeared, or the update cannot be represented reproducibly in Git, return BLOCKED rather than updating live-only.
 
-Do not:
+Create one feature branch from the baseline.
 
-- run vulnerability, malware, filesystem-integrity or recursive permission scans;
-- hash whole vendor trees;
-- inspect production;
-- change options, transients beyond WordPress's normal update-information refresh, files, database content, schedules or Git;
-- retest business journeys, email, expiry, job alerts, payment or scheduler behavior;
-- create a harness/finalizer or large evidence archive.
+## Backup and update
 
-## Output
+Before mutation, retain verified rollback copies of the current tracked core and WPForms files. Export the staging database only if the target update requires a database schema upgrade; otherwise record that no DB upgrade is required.
 
-Produce one compact table with:
+Apply official target packages to the repository working copy. Reject unexpected files, bundled themes/plugins or unrelated changes. The feature diff must contain only WordPress core 7.1.1 and WPForms Lite 2.0.2 package changes.
 
-`component | active | installed version | update available | source/owner | launch classification | note`
+Run only:
 
-Clearly separate:
+- core/package checksum or official integrity verification;
+- PHP syntax checks for changed PHP files using one bounded command;
+- diff scope check.
 
-1. confirmed update candidates;
-2. inactive removal candidates;
-3. components requiring vendor-license/manual update verification;
-4. no-action dependencies.
+Commit and push the feature branch.
+
+## Deploy and focused smoke
+
+Under the standard staging mutation lock:
+
+1. deploy only the exact feature diff and update the marker;
+2. confirm installed core/plugin versions and repository/live equality;
+3. release the lock.
+
+Run one focused smoke:
+
+- public home, `/login-register/`, and jobs page return successful responses;
+- wp-admin bootstrap/plugin screen loads for an administrator context;
+- one existing WPForms form/bootstrap path loads if a published form exists; if none exists, record `NOT_APPLICABLE`;
+- no new PHP fatal/error/warning attributable to the updates;
+- no real email, external form submission, payment, cron or Action Scheduler execution.
+
+Do not repeat quota, application, expiry or job-alert suites.
+
+## Rollback and integration
+
+If deploy or smoke fails:
+
+- restore the exact baseline files and marker under the lock;
+- restore the database only if it was changed;
+- verify baseline versions and report BLOCKED;
+- do not alter Git history.
+
+If all checks pass:
+
+- fast-forward `staging` to the feature commit and push without force;
+- verify clean local/origin/live/marker alignment.
 
 ## Result
 
-- `PASS: DEPENDENCY_BASELINE_RECORDED` if the inventory is complete and no immediate compatibility blocker is reported.
-- `BLOCKED: CRITICAL_DEPENDENCY_MISMATCH` only for a concrete current incompatibility preventing launch.
-- Do not treat the mere existence of an update as a blocker.
+Return:
 
-Publish one concise report with the matrix, recommended next bounded task, unchanged Git/live/marker SHA and production untouched. STOP after the report.
+- `PASS: PATCH_UPDATES_DEPLOYED`; or
+- one precise `BLOCKED` reason with rollback status.
+
+Publish one concise report with old/new versions, changed scope, final SHA, smoke results, DB-upgrade status, final alignment and production untouched. STOP after the report.
