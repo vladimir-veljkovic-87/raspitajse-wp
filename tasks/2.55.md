@@ -1,6 +1,6 @@
 # Zadatak 2.55 — Close scheduler launch blockers and prove the final owned cron chain
 
-Status: WAITING_FOR_MANUAL_HOST_CRON
+Status: READY
 Baseline: 4ad988463b89f9ad3c22f9f22c6766c6301f38eb
 Previous task: 2.54
 Target: staging
