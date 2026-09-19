@@ -1,126 +1,189 @@
-# Zadatak 2.53.1 — Deploy already-validated WordPress/WPForms patch commit
+# Zadatak 2.54 — Prove owned scheduler / cron launch readiness
 
 Status: READY
-Baseline / Commit A: `8d774c1e831d754c7e3f7e57842f61471a43f811`
-Prepared feature / Commit B: `4ad988463b89f9ad3c22f9f22c6766c6301f38eb`
-Feature branch: `feature/task-2.53-core-wpforms-patch`
-Previous task: 2.53
+Baseline: 4ad988463b89f9ad3c22f9f22c6766c6301f38eb
+Previous task: 2.53.1
 Target: staging
 Production: FORBIDDEN
-Time budget: 25 minutes
+Time budget: 20 minutes
+Mode: read-only operational verification
 
-## Goal
+## Required result
 
-Finish the already prepared update so staging runs:
+This task is complete only if staging has one proven operational background-execution path for the three Raspitajse-owned hourly jobs, with no competing legacy execution path and no prohibited side effects.
 
-- WordPress `7.1.1`;
-- WPForms Lite `2.0.2`;
+PASS classification:
 
-and align local `staging`, `origin/staging`, live bytes, and deploy marker to exact Commit B.
+`OWNED_SCHEDULER_LAUNCH_READY`
 
-This is a lean recovery task. Reuse the validated artifacts and evidence from Zadatak 2.53. Do not redownload packages, rebuild Commit B, repeat the 4,049-file lint/checksum suite, or create a new generated harness/finalizer.
+Do not turn this into a scheduler refactor, callback regression suite, or generic cron inventory. If the owned execution chain is not operational, return one precise BLOCKED reason.
 
-## Accepted prior evidence
+## Scope
 
-The final 2.53 report is authoritative for:
+Verify only the launch-critical chain:
 
-- Commit A deploy support and rehearsal: PASS;
-- Commit B scope: only official WordPress 7.1.1 core paths and `wp-content/plugins/wpforms-lite/**`;
-- official package hashes and integrity/checksums: PASS;
-- changed-PHP syntax and package inventory parity: PASS;
-- DB schema version unchanged at `61833`;
-- no DB backup/upgrade required;
-- rollback snapshot/readiness established.
+host cron -> `tools/raspitajse-staging-owned-cron-runner.sh` -> exact owned hooks -> current Raspitajse-owned callbacks.
 
-Action Scheduler item `32733` is now accepted as historical baseline:
+The expected owned hooks are exactly:
 
-- status: `complete`;
-- attempts: `1`;
-- completion predates Zadatak 2.53.
+- `raspitajse_job_listing_expiry_evaluator`
+- `raspitajse_employer_job_expiry_notice_evaluator`
+- `raspitajse_candidate_job_alert_evaluator`
 
-Do not change, restore, reschedule, or execute this item. Require only that its status and attempt count remain `complete/1` before and after this task.
+Do not execute broad WP-Cron. Do not execute Action Scheduler. Do not create fixtures. Do not send mail.
 
-## Preflight — one short pass
+## Preconditions
 
-Fetch `staging`, the feature branch, and `codex-reports`. Read the final 2.53 report.
+Read only:
+
+- `tasks/README.md`;
+- this task;
+- `tools/raspitajse-staging-owned-cron-runner.sh`;
+- its guard file;
+- only the owned scheduler-registration/callback code needed to verify the three hooks.
+
+Verify fresh:
+
+- local `staging`, `origin/staging`, live deploy marker = `4ad988463b89f9ad3c22f9f22c6766c6301f38eb`;
+- source worktree clean;
+- staging environment active;
+- WordPress still `7.1.1`;
+- WPForms Lite still `2.0.2`;
+- both staging mutation/runner locks are initially free.
+
+If the baseline has changed unexpectedly, STOP rather than silently rebasing.
+
+## 1. Prove host trigger
+
+Read the current shell user's cron configuration without modifying it.
+
+PASS requires one effective enabled entry equivalent to:
+
+`*/15 * * * * /bin/bash /home/u601262303/repo/raspitajse-wp/tools/raspitajse-staging-owned-cron-runner.sh`
+
+Accept harmless shell redirection differences, but require:
+
+- every 15 minutes;
+- exact owned runner path;
+- no second competing entry for this runner;
+- no broad `wp cron event run --all`, generic WordPress cron runner, or Action Scheduler runner in the same user crontab.
+
+Do not edit crontab in this task.
+
+## 2. Prove anti-double-run posture
+
+Verify:
+
+- `DISABLE_WP_CRON` is true in staging;
+- the runner has its nonblocking flock/overlap guard;
+- the runner requires source HEAD = deploy marker;
+- the runner verifies the communications manifest/parity before execution;
+- the runner contains only the exact three expected hooks;
+- continuation execution is absent.
+
+Do not inspect secrets or print config values unrelated to these booleans/contracts.
+
+## 3. Prove schedule registration and callback authority
+
+Using one bounded WordPress bootstrap with mail/payment/external-HTTP guards loaded, inspect the three owned events.
+
+PASS requires for each hook:
+
+- exactly one next scheduled event;
+- hourly recurrence / 3600-second contract;
+- callable Raspitajse-owned callback is registered;
+- no duplicate callback authority for the same business purpose;
+- no legacy WP Job Board Pro candidate/job alert or job-expiry callback remains scheduled as a competing path.
+
+Only inspect the exact retired legacy hooks already referenced by the owned implementation. Do not inventory every cron event on the site.
+
+Verify the current callback/event contract fingerprint matches the runner's expected contract.
+
+## 4. One authoritative runner health check
+
+Run exactly once:
+
+`/bin/bash tools/raspitajse-staging-owned-cron-runner.sh --check-only`
+
+Do not run normal execution mode in this task.
 
 Require:
 
-- clean worktree;
-- local/origin `staging` and live deploy marker = exact Commit A;
-- live WordPress = `7.1`;
-- live WPForms Lite = `2.0.1.1`;
-- feature branch remote contains exact Commit B and Commit B is a direct descendant of Commit A;
-- Commit B diff scope remains limited to the two already-approved package roots;
-- Action Scheduler `32733` = `complete/1`;
-- standard staging mutation/runner lock is free.
+- exit 0;
+- JSON result `NOOP`;
+- reason `check_only`;
+- environment `staging`;
+- exact three hook names;
+- each status is only `due_check_only` or `not_due`;
+- zero executed hooks;
+- zero unexpected external HTTP;
+- zero actual external network;
+- zero mail/PHPMailer/SMTP;
+- zero payment;
+- no source/runtime/DB mutation attributable to the check.
 
-Do not inspect unrelated scheduler rows or rebuild broad fingerprints. Any unexpected mismatch is one precise BLOCKED result.
+A hook being due is not a failure because check-only must not execute it.
 
-Before live mutation, acquire the existing staging lock and retain/verify rollback material for the exact affected core/WPForms paths plus the current marker. Use the already integrated deploy mechanism; do not author another deploy script.
+## 5. Protected-state equality
 
-## Deploy and acceptance
+Capture before/after only the small protected projection needed for this task:
 
-Deploy exact Commit B using `deployment/deploy-staging.sh`. The existing marker at Commit A must not cause a skip.
+- three owned cron events: timestamp, recurrence and callback fingerprint;
+- continuation event count;
+- Action Scheduler total pending/complete counts only as a drift check;
+- protected Action Scheduler item 32733 exact current status/attempt count;
+- deploy marker;
+- WordPress/WPForms versions.
 
-Verify once:
+PASS requires exact before/after equality.
 
-1. live WordPress = `7.1.1`;
-2. live WPForms Lite = `2.0.2`;
-3. exact source/live byte parity for Commit B changed paths and required deletions;
-4. `wp-config.php`, `.htaccess`, and `.user.ini` state unchanged;
-5. WordPress bootstrap succeeds;
-6. home, `/login-register/`, and jobs route succeed using one bounded request each;
-7. wp-admin/plugin bootstrap succeeds;
-8. WPForms Lite is active and loads; if an existing published form exists, render one without submission, otherwise record `WPFORM_RENDER_NOT_APPLICABLE`;
-9. Raspitajse-owned plugins and active child theme load;
-10. no new update-attributable PHP fatal/error/warning;
-11. Action Scheduler `32733` remains exactly `complete/1`.
+Important: do not assume historical `pending/0` for Action Scheduler 32733. The accepted 2.53 baseline reports it as `complete/1`; verify the actual baseline first and require this task not to change it.
 
-Do not send email, submit forms, run payment/refund, cron, Action Scheduler, quota, application, expiry, communications, entitlement, or job-alert suites. Do not add a broad HTTP/security harness.
+Do not execute, cancel, delete, reschedule or repair any Action Scheduler row.
 
-## PASS path
+## Side-effect limits
 
-If the single acceptance pass succeeds:
+Required totals:
 
-1. fast-forward local `staging` from Commit A to exact Commit B;
-2. push `staging` without force;
-3. run only the required final marker/parity verification;
-4. require local staging = origin staging = deploy marker = Commit B;
-5. require live versions `7.1.1` and `2.0.2`;
-6. release the lock after evidence/report write;
-7. publish `PASS: PATCH_UPDATES_DEPLOYED`.
+- owned cron callbacks executed: 0;
+- broad WP-Cron execution: 0;
+- Action Scheduler execution: 0;
+- mail/PHPMailer/SMTP: 0;
+- payment/refund: 0;
+- actual external network: 0;
+- user/post/order/application mutation: 0;
+- source/deploy mutation: 0;
+- production access: 0.
 
-## Failure path
+## Result
 
-If deployment or acceptance fails:
+### PASS
 
-1. do not integrate Commit B;
-2. restore the exact Commit A core/WPForms live state and marker using the retained rollback material and existing deploy support;
-3. verify WordPress `7.1`, WPForms Lite `2.0.1.1`, and marker Commit A;
-4. leave Git history unchanged;
-5. publish one precise BLOCKED reason and stop.
+Return:
 
-Never leave a mixed core/plugin runtime.
+`PASS: OWNED_SCHEDULER_LAUNCH_READY`
 
-## Scope and efficiency rules
+only when the host trigger, anti-double-run controls, exact three schedules/callbacks, check-only runner and protected-state equality all pass.
 
-Allowed:
+### BLOCKED
 
-- deploy/integrate exact Commit B;
-- rollback only affected WordPress core/WPForms paths and marker;
-- one concise report.
+Return one precise blocker if any required link in the chain is missing or inconsistent.
 
-Forbidden:
+Do not implement a fix in this verification task. Do not create a new framework. Do not retry the runner more than once.
 
-- production;
-- scheduler mutation/execution;
-- package redownload/rebuild;
-- source-code changes;
-- new commits other than fast-forwarding exact Commit B to staging and the report commit;
-- other plugins/themes;
-- force push/rebase/reset;
-- generated finalizer or new broad test framework;
-- repeating already accepted 2.53 validation.
+## Report
 
-STOP after one report.
+Publish one concise report containing:
+
+- result/classification;
+- baseline/final SHA;
+- host cron entry PASS/BLOCKED;
+- `DISABLE_WP_CRON` PASS/BLOCKED;
+- three-row owned hook table: schedule, recurrence, callback authority;
+- legacy competing-path result;
+- exact sanitized `--check-only` result;
+- protected before/after equality;
+- zero-side-effect confirmation;
+- production touched: NO.
+
+Verify the remote report and STOP. Do not begin another task.
