@@ -377,7 +377,7 @@ function raspitajse_staging_owned_cron_action_scheduler_snapshot() {
     );
 
     return array(
-        'ok'                    => is_array( $protected ) && 'pending' === $protected['status'] && 0 === (int) $protected['attempts'],
+        'ok'                    => is_array( $protected ) && 'complete' === $protected['status'] && 1 === (int) $protected['attempts'],
         'reason'                => is_array( $protected ) ? '' : 'protected_action_missing',
         'pending_count'         => count( $rows ),
         'pending_fingerprint'   => hash( 'sha256', wp_json_encode( $rows ) ),
