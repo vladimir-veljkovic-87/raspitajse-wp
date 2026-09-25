@@ -64,6 +64,9 @@ fi
 if awk '
     /^(diff --git |--- |\+\+\+ |rename from |rename to |copy from |copy to )/ {
         line=$0
+        if (line == "--- /dev/null") {
+            next
+        }
         if (line ~ /(^|[[:space:]])\/+/ ||
             line ~ /(^|[[:space:]])(a\/|b\/)?\.\.\// ||
             line ~ /(^|[[:space:]])(a\/|b\/)?\.git(\/|$)/ ||
