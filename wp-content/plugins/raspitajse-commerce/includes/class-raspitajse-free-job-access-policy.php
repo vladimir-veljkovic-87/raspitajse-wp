@@ -17,6 +17,8 @@ final class Raspitajse_Free_Job_Access_Policy {
     const REASON_IDENTITY = 'invalid_employer_identity';
     const REASON_CROSS_EMPLOYER = 'cross_employer_ownership';
     const REASON_EXPIRY = 'invalid_expiry_date';
+    const REASON_POSITION = 'invalid_job_position';
+    const REASON_WORKERS = 'invalid_workers_needed';
     const REASON_LOCK = 'quota_lock_unavailable';
 
     private static $booted = false;
@@ -164,14 +166,30 @@ final class Raspitajse_Free_Job_Access_Policy {
             return $data;
         }
 
-        self::$frames[] = array( 'lock' => '', 'reason' => '' );
+        self::$frames[] = array( 'lock' => '', 'reason' => '', 'content_valid' => false );
         $frame_index = count( self::$frames ) - 1;
+        $status      = isset( $data['post_status'] ) ? $data['post_status'] : '';
+        $post_id     = isset( $postarr['ID'] ) ? absint( $postarr['ID'] ) : 0;
 
-        if ( 'publish' !== ( isset( $data['post_status'] ) ? $data['post_status'] : '' ) || current_user_can( 'manage_options' ) ) {
-            return $data;
+        if ( class_exists( 'Raspitajse_Employer_Job_Posting' ) ) {
+            $content = Raspitajse_Employer_Job_Posting::validate_publication_request(
+                $post_id,
+                $postarr,
+                $unsanitized_postarr
+            );
+            if ( is_wp_error( $content ) ) {
+                if ( 'publish' === $status ) {
+                    return self::block_publication( $data, $frame_index, $content->get_error_code() );
+                }
+                self::$frames[ $frame_index ]['reason'] = $content->get_error_code();
+                return $data;
+            }
+            self::$frames[ $frame_index ]['content_valid'] = true;
         }
 
-        $post_id = isset( $postarr['ID'] ) ? absint( $postarr['ID'] ) : 0;
+        if ( 'publish' !== $status || current_user_can( 'manage_options' ) ) {
+            return $data;
+        }
         $identity = self::resolve_publication_identity( $data, $postarr, $unsanitized_postarr, $post_id );
         if ( is_wp_error( $identity ) ) {
             return self::block_publication( $data, $frame_index, $identity->get_error_code() );
@@ -378,6 +396,41 @@ final class Raspitajse_Free_Job_Access_Policy {
         );
     }
 
+    /**
+     * Public read-only canonical employer context for owned presentation code.
+     */
+    public static function get_employer_context( $user_id ) {
+        $owner_id = self::canonical_employer_user( $user_id );
+        if ( ! $owner_id ) {
+            return new WP_Error( self::REASON_IDENTITY, self::reason_message( self::REASON_IDENTITY ) );
+        }
+
+        return array(
+            'user_id'     => $owner_id,
+            'employer_id' => absint( WP_Job_Board_Pro_User::get_employer_by_user_id( $owner_id ) ),
+        );
+    }
+
+    /**
+     * Fail-closed ownership check shared by the form/read layer.
+     */
+    public static function employer_owns_job( $user_id, $job_id ) {
+        $context = self::get_employer_context( $user_id );
+        $job_id  = absint( $job_id );
+        if ( is_wp_error( $context ) || ! $job_id || 'job_listing' !== get_post_type( $job_id ) ) {
+            return false;
+        }
+
+        $profile_id = absint( get_post_meta( $job_id, '_job_employer_posted_by', true ) );
+        if ( $profile_id ) {
+            return $profile_id === $context['employer_id']
+                && $context['user_id'] === self::user_for_valid_employer_profile( $profile_id );
+        }
+
+        $author_id = absint( get_post_field( 'post_author', $job_id ) );
+        return $author_id && self::canonical_employer_user( $author_id ) === $context['user_id'];
+    }
+
     public static function get_quota_state( $user_id, $exclude_id = 0 ) {
         $owner_id = self::canonical_employer_user( $user_id );
         if ( ! $owner_id ) {
@@ -463,8 +516,11 @@ final class Raspitajse_Free_Job_Access_Policy {
         if ( ! empty( $frame['reason'] ) ) {
             update_post_meta( $post_id, self::META_REASON, $frame['reason'] );
             self::$last_blocked_post_id = absint( $post_id );
-        } elseif ( 'publish' === $post->post_status ) {
-            delete_post_meta( $post_id, self::META_REASON );
+        } elseif ( ! empty( $frame['content_valid'] ) ) {
+            $stored_reason = (string) get_post_meta( $post_id, self::META_REASON, true );
+            if ( 'publish' === $post->post_status || in_array( $stored_reason, array( self::REASON_POSITION, self::REASON_WORKERS ), true ) ) {
+                delete_post_meta( $post_id, self::META_REASON );
+            }
         }
 
         if ( ! empty( $frame['lock'] ) ) {
@@ -516,6 +572,12 @@ final class Raspitajse_Free_Job_Access_Policy {
             self::REASON_IDENTITY => __( 'The employer identity could not be verified. The job was kept as a draft.', 'raspitajse-commerce' ),
             self::REASON_CROSS_EMPLOYER => __( 'This job does not belong to the current employer. It was not published.', 'raspitajse-commerce' ),
             self::REASON_EXPIRY => __( 'The job expiry date must be empty or a valid date in YYYY-MM-DD format.', 'raspitajse-commerce' ),
+            self::REASON_POSITION => __( 'Izaberite tačno jednu važeću poziciju. Oglas je sačuvan kao nacrt.', 'raspitajse-commerce' ),
+            self::REASON_WORKERS => sprintf(
+                /* translators: %d: maximum supported worker count. */
+                __( 'Polje „Potreban broj radnika” mora biti ceo broj između 1 i %d. Oglas je sačuvan kao nacrt.', 'raspitajse-commerce' ),
+                class_exists( 'Raspitajse_Employer_Job_Posting' ) ? Raspitajse_Employer_Job_Posting::WORKERS_MAX : 1000
+            ),
             self::REASON_LOCK => __( 'The publication quota is busy. The job was kept as a draft; please try again.', 'raspitajse-commerce' ),
         );
     }
