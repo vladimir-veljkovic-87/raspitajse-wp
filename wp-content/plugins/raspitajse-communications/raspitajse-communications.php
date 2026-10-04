@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Raspitajse Communications
  * Description: Raspitajse-owned email transport and communication infrastructure.
- * Version: 0.9.1
+ * Version: 0.10.0
  * Author: Raspitajse.com
  */
 
@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/includes/class-candidate-job-alert-delivery.php';
 require_once __DIR__ . '/includes/class-candidate-job-alert-integration.php';
 require_once __DIR__ . '/includes/class-candidate-job-alert-frequency-ui.php';
+require_once __DIR__ . '/includes/class-private-message-notifications.php';
 
 /**
  * Semantic sender identities owned by Raspitajse communications.
@@ -26,6 +27,7 @@ final class Raspitajse_Communications_Sender_Policy {
     const CHANNEL_CANDIDATE_ALERTS = 'candidate_alerts';
     const CHANNEL_EMPLOYER_ALERTS  = 'employer_alerts';
     const CHANNEL_JOB_EXPIRY       = 'job_expiry';
+    const CHANNEL_PRIVATE_MESSAGES = 'private_messages';
 
     const DEFAULT_FROM_NAME = 'Raspitajse.com - Vaš pouzdan AI model';
 
@@ -40,6 +42,7 @@ final class Raspitajse_Communications_Sender_Policy {
             self::CHANNEL_CANDIDATE_ALERTS,
             self::CHANNEL_EMPLOYER_ALERTS,
             self::CHANNEL_JOB_EXPIRY,
+            self::CHANNEL_PRIVATE_MESSAGES,
         );
 
         if ( ! is_string( $channel ) || ! in_array( $channel, $channels, true ) ) {
@@ -59,6 +62,7 @@ final class Raspitajse_Communications_Sender_Policy {
                 self::CHANNEL_CANDIDATE_ALERTS => 'noreply-candidates@stage.raspitajse.com',
                 self::CHANNEL_EMPLOYER_ALERTS  => 'noreply-employers@stage.raspitajse.com',
                 self::CHANNEL_JOB_EXPIRY       => 'noreply-system@stage.raspitajse.com',
+                self::CHANNEL_PRIVATE_MESSAGES => 'noreply-system@stage.raspitajse.com',
             );
 
             return array(
@@ -457,6 +461,13 @@ final class Raspitajse_Communications_Transport {
         }
 
         return (string) $headers;
+    }
+
+    /**
+     * Release captured transport state when pre_wp_mail short-circuits delivery.
+     */
+    public static function finish_short_circuited_mail_context() {
+        self::finish_mail_context();
     }
 
     /**
@@ -2116,6 +2127,7 @@ final class Raspitajse_Communications_Alert_Security {
 }
 
 Raspitajse_Communications_Welcome_Email::boot();
+Raspitajse_Communications_Private_Message_Notifications::boot();
 Raspitajse_Communications_Transport::boot();
 Raspitajse_Communications_Job_Listing_Expiry::boot();
 Raspitajse_Communications_Employer_Job_Expiry_Notification::boot();
