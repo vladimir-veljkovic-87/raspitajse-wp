@@ -133,10 +133,6 @@ final class Raspitajse_Communications_Candidate_Application_Tracking {
     }
 
     public static function actor_can_manage( $actor_id, $application_id, $context = null ) {
-        $override = apply_filters( 'raspitajse_application_actor_authorized', null, $actor_id, $application_id );
-        if ( is_bool( $override ) ) {
-            return $override;
-        }
         if ( ! class_exists( 'WP_Job_Board_Pro_User' ) || ! class_exists( 'WP_Job_Board_Pro_Job_Listing' ) ) {
             return false;
         }
@@ -259,7 +255,7 @@ final class Raspitajse_Communications_Candidate_Application_Tracking {
             return false;
         }
         $blog_id = function_exists( 'get_current_blog_id' ) ? get_current_blog_id() : 1;
-        $name = 'raspitajse:application:' . hash( 'sha256', $blog_id . ':' . absint( $candidate_id ) . ':' . absint( $job_id ) );
+        $name = 'raspapp:' . substr( hash( 'sha256', $blog_id . ':' . absint( $candidate_id ) . ':' . absint( $job_id ) ), 0, 56 );
         $acquired = $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 0)', $name ) );
         if ( '1' !== (string) $acquired ) {
             return false;
