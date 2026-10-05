@@ -14,6 +14,7 @@ require_once __DIR__ . '/includes/class-candidate-job-alert-delivery.php';
 require_once __DIR__ . '/includes/class-candidate-job-alert-integration.php';
 require_once __DIR__ . '/includes/class-candidate-job-alert-frequency-ui.php';
 require_once __DIR__ . '/includes/class-private-message-notifications.php';
+require_once __DIR__ . '/includes/class-candidate-application-tracking.php';
 
 /**
  * Semantic sender identities owned by Raspitajse communications.
@@ -28,6 +29,7 @@ final class Raspitajse_Communications_Sender_Policy {
     const CHANNEL_EMPLOYER_ALERTS  = 'employer_alerts';
     const CHANNEL_JOB_EXPIRY       = 'job_expiry';
     const CHANNEL_PRIVATE_MESSAGES = 'private_messages';
+    const CHANNEL_APPLICATION_STATUS = 'application_status';
 
     const DEFAULT_FROM_NAME = 'Raspitajse.com - Vaš pouzdan AI model';
 
@@ -43,6 +45,7 @@ final class Raspitajse_Communications_Sender_Policy {
             self::CHANNEL_EMPLOYER_ALERTS,
             self::CHANNEL_JOB_EXPIRY,
             self::CHANNEL_PRIVATE_MESSAGES,
+            self::CHANNEL_APPLICATION_STATUS,
         );
 
         if ( ! is_string( $channel ) || ! in_array( $channel, $channels, true ) ) {
@@ -63,6 +66,7 @@ final class Raspitajse_Communications_Sender_Policy {
                 self::CHANNEL_EMPLOYER_ALERTS  => 'noreply-employers@stage.raspitajse.com',
                 self::CHANNEL_JOB_EXPIRY       => 'noreply-system@stage.raspitajse.com',
                 self::CHANNEL_PRIVATE_MESSAGES => 'noreply-system@stage.raspitajse.com',
+                self::CHANNEL_APPLICATION_STATUS => 'noreply-candidates@stage.raspitajse.com',
             );
 
             return array(
@@ -2135,6 +2139,7 @@ Raspitajse_Communications_Alert_Security::boot();
 Raspitajse_Communications_Employer_Candidate_Alert_Retirement::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Evaluator::boot();
 Raspitajse_Communications_Candidate_Job_Alert_Frequency_UI::boot();
+Raspitajse_Communications_Candidate_Application_Tracking::boot();
 
 register_activation_hook(
     __FILE__,
