@@ -360,7 +360,6 @@ final class Raspitajse_Communications_Candidate_Application_Tracking {
         if ( ! self::candidate_can_view( $application_id, $user_id ) ) {
             return self::denied();
         }
-        self::enqueue_assets();
         $status = self::read_status( $application_id );
         $registry = self::statuses();
         return array(
