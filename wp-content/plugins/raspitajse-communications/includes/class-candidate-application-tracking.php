@@ -19,6 +19,7 @@ final class Raspitajse_Communications_Candidate_Application_Tracking {
 
     public static function boot() {
         add_action( 'wp-job-board-pro-process-apply-internal', array( __CLASS__, 'guard_application_request' ), 5, 1 );
+        add_filter( 'wp-job-board-pro-add-job-applicant-data', array( __CLASS__, 'guard_insert_data' ), 5, 1 );
         add_action( 'wp-job-board-pro-before-after-job-applicant', array( __CLASS__, 'application_created' ), 5, 4 );
         add_action( 'shutdown', array( __CLASS__, 'release_application_lock' ), PHP_INT_MAX );
         add_action( 'wp_ajax_' . self::AJAX_ACTION, array( __CLASS__, 'ajax_change_status' ) );
@@ -275,6 +276,48 @@ final class Raspitajse_Communications_Candidate_Application_Tracking {
         $name = self::$lock_name;
         self::$lock_name = '';
         $wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $name ) );
+    }
+
+    /**
+     * Cover current direct insert_applicant callers (register and social apply).
+     * The vendor filter provides post_author; the job is resolved only from its
+     * fixed submission fields/cookies and then validated as a saved job.
+     */
+    public static function guard_insert_data( $post_args ) {
+        if ( self::POST_TYPE !== ( $post_args['post_type'] ?? '' ) || self::$lock_name ) {
+            return $post_args;
+        }
+        if ( ! class_exists( 'WP_Job_Board_Pro_User' ) ) {
+            self::send_json_failure( __( 'Prijava trenutno nije dostupna.', 'raspitajse-communications' ) );
+        }
+        $user_id = absint( $post_args['post_author'] ?? 0 );
+        $candidate_id = absint( WP_Job_Board_Pro_User::get_candidate_by_user_id( $user_id ) );
+        $job_id = self::request_job_id();
+        $job = get_post( $job_id );
+        if ( ! $candidate_id || ! $job || 'job_listing' !== $job->post_type ) {
+            self::send_json_failure( __( 'Prijava trenutno nije dostupna.', 'raspitajse-communications' ) );
+        }
+        if ( ! self::acquire_application_lock( $candidate_id, $job_id ) ) {
+            self::send_json_failure( __( 'Prijava je već u obradi. Pokušajte ponovo.', 'raspitajse-communications' ) );
+        }
+        if ( self::find_application( $candidate_id, $job_id ) ) {
+            self::release_application_lock();
+            self::send_json_failure( __( 'Već ste se prijavili na ovaj oglas.', 'raspitajse-communications' ) );
+        }
+        return $post_args;
+    }
+
+    private static function request_job_id() {
+        if ( isset( $_POST['job_id'] ) ) {
+            return absint( wp_unslash( $_POST['job_id'] ) );
+        }
+        foreach ( array( 'linkedin', 'facebook', 'twitter', 'google' ) as $provider ) {
+            $key = 'wp_job_board_pro_' . $provider . '_job_id';
+            if ( isset( $_COOKIE[ $key ] ) ) {
+                return absint( wp_unslash( $_COOKIE[ $key ] ) );
+            }
+        }
+        return 0;
     }
 
     public static function guard_application_request( $request ) {
