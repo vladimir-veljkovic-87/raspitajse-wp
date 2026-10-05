@@ -26,7 +26,6 @@ final class Raspitajse_Communications_Candidate_Application_Tracking {
         add_action( 'wjbp_ajax_' . self::AJAX_ACTION, array( __CLASS__, 'ajax_change_status' ) );
         add_action( 'wp_job_board_pro_after_applicant_content', array( __CLASS__, 'render_employer_controls' ), 20, 1 );
         add_action( 'wp_job_board_pro_after_job_content', array( __CLASS__, 'render_candidate_status' ), 20, 1 );
-        add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
         add_action( 'init', array( __CLASS__, 'retire_legacy_status_actions' ), 100 );
     }
 
@@ -361,6 +360,7 @@ final class Raspitajse_Communications_Candidate_Application_Tracking {
         if ( ! self::candidate_can_view( $application_id, $user_id ) ) {
             return self::denied();
         }
+        self::enqueue_assets();
         $status = self::read_status( $application_id );
         $registry = self::statuses();
         return array(
@@ -400,6 +400,7 @@ final class Raspitajse_Communications_Candidate_Application_Tracking {
         if ( ! is_user_logged_in() || ! self::actor_can_manage( get_current_user_id(), $application_id ) ) {
             return;
         }
+        self::enqueue_assets();
         $status = self::read_status( $application_id );
         $registry = self::statuses();
         if ( ! isset( $registry[ $status ] ) ) {
