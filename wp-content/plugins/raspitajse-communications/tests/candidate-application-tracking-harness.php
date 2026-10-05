@@ -175,6 +175,20 @@ same( 301, Raspitajse_Communications_Candidate_Application_Tracking::find_applic
 same( $before, $GLOBALS['meta'][301], 'duplicate check must not mutate original' );
 ok( false !== strpos( file_get_contents( dirname( __DIR__ ) . '/includes/class-candidate-application-tracking.php' ), 'Već ste se prijavili na ovaj oglas.' ), 'localized duplicate message required' );
 
+// 2b: the ordinary direct vendor insert seam refuses the same pair before insert.
+$_POST = array( 'job_id' => 201 );
+$row_count = count( $GLOBALS['posts'] );
+try {
+    Raspitajse_Communications_Candidate_Application_Tracking::guard_insert_data(
+        array( 'post_type' => 'job_applicant', 'post_author' => 11 )
+    );
+    fail_test( 'direct duplicate response expected' );
+} catch ( Test_Json_Response $response ) {
+    ok( ! $response->success, 'direct duplicate must be rejected' );
+    same( 'Već ste se prijavili na ovaj oglas.', $response->data['message'], 'direct duplicate localized message' );
+}
+same( $row_count, count( $GLOBALS['posts'] ), 'direct duplicate creates zero rows' );
+
 // 3: synchronized lock admits one request only and is releasable.
 ok( Raspitajse_Communications_Candidate_Application_Tracking::acquire_application_lock( 101, 201 ), 'first synchronized attempt must lock' );
 ok( ! Raspitajse_Communications_Candidate_Application_Tracking::acquire_application_lock( 101, 201 ), 'second synchronized attempt must be refused' );
