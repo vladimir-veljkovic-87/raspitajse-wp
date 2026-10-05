@@ -34,8 +34,8 @@ final class Test_WPDB {
             return '1';
         }
         if ( 0 === strpos( $query, 'SELECT RELEASE_LOCK' ) ) {
-            $get = str_replace( 'SELECT RELEASE_LOCK', 'SELECT GET_LOCK', $query );
-            unset( $GLOBALS['locks'][ $get ] );
+            $needle = substr( $query, strlen( "SELECT RELEASE_LOCK(" ), -1 );
+            foreach ( array_keys( $GLOBALS["locks"] ) as $held ) { if ( false !== strpos( $held, $needle ) ) { unset( $GLOBALS["locks"][ $held ] ); } }
             return '1';
         }
         return null;
