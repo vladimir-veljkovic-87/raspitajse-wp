@@ -436,7 +436,7 @@ final class Raspitajse_Communications_Candidate_Application_Tracking {
         $dashboard_url = add_query_arg( 'application', $application_id, $dashboard_url );
         $subject = sprintf( __( 'Status prijave: %s', 'raspitajse-communications' ), $context['job']->post_title );
         $message = sprintf(
-            __( 'Status vaše prijave za „%1u00024s” je sada: %2u00024s.' . "\n\n" . 'Pregled prijava: %3u00024s', 'raspitajse-communications' ),
+            __( 'Status vaše prijave za „%1$s” je sada: %2$s.' . "\n\n" . 'Pregled prijava: %3$s', 'raspitajse-communications' ),
             $context['job']->post_title,
             $registry[ $new ]['label'],
             esc_url_raw( $dashboard_url )
