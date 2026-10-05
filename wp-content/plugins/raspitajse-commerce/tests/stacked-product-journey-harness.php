@@ -223,5 +223,48 @@ $GLOBALS['posts'][1502] = new WP_Post( 1502, 'private_message', 'publish', 21, '
 do_action( 'wp-private-message-after-reply-message', 1502, 1501, 21 ); same( 2, count( $GLOBALS['mail'] ), 'reply owned notice' ); same( false, wp_mail( 'candidate@example.test', 'Vendor reply', 'unsafe fallback' ), 'exact reply fallback suppressed' );
 same( true, wp_mail( 'system@example.test', 'Unrelated', 'safe unrelated' ), 'unrelated mail passes' ); same( 3, count( $GLOBALS['mail'] ), 'only exact fallbacks suppressed' );
 
+// Integrated boot/idempotence and remaining fail-closed negative boundaries.
+$boot_before = array(
+    hook_count( 'wp-job-board-pro-candidate-fields-front' ),
+    hook_count( 'wp-job-board-pro-job_listing-fields' ),
+    hook_count( 'plugins_loaded' ),
+    hook_count( 'wp_ajax_raspitajse_application_status_update' ),
+    hook_count( 'wp-private-message-after-add-message' ),
+);
+Raspitajse_Candidate_Desired_Positions::boot();
+Raspitajse_Employer_Job_Posting::boot();
+Raspitajse_Free_Job_Access_Policy::boot();
+Raspitajse_Communications_Candidate_Application_Tracking::boot();
+Raspitajse_Communications_Private_Message_Notifications::boot();
+same(
+    $boot_before,
+    array(
+        hook_count( 'wp-job-board-pro-candidate-fields-front' ),
+        hook_count( 'wp-job-board-pro-job_listing-fields' ),
+        hook_count( 'plugins_loaded' ),
+        hook_count( 'wp_ajax_raspitajse_application_status_update' ),
+        hook_count( 'wp-private-message-after-add-message' ),
+    ),
+    'all owned component boots are idempotent'
+);
+$employee_context = Raspitajse_Free_Job_Access_Policy::get_employer_context( 22 );
+same( 21, $employee_context['user_id'], 'linked employee resolves canonical employer' );
+ok( Raspitajse_Communications_Candidate_Application_Tracking::actor_can_manage( 22, 1401 ), 'linked employee application authority uses same parent mapping' );
+$notice_count = count( $GLOBALS['application_notices'] );
+ok( is_wp_error( Raspitajse_Communications_Candidate_Application_Tracking::change_status( 1401, 'rejected', 'interview', 21 ) ), 'stale callback rejected' );
+same( $notice_count, count( $GLOBALS['application_notices'] ), 'stale callback sends no notification' );
+$invalid_workers = $postarr;
+$invalid_workers['ID'] = 1601;
+$invalid_workers['meta_input']['_raspitajse_workers_needed'] = '0';
+$invalid_data = Raspitajse_Free_Job_Access_Policy::enforce_publication_quota( $data, $invalid_workers, $invalid_workers, false );
+same( 'draft', $invalid_data['post_status'], 'invalid workers keeps job non-public' );
+Raspitajse_Free_Job_Access_Policy::after_insert_post( 1601, new WP_Post( 1601, 'job_listing', 'draft', 21 ), false, null );
+$root_job = $postarr;
+$root_job['ID'] = 1602;
+$root_job['tax_input']['job_listing_category'] = array( 500 );
+$root_data = Raspitajse_Free_Job_Access_Policy::enforce_publication_quota( $data, $root_job, $root_job, false );
+same( 'draft', $root_data['post_status'], 'root position keeps employer job non-public' );
+Raspitajse_Free_Job_Access_Policy::after_insert_post( 1602, new WP_Post( 1602, 'job_listing', 'draft', 21 ), false, null );
+
 foreach ( $GLOBALS['external_paths'] as $path => $count ) { same( 0, $count, $path . ' path must not run' ); }
 fwrite( STDOUT, "PASS: STACKED_PRODUCT_JOURNEY_RELEASE_CANDIDATE_READY\n" );
