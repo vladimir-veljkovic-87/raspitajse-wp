@@ -1,9 +1,9 @@
 # Codex Execution Report
 
-- Task: Zadatak 2.68 — Prepare the immutable WordPress 7.1.2 product release branch
-- Task ID: 2.68
+- Task: Zadatak 2.56.1 - Resume preflight: baseline drift
+- Task ID: 2.56
 - Result: PARTIAL
-- Recorded at (UTC): 2026-10-05T16:48:14Z
+- Recorded at (UTC): 2026-11-09T07:38:49Z
 - Source branch: feature/task-2.68-wp-7.1.2-release-preparation
 - Source HEAD: 1da38e2cb4d53e1f4356d6454248b9a276c2c6fa
 - Source working tree clean: YES
@@ -13,101 +13,31 @@
 ## Task report
 
 ## Result
-- PARTIAL — BLOCKED: OFFICIAL_WORDPRESS_7_1_2_RECONCILIATION_MISMATCH
-- The immutable snapshot tooling is implemented and fully validated in a local-only commit, but the required clean, portable six-path exact-official core commit cannot be represented under the repository's current attributes and the task's allowed path scope.
-- Required PASS token `IMMUTABLE_WORDPRESS_7_1_2_PRODUCT_RELEASE_BRANCH_READY` was not issued.
+BLOCKED: BASELINE_DRIFT. Exact resumed task ID: 2.56.1.
+The user's lock clarification is accepted: acquire owned-runner lock first, runtime lock second, both nonblocking and held continuously through fixture T0/cleanup/T1; release in reverse order. The previous lock-protocol ambiguity is resolved. This attempt stopped for a different, freshly verified precondition mismatch.
 
-## Preconditions and ancestry
-- Clean exact product RC base: `45d6e8c3aafb5f48ce9d50fd61924886a0924c2d`.
-- Accepted ancestry was preserved through staging `f6093c11d71ddc175ebf83fc69453c20aaca5239`, Tasks 2.63–2.67, and the exact 2.67 RC.
-- Remote 2.67 branch equaled the accepted RC.
-- All 13 recorded 2.67 product hashes matched before and after testing; no product file changed.
-- Target branch was absent locally/remotely before creation. It remains local only; remote target branch is absent.
-- Final local branch: `feature/task-2.68-wp-7.1.2-release-preparation`.
-- Final local-only HEAD: `1da38e2cb4d53e1f4356d6454248b9a276c2c6fa`.
-- Worktree is clean.
-- No competing Git, rsync, deploy or core-update process was present.
+## Fresh context
+- Authorized existing Hostinger SSH connection and repository /home/u601262303/repo/raspitajse-wp.
+- Required 2.56.1 baseline: ff42719f218e440b168b57690b70a2402ee66809.
+- Fresh origin/staging and live deploy marker: f6093c11d71ddc175ebf83fc69453c20aaca5239.
+- Host checkout: feature/task-2.68-wp-7.1.2-release-preparation at 1da38e2cb4d53e1f4356d6454248b9a276c2c6fa, clean.
+- Fresh origin/codex-tasks: 4d57f78b25b5dfce0286c444b3ab5554eefa9916; tasks/current.md now contains READY task 2.68. Current task and README read in full.
+- No checkout synchronization, rollback, branch switch, application edits or deployment attempted. No automatic transition to task 2.68; this report is exclusively about resuming 2.56.1.
+- Original Windows checkout was not changed by this attempt.
 
-## Staging and retained legacy state
-- `origin/staging`: `f6093c11d71ddc175ebf83fc69453c20aaca5239`.
-- Live staging marker: `f6093c11d71ddc175ebf83fc69453c20aaca5239`.
-- Environment: exact `staging`.
-- Mail safety: active.
-- WP-Cron recovery guard: active; `DISABLE_WP_CRON=true`.
-- Action Scheduler shutdown guard remains registered at the earliest priority.
-- Fixed legacy snapshot is a real non-symlink directory; metadata commit remains `8d774c1e831d754c7e3f7e57842f61471a43f811`.
-- Legacy aggregate fingerprint before/after: `2c108985c5e9d1fef5fcecb7f5ceb3b305208ceeca3d473f2b6e654ea4124a40`.
-- Legacy files/directories/bytes remained 8,092 / 1,047 / 127,825,359; symlink/special counts remained 0 / 0.
-- Deploy-state and legacy material were not modified.
+## Gate status
+| Gate | Result |
+| --- | --- |
+| Auth/role routing | NOT RUN |
+| Employer quota / slot reuse | NOT RUN |
+| Application / duplicate / authorization boundaries | NOT RUN |
+| Transactional message rendering | NOT RUN |
+| Scheduler continuity | NOT RUN |
+| Exact T0/T1 business-state equality | NOT RUN |
 
-## Immutable package snapshot tooling
-- Local commit changes only:
-  - `deployment/deploy-staging.sh` — SHA-256 `3c5615c8d0a53edbf70473a47ea106dd9179233f818d0f3833d3736f9375cdd9`.
-  - `deployment/tests/immutable-package-snapshots-harness.sh` — SHA-256 `8e042a72fc69c3fce90ca656f3e3cd31ca6d9e38a43f239e7147a2936e157970`.
-- New immutable root: `/home/u601262303/deploy-state/raspitajse-core-wpforms-snapshots-v2/<exact-HEAD-SHA>`.
-- Creation uses a same-parent operation-owned temporary directory, deterministic type/path/content manifest, exact format/commit/aggregate metadata, regeneration and equality verification, then atomic rename.
-- Duplicate final directories are rejected unchanged.
-- Restore resolves only the exact checked-out HEAD snapshot; no latest/glob/legacy fallback exists.
-- Complete pre-write validation rejects wrong metadata, changed/missing/extra entries, symlinks and unsafe types.
-- No pruning or retention deletion was added; the legacy fixed path is not referenced by the new modes.
-- Existing staging root, clean-tree, branch, allowlist, marker and Communications parity guards remain.
-- Offline harness passed twice from fresh task-private fixtures. Covered all 11 required cases, including two coexisting commit keys and operation-scoped failure cleanup.
-- `bash -n`: PASS for both shell files.
-- `shellcheck`: SKIPPED because it is not installed; nothing was installed.
-- `git diff --check`: PASS for the tooling-only local commit.
-
-## Official WordPress 7.1.2 evidence
-- Exactly one unauthenticated HTTPS GET was made to the fixed URL; status 200, final host `wordpress.org`, redirects 0, content type `application/zip`, bytes 37,225,839.
-- MD5: `c332b9a5bcab2dea2a263b649bdb2a1c`.
-- SHA-1: `fab6ce3a905a1f4085ffff7fd9920bc693f5dd94`.
-- SHA-256: `8fc96c59a78b7219e4a130222b7fadb51b03e503e8b0123beaa7e28961c21ce2`.
-- ZIP integrity: PASS; 4,250 entries; absolute/traversal/outside-prefix/duplicate/symlink/device/special counts all 0.
-- Package declaration: WordPress 7.1.2; DB version 61833.
-- Canonical scope: 3,337 regular files, no symlinks or special types.
-- Official versus 2.67 source differed at exactly the six required paths and no others.
-- After temporary import, complete official/source byte inventories were identical and every one of the six files matched the archive exactly.
-- The exact task-private archive/extraction/manifests were removed and their directory was proven absent.
-
-## Blocking Git representation conflict
-- Existing repository rule `*.js text eol=lf` is outside the task's allowed change scope.
-- Three required official files contain CRLF bytes: `license.txt`, `wp-includes/images/crystal/license.txt`, and `wp-includes/js/codemirror/csslint.js`.
-- Normal `git add` applies the repository clean filter, converts those bytes to LF, and reduces the required six-path delta to only three core paths.
-- Staging raw blobs preserves exact official bytes and exposes all six paths, but the explicit `*.js text eol=lf` rule makes `csslint.js` remain modified after checkout/commit; a fresh isolated local Git proof reproduced this behavior. The raw CRLF diff also cannot pass ordinary `git diff --check`.
-- Therefore no clean, portable candidate can simultaneously satisfy exact official bytes, exactly six core paths, ordinary diff-check, and the current allowed path scope.
-- The six temporary core changes were reverted to the exact RC bytes before reporting. No partial core commit or remote feature push exists.
-- Required task correction: either explicitly allow a narrowly reviewed `.gitattributes` exception for the exact official CRLF paths and update the allowed delta/diff-check contract, or redefine canonical source as LF-normalized and update the expected path count/manifest. No such choice was inferred here.
-
-## Regression evidence
-- PHP lint: PASS for all three candidate core PHP files while temporarily imported and all cumulative owned product PHP files (15 files total).
-- 2.63 private-message harness: PASS.
-- 2.64 desired-position harness: PASS.
-- 2.65 employer-job-posting harness: PASS.
-- 2.66 application-tracking harness: PASS.
-- 2.67 cross-feature harness: PASS twice.
-- JavaScript syntax: SKIPPED because no local Node runtime is installed; none was installed.
-- Product hash equality: PASS for all 13 recorded 2.67 paths.
-- No credential, secret, configuration, vendor, theme or product change was introduced.
-
-## Release boundary
-- Feature push: NOT PERFORMED.
-- Remote 2.68 branch: absent.
-- Staging merge/fast-forward/update: NOT PERFORMED.
-- Deploy/snapshot/restore server invocation: 0 / 0 / 0.
-- This local tooling commit is not a release candidate and must not be deployed.
-- The later guarded batch deploy/QA task is not eligible and was not defined as executable because 2.68 did not PASS.
-
-## Zero-mutation counters
-- Staging/runtime changes: 0.
-- Deploy-state/legacy changes: 0.
-- Database/cache changes: 0 / 0.
-- Live fixtures: 0.
-- Real mail: 0.
-- Scheduler/payment execution: 0 / 0.
-- Browser requests: 0.
-- External requests: exactly the one authorized official archive GET; unexpected external requests: 0.
-- Production access: 0.
-- Production touched: NO.
-
-## Warnings
-- Known host namespace pressure occurred once at the first sandbox call; the mandated namespace-free helpers were used without weakening scope or safety.
-- Host login shell continues to emit the pre-existing `.bashrc` `nexport` warning.
+## Fixtures and safety
+No locks acquired; no fixture harness created; temporary users/profiles/jobs/applications created: 0 each. Fixture ledger empty; no fixture cleanup required. No business counts or hashes sampled and no runtime equality PASS claimed.
+Inbound route probes 0; fixture outbound HTTP attempts/intercepts/transport 0/0/0; fixture mail/payment/scheduler execution 0. No normal/check-only owned runner, broad WP-Cron or Action Scheduler invocation. No source/deploy change requested. Report helper performs its standard staging-environment read; its bootstrap is not a comprehensive zero-side-effect instrumentation run.
+MANUAL_BROWSER_CHECK_REQUIRED: CAPTCHA remains untested; no CAPTCHA bypass or browser action.
+Production touched: NO.
+Publish and verify this report, then STOP. Resuming the old gate against a new baseline requires a newly aligned task contract; do not silently rebase it or undo intervening work.
