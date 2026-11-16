@@ -49,7 +49,7 @@ CORE_TOP_LEVEL_FILES=(
 )
 
 DEPLOY_PATHS=("${ALLOWLIST[@]}" "${PACKAGE_TREE_ROOTS[@]}" "${CORE_TOP_LEVEL_FILES[@]}")
-PACKAGE_ROLLBACK_DIR="/home/u601262303/deploy-state/raspitajse-core-wpforms-rollback"
+PACKAGE_SNAPSHOT_ROOT="/home/u601262303/deploy-state/raspitajse-core-wpforms-snapshots-v2"
 VENDOR_RECONCILE_ROOTS=(
   "wp-content/themes/superio"
   "wp-content/plugins/apus-framework"
@@ -87,7 +87,10 @@ cleanup() {
   [[ -z "${TMP_DELETED}" ]] || rm -f -- "${TMP_DELETED}"
   [[ -z "${TMP_STATE}" ]] || rm -f -- "${TMP_STATE}"
   [[ -z "${TMP_MANIFEST}" ]] || rm -f -- "${TMP_MANIFEST}"
-  [[ -z "${TMP_PACKAGE_ROLLBACK}" ]] || rm -rf -- "${TMP_PACKAGE_ROLLBACK}"
+  if [[ "${TMP_PACKAGE_ROLLBACK}" == "${PACKAGE_SNAPSHOT_ROOT}"/.*.tmp.* &&
+        -d "${TMP_PACKAGE_ROLLBACK}" && ! -L "${TMP_PACKAGE_ROLLBACK}" ]]; then
+    rm -rf -- "${TMP_PACKAGE_ROLLBACK}"
+  fi
 }
 
 fail() {
@@ -215,46 +218,99 @@ reconcile_package_trees() {
   done
 }
 
+snapshot_manifest() (
+  cd -- "$1"
+  local path digest
+  find . -mindepth 1 ! -path ./metadata ! -path ./manifest.sha256 -print0 |
+    LC_ALL=C sort -z | while IFS= read -r -d '' path; do
+      case "${path}" in
+        ./wp-admin|./wp-admin/*|./wp-includes|./wp-includes/*|./wp-content|./wp-content/plugins|./wp-content/plugins/wpforms-lite|./wp-content/plugins/wpforms-lite/*|./root) ;;
+        ./root/*) is_core_top_level_path "${path#./root/}" || fail "Unexpected snapshot root entry." ;;
+        *) fail "Unexpected snapshot entry." ;;
+      esac
+      [[ "${path}" != *$'\n'* && "${path}" != *$'\t'* && ! -L "${path}" ]] ||
+        fail "Unsafe snapshot entry."
+      if [[ -d "${path}" ]]; then
+        printf 'D\t%s\n' "${path}"
+      elif [[ -f "${path}" ]]; then
+        digest="$(sha256sum < "${path}")"
+        printf 'F\t%s\t%s\n' "${digest%% *}" "${path}"
+      else
+        fail "Unsupported snapshot entry type."
+      fi
+    done
+)
+
+verify_snapshot() {
+  local snapshot="$1" path digest expected
+  [[ -d "${snapshot}" && ! -L "${snapshot}" ]] || fail "Exact snapshot is missing or unsafe."
+  for path in wp-content wp-content/plugins root "${PACKAGE_TREE_ROOTS[@]}"; do
+    [[ -d "${snapshot}/${path}" && ! -L "${snapshot}/${path}" ]] || fail "Missing or unsafe snapshot directory."
+  done
+  for path in metadata manifest.sha256 "${CORE_TOP_LEVEL_FILES[@]/#/root/}"; do
+    [[ -f "${snapshot}/${path}" && ! -L "${snapshot}/${path}" ]] || fail "Missing or unsafe snapshot file."
+  done
+  digest="$(sha256sum < "${snapshot}/manifest.sha256")"
+  expected="$(printf 'format=2\ncommit=%s\nmanifest_sha256=%s' "${HEAD_SHA}" "${digest%% *}")"
+  printf '%s\n' "${expected}" | cmp -s - "${snapshot}/metadata" || fail "Snapshot metadata mismatch."
+  snapshot_manifest "${snapshot}" | cmp -s - "${snapshot}/manifest.sha256" || fail "Snapshot manifest mismatch."
+}
+
 snapshot_packages() {
-  local path metadata
-  [[ ! -e "${PACKAGE_ROLLBACK_DIR}" && ! -L "${PACKAGE_ROLLBACK_DIR}" ]] || fail "Package rollback snapshot already exists: ${PACKAGE_ROLLBACK_DIR}"
+  local path digest final="${PACKAGE_SNAPSHOT_ROOT}/${HEAD_SHA}"
+  [[ -d "${PACKAGE_SNAPSHOT_ROOT%/*}" && ! -L "${PACKAGE_SNAPSHOT_ROOT%/*}" ]] || fail "Unsafe snapshot parent."
+  mkdir -p -- "${PACKAGE_SNAPSHOT_ROOT}"
+  [[ -d "${PACKAGE_SNAPSHOT_ROOT}" && ! -L "${PACKAGE_SNAPSHOT_ROOT}" ]] || fail "Unsafe snapshot root."
+  [[ ! -e "${final}" && ! -L "${final}" ]] || fail "Snapshot already exists for this commit."
   assert_package_target_roots
-  TMP_PACKAGE_ROLLBACK="$(mktemp -d "${PACKAGE_ROLLBACK_DIR}.tmp.XXXXXX")"
-  mkdir -p "${TMP_PACKAGE_ROLLBACK}/root" "${TMP_PACKAGE_ROLLBACK}/wp-content/plugins"
+  TMP_PACKAGE_ROLLBACK="$(mktemp -d "${PACKAGE_SNAPSHOT_ROOT}/.${HEAD_SHA}.tmp.XXXXXX")"
+  mkdir -- "${TMP_PACKAGE_ROLLBACK}/root"
   for path in "${PACKAGE_TREE_ROOTS[@]}"; do
-    [[ -z "$(find "${TARGET_SITE_ROOT}/${path}" -type l -print -quit)" ]] || fail "Package target tree contains a symlink: ${path}"
-    mkdir -p "${TMP_PACKAGE_ROLLBACK}/${path}"
-    rsync -a --delete -- "${TARGET_SITE_ROOT}/${path}/" "${TMP_PACKAGE_ROLLBACK}/${path}/"
+    assert_no_symlink_components "${TARGET_SITE_ROOT}" "${path}"
+    mkdir -p -- "${TMP_PACKAGE_ROLLBACK}/${path}"
+    rsync -a -- "${TARGET_SITE_ROOT}/${path}/" "${TMP_PACKAGE_ROLLBACK}/${path}/"
   done
   for path in "${CORE_TOP_LEVEL_FILES[@]}"; do
-    [[ -f "${TARGET_SITE_ROOT}/${path}" && ! -L "${TARGET_SITE_ROOT}/${path}" ]] || fail "Canonical live core root file is missing or unsafe: ${path}"
+    [[ -f "${TARGET_SITE_ROOT}/${path}" && ! -L "${TARGET_SITE_ROOT}/${path}" ]] || fail "Unsafe core root file."
     cp -p -- "${TARGET_SITE_ROOT}/${path}" "${TMP_PACKAGE_ROLLBACK}/root/${path}"
   done
-  metadata="${TMP_PACKAGE_ROLLBACK}/metadata"
-  printf 'format=1\ncommit=%s\n' "${HEAD_SHA}" > "${metadata}"
-  mv -- "${TMP_PACKAGE_ROLLBACK}" "${PACKAGE_ROLLBACK_DIR}"
+  snapshot_manifest "${TMP_PACKAGE_ROLLBACK}" > "${TMP_PACKAGE_ROLLBACK}/manifest.sha256"
+  digest="$(sha256sum < "${TMP_PACKAGE_ROLLBACK}/manifest.sha256")"
+  printf 'format=2\ncommit=%s\nmanifest_sha256=%s\n' "${HEAD_SHA}" "${digest%% *}" > "${TMP_PACKAGE_ROLLBACK}/metadata"
+  verify_snapshot "${TMP_PACKAGE_ROLLBACK}"
+
+  # Lock the shared directory inode only for publication. Each writer owns its temporary directory.
+  (
+    flock -x 9
+    [[ ! -e "${final}" && ! -L "${final}" ]] || fail "Snapshot already exists for this commit."
+    mv -T -- "${TMP_PACKAGE_ROLLBACK}" "${final}"
+  ) 9< "${PACKAGE_SNAPSHOT_ROOT}"
   TMP_PACKAGE_ROLLBACK=""
-  echo "Package rollback snapshot created for ${HEAD_SHA}."
+  echo "Immutable package snapshot created for ${HEAD_SHA}."
 }
 
 restore_packages() {
-  local path snapshot_commit
-  [[ -d "${PACKAGE_ROLLBACK_DIR}" && ! -L "${PACKAGE_ROLLBACK_DIR}" ]] || fail "Package rollback snapshot is missing or unsafe."
-  snapshot_commit="$(sed -n 's/^commit=//p' "${PACKAGE_ROLLBACK_DIR}/metadata")"
-  [[ "${snapshot_commit}" == "${HEAD_SHA}" ]] || fail "Rollback snapshot commit does not match checked out deploy source."
+  local path snapshot="${PACKAGE_SNAPSHOT_ROOT}/${HEAD_SHA}"
+  [[ -d "${PACKAGE_SNAPSHOT_ROOT}" && ! -L "${PACKAGE_SNAPSHOT_ROOT}" ]] || fail "Unsafe snapshot root."
+  verify_snapshot "${snapshot}"
   assert_package_target_roots
   for path in "${PACKAGE_TREE_ROOTS[@]}"; do
-    [[ -d "${PACKAGE_ROLLBACK_DIR}/${path}" && ! -L "${PACKAGE_ROLLBACK_DIR}/${path}" ]] || fail "Rollback package tree is missing or unsafe: ${path}"
-    [[ -z "$(find "${PACKAGE_ROLLBACK_DIR}/${path}" -type l -print -quit)" ]] || fail "Rollback package tree contains a symlink: ${path}"
-    rsync -a --checksum --delete-delay -- "${PACKAGE_ROLLBACK_DIR}/${path}/" "${TARGET_SITE_ROOT}/${path}/"
+    assert_no_symlink_components "${TARGET_SITE_ROOT}" "${path}"
   done
   for path in "${CORE_TOP_LEVEL_FILES[@]}"; do
-    [[ -f "${PACKAGE_ROLLBACK_DIR}/root/${path}" && ! -L "${PACKAGE_ROLLBACK_DIR}/root/${path}" ]] || fail "Rollback core root file is missing or unsafe: ${path}"
     assert_no_symlink_components "${TARGET_SITE_ROOT}" "${path}"
-    cp -p -- "${PACKAGE_ROLLBACK_DIR}/root/${path}" "${TARGET_SITE_ROOT}/${path}"
+    [[ ! -e "${TARGET_SITE_ROOT}/${path}" || -f "${TARGET_SITE_ROOT}/${path}" ]] ||
+      fail "Unsafe core restore target."
   done
-  echo "Package rollback snapshot restored for ${HEAD_SHA}."
+  for path in "${PACKAGE_TREE_ROOTS[@]}"; do
+    rsync -a --checksum --delete-delay -- "${snapshot}/${path}/" "${TARGET_SITE_ROOT}/${path}/"
+  done
+  for path in "${CORE_TOP_LEVEL_FILES[@]}"; do
+    cp -p -- "${snapshot}/root/${path}" "${TARGET_SITE_ROOT}/${path}"
+  done
+  echo "Immutable package snapshot restored for ${HEAD_SHA}."
 }
+
 full_deploy() {
   local path
 
