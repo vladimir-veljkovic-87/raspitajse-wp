@@ -1,43 +1,81 @@
 # Codex Execution Report
 
-- Task: Zadatak 2.56.1 - Resume preflight: baseline drift
-- Task ID: 2.56
-- Result: PARTIAL
-- Recorded at (UTC): 2026-11-09T07:38:49Z
-- Source branch: feature/task-2.68-wp-7.1.2-release-preparation
-- Source HEAD: 1da38e2cb4d53e1f4356d6454248b9a276c2c6fa
+- Task: Zadatak 2.68.2 - Final WordPress release preparation
+- Task ID: 2.68
+- Result: PASS
+- Recorded at (UTC): 2026-11-16T15:28:07Z
+- Source branch: feature/task-2.68.2-wp-7.1.2-release-preparation
+- Source HEAD: 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0
 - Source working tree clean: YES
-- Staging deploy marker: f6093c11d71ddc175ebf83fc69453c20aaca5239
-- Staging environment: staging
+- Staging deploy marker: unavailable
+- Staging environment: unavailable
 
 ## Task report
 
-## Result
-BLOCKED: BASELINE_DRIFT. Exact resumed task ID: 2.56.1.
-The user's lock clarification is accepted: acquire owned-runner lock first, runtime lock second, both nonblocking and held continuously through fixture T0/cleanup/T1; release in reverse order. The previous lock-protocol ambiguity is resolved. This attempt stopped for a different, freshly verified precondition mismatch.
+Zadatak 2.68.2 — Final repository release preparation report
 
-## Fresh context
-- Authorized existing Hostinger SSH connection and repository /home/u601262303/repo/raspitajse-wp.
-- Required 2.56.1 baseline: ff42719f218e440b168b57690b70a2402ee66809.
-- Fresh origin/staging and live deploy marker: f6093c11d71ddc175ebf83fc69453c20aaca5239.
-- Host checkout: feature/task-2.68-wp-7.1.2-release-preparation at 1da38e2cb4d53e1f4356d6454248b9a276c2c6fa, clean.
-- Fresh origin/codex-tasks: 4d57f78b25b5dfce0286c444b3ab5554eefa9916; tasks/current.md now contains READY task 2.68. Current task and README read in full.
-- No checkout synchronization, rollback, branch switch, application edits or deployment attempted. No automatic transition to task 2.68; this report is exclusively about resuming 2.56.1.
-- Original Windows checkout was not changed by this attempt.
+Result PASS for repository preparation and offline validation.
+Baseline f6093c11d71ddc175ebf83fc69453c20aaca5239.
+Feature branch feature/task-2.68.2-wp-7.1.2-release-preparation.
+Verified remote feature HEAD 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0.
+Source working tree clean, confirmed again before report publication.
 
-## Gate status
-| Gate | Result |
-| --- | --- |
-| Auth/role routing | NOT RUN |
-| Employer quota / slot reuse | NOT RUN |
-| Application / duplicate / authorization boundaries | NOT RUN |
-| Transactional message rendering | NOT RUN |
-| Scheduler continuity | NOT RUN |
-| Exact T0/T1 business-state equality | NOT RUN |
+Original 1da38e2cb4d53e1f4356d6454248b9a276c2c6fa preserved under recovery/task-2.68-original. Recovery branch was not pushed. Accepted product RC 45d6e8c3 was included from the baseline. New snapshot implementation commit 3025d3b8fc1cc55948bec929fba8f897904b7a4b and official core import commit 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0 preserve the original recovery history separately.
 
-## Fixtures and safety
-No locks acquired; no fixture harness created; temporary users/profiles/jobs/applications created: 0 each. Fixture ledger empty; no fixture cleanup required. No business counts or hashes sampled and no runtime equality PASS claimed.
-Inbound route probes 0; fixture outbound HTTP attempts/intercepts/transport 0/0/0; fixture mail/payment/scheduler execution 0. No normal/check-only owned runner, broad WP-Cron or Action Scheduler invocation. No source/deploy change requested. Report helper performs its standard staging-environment read; its bootstrap is not a comprehensive zero-side-effect instrumentation run.
-MANUAL_BROWSER_CHECK_REQUIRED: CAPTCHA remains untested; no CAPTCHA bypass or browser action.
+Official source https://wordpress.org/wordpress-7.1.2.zip
+HTTP 200. MD5 c332b9a5bcab2dea2a263b649bdb2a1c
+SHA-1 fab6ce3a905a1f4085ffff7fd9920bc693f5dd94
+SHA-256 8fc96c59a78b7219e4a130222b7fadb51b03e503e8b0123beaa7e28961c21ce2
+Package version.php confirms WordPress 7.1.2 and DB version 61833.
+
+The six official files are license.txt, wp-admin/about.php, wp-includes/images/crystal/license.txt, wp-includes/js/codemirror/csslint.js, wp-includes/template.php and wp-includes/version.php.
+Before commit, each official archive entry matched working-tree bytes and index blob bytes by SHA-256. After commit, direct byte comparisons matched archive entries, exact commit blobs and fresh local clone files. Complete canonical core inventory contains 3337 files, with zero missing, extra or content differences against the official archive in the exact commit and fresh checkout.
+
+The three CRLF files license.txt, wp-includes/images/crystal/license.txt and wp-includes/js/codemirror/csslint.js have exact-path attributes -text !eol whitespace=trailing-space,space-before-tab,cr-at-eol. git check-attr confirmed these. Official file bytes were preserved.
+
+Offline validation PASS
+- Ordinary git diff --check, staged diff check and commit diff check.
+- bash -n for deploy script and snapshot harness.
+- Snapshot behavioral harness twice from clean private fixtures.
+- Deterministic concurrent publication barrier ensured both processes finished temporary snapshots before either acquired the publication lock. Exactly one succeeded, one rejected the existing commit snapshot, and no temporary directory remained. Both outcomes were checked in both harness runs.
+- Duplicate rejection preserved the original snapshot digest.
+- Two commit keys, deterministic manifests, exact-key restore and missing-key rejection with no legacy fallback.
+- Corrupted metadata, changed/missing/extra entries and symlink rejection before target modification.
+- Restore removed extra target files and restored original bytes.
+- Failure after temporary creation left no final snapshot or temporary directory.
+- Legacy and unrelated fixture sentinels remained unchanged.
+- Candidate desired positions, employer job posting, candidate application tracking and private-message notification harnesses.
+- Stacked product journey harness twice.
+- PHP lint for cumulative product PHP changes and three imported core PHP files.
+
+Tests ran in Debian Docker with PHP and rsync. Dependencies were installed before docker network disconnect bridge. The fresh-clone offline test execution and byte verification ran with the container disconnected from the network. Fixture paths were local /tmp paths; messages mentioning staging in fixture test output referred only to those disposable local fixtures. The temporary test container was removed.
+
+No staging runtime, staging mutations, server snapshot/restore, deploy, database/cache operation, live fixture, real email, scheduler/payment execution, browser QA or production access occurred. Live marker and effective runtime state were not inspected in this local continuation.
 Production touched: NO.
-Publish and verify this report, then STOP. Resuming the old gate against a new baseline requires a newly aligned task contract; do not silently rebase it or undo intervening work.
+
+Runtime activation of staging protections is NOT CONFIRMED. It must be separately confirmed before any future staging deploy. This report does not authorize deployment or merging.
+
+Exact changed-file inventory relative to the declared baseline follows.
+
+- .gitattributes
+- deployment/deploy-staging.sh
+- deployment/tests/immutable-package-snapshots-harness.sh
+- license.txt
+- wp-admin/about.php
+- wp-content/mu-plugins/raspitajse-candidate-desired-positions.php
+- wp-content/mu-plugins/tests/candidate-desired-positions-harness.php
+- wp-content/plugins/raspitajse-commerce/includes/class-raspitajse-employer-job-posting.php
+- wp-content/plugins/raspitajse-commerce/includes/class-raspitajse-free-job-access-policy.php
+- wp-content/plugins/raspitajse-commerce/raspitajse-commerce.php
+- wp-content/plugins/raspitajse-commerce/tests/employer-job-posting-harness.php
+- wp-content/plugins/raspitajse-commerce/tests/stacked-product-journey-harness.php
+- wp-content/plugins/raspitajse-communications/assets/application-tracking.js
+- wp-content/plugins/raspitajse-communications/includes/class-candidate-application-tracking.php
+- wp-content/plugins/raspitajse-communications/includes/class-private-message-notifications.php
+- wp-content/plugins/raspitajse-communications/raspitajse-communications.php
+- wp-content/plugins/raspitajse-communications/tests/candidate-application-tracking-harness.php
+- wp-content/plugins/raspitajse-communications/tests/private-message-notifications-harness.php
+- wp-includes/images/crystal/license.txt
+- wp-includes/js/codemirror/csslint.js
+- wp-includes/template.php
+- wp-includes/version.php
