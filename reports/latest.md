@@ -1,9 +1,9 @@
 # Codex Execution Report
 
-- Task: Zadatak 2.68.3 — Kontrolisana potvrda aktivnih staging runtime zaštita
-- Task ID: 2.68.3
+- Task: Zadatak 2.69 — Klasifikuj bootstrap housekeeping i potvrdi staging zaštite
+- Task ID: 2.69
 - Result: PARTIAL
-- Recorded at (UTC): 2026-11-16T15:43:30Z
+- Recorded at (UTC): 2026-11-16T15:53:09Z
 - Source branch: feature/task-2.68.2-wp-7.1.2-release-preparation
 - Source HEAD: 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0
 - Source working tree clean: YES
@@ -12,41 +12,36 @@
 
 ## Task report
 
-Result PARTIAL: STAGING_BOOTSTRAP_SIDE_EFFECT_NOT_CLASSIFIED.
-Task 2.68.3 stopped during static preflight before any WordPress bootstrap.
+Zadatak 2.69 — Klasifikuj bootstrap housekeeping i potvrdi staging zaštite
 
-Git preflight confirmed origin/staging f6093c11d71ddc175ebf83fc69453c20aaca5239 and release candidate feature/task-2.68.2-wp-7.1.2-release-preparation at 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0. Source working tree clean. SSH available. Staging realpath exactly matched the authorized staging directory. Deploy marker was regular, non-symlink and contained the baseline.
+Result PARTIAL: EXTERNAL_TRANSPORT_EVIDENCE_AMBIGUOUS.
+Read tasks/current.md from origin/codex-tasks ae4aeb55. The explicitly permitted removal of the three DROP telemetry/reporting cron hooks supersedes the previous 2.68.3 blocker. Cache population is accepted bounded housekeeping.
 
-Blocking evidence
-raspitajse-staging-cron-recovery-guard.php registers raspitajse_staging_disable_reporting_telemetry_callbacks on plugins_loaded and init at PHP_INT_MAX. During ordinary bootstrap this callback checks wp_next_scheduled and calls wp_clear_scheduled_hook for elementor/tracker/send_event, monsterinsights_feature_feedback_checkin and wpforms_email_summaries_cron. These conditional scheduler writes are outside the task permission. Skipping regular plugins does not suppress this MU callback. DISABLE_WP_CRON does not suppress schedule deletion. No attempt was made to invoke or disable this callback.
+Preflight confirmed clean local working tree, origin/staging f6093c11d71ddc175ebf83fc69453c20aaca5239, release candidate feature/task-2.68.2-wp-7.1.2-release-preparation at 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0, exact staging realpath, and regular non-symlink deploy marker containing the baseline. Process listing exposed only PID, command, state and elapsed time; the observed processes were the inspection bash and ps.
 
-Reviewed regular non-symlink staging files and SHA-256
-- raspitajse-staging-mail-safety.php cf1acae6dbbeb69adb5d3bb3a06bb14d7f45631d543d8d1df49f36088290d5c0
-- raspitajse-staging-cron-recovery-guard.php 521b79ebb60ef4dc2b5f33a41e6b3c654fd80d5aa91c787536ffd51b8d7fa6ec
-- raspitajse-staging-action-scheduler-drop-guard.php d2aa95755a299df70fc7d3c95af50bb252551be83c8ec440a7b70b49292e23a7
-- hostinger-auto-updates.php 675bbe629bf844ca4d27e3793406a12cf95802c1f36e150fd87dff5cf83b9b8b
-- elementor-safe-mode.php cd9d7895d440e7105c476080d0c671ba52016f35bc5ec953dd8781f03029eaa9
-- object-cache.php 0888d468ece84dda092719550658a2e870f440def2e57fbbedd681cb06abe9f1
+Transport evidence limitation
+The staging LiteSpeed object-cache implementation uses direct Redis connect/pconnect and Memcached addServer calls. WordPress HTTP API filters cannot establish all direct socket activity. This does not establish that cache destinations are external or that any transport occurred.
+A read-only tracer capability test ran strace -qq -e trace=connect -o /dev/null true. The host rejected PTRACE_TRACEME with Operation not permitted, exit 1. No network operation or WordPress bootstrap was involved in that test. No equivalent complete transport evidence was established. Therefore the task stopped before WordPress execution, without claiming zero actual runtime transport.
 
-Expected static registrations
-Mail closures use pre_wp_mail at PHP_INT_MAX, wp_mail at PHP_INT_MIN and PHP_INT_MAX, and phpmailer_init at PHP_INT_MAX. Symbol raspitajse_staging_mail_safety_is_staging.
-Cron symbol raspitajse_staging_cron_recovery_guard_is_active and conditional DISABLE_WP_CRON definition.
-Async blocking callback raspitajse_staging_disable_action_scheduler_async_dispatch on plugins_loaded at PHP_INT_MAX, init and shutdown at PHP_INT_MIN.
-DROP filters pre_as_enqueue_async_action, pre_as_schedule_single_action, pre_as_schedule_recurring_action and pre_as_schedule_cron_action at PHP_INT_MAX, with respective raspitajse_staging_as_drop_guard_pre_async/pre_single/pre_recurring/pre_cron callbacks.
-Actual runtime registrations and staging environment NOT MEASURED.
+WP-CLI WordPress bootstrap count 0.
+T0/T1 cron counts for elementor/tracker/send_event, monsterinsights_feature_feedback_checkin and wpforms_email_summaries_cron NOT MEASURED.
+T0/T1 canonical cron hashes NOT MEASURED.
+SQL read-only, permitted cron updates, other mutating and unknown categories NOT MEASURED.
+Runtime mail/cron/Action Scheduler symbols and hook registrations NOT MEASURED in this task; previous static evidence is not runtime attestation.
+WP HTTP API attempts NOT MEASURED.
+Guard-intercepted before transport NOT MEASURED.
+Approved external transport attempts 0.
+Actual external network requests and unexpected external network requests NOT MEASURED for WordPress; no WordPress process was started.
+No mail, scheduler callback, Action Scheduler execution or payment operation was invoked by this task.
 
-Hostinger auto-updates registers update and HTTP proxy filters. Object-cache delegates to LiteSpeed object.lib.php and its classes. Full transitive cache review was not completed after the scheduler side-effect stop condition.
-Process-name sample contained lsphp and ps only; complete concurrent-command exclusion was not established. Initial process listing pipeline had a CRLF argument error and was replaced by a read-only direct process-name listing. SSH startup emitted a .bashrc nexport command-not-found diagnostic.
+No preload guard or server task-private directory was created.
+No locks were acquired. Required acquisition order remains cron-runner then runtime; release order runtime then cron-runner. No task-held locks remain and server cleanup is not applicable.
+No database access or runtime mutation was performed.
+Deploy NO.
+Snapshot/restore NO.
+Production access 0.
+Production touched: NO.
 
-WP-CLI bootstrap count 0.
-Preload guard not created; guard hash/lint/removal not applicable.
-No task-private server directory was created; cleanup not applicable.
-Locks not acquired. Required order remains cron-runner then runtime, release runtime then cron-runner. No locks are held by this task.
-SQL read-only/mutating/unknown counters NOT MEASURED.
-WP HTTP API attempts and guard-intercepted counters NOT MEASURED.
-Approved WordPress transport attempts 0; actual and unexpected WordPress external transport counters NOT MEASURED. No WordPress process was started.
-Runtime business mutation attributable to task 0.
-Deploy NO. Snapshot/restore NO. Scheduler execution NO. Mail/payment execution NO.
-Production access 0. Production touched: NO.
-Runtime activation of all staging protections remains unconfirmed and is mandatory before staging deployment. Task 2.68.4 is not ready and was not executed.
-Final read-only check confirmed marker and both remote Git SHAs unchanged.
+The runtime acceptance gate remains unmet. Task 2.70 was not executed. A follow-up requires a technically supported way to establish external transport evidence within the approved bootstrap scope.
+SSH startup also emitted a pre-existing .bashrc nexport command-not-found diagnostic; no shell configuration was changed.
+Final marker and remote staging/release SHA checks matched the preflight values.
