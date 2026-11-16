@@ -1,9 +1,9 @@
 # Codex Execution Report
 
-- Task: Zadatak 2.68.2 - Final WordPress release preparation
-- Task ID: 2.68
-- Result: PASS
-- Recorded at (UTC): 2026-11-16T15:28:07Z
+- Task: Zadatak 2.68.3 — Kontrolisana potvrda aktivnih staging runtime zaštita
+- Task ID: 2.68.3
+- Result: PARTIAL
+- Recorded at (UTC): 2026-11-16T15:43:30Z
 - Source branch: feature/task-2.68.2-wp-7.1.2-release-preparation
 - Source HEAD: 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0
 - Source working tree clean: YES
@@ -12,70 +12,41 @@
 
 ## Task report
 
-Zadatak 2.68.2 — Final repository release preparation report
+Result PARTIAL: STAGING_BOOTSTRAP_SIDE_EFFECT_NOT_CLASSIFIED.
+Task 2.68.3 stopped during static preflight before any WordPress bootstrap.
 
-Result PASS for repository preparation and offline validation.
-Baseline f6093c11d71ddc175ebf83fc69453c20aaca5239.
-Feature branch feature/task-2.68.2-wp-7.1.2-release-preparation.
-Verified remote feature HEAD 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0.
-Source working tree clean, confirmed again before report publication.
+Git preflight confirmed origin/staging f6093c11d71ddc175ebf83fc69453c20aaca5239 and release candidate feature/task-2.68.2-wp-7.1.2-release-preparation at 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0. Source working tree clean. SSH available. Staging realpath exactly matched the authorized staging directory. Deploy marker was regular, non-symlink and contained the baseline.
 
-Original 1da38e2cb4d53e1f4356d6454248b9a276c2c6fa preserved under recovery/task-2.68-original. Recovery branch was not pushed. Accepted product RC 45d6e8c3 was included from the baseline. New snapshot implementation commit 3025d3b8fc1cc55948bec929fba8f897904b7a4b and official core import commit 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0 preserve the original recovery history separately.
+Blocking evidence
+raspitajse-staging-cron-recovery-guard.php registers raspitajse_staging_disable_reporting_telemetry_callbacks on plugins_loaded and init at PHP_INT_MAX. During ordinary bootstrap this callback checks wp_next_scheduled and calls wp_clear_scheduled_hook for elementor/tracker/send_event, monsterinsights_feature_feedback_checkin and wpforms_email_summaries_cron. These conditional scheduler writes are outside the task permission. Skipping regular plugins does not suppress this MU callback. DISABLE_WP_CRON does not suppress schedule deletion. No attempt was made to invoke or disable this callback.
 
-Official source https://wordpress.org/wordpress-7.1.2.zip
-HTTP 200. MD5 c332b9a5bcab2dea2a263b649bdb2a1c
-SHA-1 fab6ce3a905a1f4085ffff7fd9920bc693f5dd94
-SHA-256 8fc96c59a78b7219e4a130222b7fadb51b03e503e8b0123beaa7e28961c21ce2
-Package version.php confirms WordPress 7.1.2 and DB version 61833.
+Reviewed regular non-symlink staging files and SHA-256
+- raspitajse-staging-mail-safety.php cf1acae6dbbeb69adb5d3bb3a06bb14d7f45631d543d8d1df49f36088290d5c0
+- raspitajse-staging-cron-recovery-guard.php 521b79ebb60ef4dc2b5f33a41e6b3c654fd80d5aa91c787536ffd51b8d7fa6ec
+- raspitajse-staging-action-scheduler-drop-guard.php d2aa95755a299df70fc7d3c95af50bb252551be83c8ec440a7b70b49292e23a7
+- hostinger-auto-updates.php 675bbe629bf844ca4d27e3793406a12cf95802c1f36e150fd87dff5cf83b9b8b
+- elementor-safe-mode.php cd9d7895d440e7105c476080d0c671ba52016f35bc5ec953dd8781f03029eaa9
+- object-cache.php 0888d468ece84dda092719550658a2e870f440def2e57fbbedd681cb06abe9f1
 
-The six official files are license.txt, wp-admin/about.php, wp-includes/images/crystal/license.txt, wp-includes/js/codemirror/csslint.js, wp-includes/template.php and wp-includes/version.php.
-Before commit, each official archive entry matched working-tree bytes and index blob bytes by SHA-256. After commit, direct byte comparisons matched archive entries, exact commit blobs and fresh local clone files. Complete canonical core inventory contains 3337 files, with zero missing, extra or content differences against the official archive in the exact commit and fresh checkout.
+Expected static registrations
+Mail closures use pre_wp_mail at PHP_INT_MAX, wp_mail at PHP_INT_MIN and PHP_INT_MAX, and phpmailer_init at PHP_INT_MAX. Symbol raspitajse_staging_mail_safety_is_staging.
+Cron symbol raspitajse_staging_cron_recovery_guard_is_active and conditional DISABLE_WP_CRON definition.
+Async blocking callback raspitajse_staging_disable_action_scheduler_async_dispatch on plugins_loaded at PHP_INT_MAX, init and shutdown at PHP_INT_MIN.
+DROP filters pre_as_enqueue_async_action, pre_as_schedule_single_action, pre_as_schedule_recurring_action and pre_as_schedule_cron_action at PHP_INT_MAX, with respective raspitajse_staging_as_drop_guard_pre_async/pre_single/pre_recurring/pre_cron callbacks.
+Actual runtime registrations and staging environment NOT MEASURED.
 
-The three CRLF files license.txt, wp-includes/images/crystal/license.txt and wp-includes/js/codemirror/csslint.js have exact-path attributes -text !eol whitespace=trailing-space,space-before-tab,cr-at-eol. git check-attr confirmed these. Official file bytes were preserved.
+Hostinger auto-updates registers update and HTTP proxy filters. Object-cache delegates to LiteSpeed object.lib.php and its classes. Full transitive cache review was not completed after the scheduler side-effect stop condition.
+Process-name sample contained lsphp and ps only; complete concurrent-command exclusion was not established. Initial process listing pipeline had a CRLF argument error and was replaced by a read-only direct process-name listing. SSH startup emitted a .bashrc nexport command-not-found diagnostic.
 
-Offline validation PASS
-- Ordinary git diff --check, staged diff check and commit diff check.
-- bash -n for deploy script and snapshot harness.
-- Snapshot behavioral harness twice from clean private fixtures.
-- Deterministic concurrent publication barrier ensured both processes finished temporary snapshots before either acquired the publication lock. Exactly one succeeded, one rejected the existing commit snapshot, and no temporary directory remained. Both outcomes were checked in both harness runs.
-- Duplicate rejection preserved the original snapshot digest.
-- Two commit keys, deterministic manifests, exact-key restore and missing-key rejection with no legacy fallback.
-- Corrupted metadata, changed/missing/extra entries and symlink rejection before target modification.
-- Restore removed extra target files and restored original bytes.
-- Failure after temporary creation left no final snapshot or temporary directory.
-- Legacy and unrelated fixture sentinels remained unchanged.
-- Candidate desired positions, employer job posting, candidate application tracking and private-message notification harnesses.
-- Stacked product journey harness twice.
-- PHP lint for cumulative product PHP changes and three imported core PHP files.
-
-Tests ran in Debian Docker with PHP and rsync. Dependencies were installed before docker network disconnect bridge. The fresh-clone offline test execution and byte verification ran with the container disconnected from the network. Fixture paths were local /tmp paths; messages mentioning staging in fixture test output referred only to those disposable local fixtures. The temporary test container was removed.
-
-No staging runtime, staging mutations, server snapshot/restore, deploy, database/cache operation, live fixture, real email, scheduler/payment execution, browser QA or production access occurred. Live marker and effective runtime state were not inspected in this local continuation.
-Production touched: NO.
-
-Runtime activation of staging protections is NOT CONFIRMED. It must be separately confirmed before any future staging deploy. This report does not authorize deployment or merging.
-
-Exact changed-file inventory relative to the declared baseline follows.
-
-- .gitattributes
-- deployment/deploy-staging.sh
-- deployment/tests/immutable-package-snapshots-harness.sh
-- license.txt
-- wp-admin/about.php
-- wp-content/mu-plugins/raspitajse-candidate-desired-positions.php
-- wp-content/mu-plugins/tests/candidate-desired-positions-harness.php
-- wp-content/plugins/raspitajse-commerce/includes/class-raspitajse-employer-job-posting.php
-- wp-content/plugins/raspitajse-commerce/includes/class-raspitajse-free-job-access-policy.php
-- wp-content/plugins/raspitajse-commerce/raspitajse-commerce.php
-- wp-content/plugins/raspitajse-commerce/tests/employer-job-posting-harness.php
-- wp-content/plugins/raspitajse-commerce/tests/stacked-product-journey-harness.php
-- wp-content/plugins/raspitajse-communications/assets/application-tracking.js
-- wp-content/plugins/raspitajse-communications/includes/class-candidate-application-tracking.php
-- wp-content/plugins/raspitajse-communications/includes/class-private-message-notifications.php
-- wp-content/plugins/raspitajse-communications/raspitajse-communications.php
-- wp-content/plugins/raspitajse-communications/tests/candidate-application-tracking-harness.php
-- wp-content/plugins/raspitajse-communications/tests/private-message-notifications-harness.php
-- wp-includes/images/crystal/license.txt
-- wp-includes/js/codemirror/csslint.js
-- wp-includes/template.php
-- wp-includes/version.php
+WP-CLI bootstrap count 0.
+Preload guard not created; guard hash/lint/removal not applicable.
+No task-private server directory was created; cleanup not applicable.
+Locks not acquired. Required order remains cron-runner then runtime, release runtime then cron-runner. No locks are held by this task.
+SQL read-only/mutating/unknown counters NOT MEASURED.
+WP HTTP API attempts and guard-intercepted counters NOT MEASURED.
+Approved WordPress transport attempts 0; actual and unexpected WordPress external transport counters NOT MEASURED. No WordPress process was started.
+Runtime business mutation attributable to task 0.
+Deploy NO. Snapshot/restore NO. Scheduler execution NO. Mail/payment execution NO.
+Production access 0. Production touched: NO.
+Runtime activation of all staging protections remains unconfirmed and is mandatory before staging deployment. Task 2.68.4 is not ready and was not executed.
+Final read-only check confirmed marker and both remote Git SHAs unchanged.
