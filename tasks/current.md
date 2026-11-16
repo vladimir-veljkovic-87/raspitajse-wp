@@ -1,170 +1,250 @@
-# Zadatak 2.68.1 — Resume and complete the byte-exact WordPress 7.1.2 release preparation
+# Zadatak 2.69 — Klasifikuj bootstrap housekeeping i potvrdi staging zaštite
 
 Status: READY
 Staging baseline: f6093c11d71ddc175ebf83fc69453c20aaca5239
-Product release-candidate base: 45d6e8c3aafb5f48ce9d50fd61924886a0924c2d
-Previous task: 2.68
-Supersedes execution retry of: 2.56.1
-Target: repository-only continuation of release preparation
+Release candidate branch: feature/task-2.68.2-wp-7.1.2-release-preparation
+Release candidate HEAD: 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0
+Previous task: 2.68.3 — PARTIAL
 Production: FORBIDDEN
-Time budget: 50 minutes
 Risk class: AUTONOMOUS_SAFE
-Mutation class: RELEASE_PREPARATION_REPOSITORY_ONLY
+Mutation class: BOUNDED_TECHNICAL_HOUSEKEEPING
+Deployment: FORBIDDEN
 
-## Objective
+## Cilj
 
-Resume the interrupted Task 2.68 work, resolve the proven Git line-ending normalization blocker with the smallest path-specific `.gitattributes` exception, and complete one remote release-preparation branch containing:
+Ponovi kontrolisanu staging runtime proveru iz Zadatka 2.68.3, uz eksplicitnu dozvolu za precizno klasifikovano uklanjanje najviše tri DROP telemetry/reporting WP-Cron hooka:
 
-1. the accepted 2.63–2.67 product stack;
-2. immutable exact-commit package snapshot/restore tooling; and
-3. canonical WordPress core byte-identical to the verified official WordPress 7.1.2 package.
+- `elementor/tracker/send_event`;
+- `monsterinsights_feature_feedback_checkin`;
+- `wpforms_email_summaries_cron`.
 
-Required result: `PASS: IMMUTABLE_WORDPRESS_7_1_2_PRODUCT_RELEASE_BRANCH_READY`.
+Potvrdi runtime aktivaciju staging mail-safety, cron-recovery i Action Scheduler drop/async-dispatch zaštita.
 
-This task does not resume Task 2.56.1. Its E2E intent is superseded by the later complete product batch deploy/QA contract. It must not deploy, mutate staging/runtime/database/cache, create live fixtures, execute browser QA, or access production.
+Obavezni uspešan rezultat:
 
-## Fresh proven state
+`PASS: STAGING_RUNTIME_PROTECTIONS_ATTESTED`
 
-- `origin/staging` and the live staging marker are `f6093c11d71ddc175ebf83fc69453c20aaca5239`.
-- `origin/codex-tasks` at `4d57f78b25b5dfce0286c444b3ab5554eefa9916` contained Task 2.68 with this same baseline.
-- The 2026-11-09 report for Task 2.56.1 stopped before locks, fixtures, source changes or deploy because that obsolete task required `ff42719f218e440b168b57690b70a2402ee66809`.
-- Host checkout was clean on local branch `feature/task-2.68-wp-7.1.2-release-preparation` at local-only commit `1da38e2cb4d53e1f4356d6454248b9a276c2c6fa`.
-- No remote branch with that name existed when this task was authored. The local-only commit must be inspected, not assumed valid and not destroyed.
-- Task 2.68 exposed a byte-identity blocker: repository-wide text rules normalize line endings, while some files in the official package require their original bytes. `.gitattributes` was outside the original allowed scope.
-- The accepted product RC is `45d6e8c3aafb5f48ce9d50fd61924886a0924c2d` with the exact 2.63–2.67 ancestry recorded in Task 2.68.
-- Official runtime/core manifest SHA-256 remains `8b4f6e4a20b87010eeb3730a533fd5d16119ed49c6342f7f33f5a47f5b26e2a2`.
+Ovaj zadatak ne deployuje release candidate, ne spaja grane, ne pravi snapshot i ne pristupa produkciji.
 
-## Preconditions and safe local-branch adoption
+## Obavezna početna provera
 
-1. Fetch `origin/staging`, `origin/codex-tasks`, `origin/codex-reports` and remote feature refs.
-2. Prove `origin/staging` and live marker equal the declared baseline, staging environment is exact, guards remain active, and no competing Git/rsync/deploy/core-update process exists.
-3. Prove remote `feature/task-2.67-product-journey-integration` equals the product RC and retains the accepted ancestry.
-4. Confirm `feature/task-2.68-wp-7.1.2-release-preparation` still has no remote ref before any push.
-5. If the clean local branch and local-only commit named above exist:
-   - prove the product RC is an ancestor;
-   - inventory every commit and changed path from the product RC;
-   - inspect the complete diff for credentials, secrets, production paths, unsafe deletion, weakened guards and scope drift;
-   - adopt the local work only if every changed path fits Task 2.68 scope and every change is attributable to its snapshot tooling or official-core reconciliation objective.
-6. If the named local branch/commit no longer exists, create the branch from the exact product RC and perform the complete work below.
-7. Never reset, delete, overwrite, force-update or silently recreate an existing local branch. Unexpected ancestry/path/content is `BLOCKED: LOCAL_2_68_CONTINUATION_SCOPE_DRIFT`.
+Pročitaj u celosti:
 
-The obsolete 2.56.1 baseline is not a precondition for this task and must not be restored, checked out or used as application source.
+- `AGENTS.md`;
+- `CODEX_WORKFLOW.md`;
+- `CODEX_HOST_RESILIENCE.md`;
+- `STAGING_MUTATION_POLICY.md`;
+- `STAGING_DEFINITION_OF_DONE.md`;
+- najnoviji izveštaj Zadatka 2.68.3.
 
-## Allowed delta from the product RC
+Potvrdi:
 
-Only:
+- `origin/staging` je `f6093c11d71ddc175ebf83fc69453c20aaca5239`;
+- remote release candidate je `0c233ad646d7f8f0bac1079eb21f7e73b43d29b0`;
+- staging marker sadrži baseline;
+- staging realpath je tačno `/home/u601262303/domains/raspitajse.com/public_html/public_html_stage`;
+- working tree je čist;
+- nema konkurentnog Git, rsync, deploy, snapshot, restore, core-update ili queue-runner procesa.
 
-- `.gitattributes`;
-- `deployment/deploy-staging.sh`;
-- focused offline tests under `deployment/tests/`;
-- `license.txt`;
-- `wp-admin/about.php`;
-- `wp-includes/images/crystal/license.txt`;
-- `wp-includes/js/codemirror/csslint.js`;
-- `wp-includes/template.php`;
-- `wp-includes/version.php`.
+Pri pregledu procesa ne prikazuj pune argumente koji mogu sadržati tajne. Koristi samo PID, naziv procesa, stanje i trajanje.
 
-No 2.63–2.67 product file may change. No vendor plugin/theme, configuration, secret, upload, database, production or unrelated WordPress path may change.
+## Eksplicitno dozvoljene mutacije
 
-## Required correction — exact-path EOL preservation
+Tokom jednog WordPress bootstrapa dozvoljeno je isključivo:
 
-1. Read the existing `.gitattributes` rules from the product RC and prove the global `text`/`eol=lf` rules are the cause of the byte mismatch.
-2. Download and verify the official archive exactly as defined below, then identify by byte comparison which of the six official delta files cannot survive the current Git clean/smudge rules byte-identically.
-3. Add exceptions only for the exact affected paths. Use path-specific attributes that disable text normalization and remove inherited EOL conversion, equivalent to `-text !eol`.
-4. Do not weaken rules for any directory, wildcard, file type, product path or additional core file.
-5. After applying attributes, copy the six verified official files, stage them, and prove both:
-   - staged/index blobs equal the official archive bytes; and
-   - committed Git blobs equal the official archive bytes after commit.
-6. Prove a fresh checkout of the final commit reproduces the complete official canonical-core manifest exactly.
+- uklanjanje postojećih instanci tri navedena WP-Cron hooka;
+- odgovarajući strogo ograničeni update WordPress `cron` optiona;
+- cache invalidacija/populacija neposredno izazvana tim updateom ili read-only bootstrapom;
+- privremeni task fajlovi samo pod `/tmp/raspitajse-task-2.69-*`;
+- preuzimanje i oslobađanje propisanih lockova.
 
-If exact byte identity requires anything broader than `.gitattributes` plus exact-path exceptions for a subset of the six authorized core files, stop with `BLOCKED: BYTE_EXACT_CORE_REQUIRES_BROADER_POLICY_CHANGE`.
+Ova tri hooka su klasifikovana kao `DROP` tehnički reporting/telemetry poslovi bez poslovnog značenja.
 
-## Official WordPress 7.1.2 reference
+Nije dozvoljeno:
 
-Use only:
+- uklanjanje ili promena bilo kog drugog cron događaja;
+- izvršavanje cron callbacka ili Action Scheduler akcije;
+- pokretanje WP-Crona ili queue runnera;
+- poslovni, korisnički, content, payment, application, message ili order upis;
+- mail ili stvarni spoljni HTTP transport;
+- promena staging fajlova ili deploy markera.
 
-- `https://wordpress.org/wordpress-7.1.2.zip`;
-- published MD5 `c332b9a5bcab2dea2a263b649bdb2a1c`;
-- published SHA-1 `fab6ce3a905a1f4085ffff7fd9920bc693f5dd94`.
+## T0 cron dokaz bez WordPress bootstrapa
 
-In a fresh non-symlink task-private `/tmp/raspitajse-task-2.68.1-*` directory, perform exactly one bounded unauthenticated HTTPS GET. Allow at most two redirects, every hop limited to `wordpress.org` or `downloads.wordpress.org`. No cookies, authorization, request body, referrer, site data, retry, mirror or alternate URL.
+Pre WordPress bootstrapa, koristeći staging-scoped WP-CLI DB alat koji ne učitava WordPress plugine:
 
-Before extraction require a regular non-symlink archive, exact published MD5/SHA-1, recorded SHA-256, and a safe ZIP containing only one `wordpress/` prefix with no traversal, absolute path, symlink or device entry.
+1. pročitaj samo `cron` option iz staging baze;
+2. ne prikazuj sirovi ili serijalizovani sadržaj;
+3. analiziraj ga task-private PHP helperom;
+4. zabeleži samo:
+   - broj instanci svakog od tri dozvoljena hooka;
+   - ukupan broj cron događaja;
+   - SHA-256 kanonskog cron stanja nakon logičkog uklanjanja samo ta tri hooka.
 
-Require:
+Helper ne sme prikazivati argumente cron događaja, korisničke podatke ili option sadržaj.
 
-- package WordPress version 7.1.2 and DB version 61833;
-- official aggregate canonical-core manifest `8b4f6e4a20b87010eeb3730a533fd5d16119ed49c6342f7f33f5a47f5b26e2a2`;
-- pre-import content differences at exactly the six authorized paths and no others;
-- post-import/fresh-checkout differences of zero: no missing, extra, type or content mismatch.
+Ako se cron option ne može bezbedno analizirati bez prikazivanja sadržaja, zaustavi se pre bootstrapa sa `PARTIAL`.
 
-Remove only the exact task-private directory after evidence is recorded and prove it absent.
+## Privremeni preload guard
 
-## Immutable snapshot tooling completion
+U novom regularnom non-symlink direktorijumu `/tmp/raspitajse-task-2.69-<collision-resistant-id>` napravi minimalan WP-CLI preload guard koji pre WordPress učitavanja postavlja, ako već nisu postavljene:
 
-Complete and validate the original Task 2.68 tooling contract:
+- `DISABLE_WP_CRON=true`;
+- `AUTOMATIC_UPDATER_DISABLED=true`;
+- `WP_AUTO_UPDATE_CORE=false`;
+- `WP_HTTP_BLOCK_EXTERNAL=true`;
+- `SAVEQUERIES=true`.
 
-- versioned snapshot root under `/home/u601262303/deploy-state`;
-- immutable deterministic directory keyed by exact checked-out commit SHA;
-- atomic same-parent temporary creation and rename only after verification;
-- exact package scope: `wp-admin`, `wp-includes`, `wp-content/plugins/wpforms-lite`, and the existing 15 canonical root files;
-- format version, exact commit and deterministic aggregate SHA-256 manifest in metadata;
-- reject existing same-commit snapshot without altering it;
-- exact-HEAD restore only, with no latest/glob selection or implicit legacy fallback;
-- validate types, metadata commit, completeness and manifest before any target write;
-- preserve existing allowlist, staging-root, branch, clean-tree, marker and Communications parity guards;
-- no automatic pruning or retention deletion.
+Guard mora:
 
-The fixed legacy snapshot `/home/u601262303/deploy-state/raspitajse-core-wpforms-rollback` must remain byte-for-byte untouched. Do not run snapshot or restore modes against real server paths in this task.
+- proći `php -l`;
+- biti pregledan i SHA-256 zabeležen;
+- ne čitati niti prikazivati konfiguraciju;
+- ne registrovati događaje;
+- ne slati mail;
+- ne praviti mrežni zahtev;
+- ne menjati bazu.
 
-## Offline and regression gates
+Proveri da WP-CLI `--require` učitava guard pre WordPress bootstrapa. Ako to nije dokazivo, STOP pre bootstrapa.
 
-Run from task-private fixtures only:
+## Lockovi
 
-- `bash -n` for changed shell files;
-- `shellcheck` only if already installed;
-- immutable snapshot harness twice from clean fixture roots, including atomic creation, deterministic manifest, duplicate rejection, two commit keys, exact-key restore, wrong metadata, changed/missing/extra entries, symlink rejection, no legacy fallback, bounded failure cleanup and unchanged unrelated/legacy fixtures;
-- PHP lint for the changed PHP core files and every cumulative owned product PHP file in the 2.67 manifest;
-- `git diff --check`;
-- all accepted 2.63–2.66 focused harnesses;
-- the 2.67 cross-feature product harness twice;
-- unchanged hashes for every recorded 2.67 product file;
-- exact final allowed-path inventory from the product RC;
-- fresh-checkout official-core manifest verification after the final commit.
+Nonblocking preuzmi:
 
-No live database, fixtures, SMTP, payment, scheduler execution, browser, external HTTP beyond the one fixed archive GET, or production access.
+1. `/tmp/raspitajse-staging-owned-cron-runner.lock`;
+2. `/tmp/raspitajse-staging-runtime.lock`.
 
-## Commit and push boundary
+Ako neki lock nije odmah dostupan, oslobodi prethodni i objavi `PARTIAL: STAGING_RUNTIME_LOCK_BUSY`.
 
-- Preserve valid adopted local commits; add the smallest corrective/finalizing commit(s) without rewriting history.
-- Push only `feature/task-2.68-wp-7.1.2-release-preparation` after all gates pass.
-- Never force-push.
-- Do not merge, fast-forward or update `staging`, previous feature branches or `main`.
-- Verify remote feature HEAD equals local HEAD and the product RC ancestry is exact.
-- Produce a categorized path/hash manifest for product files, deployment tooling/tests, `.gitattributes`, and six official core files.
+Lockove oslobodi obrnutim redom.
 
-## Later batch deploy/QA contract — define, do not execute
+## Jedna runtime proba
 
-The report must define the next single guarded task from the exact remote 2.68.1 HEAD:
+Pokreni tačno jedan staging-scoped WP-CLI bootstrap sa preload guardom, `--skip-plugins` i `--skip-themes`, bez cron ili Action Scheduler izvršavanja.
 
-1. acquire nonblocking locks in order `/tmp/raspitajse-staging-owned-cron-runner.lock`, then `/tmp/raspitajse-staging-runtime.lock`; release in reverse order;
-2. create and fully verify a fresh immutable snapshot keyed by the exact release commit before deploy;
-3. deploy the complete release once, never feature-by-feature;
-4. run server-side candidate/employer journey first, including the still-needed E2E intent from 2.56.1, then human desktop/mobile browser QA;
-5. use collision-resistant fixture ledger and delete only ledger-owned fixtures, proving T0/T1 protected-state equality;
-6. intercept staging mail, payment and external HTTP before real transport;
-7. require manual CAPTCHA completion only—never disable, bypass or automate it;
-8. rollback to the fresh verified immutable snapshot on any failed gate and prove Git/live/marker/protected-state alignment;
-9. perform no production action.
+MU plugini i drop-in komponente moraju ostati učitani.
 
-## Zero-runtime-mutation contract
+Bezbedno prikaži samo:
 
-Required counters: staging/runtime changes `0`; deploy-state/legacy snapshot changes `0`; real server snapshot/restore/deploy invocations `0`; database/cache changes `0`; live fixtures `0`; real mail `0`; scheduler/payment execution `0`; browser requests `0`; unexpected external requests `0`; production access `0`.
+- `wp_get_environment_type()`;
+- relevantne učitane MU-plugin basenames;
+- očekivane `function_exists` rezultate;
+- očekivane `has_action`/`has_filter` rezultate i prioritete;
+- vrednosti zaštitnih boolean konstanti;
+- agregirane SQL brojače.
 
-Do not acquire staging mutation locks because this task is repository-only.
+Potvrdi najmanje:
 
-## Report
+### Mail safety
 
-Publish exactly one Zadatak 2.68.1 report through `codex-reports`, verify it remotely, and STOP.
+- `raspitajse_staging_mail_safety_is_staging()` postoji i vraća aktivno stanje;
+- `pre_wp_mail`, `wp_mail` i `phpmailer_init` zaštitni callbackovi su registrovani na očekivanim prioritetima.
 
-Report: preconditions; handling of the local-only `1da38e2c…` continuation; exact adopted commits/paths; `.gitattributes` root cause and exact exceptions; official archive transport/digests/safety; index/commit/fresh-checkout byte proofs; snapshot tooling and harness results; complete product regressions; final remote feature HEAD and categorized hash manifest; zero-mutation counters; unchanged staging/marker/legacy material; exact next batch deploy/QA contract; and `Production touched: NO`.
+### Cron recovery
+
+- `raspitajse_staging_cron_recovery_guard_is_active()` postoji i vraća aktivno stanje;
+- `DISABLE_WP_CRON === true`;
+- telemetry/reporting disable filteri i callbackovi su registrovani.
+
+### Action Scheduler
+
+- `raspitajse_staging_disable_action_scheduler_async_dispatch` je registrovan;
+- svi postojeći `pre_as_*` DROP filteri su registrovani na očekivanim prioritetima;
+- nije pokrenut queue runner niti bilo koja Action Scheduler akcija.
+
+## SQL klasifikacija
+
+Interno pregledaj `SAVEQUERIES`, ali nikada ne prikazuj SQL tekst.
+
+Dozvoljeni mutating SQL je samo update staging `cron` optiona koji odgovara uklanjanju dozvoljenih hookova.
+
+Svaki drugi mutating ili neklasifikovan SQL je hard stop:
+
+`FAIL: UNEXPECTED_BOOTSTRAP_DATABASE_MUTATION`
+
+## T1 cron dokaz
+
+Posle bootstrapa, dok su lockovi još preuzeti, ponovi isti sanitizovani DB pregled bez dodatnog WordPress bootstrapa.
+
+Obavezno:
+
+- sva tri dozvoljena hooka imaju broj `0`;
+- kanonski SHA-256 cron stanja bez ta tri hooka jednak je T0 vrednosti;
+- ukupan pad događaja odgovara isključivo T0 broju instanci ta tri hooka;
+- nijedan drugi cron događaj nije dodat, uklonjen ili promenjen.
+
+Ako se promenio bilo koji drugi događaj, objavi `FAIL: UNEXPECTED_CRON_STATE_DRIFT` i ne pokušavaj fix-forward.
+
+## Transport i spoljašnji efekti
+
+Dozvoljeni su WP HTTP API pokušaji samo ako su deterministički blokirani pre transporta.
+
+Obavezno:
+
+- approved external transport attempts: `0`;
+- actual external network requests: `0`;
+- unexpected external network requests: `0`;
+- real mail: `0`;
+- scheduler callback executions: `0`;
+- Action Scheduler executions: `0`;
+- payment operations: `0`.
+
+Ako stvarni transport ne može nedvosmisleno da se utvrdi, rezultat je `PARTIAL: EXTERNAL_TRANSPORT_EVIDENCE_AMBIGUOUS`.
+
+## Cleanup
+
+Uvek:
+
+1. oslobodi runtime lock;
+2. oslobodi cron-runner lock;
+3. ukloni samo sopstveni `/tmp/raspitajse-task-2.69-*`;
+4. potvrdi da je uklonjen;
+5. potvrdi da su staging marker i obe Git reference nepromenjeni;
+6. potvrdi da nije bilo deploya, snapshota ili restorea.
+
+Produkcijska putanja i produkcijska baza ne smeju biti čitane niti menjane.
+
+## PASS kriterijumi
+
+Zadatak je PASS samo ako:
+
+- runtime environment je tačno `staging`;
+- sve tri zaštite su aktivne;
+- uklonjeni su isključivo dozvoljeni DROP hookovi;
+- T0/T1 kanonski hash ostatka cron stanja je isti;
+- nema drugog DB upisa;
+- nema scheduler/action izvršavanja;
+- nema realnog maila ili spoljnog transporta;
+- marker i Git stanje su nepromenjeni;
+- svi privremeni fajlovi i lockovi su očišćeni;
+- produkcija nije pristupana.
+
+## Sledeći zadatak — samo definisati
+
+Ako 2.69 prođe, preporuči:
+
+`Zadatak 2.70 — Immutable snapshot i kontrolisani combined staging deploy`
+
+Nemoj ga izvršavati u ovom zadatku.
+
+## Izveštaj
+
+Objavi jedan izveštaj:
+
+`Zadatak 2.69 — Klasifikuj bootstrap housekeeping i potvrdi staging zaštite`
+
+Izveštaj mora sadržati:
+
+- T0/T1 broj dozvoljenih hookova;
+- T0/T1 kanonski hash bez njihovog sadržaja;
+- agregirane SQL kategorije;
+- runtime zaštitne simbole i hookove;
+- HTTP/transport brojače;
+- lock redosled i oslobađanje;
+- cleanup;
+- deploy: `NO`;
+- snapshot/restore: `NO`;
+- production access: `0`;
+- `Production touched: NO`.
+
+Posle potvrde objavljenog izveštaja — STOP.
