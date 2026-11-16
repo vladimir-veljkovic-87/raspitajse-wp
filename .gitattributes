@@ -24,3 +24,6 @@
 
 wp-content/plugins/wp-job-board-pro/** -text !eol
 wp-content/plugins/wp-job-board-pro-wc-paid-listings/** -text !eol
+/license.txt -text !eol whitespace=trailing-space,space-before-tab,cr-at-eol
+/wp-includes/images/crystal/license.txt -text !eol whitespace=trailing-space,space-before-tab,cr-at-eol
+/wp-includes/js/codemirror/csslint.js -text !eol whitespace=trailing-space,space-before-tab,cr-at-eol
