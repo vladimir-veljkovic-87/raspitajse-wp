@@ -77,6 +77,11 @@ Usage:
   ./deploy-staging.sh changed [staging|feature/<branch>]
   ./deploy-staging.sh snapshot-packages [staging|feature/<branch>]
   ./deploy-staging.sh restore-packages [staging|feature/<branch>]
+  ./deploy-staging.sh snapshot-release <branch> [previous-sha]
+  ./deploy-staging.sh restore-release <branch> <previous-sha>
+
+Release transactions require Python 3 and use the exact previous/HEAD pair.
+An explicit previous-sha is required when the marker is absent and for restore.
 
 Default branch: staging
 EOF
@@ -108,7 +113,7 @@ trap cleanup EXIT
 trap on_error ERR
 
 case "${MODE}" in
-  full|changed|snapshot-packages|restore-packages) ;;
+  full|changed|snapshot-packages|restore-packages|snapshot-release|restore-release) ;;
   *) usage; exit 2 ;;
 esac
 
@@ -378,7 +383,9 @@ changed_deploy() {
     fi
 
     echo "Syncing changed file: ${path}"
-    rsync -aR --checksum --no-times --omit-dir-times --itemize-changes -- "${path}" "${TARGET_SITE_ROOT}/"
+    assert_no_symlink_components "${REPO_DIR}" "${path}"
+    assert_no_symlink_components "${TARGET_SITE_ROOT}" "${path}"
+    rsync -aR --no-implied-dirs --checksum --no-times --omit-dir-times --itemize-changes -- "${path}" "${TARGET_SITE_ROOT}/"
   done < "${TMP_CHANGED}"
 
   while IFS= read -r -d '' path; do
@@ -391,6 +398,7 @@ changed_deploy() {
     fi
 
     echo "Removing deleted file: ${path}"
+    assert_no_symlink_components "${TARGET_SITE_ROOT}" "${path}"
     rm -f -- "${TARGET_SITE_ROOT}/${path}"
   done < "${TMP_DELETED}"
 
@@ -399,6 +407,7 @@ changed_deploy() {
   fi
 
   for path in "${VENDOR_RECONCILE_ROOTS[@]}"; do
+    git diff --quiet "${previous_sha}" "${HEAD_SHA}" -- "${path}" && continue
     [[ -d "${REPO_DIR}/${path}" ]] \
       || fail "Vendor reconciliation source is missing: ${path}"
     [[ ! -L "${TARGET_SITE_ROOT}/${path}" ]] \
@@ -436,7 +445,216 @@ changed_deploy() {
   done
 }
 
+release_transaction() {
+  python3 - "${MODE}" "${3:-}" "${HEAD_SHA}" "${TARGET_SITE_ROOT}" "${STATE_FILE}" "${MANIFEST_FILE}" <<'PYTHON'
+import fcntl
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import stat
+import subprocess
+import sys
+import tempfile
+
+mode, previous, head, site_name, marker_name, communications_name = sys.argv[1:]
+site = Path(site_name)
+marker = Path(marker_name)
+communications = Path(communications_name)
+snapshot_root = marker.parent / "raspitajse-release-snapshots-v1"
+
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
+def safe(path):
+    for part in [path, *path.parents]:
+        require(not part.is_symlink(), "Symlink in transaction path")
+    if path.exists():
+        require(path.is_file() or path.is_dir(), "Unsupported filesystem type")
+
+def git(*args):
+    return subprocess.check_output(["git", *args])
+
+def encoded(value):
+    return (json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode()
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+def inventory(path):
+    safe(path)
+    if not path.exists():
+        return [["", "absent"]]
+    result = []
+    for entry in [path, *sorted(path.rglob("*"))] if path.is_dir() else [path]:
+        safe(entry)
+        relative = str(entry.relative_to(path))
+        if entry.is_dir():
+            result.append([relative, "directory"])
+        else:
+            result.append([relative, "file", digest(entry.read_bytes())])
+    return result
+
+def copy(source, target):
+    if source.is_dir():
+        shutil.copytree(source, target)
+    else:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+
+def remove(path):
+    safe(path)
+    if path.is_dir():
+        shutil.rmtree(path)
+    elif path.exists():
+        path.unlink()
+
+safe(site)
+safe(marker)
+safe(communications)
+require(site.is_dir() and marker.parent.is_dir(), "Target roots unavailable")
+if mode == "snapshot-release":
+    if marker.exists():
+        recorded = marker.read_text().strip()
+        require(not previous or previous == recorded, "Previous SHA disagrees with marker")
+        previous = recorded
+else:
+    require(bool(previous), "restore-release requires explicit previous SHA")
+require(re.fullmatch("[0-9a-f]{40}", previous or ""), "Exact previous SHA required")
+require(re.fullmatch("[0-9a-f]{40}", head), "Exact HEAD required")
+require(git("rev-parse", "HEAD").decode().strip() == head, "Checkout HEAD mismatch")
+git("cat-file", "-e", previous + "^{commit}")
+if mode == "restore-release" and marker.exists():
+    require(marker.read_text().strip() in (previous, head), "Target transaction mismatch")
+
+packages = ["wp-admin", "wp-includes", "wp-content/plugins/wpforms-lite"]
+roots = "index.php license.txt readme.html wp-activate.php wp-blog-header.php wp-comments-post.php wp-cron.php wp-links-opml.php wp-load.php wp-login.php wp-mail.php wp-settings.php wp-signup.php wp-trackback.php xmlrpc.php".split()
+vendors = ["wp-content/themes/superio", "wp-content/plugins/apus-framework", "wp-content/plugins/revslider"]
+allowed = vendors + ["wp-content/themes/superio-child", "wp-content/plugins/wp-job-board-pro", "wp-content/plugins/wp-job-board-pro-wc-paid-listings", "wp-content/plugins/raspitajse-communications", "wp-content/plugins/raspitajse-commerce", "wp-content/mu-plugins"]
+retired = ["wp-content/plugins/hostinger-ai-assistant", "wp-content/plugins/hostinger-easy-onboarding", "wp-content/plugins/google-analytics-for-wordpress"]
+changed = [p.decode() for p in git("diff", "--name-only", "--no-renames", "-z", previous, head).split(b"\0") if p]
+
+def under(path, root):
+    return path == root or path.startswith(root + "/")
+
+plan = set()
+if any(p in roots or any(under(p, r) for r in packages) for p in changed):
+    plan.update(packages + roots)
+for vendor in vendors:
+    if any(under(p, vendor) for p in changed):
+        plan.add(vendor)
+for path in changed:
+    if any(under(path, r) for r in allowed) and not any(under(path, r) for r in plan):
+        plan.add(path)
+for path in retired:
+    before = git("ls-tree", "-r", "--name-only", previous, "--", path)
+    after = git("ls-tree", "-r", "--name-only", head, "--", path)
+    if before and not after:
+        plan.add(path)
+plan = sorted(plan)
+require(all(not p.startswith("/") and ".." not in Path(p).parts for p in plan), "Unsafe mutation plan")
+targets = [site / p for p in plan] + [communications, marker]
+labels = ["site/" + p for p in plan] + ["state/communications", "state/marker"]
+
+safe(snapshot_root)
+if mode == "snapshot-release":
+    snapshot_root.mkdir(exist_ok=True)
+require(snapshot_root.is_dir(), "Missing snapshot root")
+final = snapshot_root / (previous + "--" + head)
+
+def verify(snapshot):
+    safe(snapshot)
+    require(snapshot.is_dir(), "Missing exact transaction snapshot")
+    require({p.name for p in snapshot.iterdir()} == {"metadata.json", "manifest.json", "payload"}, "Unexpected snapshot inventory")
+    safe(snapshot / "metadata.json")
+    safe(snapshot / "manifest.json")
+    safe(snapshot / "payload")
+    metadata = json.loads((snapshot / "metadata.json").read_bytes())
+    data = (snapshot / "manifest.json").read_bytes()
+    require(metadata == {"format": 1, "previous": previous, "head": head, "manifest_sha256": digest(data)}, "Metadata mismatch")
+    manifest = json.loads(data)
+    require(manifest["plan"] == labels, "Mutation plan mismatch")
+    require(set(manifest) == {"plan", "entries", "absent_parents"}, "Manifest schema mismatch")
+    require(len(manifest["entries"]) == len(targets), "Manifest completeness mismatch")
+    expected_payload = set()
+    for index, entries in enumerate(manifest["entries"]):
+        payload = snapshot / "payload" / str(index)
+        require(inventory(payload) == entries, "Payload manifest mismatch")
+        if entries != [["", "absent"]]:
+            expected_payload.add(str(index))
+    require({p.name for p in (snapshot / "payload").iterdir()} == expected_payload, "Extra payload")
+    for relative in manifest["absent_parents"]:
+        require(relative and ".." not in Path(relative).parts and not relative.startswith("/"), "Unsafe parent ledger")
+        parent = site / relative
+        require(any(parent in target.parents for target in targets[:-2]), "Parent outside plan")
+    return manifest
+
+if mode == "snapshot-release":
+    require(not final.exists() and not final.is_symlink(), "Snapshot already exists")
+    for target in targets:
+        inventory(target)
+    absent_parents = set()
+    for target in targets[:-2]:
+        for parent in target.parents:
+            if parent == site:
+                break
+            if not parent.exists():
+                absent_parents.add(str(parent.relative_to(site)))
+    temporary = Path(tempfile.mkdtemp(prefix="." + previous + "--" + head + ".tmp.", dir=snapshot_root))
+    try:
+        (temporary / "payload").mkdir()
+        entries = []
+        for index, target in enumerate(targets):
+            before = inventory(target)
+            if target.exists():
+                copy(target, temporary / "payload" / str(index))
+            require(inventory(temporary / "payload" / str(index)) == before, "Snapshot copy mismatch")
+            require(inventory(target) == before, "Runtime changed during snapshot")
+            entries.append(before)
+        manifest = {"plan": labels, "entries": entries, "absent_parents": sorted(absent_parents)}
+        data = encoded(manifest)
+        (temporary / "manifest.json").write_bytes(data)
+        (temporary / "metadata.json").write_bytes(encoded({"format": 1, "previous": previous, "head": head, "manifest_sha256": digest(data)}))
+        verify(temporary)
+        lock = os.open(snapshot_root, os.O_RDONLY)
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            require(not final.exists() and not final.is_symlink(), "Snapshot already exists")
+            os.rename(temporary, final)
+        finally:
+            os.close(lock)
+        print("PASS snapshot-release " + final.name)
+    finally:
+        if temporary.exists():
+            shutil.rmtree(temporary)
+else:
+    manifest = verify(final)
+    for target in targets:
+        inventory(target)
+    # Validate every target before the first write. State files are restored last.
+    for index, target in enumerate(targets):
+        if index == len(targets) - 2:
+            for checked, content in enumerate(targets[:-2]):
+                require(inventory(content) == manifest["entries"][checked], "Content restore verification failed")
+            for relative in sorted(manifest["absent_parents"], key=lambda p: len(Path(p).parts), reverse=True):
+                parent = site / relative
+                safe(parent)
+                if parent.exists():
+                    parent.rmdir()
+        payload = final / "payload" / str(index)
+        remove(target)
+        if payload.exists():
+            copy(payload, target)
+        require(inventory(target) == manifest["entries"][index], "Restored target mismatch")
+    require([inventory(p) for p in targets] == manifest["entries"], "Aggregate prestate mismatch")
+    print("PASS restore-release " + digest(encoded(manifest["entries"])))
+PYTHON
+}
 case "${MODE}" in
+  snapshot-release|restore-release) release_transaction "$@"; exit 0 ;;
   full) full_deploy ;;
   changed) changed_deploy ;;
   snapshot-packages) snapshot_packages; exit 0 ;;
