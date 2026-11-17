@@ -1,10 +1,10 @@
-# Zadatak 2.69.1 — Izoluj cache transport i potvrdi staging runtime zaštite
+# Zadatak 2.69.2 — Potvrdi staging zaštite bez čitanja DB konfiguracije
 
 Status: READY
 Staging baseline: f6093c11d71ddc175ebf83fc69453c20aaca5239
 Release candidate branch: feature/task-2.68.2-wp-7.1.2-release-preparation
 Release candidate HEAD: 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0
-Previous task: 2.69 — PARTIAL
+Previous task: 2.69.1 — PARTIAL
 Production: FORBIDDEN
 Risk class: AUTONOMOUS_SAFE
 Mutation class: BOUNDED_TECHNICAL_HOUSEKEEPING
@@ -13,21 +13,39 @@ Time budget: 45 minutes
 
 ## Cilj
 
-Završi runtime attestation koju Zadatak 2.69 nije pokrenuo zato što Hostinger zabranjuje `strace`, a LiteSpeed object-cache može direktno da otvori Redis/Memcached socket.
+Završi jednu kontrolisanu staging WordPress runtime proveru iz 2.69/2.69.1.
 
-Koristi dokazanu LiteSpeed fail-closed putanju `LITESPEED_OC_FAILURE` da pre WordPress učitavanja deterministički onemogući svaki Redis/Memcached connect/pconnect/addServer transport, zatim izvrši tačno jedan kontrolisani staging bootstrap i potvrdi:
+Prethodni zadatak nije otkrio novi runtime problem. Zaustavljen je samo zato što je pokušaj čitanja `DB_HOST` radi klasifikacije transporta odbijen pravilom koje zabranjuje čitanje `wp-config.php`.
 
-1. staging mail-safety zaštitu;
-2. cron-recovery zaštitu;
-3. Action Scheduler drop/async-dispatch zaštitu;
-4. da su uklonjena samo tri unapred klasifikovana DROP telemetry/reporting cron hooka;
-5. da nije bilo spoljnog mrežnog transporta.
+Ovaj zadatak unapred klasifikuje normalnu baznu konekciju koju postojeća staging WordPress instalacija koristi kroz tačno odobrenu staging putanju kao:
+
+`APPROVED_INTERNAL_STAGING_DB_TRANSPORT`
+
+Nije potrebno niti dozvoljeno utvrđivati, čitati ili prikazivati DB host, port, socket, username, password ili bilo koju `wp-config.php` vrednost.
 
 Obavezni uspešan rezultat:
 
 `PASS: STAGING_RUNTIME_PROTECTIONS_ATTESTED_WITH_CACHE_TRANSPORT_DISABLED`
 
 Ne deployuj, ne pravi snapshot, ne menjaj Git grane i ne pristupaj produkciji.
+
+## Šta ovaj zadatak izričito superseduje
+
+Superseduje samo sledeći neuspešni precondition iz 2.69.1:
+
+- čitanje ili klasifikovanje `DB_HOST`;
+- dokazivanje da je DB host loopback, Unix socket ili određeni hostname.
+
+Postojeća DB konekcija WordPressa iz odobrene staging putanje je unapred odobren interni staging servis.
+
+Ovo odobrenje:
+
+- važi samo za staging WordPress root;
+- ne važi za produkcijsku bazu;
+- ne dozvoljava čitanje konfiguracije;
+- ne dozvoljava proizvoljne SQL upise;
+- ne dozvoljava prikaz kredencijala;
+- ne klasifikuje Redis, Memcached, HTTP, SMTP ili druge sockete kao dozvoljene.
 
 ## Obavezni kontekst
 
@@ -38,71 +56,65 @@ Pročitaj u celosti:
 - `CODEX_HOST_RESILIENCE.md`;
 - `STAGING_MUTATION_POLICY.md`;
 - `STAGING_DEFINITION_OF_DONE.md`;
-- izveštaje Zadatka 2.68.3 i 2.69;
-- aktivne staging kopije:
-  - `wp-content/object-cache.php`;
-  - LiteSpeed `object.lib.php`;
-  - LiteSpeed `object-cache.cls.php`;
-  - LiteSpeed `object-cache-wp.cls.php`;
-  - sve MU plugine učitane pri bootstrapu.
+- izveštaje 2.68.3, 2.69 i 2.69.1.
 
-Nemoj koristiti `strace`, `ptrace`, namespace izolaciju niti ponavljati neuspešni tracer test iz 2.69.
+Prihvati statički dokaz iz 2.69.1 da LiteSpeed `_connect()` proverava `LITESPEED_OC_FAILURE` pre Redis/Memcached transporta. Ponovo proveri relevantne hash vrednosti, ali ne ponavljaj `strace`, `ptrace`, namespace probu ili DB host klasifikaciju.
 
 ## Preflight
 
-Potvrdi bez WordPress bootstrapa:
+Bez WordPress bootstrapa potvrdi:
 
 - `origin/staging=f6093c11d71ddc175ebf83fc69453c20aaca5239`;
 - release candidate remote HEAD je `0c233ad646d7f8f0bac1079eb21f7e73b43d29b0`;
 - working tree je čist;
 - staging marker je regularan non-symlink fajl sa tačnim baseline-om;
 - staging realpath je tačno `/home/u601262303/domains/raspitajse.com/public_html/public_html_stage`;
-- nema konkurentnog Git, rsync, deploy, snapshot, restore, core-update, WP-Cron ili queue-runner procesa.
+- nema konkurentnog Git, rsync, deploy, snapshot, restore, core-update, WP-Cron ili queue-runner procesa;
+- MU-plugin, object-cache drop-in i LiteSpeed hash vrednosti odgovaraju izveštaju 2.69.1.
 
-Procesni dokaz sme sadržati samo PID, command name, state i elapsed time, bez punih argumenata.
+Procesni dokaz sme sadržati samo PID, command name, state i elapsed time.
 
-Potvrdi SHA-256 svih MU plugina, `object-cache.php` drop-ina i LiteSpeed biblioteka relevantnih za transport. Ne prikazuj cache host, port, username, password ili konfiguracione vrednosti.
+### Stroga zabrana konfiguracionog čitanja
 
-## Statički dokaz cache izolacije
+Ne pokreći:
 
-Pre pravljenja guarda dokaži iz tačno učitanog LiteSpeed koda:
+- `wp config get`;
+- `wp config list`;
+- `cat`, `grep`, `sed`, PHP include ili bilo koji drugi pokušaj čitanja `wp-config.php`;
+- komandu koja prikazuje DB host, port, ime baze, korisnika ili lozinku.
 
-1. Redis `connect`/`pconnect` i Memcached `addServer` dostupni su samo kroz LiteSpeed `_connect()`;
-2. `_connect()` vraća `false` pre tih poziva kada je `LITESPEED_OC_FAILURE` definisan;
-3. `wp_cache_init()` pri tom stanju registruje prelazak na neeksterni cache režim;
-4. nakon `muplugins_loaded`, `wp_using_ext_object_cache()` treba da bude `false`;
-5. nijedan drugi učitani MU plugin ili drop-in nema direktan bootstrap-time `socket_connect`, `fsockopen`, `stream_socket_client`, cURL, Redis ili Memcached transport koji zaobilazi WordPress HTTP API i ovu LiteSpeed blokadu.
-
-Ako bilo koja stavka nije dokazana, STOP pre bootstrapa sa:
-
-`PARTIAL: DIRECT_TRANSPORT_ISOLATION_NOT_PROVEN`
+WP-CLI sme interno koristiti postojeću konfiguraciju samo kao deo normalnog staging-scoped DB ili WordPress rada, bez prikazivanja vrednosti.
 
 ## Eksplicitno dozvoljene mutacije
 
-Dozvoljeno je samo:
+Tokom jednog WordPress bootstrapa dozvoljeno je isključivo:
 
 - uklanjanje postojećih instanci:
   - `elementor/tracker/send_event`;
   - `monsterinsights_feature_feedback_checkin`;
   - `wpforms_email_summaries_cron`;
 - odgovarajući update isključivo staging `cron` optiona;
-- lokalni in-process cache i DB fallback neophodan za jedan bootstrap;
-- task-private fajlovi pod `/tmp/raspitajse-task-2.69.1-*`;
-- nonblocking preuzimanje propisanih lockova.
+- in-process cache i DB fallback neophodan za jedan bootstrap;
+- task-private fajlovi pod `/tmp/raspitajse-task-2.69.2-*`;
+- nonblocking preuzimanje propisanih lockova;
+- normalna staging DB konekcija, klasifikovana kao `APPROVED_INTERNAL_STAGING_DB_TRANSPORT`.
 
 Nije dozvoljeno:
 
 - menjanje drugog cron događaja;
-- izvršavanje cron/Action Scheduler callbacka;
-- spoljni Redis/Memcached/HTTP/SMTP transport;
+- izvršavanje cron ili Action Scheduler callbacka;
+- Redis/Memcached transport;
+- spoljni HTTP/SMTP ili drugi nekontrolisani transport;
 - poslovni, korisnički, content, application, order ili payment upis;
 - promena staging fajlova, plugina, drop-ina, konfiguracije ili markera.
 
 ## T0 cron dokaz bez WordPress bootstrapa
 
-Koristeći staging-scoped WP-CLI DB alat koji ne učitava WordPress plugine pročitaj samo `cron` option i analiziraj ga task-private PHP helperom.
+Koristi staging-scoped `wp db query` ili ekvivalentni WP-CLI DB podnaredbeni put koji ne učitava WordPress plugine.
 
-Ne prikazuj sirovi option, serijalizovani sadržaj, callback argumente ili privatne podatke.
+WP-CLI sme interno koristiti postojeću staging konfiguraciju, ali nijedna konfiguraciona vrednost ne sme biti prikazana ili kopirana.
+
+Pročitaj samo `cron` option i odmah ga prosledi task-private PHP helperu. Ne prikazuj sirovi/serijalizovani sadržaj, callback argumente ili privatne podatke.
 
 Zabeleži samo:
 
@@ -110,13 +122,11 @@ Zabeleži samo:
 - ukupan broj cron događaja;
 - SHA-256 kanonskog cron stanja nakon logičkog uklanjanja samo tri dozvoljena hooka.
 
-Interno potvrdi da staging DB transport koristi Unix socket, loopback ili isti odobreni Hostinger DB servis. Ne prikazuj DB host ili kredencijale. Ako se DB transport ne može klasifikovati bez otkrivanja tajni, STOP pre bootstrapa.
+Ako se sanitizovani dokaz ne može dobiti bez prikaza sadržaja, STOP pre bootstrapa.
 
 ## Preload guard
 
-U svežem regularnom non-symlink direktorijumu `/tmp/raspitajse-task-2.69.1-<id>` napravi minimalan PHP preload guard.
-
-Pre WordPress učitavanja mora definisati, ako već nisu definisane:
+U svežem regularnom non-symlink direktorijumu `/tmp/raspitajse-task-2.69.2-<id>` napravi minimalan PHP preload guard koji pre WordPress učitavanja definiše, ako već nisu definisane:
 
 - `LITESPEED_OC_FAILURE=true`;
 - `DISABLE_WP_CRON=true`;
@@ -125,9 +135,17 @@ Pre WordPress učitavanja mora definisati, ako već nisu definisane:
 - `WP_HTTP_BLOCK_EXTERNAL=true`;
 - `SAVEQUERIES=true`.
 
-Guard mora proći `php -l`, biti pregledan i imati zabeležen SHA-256. Ne sme čitati/štampati konfiguraciju, registrovati događaje, slati mail, otvarati transport ili menjati bazu.
+Guard mora:
 
-Dokaži iz WP-CLI ponašanja/dokumentovanog redosleda da `--require` učitava guard pre WordPress bootstrapa. Ako nije dokazivo, STOP.
+- proći `php -l`;
+- imati zabeležen SHA-256;
+- ne čitati/štampati konfiguraciju;
+- ne registrovati događaje;
+- ne slati mail;
+- ne otvarati transport;
+- ne menjati bazu.
+
+Dokaži da WP-CLI `--require` učitava guard pre WordPress bootstrapa. Ako to nije dokazivo, STOP.
 
 ## Lock protokol
 
@@ -136,11 +154,13 @@ Nonblocking preuzmi redom:
 1. `/tmp/raspitajse-staging-owned-cron-runner.lock`;
 2. `/tmp/raspitajse-staging-runtime.lock`.
 
-Ako neki nije odmah dostupan, oslobodi prethodni i objavi `PARTIAL: STAGING_RUNTIME_LOCK_BUSY`.
+Ako neki lock nije odmah dostupan, oslobodi prethodni i objavi:
+
+`PARTIAL: STAGING_RUNTIME_LOCK_BUSY`
 
 Oslobađanje je obrnutim redom.
 
-## Jedina dozvoljena WordPress proba
+## Jedina dozvoljena runtime proba
 
 Pokreni tačno jedan staging-scoped WP-CLI bootstrap sa:
 
@@ -151,9 +171,9 @@ Pokreni tačno jedan staging-scoped WP-CLI bootstrap sa:
 
 MU plugini i drop-in ostaju učitani.
 
-Bezbedno izmeri i prikaži samo:
+Bezbedno izmeri samo:
 
-- environment type;
+- `wp_get_environment_type()`;
 - relevantne MU-plugin basenames;
 - zaštitne `function_exists`, `has_action` i `has_filter` rezultate/prioritete;
 - boolean vrednosti guard konstanti;
@@ -161,28 +181,36 @@ Bezbedno izmeri i prikaži samo:
 - agregirane SQL kategorije;
 - agregirane transport kategorije.
 
-Obavezno potvrdi:
+Ne prikazuj SQL tekst, option sadržaj, konfiguracione vrednosti, hostove, portove, korisničke podatke ili tajne.
 
-### Cache/transport
+### Cache/transport acceptance
+
+Potvrdi:
 
 - `LITESPEED_OC_FAILURE === true`;
 - `wp_using_ext_object_cache() === false` posle `muplugins_loaded`;
 - LiteSpeed `_connect()` nije mogao doći do Redis/Memcached transport grane;
-- WordPress HTTP spoljni transport je blokiran sa `WP_HTTP_BLOCK_EXTERNAL`;
+- `WP_HTTP_BLOCK_EXTERNAL === true`;
 - nema drugog direktnog transport puta u učitanom scope-u.
 
-### Mail safety
+### Mail safety acceptance
+
+Potvrdi:
 
 - `raspitajse_staging_mail_safety_is_staging()` postoji i vraća aktivno stanje;
 - zaštite na `pre_wp_mail`, `wp_mail` i `phpmailer_init` registrovane su na očekivanim prioritetima.
 
-### Cron recovery
+### Cron recovery acceptance
+
+Potvrdi:
 
 - `raspitajse_staging_cron_recovery_guard_is_active()` postoji i vraća aktivno stanje;
 - `DISABLE_WP_CRON === true`;
-- očekivani telemetry/reporting disable callbackovi i filteri su registrovani.
+- očekivani telemetry/reporting callbackovi i filteri su registrovani.
 
-### Action Scheduler
+### Action Scheduler acceptance
+
+Potvrdi:
 
 - `raspitajse_staging_disable_action_scheduler_async_dispatch` je registrovan;
 - svi postojeći `pre_as_*` DROP filteri su registrovani;
@@ -200,13 +228,13 @@ Svaki drugi mutating ili neklasifikovan SQL je:
 
 ## T1 cron dokaz
 
-Dok su lockovi još preuzeti, bez drugog WordPress bootstrapa ponovi sanitizovani DB pregled.
+Dok su lockovi još preuzeti, bez drugog WordPress bootstrapa ponovi isti sanitizovani DB pregled.
 
 Obavezno:
 
 - sva tri dozvoljena hooka imaju broj `0`;
 - kanonski SHA-256 cron stanja bez ta tri hooka jednak je T0 vrednosti;
-- pad ukupnog broja događaja jednak je T0 broju samo ta tri hooka;
+- pad ukupnog broja događaja odgovara isključivo T0 broju tri dozvoljena hooka;
 - nijedan drugi događaj nije dodat, uklonjen ili promenjen.
 
 Svaki drugi drift je:
@@ -215,27 +243,28 @@ Svaki drugi drift je:
 
 Ne pokušavaj fix-forward.
 
-## Transport rezultat
+## Transport računovodstvo
 
 Izveštaj mora odvojiti:
 
-- approved internal staging DB transport;
+- approved internal staging DB transport: `APPROVED`;
+- DB configuration values read/displayed: `0`;
 - object-cache direct transport attempts;
 - WP HTTP API attempts;
 - guard-intercepted before transport;
 - approved external transport attempts;
-- actual external network requests;
+- actual external network requests izvan odobrene staging DB konekcije;
 - unexpected external network requests.
 
 PASS zahteva:
 
 - object-cache direct transport attempts: `0`;
 - approved external transport attempts: `0`;
-- actual external network requests: `0`;
+- actual external network requests izvan odobrene staging DB konekcije: `0`;
 - unexpected external network requests: `0`;
 - real mail: `0`.
 
-Nemoj vrednost `not measured` pretvarati u nulu. Ako neki preostali mogući spoljni transport nije deterministički blokiran ili statički isključen, rezultat ostaje `PARTIAL`.
+Normalna staging DB konekcija ne računa se kao spoljni ili neočekivani transport u okviru ovog ugovora.
 
 ## Cleanup
 
@@ -256,18 +285,18 @@ PASS samo ako:
 
 - environment je tačno `staging`;
 - sve tri runtime zaštite su potvrđene;
-- persistent object-cache transport je deterministički onemogućen pre bootstrapa;
+- persistent object-cache transport je onemogućen pre bootstrapa;
 - uklonjeni su samo dozvoljeni DROP hookovi;
 - T0/T1 hash ostatka cron stanja je isti;
 - nema drugog DB upisa;
 - nema scheduler/action/mail/payment izvršavanja;
-- nema spoljnog transporta;
+- nema spoljnog transporta izvan unapred odobrene staging DB konekcije;
 - cleanup je potpun;
 - produkcija nije pristupana.
 
 ## Sledeći zadatak — samo definisati
 
-Samo ako 2.69.1 prođe, preporuči:
+Samo ako 2.69.2 prođe, preporuči:
 
 `Zadatak 2.70 — Immutable snapshot i kontrolisani combined staging deploy`
 
@@ -277,12 +306,13 @@ Ne izvršavaj ga sada.
 
 Objavi tačno jedan izveštaj:
 
-`Zadatak 2.69.1 — Izoluj cache transport i potvrdi staging runtime zaštite`
+`Zadatak 2.69.2 — Potvrdi staging zaštite bez čitanja DB konfiguracije`
 
-Uključi T0/T1 dokaze, runtime simbole/hookove, SQL kategorije, cache/HTTP transport klasifikaciju, lockove, cleanup, nepromenjene SHA/marker vrednosti i:
+Uključi T0/T1 dokaze, runtime simbole/hookove, SQL kategorije, transport računovodstvo, lockove, cleanup, nepromenjene SHA/marker vrednosti i:
 
 - Deploy: `NO`;
 - Snapshot/restore: `NO`;
+- DB config values read/displayed: `0`;
 - Production access: `0`;
 - `Production touched: NO`.
 
