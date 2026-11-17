@@ -1,101 +1,99 @@
 # Codex Execution Report
 
-- Task: Zadatak 2.69.2 — Potvrdi staging zaštite bez čitanja DB konfiguracije
-- Task ID: 2.69.2
+- Task: Zadatak 2.70 — Kompletan transakcioni rollback paket za combined staging release
+- Task ID: 2.70
 - Result: PASS
-- Recorded at (UTC): 2026-11-17T06:22:39Z
-- Source branch: feature/task-2.68.2-wp-7.1.2-release-preparation
-- Source HEAD: 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0
+- Recorded at (UTC): 2026-11-17T17:23:46Z
+- Source branch: feature/task-2.70-transactional-staging-rollback
+- Source HEAD: 2c0c70123af61fc539f61d3349fff369fe1cd9d5
 - Source working tree clean: YES
 - Staging deploy marker: unavailable
 - Staging environment: unavailable
 
 ## Task report
 
-Zadatak 2.69.2 — Potvrdi staging zaštite bez čitanja DB konfiguracije
+Zadatak 2.70 — Kompletan transakcioni rollback paket za combined staging release
 
-PASS: STAGING_RUNTIME_PROTECTIONS_ATTESTED_WITH_CACHE_TRANSPORT_DISABLED
+PASS: COMPLETE_TRANSACTIONAL_STAGING_ROLLBACK_READY
 
-Task source origin/codex-tasks 9b713071.
-Baseline origin/staging f6093c11d71ddc175ebf83fc69453c20aaca5239.
-Release candidate feature/task-2.68.2-wp-7.1.2-release-preparation.
-Release HEAD 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0.
-Source working tree clean. Staging realpath exactly matched authorized root. Marker was regular, non-symlink and contained baseline.
-MU, object-cache and LiteSpeed hashes matched 2.69.1 evidence. Process sampling displayed only PID/name/state/elapsed time. Initial sample contained two lsphp processes and ps; no Git/rsync/deploy process was identified by name. Command arguments were not inspected. Both prescribed nonblocking locks were subsequently acquired.
+Branch feature/task-2.70-transactional-staging-rollback.
+Verified local/remote HEAD 2c0c70123af61fc539f61d3349fff369fe1cd9d5.
+Direct parent accepted release 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0.
+Baseline f6093c11d71ddc175ebf83fc69453c20aaca5239.
+Accepted release preflight confirmed 19 ahead, 0 behind and exactly 22 changed paths.
+Working tree clean. Previous 2.69.2 attestation PASS.
 
-Bootstrap count exactly 1. Regular plugins and themes skipped; five MU files loaded:
-elementor-safe-mode.php
-hostinger-auto-updates.php
-raspitajse-staging-action-scheduler-drop-guard.php
-raspitajse-staging-cron-recovery-guard.php
-raspitajse-staging-mail-safety.php
+Changed files
+- deployment/deploy-staging.sh
+- deployment/tests/transactional-release-rollback-harness.sh
 
-Runtime environment staging.
-wp_using_ext_object_cache false.
-LITESPEED_OC_FAILURE, DISABLE_WP_CRON, AUTOMATIC_UPDATER_DISABLED, WP_HTTP_BLOCK_EXTERNAL and SAVEQUERIES true.
-WP_AUTO_UPDATE_CORE false.
-Active runtime functions all true:
-raspitajse_staging_mail_safety_is_staging
-raspitajse_staging_cron_recovery_guard_is_active
-raspitajse_staging_as_drop_guard_is_active
+No delta outside deployment. All 20 accepted release paths outside deployment retain identical blobs; the accepted 22-path inventory includes two deployment paths.
 
-Expected and actual hook priorities matched
-- raspitajse_staging_disable_action_scheduler_async_dispatch on plugins_loaded PHP_INT_MAX, init PHP_INT_MIN, shutdown PHP_INT_MIN.
-- raspitajse_staging_disable_reporting_telemetry_callbacks on plugins_loaded and init PHP_INT_MAX.
-- raspitajse_staging_disable_aioseo_report_summary on aioseo_report_summary_enable PHP_INT_MIN.
-- raspitajse_staging_disable_wpforms_email_summaries on wpforms_emails_summaries_is_disabled PHP_INT_MIN.
-- raspitajse_staging_as_drop_guard_pre_async on pre_as_enqueue_async_action PHP_INT_MAX.
-- raspitajse_staging_as_drop_guard_pre_single on pre_as_schedule_single_action PHP_INT_MAX.
-- raspitajse_staging_as_drop_guard_pre_recurring on pre_as_schedule_recurring_action PHP_INT_MAX.
-- raspitajse_staging_as_drop_guard_pre_cron on pre_as_schedule_cron_action PHP_INT_MAX.
-Mail closure identity was checked by ReflectionFunction source basename, not merely hook occupancy. Exactly one existing mail-safety closure at pre_wp_mail PHP_INT_MAX, wp_mail PHP_INT_MIN, wp_mail PHP_INT_MAX and phpmailer_init PHP_INT_MAX.
-PHP_INT_MAX 9223372036854775807; PHP_INT_MIN -9223372036854775808.
+Interface
+snapshot-release <branch> [previous-sha]
+restore-release <branch> <previous-sha>
+Snapshot reads previous SHA from marker and rejects a conflicting explicit argument. Missing marker requires explicit previous SHA. Restore requires explicit previous SHA and exact checked-out HEAD.
+Python 3 is required and documented in usage; available in test environment, no server installation attempted.
 
-T0 and T1
-elementor/tracker/send_event 0 -> 0
-monsterinsights_feature_feedback_checkin 0 -> 0
-wpforms_email_summaries_cron 0 -> 0
-Total events 28 -> 28
-Canonical remaining-cron SHA-256 both b479edeaaf0920349b012cbc708e91d9b4bad18cd45e9212c8ef10f981fd751f.
-Sanitized JSON compared byte-identically. No cron event changed. A separate preliminary DB-only preflight returned the same evidence, released its locks and removed its directory. Authoritative T0/bootstrap/T1 then ran under one continuous lock interval.
+Mutation plan
+Deterministic PREVIOUS..HEAD Git diff expands any package change to all three package roots and 15 core root files. Changed/deleted owned allowlisted files are included individually. Vendor roots are reconciled and snapshotted only when their diff is touched. Retired roots are protected when present in previous Git tree and absent in release. Marker and Communications manifest are included with absence represented. Absent parent directories are recorded for safe rmdir cleanup.
+Owned-file rsync now uses --no-implied-dirs to preserve existing parent attributes outside the plan. Owned changed/deleted paths reject symlink components.
 
-SQL from SAVEQUERIES collected in a shutdown callback
-read_only 2
-allowed_cron_update 0
-other_mutating 0
-unknown 0
-No SQL text, cron arguments or raw option values displayed. Because authoritative T0 had zero allowed DROP events, the probe conservatively classified every mutating query as forbidden.
+Snapshot
+Root /home/u601262303/deploy-state/raspitajse-release-snapshots-v1.
+Key is full PREVIOUS_SHA--HEAD_SHA.
+metadata.json contains format 1, previous/head and SHA-256 of deterministic manifest.json.
+Manifest contains sorted plan, file/directory/absence inventories with SHA-256 file hashes and absent-parent ledger. Runtime bytes, including drift from Git baseline, are authoritative.
+Same-parent temporary snapshot is fully verified before exclusive publication flock and atomic rename. Duplicate rejection occurs under lock. Cleanup removes only the operation-created temporary directory. No latest/glob selection, legacy fallback, retention or pruning.
 
-Transport
-approved internal staging DB transport APPROVED_INTERNAL_STAGING_DB_TRANSPORT
-DB config values read/displayed by the agent 0; normal WP-CLI internal configuration use only.
-object-cache direct transport attempts 0, established from the hash-verified fail-closed branch and preloaded LITESPEED_OC_FAILURE, not packet capture.
-WP HTTP API attempts 0
-guard-intercepted before transport 0
-approved external transport attempts 0
-actual external network requests outside approved staging DB connection 0 by source/guard evidence
-unexpected external network requests 0 by source/guard evidence
-mail attempts 0; real mail 0
-No cron runner, Action Scheduler action, payment operation, browser request or business fixture invoked.
+Restore
+Before writes validates exact pair, checkout/marker transaction, safe types, path components, metadata, complete manifest and payload.
+Content is restored and verified first, including removal of newly created ledger files and package/vendor extras. Communications manifest and marker are restored last, byte-exact or absent.
+Content failure leaves marker/manifest unchanged and reports failure. A failed restore may leave partially restored content, requiring recovery while the caller retains transaction locks.
+Successful restore verifies aggregate ledger prestate. Unrelated paths and legacy/package-v2 snapshots remain outside the plan.
 
-Preload guard SHA-256 54a57fd9c80d43e4e22c55e7a1d776a8b38176637be75b5d88c01f936a3fd159.
-Guard, runtime helper and cron helper passed php -l.
-Installed WP-CLI 2.12.0 bootstrap source showed LoadRequiredCommand before LaunchRunner; Runner loads WordPress subsequently.
-The guard defined the six required constants and registered in-memory preinitialized HTTP/mail blocking callbacks. It did not read configuration, write the DB or open transport.
-LiteSpeed _connect returns before Redis/Memcached calls when LITESPEED_OC_FAILURE is defined. wp_cache_init registered the fallback at muplugins_loaded priority -999 and runtime confirmed external cache false.
-No strace, ptrace, namespace probe or DB host classification used.
+Validation
+Docker dependencies were prepared locally, then bridge networking disconnected. All behavioral tests ran offline in private fixture roots. No server paths remained in fixture script copies.
+bash -n PASS for deployment and both harness scripts.
+git diff --check PASS, including final commit in fresh clone.
+shellcheck SKIPPED, not installed.
+Immutable package harness PASS twice.
+Transactional release harness PASS twice.
+Both harnesses PASS twice again in fresh clone of exact final commit.
+Stacked product journey PASS twice, repeated twice in fresh clone.
+Candidate desired positions, employer job posting, candidate application tracking and private-message notification harnesses PASS.
+PHP lint PASS for cumulative product PHP changes and imported core PHP files.
+Initial stdin-fed lint invocation failed from argument handling; direct Docker invocation and final fresh-clone lint passed.
+Fresh checkout confirmed accepted release as direct parent and no changes outside deployment.
 
-Lock order cron-runner then runtime. Both acquired nonblocking. Cleanup released runtime then cron-runner. Both task-private directories were removed and absence confirmed. No staging WordPress file changed.
-Bootstrap exit 0. Cleanup PASS.
-SSH startup emitted the existing nexport command-not-found diagnostic; configuration was not changed.
+Behavioral coverage
+- Exact pair key, deterministic plan and coexistence of multiple pairs.
+- Full package and changed owned restoration after actual fixture changed deploy.
+- Newly created file/parent cleanup and deleted file return.
+- Runtime drift restored from snapshot rather than Git.
+- Marker and manifest byte-exact restoration, including absence.
+- Untouched vendor remains unchanged during changed deploy; touched vendor fully restored with extras removed.
+- Existing and absent retired-plugin lifecycle.
+- Duplicate rejection leaves first snapshot fingerprint unchanged.
+- Deterministic concurrency uses separate checkouts and publication-directory flock held until both temporary snapshots have metadata. Release yields exactly one success and one rejection, with no operation temp left.
+- Wrong previous and metadata HEAD rejection.
+- Changed/missing/extra snapshot payload, bad metadata and symlinked root/payload/metadata rejected before target changes.
+- Injected prepublication failure cleans only its temporary snapshot.
+- Injected failure after content restore but before state copy preserves marker and manifest.
+- Successful full runtime fingerprint equals prestate.
+- Unrelated runtime/deploy-state, legacy and package-v2 sentinels preserved.
 
-Deploy NO.
-Snapshot/restore NO.
-Runtime business mutation attributable to task 0.
+Remote feature HEAD verified equal to local. Remote staging and prior release remained unchanged.
+Real server snapshot/restore/deploy invocations 0.
+Staging filesystem and DB/cache changes 0.
+Scheduler/mail/payment/browser actions 0.
 Production access 0.
+Deploy NO.
 Production touched: NO.
+No SSH or WordPress runtime invocation in Task 2.70. Test container removed.
 
-Next task recommended only
-Zadatak 2.70 — Immutable snapshot i kontrolisani combined staging deploy.
-Start from the exact remote release HEAD, recheck active protections, create and verify an immutable commit-keyed snapshot, deploy the combined release once, and require rollback on any failed gate. Not executed here.
-Final marker and remote staging/release references matched preflight. Local source remained clean at the exact release HEAD.
+Report publication initially blocked by automatic approval review usage limit; the publication command was not executed at that time. User requested continuation.
+
+Next task defined only
+Zadatak 2.71 — Immutable transactional snapshot i combined staging deploy.
+Start from exact remote 2c0c70123af61fc539f61d3349fff369fe1cd9d5, confirm Python 3 and active runtime protections, acquire cron-runner then runtime locks, create/verify exact commit-pair snapshot, perform one combined changed deploy and server-side gates. On any failed gate invoke exact restore-release and prove byte-exact prestate, marker and manifest. No browser/fixture journey or production access. Not executed here.
