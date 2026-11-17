@@ -1,9 +1,9 @@
 # Codex Execution Report
 
-- Task: Zadatak 2.69.1 — Izoluj cache transport i potvrdi staging runtime zaštite
-- Task ID: 2.69.1
-- Result: PARTIAL
-- Recorded at (UTC): 2026-11-16T21:59:23Z
+- Task: Zadatak 2.69.2 — Potvrdi staging zaštite bez čitanja DB konfiguracije
+- Task ID: 2.69.2
+- Result: PASS
+- Recorded at (UTC): 2026-11-17T06:22:39Z
 - Source branch: feature/task-2.68.2-wp-7.1.2-release-preparation
 - Source HEAD: 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0
 - Source working tree clean: YES
@@ -12,43 +12,90 @@
 
 ## Task report
 
-Zadatak 2.69.1 — Izoluj cache transport i potvrdi staging runtime zaštite
-Result PARTIAL. Stopped before WordPress bootstrap because required internal staging DB transport classification was blocked by automatic approval review.
+Zadatak 2.69.2 — Potvrdi staging zaštite bez čitanja DB konfiguracije
 
-Task source origin/codex-tasks 2d512bf9.
-Baseline f6093c11d71ddc175ebf83fc69453c20aaca5239.
-Release feature/task-2.68.2-wp-7.1.2-release-preparation at 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0.
-Local working tree clean; remote refs refreshed. Exact staging realpath and regular non-symlink baseline marker verified. Sanitized process sample showed only ps.
+PASS: STAGING_RUNTIME_PROTECTIONS_ATTESTED_WITH_CACHE_TRANSPORT_DISABLED
 
-Static cache evidence
-Active LiteSpeed _connect() checks defined(LITESPEED_OC_FAILURE) and returns false before Redis connect/pconnect or Memcached initialization. wp_cache_init registers a muplugins_loaded callback at -999 to set wp_using_ext_object_cache(false). Runtime confirmation was not executed.
-object-cache.php 0888d468ece84dda092719550658a2e870f440def2e57fbbedd681cb06abe9f1
-object.lib.php 5073b49631e0c7e00b0bb614b3e20f4245ed7c9c805bfcd81ebf5f2fd755331f
-object-cache.cls.php 7a4afa6233aa84514b9354afe6a1057585f8a89e0b0c626834908917aa7c0376
-object-cache-wp.cls.php e30e1fceaee05f06ba085fe65a1c32c6324448c621a3bbe892434bfbfc7b25bd
+Task source origin/codex-tasks 9b713071.
+Baseline origin/staging f6093c11d71ddc175ebf83fc69453c20aaca5239.
+Release candidate feature/task-2.68.2-wp-7.1.2-release-preparation.
+Release HEAD 0c233ad646d7f8f0bac1079eb21f7e73b43d29b0.
+Source working tree clean. Staging realpath exactly matched authorized root. Marker was regular, non-symlink and contained baseline.
+MU, object-cache and LiteSpeed hashes matched 2.69.1 evidence. Process sampling displayed only PID/name/state/elapsed time. Initial sample contained two lsphp processes and ps; no Git/rsync/deploy process was identified by name. Command arguments were not inspected. Both prescribed nonblocking locks were subsequently acquired.
 
+Bootstrap count exactly 1. Regular plugins and themes skipped; five MU files loaded:
+elementor-safe-mode.php
+hostinger-auto-updates.php
+raspitajse-staging-action-scheduler-drop-guard.php
+raspitajse-staging-cron-recovery-guard.php
+raspitajse-staging-mail-safety.php
 
-MU hashes
-elementor-safe-mode.php cd9d7895d440e7105c476080d0c671ba52016f35bc5ec953dd8781f03029eaa9
-hostinger-auto-updates.php 675bbe629bf844ca4d27e3793406a12cf95802c1f36e150fd87dff5cf83b9b8b
-raspitajse-staging-action-scheduler-drop-guard.php d2aa95755a299df70fc7d3c95af50bb252551be83c8ec440a7b70b49292e23a7
-raspitajse-staging-cron-recovery-guard.php 521b79ebb60ef4dc2b5f33a41e6b3c654fd80d5aa91c787536ffd51b8d7fa6ec
-raspitajse-staging-mail-safety.php cf1acae6dbbeb69adb5d3bb3a06bb14d7f45631d543d8d1df49f36088290d5c0
+Runtime environment staging.
+wp_using_ext_object_cache false.
+LITESPEED_OC_FAILURE, DISABLE_WP_CRON, AUTOMATIC_UPDATER_DISABLED, WP_HTTP_BLOCK_EXTERNAL and SAVEQUERIES true.
+WP_AUTO_UPDATE_CORE false.
+Active runtime functions all true:
+raspitajse_staging_mail_safety_is_staging
+raspitajse_staging_cron_recovery_guard_is_active
+raspitajse_staging_as_drop_guard_is_active
 
-Approval blocker
-Proposed staging-scoped wp config get DB_HOST output was to be piped directly into a PHP classifier printing only LOCAL_PASS or UNCLASSIFIED. Automatic approval review rejected the action as reading wp-config.php, despite no configuration value being intended for output. The command was not executed. No workaround was attempted. The task requires classified DB transport before bootstrap, so neither DB query nor bootstrap proceeded. No secrets were printed.
+Expected and actual hook priorities matched
+- raspitajse_staging_disable_action_scheduler_async_dispatch on plugins_loaded PHP_INT_MAX, init PHP_INT_MIN, shutdown PHP_INT_MIN.
+- raspitajse_staging_disable_reporting_telemetry_callbacks on plugins_loaded and init PHP_INT_MAX.
+- raspitajse_staging_disable_aioseo_report_summary on aioseo_report_summary_enable PHP_INT_MIN.
+- raspitajse_staging_disable_wpforms_email_summaries on wpforms_emails_summaries_is_disabled PHP_INT_MIN.
+- raspitajse_staging_as_drop_guard_pre_async on pre_as_enqueue_async_action PHP_INT_MAX.
+- raspitajse_staging_as_drop_guard_pre_single on pre_as_schedule_single_action PHP_INT_MAX.
+- raspitajse_staging_as_drop_guard_pre_recurring on pre_as_schedule_recurring_action PHP_INT_MAX.
+- raspitajse_staging_as_drop_guard_pre_cron on pre_as_schedule_cron_action PHP_INT_MAX.
+Mail closure identity was checked by ReflectionFunction source basename, not merely hook occupancy. Exactly one existing mail-safety closure at pre_wp_mail PHP_INT_MAX, wp_mail PHP_INT_MIN, wp_mail PHP_INT_MAX and phpmailer_init PHP_INT_MAX.
+PHP_INT_MAX 9223372036854775807; PHP_INT_MIN -9223372036854775808.
 
-T0/T1 cron counts and canonical hashes NOT MEASURED.
-Runtime environment, mail/cron/Action Scheduler symbols, hooks and external-cache boolean NOT MEASURED.
-SQL categories NOT MEASURED.
-Approved internal staging DB transport NOT CLASSIFIED.
-Object-cache direct transport attempts, WP HTTP API attempts, intercepted requests, actual and unexpected external transport NOT MEASURED for runtime.
-Approved external transport attempts 0.
-WordPress bootstrap count 0; no cron, Action Scheduler, mail or payment execution invoked.
-No guard or server task-private directory created. Guard hash/lint/removal not applicable.
-No locks acquired or held. Required order cron-runner then runtime; release runtime then cron-runner. No server cleanup necessary.
-No strace, ptrace or namespace isolation used.
-Deploy NO. Snapshot/restore NO. Runtime business mutation attributable to task 0.
-Production access 0. Production touched: NO.
-Runtime attestation remains incomplete. Task 2.70 not executed.
-Final marker and remote Git references confirmed unchanged.
+T0 and T1
+elementor/tracker/send_event 0 -> 0
+monsterinsights_feature_feedback_checkin 0 -> 0
+wpforms_email_summaries_cron 0 -> 0
+Total events 28 -> 28
+Canonical remaining-cron SHA-256 both b479edeaaf0920349b012cbc708e91d9b4bad18cd45e9212c8ef10f981fd751f.
+Sanitized JSON compared byte-identically. No cron event changed. A separate preliminary DB-only preflight returned the same evidence, released its locks and removed its directory. Authoritative T0/bootstrap/T1 then ran under one continuous lock interval.
+
+SQL from SAVEQUERIES collected in a shutdown callback
+read_only 2
+allowed_cron_update 0
+other_mutating 0
+unknown 0
+No SQL text, cron arguments or raw option values displayed. Because authoritative T0 had zero allowed DROP events, the probe conservatively classified every mutating query as forbidden.
+
+Transport
+approved internal staging DB transport APPROVED_INTERNAL_STAGING_DB_TRANSPORT
+DB config values read/displayed by the agent 0; normal WP-CLI internal configuration use only.
+object-cache direct transport attempts 0, established from the hash-verified fail-closed branch and preloaded LITESPEED_OC_FAILURE, not packet capture.
+WP HTTP API attempts 0
+guard-intercepted before transport 0
+approved external transport attempts 0
+actual external network requests outside approved staging DB connection 0 by source/guard evidence
+unexpected external network requests 0 by source/guard evidence
+mail attempts 0; real mail 0
+No cron runner, Action Scheduler action, payment operation, browser request or business fixture invoked.
+
+Preload guard SHA-256 54a57fd9c80d43e4e22c55e7a1d776a8b38176637be75b5d88c01f936a3fd159.
+Guard, runtime helper and cron helper passed php -l.
+Installed WP-CLI 2.12.0 bootstrap source showed LoadRequiredCommand before LaunchRunner; Runner loads WordPress subsequently.
+The guard defined the six required constants and registered in-memory preinitialized HTTP/mail blocking callbacks. It did not read configuration, write the DB or open transport.
+LiteSpeed _connect returns before Redis/Memcached calls when LITESPEED_OC_FAILURE is defined. wp_cache_init registered the fallback at muplugins_loaded priority -999 and runtime confirmed external cache false.
+No strace, ptrace, namespace probe or DB host classification used.
+
+Lock order cron-runner then runtime. Both acquired nonblocking. Cleanup released runtime then cron-runner. Both task-private directories were removed and absence confirmed. No staging WordPress file changed.
+Bootstrap exit 0. Cleanup PASS.
+SSH startup emitted the existing nexport command-not-found diagnostic; configuration was not changed.
+
+Deploy NO.
+Snapshot/restore NO.
+Runtime business mutation attributable to task 0.
+Production access 0.
+Production touched: NO.
+
+Next task recommended only
+Zadatak 2.70 — Immutable snapshot i kontrolisani combined staging deploy.
+Start from the exact remote release HEAD, recheck active protections, create and verify an immutable commit-keyed snapshot, deploy the combined release once, and require rollback on any failed gate. Not executed here.
+Final marker and remote staging/release references matched preflight. Local source remained clean at the exact release HEAD.
